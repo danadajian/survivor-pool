@@ -15,11 +15,12 @@ jobs:
       - run: bun install
       - run: bun format-check
       - run: bun lint
+      - run: bun type-check
       - run: bun transpile
       - run: bun test
       - name: E2E Tests
         uses: cypress-io/github-action@v6
         with:
-          install: false
+          install-command: cypress install
           start: bun docker
           wait-on: "http://localhost:8080"

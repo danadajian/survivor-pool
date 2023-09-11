@@ -8,7 +8,8 @@
     "format-check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",
     "start": "bun backend/serve.ts",
-    "transpile": "tsc && bun build ./frontend/main.tsx --outdir public && bun css"
+    "transpile": "bun build ./frontend/main.tsx --outdir public && bun css",
+    "type-check": "tsc"
   },
   "dependencies": {
     "@elysiajs/cors": "^0.6.0",
