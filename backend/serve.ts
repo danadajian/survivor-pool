@@ -17,5 +17,5 @@ if (process.env.NODE_ENV === "production") {
 }
 
 console.log(
-  `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`,
+  `App is running at http://${app.server?.hostname}:${app.server?.port}`,
 );

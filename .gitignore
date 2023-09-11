@@ -9,8 +9,8 @@
 
 # production
 /dist
-/public
-!/public/index.html
+/public/main.js
+/public/globals*
 
 # misc
 .DS_Store

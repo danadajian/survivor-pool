@@ -10,12 +10,16 @@ export const App = () => {
 };
 
 export const Component = () => {
-  const { data } = trpc.hello.useQuery();
+  const { data } = trpc.games.useQuery();
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
       <h1 className="text-red-400">Test</h1>
-      {data ? <div>{data}</div> : <div>Loading...</div>}
+      <div>{data.week.number}</div>
     </div>
   );
 };

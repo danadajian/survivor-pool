@@ -20,7 +20,7 @@ jobs:
       - run: bun test
 
   cypress:
-    name: Run Cypress Tests
+    name: Cypress Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
