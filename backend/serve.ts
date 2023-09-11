@@ -5,13 +5,16 @@ import { html } from "@elysiajs/html";
 import { staticPlugin } from "@elysiajs/static";
 import { appRouter } from "./router";
 
-const app = new Elysia()
-  .use(cors())
-  .use(trpc(appRouter))
-  .use(html())
-  .use(staticPlugin({ assets: "dist", prefix: "/" }))
-  .get("/", () => Bun.file("dist/index.html").text())
-  .listen(8080);
+const app = new Elysia();
+
+app.use(cors()).use(trpc(appRouter)).listen(8080);
+
+if (process.env.NODE_ENV === "production") {
+  app
+    .use(html())
+    .use(staticPlugin({ assets: "public", prefix: "/" }))
+    .get("/", () => Bun.file("public/index.html").text());
+}
 
 console.log(
   `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`,

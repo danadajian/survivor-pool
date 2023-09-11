@@ -1,0 +1,7 @@
+version: "3"
+services:
+  survivor-pool:
+    image: survivor-pool
+    container_name: survivor-pool
+    ports:
+      - "8080:8080"
