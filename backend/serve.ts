@@ -7,7 +7,10 @@ import { appRouter } from "./router";
 
 const app = new Elysia();
 
-app.use(cors()).use(trpc(appRouter)).listen(8080);
+app
+  .use(cors())
+  .use(trpc(appRouter))
+  .listen(process.env.PORT ?? 8080);
 
 if (process.env.NODE_ENV === "production") {
   app
