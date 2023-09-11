@@ -16,3 +16,9 @@ jobs:
       - run: bun format-check
       - run: bun lint
       - run: bun run build
+      - run: bun run test
+      - name: E2E Tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: bun docker
+          wait-on: 'http://localhost:8080'

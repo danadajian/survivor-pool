@@ -6,7 +6,7 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "moduleDetection": "force",
     "resolveJsonModule": true,
     "isolatedModules": true,
