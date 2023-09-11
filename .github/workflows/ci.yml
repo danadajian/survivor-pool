@@ -15,8 +15,8 @@ jobs:
       - run: bun install
       - run: bun format-check
       - run: bun lint
-      - run: bun run build
-      - run: bun run test
+      - run: bun transpile
+      - run: bun test
       - name: E2E Tests
         uses: cypress-io/github-action@v6
         with:

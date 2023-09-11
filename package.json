@@ -1,14 +1,14 @@
 {
   "name": "survivor-pool",
   "scripts": {
-    "build": "tsc && bun build ./frontend/main.tsx --outdir public && bun css",
     "css": "tailwindcss -o ./public/globals.css",
     "dev": "vite & bun --hot backend/serve.ts",
     "docker": "docker build . --tag survivor-pool && docker-compose up",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",
-    "start": "bun backend/serve.ts"
+    "start": "bun backend/serve.ts",
+    "transpile": "tsc && bun build ./frontend/main.tsx --outdir public && bun css"
   },
   "dependencies": {
     "@elysiajs/cors": "^0.6.0",

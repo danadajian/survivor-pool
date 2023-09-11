@@ -4,7 +4,7 @@ WORKDIR /app
 COPY --chown=admin . .
 
 RUN bun install
-RUN bun run build
+RUN bun transpile
 
 ENV NODE_ENV production
 CMD [ "bun", "start" ]
