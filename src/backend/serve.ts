@@ -10,14 +10,10 @@ const app = new Elysia();
 app
   .use(cors())
   .use(trpc(appRouter))
+  .use(html())
+  .use(staticPlugin({ assets: "public", prefix: "/" }))
+  .get("/", () => Bun.file("public/index.html").text())
   .listen(process.env.PORT ?? 8080);
-
-if (process.env.NODE_ENV === "production") {
-  app
-    .use(html())
-    .use(staticPlugin({ assets: "public", prefix: "/" }))
-    .get("/", () => Bun.file("public/index.html").text());
-}
 
 console.log(
   `App is running at http://${app.server?.hostname}:${app.server?.port}`,

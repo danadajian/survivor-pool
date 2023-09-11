@@ -1,5 +1,5 @@
-import { App } from "../../frontend/app";
-import { mockEspnResponse } from "../../backend/mock-espn-response";
+import { App } from "../../src/frontend/app";
+import { mockEspnResponse } from "../../src/backend/mock-espn-response";
 
 describe("App.cy.tsx", () => {
   beforeEach(() => {
