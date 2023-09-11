@@ -4,12 +4,12 @@ import { ClientProvider } from "./client-provider";
 export const App = () => {
   return (
     <ClientProvider>
-      <Component />
+      <Home />
     </ClientProvider>
   );
 };
 
-export const Component = () => {
+const Home = () => {
   const { data } = trpc.games.useQuery();
 
   if (!data) {
