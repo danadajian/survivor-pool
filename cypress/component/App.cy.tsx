@@ -1,7 +1,7 @@
-import {App} from "../../frontend/app";
+import { App } from "../../frontend/app";
 
-describe('App.cy.tsx', () => {
-  it('renders', () => {
-    cy.mount(<App />)
-  })
+describe("App.cy.tsx", () => {
+  it("renders", () => {
+    cy.mount(<App />);
+  });
 });

@@ -1,6 +1,6 @@
-import '@testing-library/cypress/add-commands';
+import "@testing-library/cypress/add-commands";
 
-import { mount } from 'cypress/react18'
+import { mount } from "cypress/react18";
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -9,9 +9,9 @@ import { mount } from 'cypress/react18'
 declare global {
   namespace Cypress {
     interface Chainable {
-      mount: typeof mount
+      mount: typeof mount;
     }
   }
 }
 
-Cypress.Commands.add('mount', mount)
+Cypress.Commands.add("mount", mount);
