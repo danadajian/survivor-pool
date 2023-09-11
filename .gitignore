@@ -8,7 +8,6 @@
 .pnp.js
 
 # production
-/dist
 /public/main.js
 /public/globals*
 

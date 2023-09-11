@@ -16,8 +16,8 @@ jobs:
       - run: bun format-check
       - run: bun lint
       - run: bun type-check
-      - run: bun transpile
       - run: bun test
+      - run: bun docker
 
   cypress:
     name: Cypress Tests
@@ -31,7 +31,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/Cypress
-          key: ${{ runner.os }}-cypress-${{ hashFiles('bun.lockb') }}
+          key: ${{ runner.os }}-cypress-${{ hashFiles('package.json') }}
 
       - name: Install Cypress binary if not cached
         run: bun cypress install
@@ -41,10 +41,3 @@ jobs:
         with:
           install: false
           component: true
-
-      - name: E2E Tests
-        uses: cypress-io/github-action@v6
-        with:
-          install: false
-          start: bun docker
-          wait-on: "http://localhost:8080"

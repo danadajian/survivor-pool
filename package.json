@@ -3,7 +3,7 @@
   "scripts": {
     "css": "tailwindcss -o ./public/globals.css",
     "dev": "vite & bun --hot backend/serve.ts",
-    "docker": "docker build . --tag survivor-pool && docker-compose up",
+    "docker": "docker build . --tag survivor-pool",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",

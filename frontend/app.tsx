@@ -19,7 +19,7 @@ export const Component = () => {
   return (
     <div>
       <h1 className="text-red-400">Test</h1>
-      <div>{data.week.number}</div>
+      <div>Week {data.week.number}</div>
     </div>
   );
 };
