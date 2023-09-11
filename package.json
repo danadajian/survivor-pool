@@ -2,12 +2,12 @@
   "name": "survivor-pool",
   "scripts": {
     "css": "tailwindcss -o ./public/globals.css",
-    "dev": "vite & bun --hot ./src/backend/serve.ts",
+    "dev": "vite & bun --hot ./src/backend/server.ts",
     "docker": "docker build . --tag survivor-pool",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",
-    "start": "bun ./src/backend/serve.ts",
+    "start": "bun ./src/backend/server.ts",
     "transpile": "bun build ./src/frontend/main.tsx --outdir public && bun css",
     "type-check": "tsc"
   },
