@@ -20,5 +20,6 @@ jobs:
       - name: E2E Tests
         uses: cypress-io/github-action@v6
         with:
+          install: false
           start: bun docker
           wait-on: "http://localhost:8080"
