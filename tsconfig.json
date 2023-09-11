@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "moduleDetection": "force",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -16,5 +17,10 @@
     "strict": true,
     "noEmit": true,
     "noUncheckedIndexedAccess": true
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "moduleResolution": "node"
+    }
   }
 }
