@@ -20,12 +20,12 @@ const Home = () => {
   return (
     <div className="mb-8 flex flex-col items-center text-center">
       <h1 className="mt-8 text-2xl font-bold text-red-700">
-        Survival Pool {season.year}
+        Survivor Pool {season.year}
       </h1>
       <h2 className="mt-2 text-lg font-bold">Week {week.number}</h2>
       <ul>
-        {events.map((event) => (
-          <EventRow event={event} />
+        {events.map((event, index) => (
+          <EventRow key={index} event={event} />
         ))}
       </ul>
     </div>

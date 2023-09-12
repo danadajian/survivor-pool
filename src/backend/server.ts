@@ -5,6 +5,17 @@ import { html } from "@elysiajs/html";
 import { staticPlugin } from "@elysiajs/static";
 import { rateLimit } from "elysia-rate-limit";
 import { appRouter } from "./router";
+import { environmentVariables } from "./env";
+
+// const flyway = new Flyway(
+//     {
+//         url: environmentVariables.POSTGRES_URL,
+//         user: 'postgres',
+//         migrationLocations: ["src/migrations"]
+//     }
+// );
+// const response = await flyway.migrate();
+// console.info(response.success ? 'Flyway ran successfully.' : response.error?.message);
 
 const app = new Elysia();
 
@@ -15,7 +26,7 @@ app
   .use(html())
   .use(staticPlugin({ assets: "public", prefix: "/" }))
   .get("/", () => Bun.file("public/index.html").text())
-  .listen(process.env.PORT ?? 8080);
+  .listen(environmentVariables.PORT ?? 8080);
 
 console.log(
   `App is running at http://${app.server?.hostname}:${app.server?.port}`,
