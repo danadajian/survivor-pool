@@ -7,16 +7,6 @@ import { rateLimit } from "elysia-rate-limit";
 import { appRouter } from "./router";
 import { environmentVariables } from "./env";
 
-// const flyway = new Flyway(
-//     {
-//         url: environmentVariables.POSTGRES_URL,
-//         user: 'postgres',
-//         migrationLocations: ["src/migrations"]
-//     }
-// );
-// const response = await flyway.migrate();
-// console.info(response.success ? 'Flyway ran successfully.' : response.error?.message);
-
 const app = new Elysia();
 
 app

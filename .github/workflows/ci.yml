@@ -41,3 +41,39 @@ jobs:
         with:
           install: false
           component: true
+
+  db:
+    name: Database Migration
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: db
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Migration Scripts on Test DB
+        uses: joshuaavalon/flyway-action@v3.0.0
+        with:
+          url: jdbc:postgresql://postgres:5432/db
+          user: user
+          password: password
+          locations: classpath:src/migrations
+
+      - name: Run Migration Scripts on Prod DB
+        uses: joshuaavalon/flyway-action@v3.0.0
+        with:
+          url: ${{ secrets.POSTGRES_URL }}
+          user: ${{ secrets.POSTGRES_USER }}
+          password: ${{ secrets.POSTGRES_PASSWORD }}
+          locations: classpath:src/migrations
