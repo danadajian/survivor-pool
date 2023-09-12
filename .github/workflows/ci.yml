@@ -17,6 +17,8 @@ jobs:
       - run: bun lint
       - run: bun type-check
       - run: bun test
+        env:
+          GAMES_API_URL: "https://some-api-url"
       - run: bun docker
 
   cypress:
