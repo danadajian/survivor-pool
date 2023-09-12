@@ -19,6 +19,7 @@ jobs:
       - run: bun test
         env:
           GAMES_API_URL: "https://some-api-url"
+          POSTGRES_URL: "postgresql://some-postgres-url"
       - run: bun docker
 
   cypress:
@@ -47,6 +48,9 @@ jobs:
   db:
     name: Database Migration
     runs-on: ubuntu-latest
+    needs:
+      - test
+      - cypress
     services:
       postgres:
         image: postgres
