@@ -11,6 +11,10 @@
 /public/main.js
 /public/globals*
 
+# flyway
+report.html
+report.json
+
 # misc
 .DS_Store
 *.pem

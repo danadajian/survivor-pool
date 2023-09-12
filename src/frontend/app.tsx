@@ -59,9 +59,22 @@ const EventRow = ({ event }: TeamRowProps) => {
 
 type TeamProps = { team?: Team };
 const TeamButton = ({ team }: TeamProps) => {
-  if (!team) return <div>No team found.</div>;
+  const { data } = trpc.games.useQuery();
+  const { mutateAsync } = trpc.makePick.useMutation();
+
+  if (!data || !team) return <div>No team found.</div>;
+  const onClick = () =>
+    mutateAsync({
+      username: "dan",
+      teamPicked: team.name,
+      week: data.week.number,
+      season: data.season.year,
+    });
   return (
-    <button className="flex flex-col items-center rounded-lg border-2 border-slate-100 bg-slate-300 p-2">
+    <button
+      onClick={onClick}
+      className="flex flex-col items-center rounded-lg border-2 border-slate-100 bg-slate-300 p-2"
+    >
       <img alt={team.name} src={team.logo} className="h-14 w-14" />
       <p>{team.name}</p>
     </button>
