@@ -1,5 +1,8 @@
 import { type RouterOutput, trpc } from "./trpc";
 import { ClientProvider } from "./client-provider";
+import { Dialog } from "@headlessui/react";
+import { useState } from "react";
+import { DialogWrapper } from "./dialog-wrapper";
 
 export const App = () => {
   return (
@@ -10,12 +13,23 @@ export const App = () => {
 };
 
 const Home = () => {
-  const { data } = trpc.games.useQuery();
+  const { data } = trpc.gamesAndPick.useQuery({ username: "dan" });
 
   if (!data) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Loading...
+      </div>
+    );
   }
-  const { events, season, week } = data;
+  const {
+    pick,
+    games: { events, season, week },
+  } = data;
+
+  const pickHeader = pick
+    ? `You're riding with the ${pick.teamPicked}!`
+    : "Make your pick!";
 
   return (
     <div className="mb-8 flex flex-col items-center text-center">
@@ -23,20 +37,21 @@ const Home = () => {
         Survivor Pool {season.year}
       </h1>
       <h2 className="mt-2 text-lg font-bold">Week {week.number}</h2>
+      <h3 className="mt-2 text-lg">{pickHeader}</h3>
       <ul>
         {events.map((event, index) => (
-          <EventRow key={index} event={event} />
+          <EventRow key={index} event={event} teamPicked={pick?.teamPicked} />
         ))}
       </ul>
     </div>
   );
 };
 
-type Event = RouterOutput["games"]["events"][number];
+type Event = RouterOutput["gamesAndPick"]["games"]["events"][number];
 type Team = Event["competitions"][number]["competitors"][number]["team"];
 
-type TeamRowProps = { event: Event };
-const EventRow = ({ event }: TeamRowProps) => {
+type TeamRowProps = { event: Event; teamPicked?: string };
+const EventRow = ({ event, teamPicked }: TeamRowProps) => {
   const competitors = event.competitions[0]?.competitors ?? [];
   const homeTeam = competitors.find(
     (competitor) => competitor.homeAway === "home",
@@ -47,36 +62,77 @@ const EventRow = ({ event }: TeamRowProps) => {
   return (
     <div className="mt-6 flex flex-row justify-center gap-4">
       <li>
-        <TeamButton team={awayTeam} />
+        <TeamButton team={awayTeam} teamPicked={teamPicked} />
       </li>
       <li className="flex items-center font-bold">@</li>
       <li>
-        <TeamButton team={homeTeam} />
+        <TeamButton team={homeTeam} teamPicked={teamPicked} />
       </li>
     </div>
   );
 };
 
-type TeamProps = { team?: Team };
-const TeamButton = ({ team }: TeamProps) => {
-  const { data } = trpc.games.useQuery();
+type TeamProps = { team?: Team; teamPicked?: string };
+const TeamButton = ({ team, teamPicked }: TeamProps) => {
+  const context = trpc.useContext();
+  const gamesAndPick = context.gamesAndPick.getData({ username: "dan" });
   const { mutateAsync } = trpc.makePick.useMutation();
+  const [dialogIsOpen, setDialogIsOpen] = useState(false);
+  const toggleDialog = () => setDialogIsOpen(!dialogIsOpen);
 
-  if (!data || !team) return <div>No team found.</div>;
-  const onClick = () =>
-    mutateAsync({
+  if (!gamesAndPick || !team) return <div>No team found.</div>;
+  const handleUpdate = async () => {
+    await mutateAsync({
       username: "dan",
       teamPicked: team.name,
-      week: data.week.number,
-      season: data.season.year,
+      week: gamesAndPick.games.week.number,
+      season: gamesAndPick.games.season.year,
     });
+    await context.gamesAndPick.invalidate();
+    toggleDialog();
+  };
   return (
-    <button
-      onClick={onClick}
-      className="flex flex-col items-center rounded-lg border-2 border-slate-100 bg-slate-300 p-2"
-    >
-      <img alt={team.name} src={team.logo} className="h-14 w-14" />
-      <p>{team.name}</p>
-    </button>
+    <>
+      <button
+        /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+        // @ts-ignore
+        disabled={team.name === teamPicked}
+        onClick={toggleDialog}
+        className="flex flex-col items-center rounded-lg border-2 border-slate-100 bg-slate-300 p-2 disabled:bg-blue-800 disabled:text-white"
+      >
+        <img alt={team.abbreviation} src={team.logo} className="h-14 w-14" />
+        <p>{team.name}</p>
+      </button>
+      <DialogWrapper dialogIsOpen={dialogIsOpen} toggleDialog={toggleDialog}>
+        <>
+          <Dialog.Title
+            as="h3"
+            className="mt-2 text-xl font-semibold leading-6"
+          >
+            Confirm pick
+          </Dialog.Title>
+          <Dialog.Description className="mt-5 font-semibold text-slate-500">
+            Are you sure you want to pick the {team.name}? You won't be able to
+            pick them again this season.
+          </Dialog.Description>
+
+          <div className="mt-5 flex justify-end">
+            <button
+              className="rounded-md bg-blue-800 px-3 py-2 font-medium uppercase text-white hover:bg-blue-500"
+              autoFocus
+              onClick={handleUpdate}
+            >
+              Lock it in
+            </button>
+            <button
+              className="ml-3 rounded-md border border-blue-800 px-3 py-2 font-medium uppercase text-blue-800 hover:bg-blue-300"
+              onClick={toggleDialog}
+            >
+              Cancel
+            </button>
+          </div>
+        </>
+      </DialogWrapper>
+    </>
   );
 };

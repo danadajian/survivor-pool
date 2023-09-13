@@ -1,11 +1,14 @@
 import postgres from "postgres";
 import { environmentVariables } from "./env";
-import type { makePickInput } from "./schema";
 import { randomUUID } from "crypto";
+import { drizzle } from "drizzle-orm/postgres-js";
+import { and, desc, eq } from "drizzle-orm";
+import * as schema from "./schema";
+import { picks } from "./schema";
+import type { makePickInput } from "./router";
 
-export const sql = postgres(environmentVariables.POSTGRES_URL, {
-  transform: postgres.camel,
-});
+export const pgClient = postgres(environmentVariables.POSTGRES_URL);
+export const db = drizzle(pgClient, { schema });
 
 export async function makePick({
   username,
@@ -13,7 +16,25 @@ export async function makePick({
   week,
   season,
 }: typeof makePickInput.infer) {
-  return sql`INSERT INTO picks ${sql([
-    { id: randomUUID(), username, teamPicked, week, season },
-  ])}`;
+  return db
+    .insert(picks)
+    .values({ id: randomUUID(), username, teamPicked, week, season });
+}
+
+export async function fetchPickForUser({
+  username,
+  week,
+  season,
+}: {
+  username: string;
+  week: number;
+  season: number;
+}) {
+  return db.query.picks.findFirst({
+    where: and(
+      and(and(eq(picks.username, username), eq(picks.week, week))),
+      eq(picks.season, season),
+    ),
+    orderBy: desc(picks.timestamp),
+  });
 }

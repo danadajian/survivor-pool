@@ -8,4 +8,6 @@ export default defineConfig({
     },
   },
   screenshotOnRunFailure: false,
+  viewportWidth: 390,
+  viewportHeight: 844,
 });

@@ -1,3 +1,14 @@
+import type { RouterOutput } from "../frontend/trpc";
+
+export const mockPick: RouterOutput["gamesAndPick"]["pick"] = {
+  id: "123",
+  username: "user",
+  teamPicked: "Chiefs",
+  week: 1,
+  season: 2023,
+  timestamp: "123",
+};
+
 export type EspnResponse = typeof mockEspnResponse;
 export const mockEspnResponse = {
   leagues: [
