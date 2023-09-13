@@ -52,31 +52,10 @@ jobs:
     needs:
       - test
       - cypress
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_DB: db
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
-        ports:
-          - 5433:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
       - run: bun install
-
-      - name: Run Migration Scripts on Test DB
-        run: bun drizzle
-        env:
-          POSTGRES_URL: postgresql://user:password@postgres:5432/db
-
-      - name: Run Migration Scripts on Prod DB
-        run: bun drizzle
+      - run: bun drizzle
         env:
           POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
