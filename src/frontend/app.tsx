@@ -116,10 +116,12 @@ const TeamButton = ({ team, teamPicked, username }: TeamProps) => {
   const { forbiddenTeams } = gamesAndPicks;
   const teamCurrentlyPicked = team.name === teamPicked;
   const teamPreviouslyPicked = forbiddenTeams?.includes(team.name);
-  const lockedInClass = teamCurrentlyPicked ? "bg-blue-800 text-white" : "";
-  const previouslyPickedClass = teamPreviouslyPicked
-    ? "bg-blue-800 text-white opacity-50"
-    : "";
+  const buttonClass = teamCurrentlyPicked
+    ? "bg-blue-800 text-white"
+    : teamPreviouslyPicked
+    ? "bg-blue-800 text-white opacity-30"
+    : "bg-slate-300";
+  const imageClass = teamPreviouslyPicked ? "opacity-80" : "";
   return (
     <>
       <button
@@ -127,12 +129,12 @@ const TeamButton = ({ team, teamPicked, username }: TeamProps) => {
         // @ts-ignore
         disabled={teamCurrentlyPicked || teamPreviouslyPicked}
         onClick={toggleDialog}
-        className={`flex flex-col items-center rounded-lg border-2 border-slate-100 bg-slate-300 p-2 ${lockedInClass} ${previouslyPickedClass}`}
+        className={`flex flex-col items-center rounded-lg border-2 border-slate-100 p-2 ${buttonClass}`}
       >
         <img
           alt={team.abbreviation}
           src={team.logo}
-          className={`h-14 w-14 ${previouslyPickedClass}`}
+          className={`h-14 w-14 ${imageClass}`}
         />
         <p>{team.name}</p>
       </button>
