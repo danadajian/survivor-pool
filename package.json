@@ -9,10 +9,11 @@
     "format-check": "prettier --check .",
     "lint": "eslint . --max-warnings=0",
     "start": "bun ./src/backend/server.ts",
-    "transpile": "bun build ./src/frontend/main.tsx --outdir public && bun css",
+    "transpile": "bun build.ts && bun css",
     "type-check": "tsc"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^4.24.2",
     "@elysiajs/cors": "0.6.0",
     "@elysiajs/html": "0.6.4",
     "@elysiajs/static": "0.6.0",

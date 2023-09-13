@@ -22,6 +22,8 @@ jobs:
       - run: bun type-check
       - run: bun test
       - run: bun docker
+        env:
+          CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
 
   cypress:
     name: Cypress Tests
@@ -45,6 +47,7 @@ jobs:
         with:
           install: false
           component: true
+          env: CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }}
 
   db:
     name: Database Migration

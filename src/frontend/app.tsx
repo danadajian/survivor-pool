@@ -1,19 +1,28 @@
 import { type RouterOutput, trpc } from "./trpc";
 import { ClientProvider } from "./client-provider";
 import { Dialog } from "@headlessui/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DialogWrapper } from "./dialog-wrapper";
+import { Header } from "./header";
+import { useUser } from "@clerk/clerk-react";
+import type { UserResource } from "@clerk/types";
 
 export const App = () => {
+  const userResult = useUser();
+  const { user } = useMemo(() => userResult, []);
+  const username = user?.primaryEmailAddress?.emailAddress;
+  if (!user || !username) return null;
+
   return (
     <ClientProvider>
-      <Home />
+      <Header />
+      <Home user={user} username={username} />
     </ClientProvider>
   );
 };
 
-const Home = () => {
-  const { data } = trpc.gamesAndPick.useQuery({ username: "dan" });
+const Home = ({ user, username }: { user: UserResource; username: string }) => {
+  const { data } = trpc.gamesAndPick.useQuery({ username });
 
   if (!data) {
     return (
@@ -28,19 +37,24 @@ const Home = () => {
   } = data;
 
   const pickHeader = pick
-    ? `You're riding with the ${pick.teamPicked}!`
-    : "Make your pick!";
+    ? `You're riding with the ${pick.teamPicked} this week!`
+    : `Make your pick, ${user.firstName}!`;
 
   return (
-    <div className="mb-8 flex flex-col items-center text-center">
-      <h1 className="mt-8 text-2xl font-bold text-red-700">
+    <div className="flex flex-col items-center pb-8 pt-16 text-center">
+      <h1 className="pt-2 text-2xl font-bold text-red-700">
         Survivor Pool {season.year}
       </h1>
-      <h2 className="mt-2 text-lg font-bold">Week {week.number}</h2>
-      <h3 className="mt-2 text-lg">{pickHeader}</h3>
+      <h2 className="pt-2 text-lg font-bold">Week {week.number}</h2>
+      <h3 className="pt-2 text-lg">{pickHeader}</h3>
       <ul>
         {events.map((event, index) => (
-          <EventRow key={index} event={event} teamPicked={pick?.teamPicked} />
+          <EventRow
+            key={index}
+            event={event}
+            teamPicked={pick?.teamPicked}
+            username={username}
+          />
         ))}
       </ul>
     </div>
@@ -50,8 +64,8 @@ const Home = () => {
 type Event = RouterOutput["gamesAndPick"]["games"]["events"][number];
 type Team = Event["competitions"][number]["competitors"][number]["team"];
 
-type TeamRowProps = { event: Event; teamPicked?: string };
-const EventRow = ({ event, teamPicked }: TeamRowProps) => {
+type TeamRowProps = { event: Event; teamPicked?: string; username: string };
+const EventRow = ({ event, teamPicked, username }: TeamRowProps) => {
   const competitors = event.competitions[0]?.competitors ?? [];
   const homeTeam = competitors.find(
     (competitor) => competitor.homeAway === "home",
@@ -60,22 +74,30 @@ const EventRow = ({ event, teamPicked }: TeamRowProps) => {
     (competitor) => competitor.homeAway === "away",
   )?.team;
   return (
-    <div className="mt-6 flex flex-row justify-center gap-4">
+    <div className="flex flex-row justify-center gap-4 pt-6">
       <li>
-        <TeamButton team={awayTeam} teamPicked={teamPicked} />
+        <TeamButton
+          team={awayTeam}
+          teamPicked={teamPicked}
+          username={username}
+        />
       </li>
       <li className="flex items-center font-bold">@</li>
       <li>
-        <TeamButton team={homeTeam} teamPicked={teamPicked} />
+        <TeamButton
+          team={homeTeam}
+          teamPicked={teamPicked}
+          username={username}
+        />
       </li>
     </div>
   );
 };
 
-type TeamProps = { team?: Team; teamPicked?: string };
-const TeamButton = ({ team, teamPicked }: TeamProps) => {
+type TeamProps = { team?: Team; teamPicked?: string; username: string };
+const TeamButton = ({ team, teamPicked, username }: TeamProps) => {
   const context = trpc.useContext();
-  const gamesAndPick = context.gamesAndPick.getData({ username: "dan" });
+  const gamesAndPick = context.gamesAndPick.getData({ username });
   const { mutateAsync } = trpc.makePick.useMutation();
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const toggleDialog = () => setDialogIsOpen(!dialogIsOpen);
@@ -83,7 +105,7 @@ const TeamButton = ({ team, teamPicked }: TeamProps) => {
   if (!gamesAndPick || !team) return <div>No team found.</div>;
   const handleUpdate = async () => {
     await mutateAsync({
-      username: "dan",
+      username,
       teamPicked: team.name,
       week: gamesAndPick.games.week.number,
       season: gamesAndPick.games.season.year,
@@ -107,16 +129,16 @@ const TeamButton = ({ team, teamPicked }: TeamProps) => {
         <>
           <Dialog.Title
             as="h3"
-            className="mt-2 text-xl font-semibold leading-6"
+            className="pt-2 text-xl font-semibold leading-6"
           >
             Confirm pick
           </Dialog.Title>
-          <Dialog.Description className="mt-5 font-semibold text-slate-500">
+          <Dialog.Description className="pt-5 font-semibold text-slate-500">
             Are you sure you want to pick the {team.name}? You won't be able to
             pick them again this season.
           </Dialog.Description>
 
-          <div className="mt-5 flex justify-end">
+          <div className="flex justify-end pt-5">
             <button
               className="rounded-md bg-blue-800 px-3 py-2 font-medium uppercase text-white hover:bg-blue-500"
               autoFocus
