@@ -21,9 +21,10 @@ jobs:
       - run: bun lint
       - run: bun type-check
       - run: bun test
-      - run: bun docker
+      - uses: iamsauravsharma/create-dotenv@v1.2.2
         env:
           CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+      - run: bun docker
 
   cypress:
     name: Cypress Tests
