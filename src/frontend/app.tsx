@@ -112,6 +112,13 @@ const TeamButton = ({ team, teamPicked, username }: TeamProps) => {
     });
     await context.gamesAndPicks.invalidate();
     toggleDialog();
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+    }, 50);
   };
   const { forbiddenTeams } = gamesAndPicks;
   const teamCurrentlyPicked = team.name === teamPicked;
