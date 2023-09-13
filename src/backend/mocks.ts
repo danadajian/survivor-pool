@@ -1,6 +1,7 @@
 import type { RouterOutput } from "../frontend/trpc";
+import type { TRPCResponse } from "@trpc/server/rpc";
 
-export const mockPick: RouterOutput["gamesAndPick"]["pick"] = {
+export const mockPick: RouterOutput["gamesAndPicks"]["pick"] = {
   id: "123",
   username: "user",
   teamPicked: "Chiefs",
@@ -10703,4 +10704,34 @@ export const mockEspnResponse = {
       },
     },
   ],
+};
+
+export const basicGamesAndPicksResponse: TRPCResponse<
+  RouterOutput["gamesAndPicks"]
+> = {
+  result: {
+    data: {
+      games: mockEspnResponse,
+    },
+  },
+};
+export const responseWithPick: TRPCResponse<RouterOutput["gamesAndPicks"]> = {
+  result: {
+    data: {
+      pick: mockPick,
+      games: mockEspnResponse,
+    },
+  },
+};
+
+export const responseWithPickAndForbiddenTeams: TRPCResponse<
+  RouterOutput["gamesAndPicks"]
+> = {
+  result: {
+    data: {
+      pick: mockPick,
+      games: mockEspnResponse,
+      forbiddenTeams: ["Bills", "Jets"],
+    },
+  },
 };

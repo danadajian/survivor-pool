@@ -1,6 +1,6 @@
 import { initTRPC } from "@trpc/server";
 import { makePick } from "./db";
-import { fetchGamesAndPick } from "./fetch-games";
+import { fetchGamesAndPicks } from "./fetch-games";
 import { type } from "arktype";
 
 export const makePickInput = type({
@@ -17,9 +17,9 @@ export const fetchGamesAndPicksInput = type({
 const t = initTRPC.create();
 
 export const appRouter = t.router({
-  gamesAndPick: t.procedure
+  gamesAndPicks: t.procedure
     .input(fetchGamesAndPicksInput.assert)
-    .query(({ input }) => fetchGamesAndPick(input)),
+    .query(({ input }) => fetchGamesAndPicks(input)),
   makePick: t.procedure
     .input(makePickInput.assert)
     .mutation(({ input }) => makePick(input)),

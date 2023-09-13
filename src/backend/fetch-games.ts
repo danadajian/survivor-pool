@@ -1,9 +1,9 @@
 import type { EspnResponse } from "./mocks";
 import { environmentVariables } from "./env";
-import { fetchPickForUser } from "./db";
+import { fetchForbiddenTeamsForUser, fetchPickForUser } from "./db";
 import type { fetchGamesAndPicksInput } from "./router";
 
-export async function fetchGamesAndPick({
+export async function fetchGamesAndPicks({
   username,
 }: typeof fetchGamesAndPicksInput.infer) {
   const games = await fetchGames();
@@ -12,9 +12,15 @@ export async function fetchGamesAndPick({
     week: games.week.number,
     season: games.season.year,
   });
+  const forbiddenTeams = await fetchForbiddenTeamsForUser({
+    username,
+    week: games.week.number,
+    season: games.season.year,
+  });
   return {
     games,
     pick,
+    forbiddenTeams,
   };
 }
 

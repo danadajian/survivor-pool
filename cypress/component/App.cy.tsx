@@ -1,5 +1,9 @@
 import { App } from "../../src/frontend/app";
-import { mockEspnResponse, mockPick } from "../../src/backend/mocks";
+import {
+  basicGamesAndPicksResponse,
+  responseWithPick,
+  responseWithPickAndForbiddenTeams,
+} from "../../src/backend/mocks";
 import { ClerkProvider } from "@clerk/clerk-react";
 import type { InitialState } from "@clerk/types";
 
@@ -24,7 +28,7 @@ const AppWithClerkProvider = () => (
 describe("App.cy.tsx", () => {
   beforeEach(() => {
     cy.intercept("/trpc/games*", {
-      body: { result: { data: { games: mockEspnResponse } } },
+      body: basicGamesAndPicksResponse,
     });
   });
 
@@ -54,9 +58,23 @@ describe("App.cy.tsx", () => {
       "be.visible",
     );
     cy.intercept("/trpc/games*", {
-      body: { result: { data: { games: mockEspnResponse, pick: mockPick } } },
+      body: responseWithPick,
     });
     cy.findByRole("button", { name: "Lock it in" }).click();
+    cy.findByRole("button", { name: /Chiefs/ }).should("be.disabled");
+    cy.findByRole("heading", {
+      name: "You're riding with the Chiefs this week!",
+    }).should("be.visible");
+  });
+
+  it("prevents picking the same team twice", () => {
+    cy.intercept("/trpc/games*", {
+      body: responseWithPickAndForbiddenTeams,
+    });
+    cy.mount(<AppWithClerkProvider />);
+
+    cy.findByRole("button", { name: /Bills/ }).should("be.disabled");
+    cy.findByRole("button", { name: /Jets/ }).should("be.disabled");
     cy.findByRole("button", { name: /Chiefs/ }).should("be.disabled");
     cy.findByRole("heading", {
       name: "You're riding with the Chiefs this week!",

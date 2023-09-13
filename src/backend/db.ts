@@ -25,6 +25,22 @@ export async function fetchPickForUser({
   });
 }
 
+export async function fetchForbiddenTeamsForUser({
+  username,
+  week,
+  season,
+}: {
+  username: string;
+  week: number;
+  season: number;
+}) {
+  const result = await db.query.picks.findMany({
+    columns: { teamPicked: true },
+    where: sql`username = ${username} and week < ${week} and season = ${season}`,
+  });
+  return result.length ? result.map(({ teamPicked }) => teamPicked) : undefined;
+}
+
 export async function makePick({
   username,
   teamPicked,

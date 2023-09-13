@@ -22,7 +22,7 @@ export const App = () => {
 };
 
 const Home = ({ user, username }: { user: UserResource; username: string }) => {
-  const { data } = trpc.gamesAndPick.useQuery({ username });
+  const { data } = trpc.gamesAndPicks.useQuery({ username });
 
   if (!data) {
     return (
@@ -61,7 +61,7 @@ const Home = ({ user, username }: { user: UserResource; username: string }) => {
   );
 };
 
-type Event = RouterOutput["gamesAndPick"]["games"]["events"][number];
+type Event = RouterOutput["gamesAndPicks"]["games"]["events"][number];
 type Team = Event["competitions"][number]["competitors"][number]["team"];
 
 type TeamRowProps = { event: Event; teamPicked?: string; username: string };
@@ -97,32 +97,43 @@ const EventRow = ({ event, teamPicked, username }: TeamRowProps) => {
 type TeamProps = { team?: Team; teamPicked?: string; username: string };
 const TeamButton = ({ team, teamPicked, username }: TeamProps) => {
   const context = trpc.useContext();
-  const gamesAndPick = context.gamesAndPick.getData({ username });
+  const gamesAndPicks = context.gamesAndPicks.getData({ username });
   const { mutateAsync } = trpc.makePick.useMutation();
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const toggleDialog = () => setDialogIsOpen(!dialogIsOpen);
 
-  if (!gamesAndPick || !team) return <div>No team found.</div>;
+  if (!gamesAndPicks || !team) return <div>No team found.</div>;
   const handleUpdate = async () => {
     await mutateAsync({
       username,
       teamPicked: team.name,
-      week: gamesAndPick.games.week.number,
-      season: gamesAndPick.games.season.year,
+      week: gamesAndPicks.games.week.number,
+      season: gamesAndPicks.games.season.year,
     });
-    await context.gamesAndPick.invalidate();
+    await context.gamesAndPicks.invalidate();
     toggleDialog();
   };
+  const { forbiddenTeams } = gamesAndPicks;
+  const teamCurrentlyPicked = team.name === teamPicked;
+  const teamPreviouslyPicked = forbiddenTeams?.includes(team.name);
+  const lockedInClass = teamCurrentlyPicked ? "bg-blue-800 text-white" : "";
+  const previouslyPickedClass = teamPreviouslyPicked
+    ? "bg-blue-800 text-white opacity-50"
+    : "";
   return (
     <>
       <button
         /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
         // @ts-ignore
-        disabled={team.name === teamPicked}
+        disabled={teamCurrentlyPicked || teamPreviouslyPicked}
         onClick={toggleDialog}
-        className="flex flex-col items-center rounded-lg border-2 border-slate-100 bg-slate-300 p-2 disabled:bg-blue-800 disabled:text-white"
+        className={`flex flex-col items-center rounded-lg border-2 border-slate-100 bg-slate-300 p-2 ${lockedInClass} ${previouslyPickedClass}`}
       >
-        <img alt={team.abbreviation} src={team.logo} className="h-14 w-14" />
+        <img
+          alt={team.abbreviation}
+          src={team.logo}
+          className={`h-14 w-14 ${previouslyPickedClass}`}
+        />
         <p>{team.name}</p>
       </button>
       <DialogWrapper dialogIsOpen={dialogIsOpen} toggleDialog={toggleDialog}>
