@@ -20,6 +20,7 @@ export const TeamButton = ({ team, teamPicked, username }: TeamProps) => {
       teamPicked: team.name,
       week: gamesAndPicks.games.week.number,
       season: gamesAndPicks.games.season.year,
+      poolId: 1,
     });
     await context.gamesAndPicks.invalidate();
     toggleDialog();

@@ -8,6 +8,7 @@ export const makePickInput = type({
   teamPicked: "string",
   week: "number",
   season: "number",
+  poolId: "number",
 });
 
 export const fetchGamesAndPicksInput = type({
