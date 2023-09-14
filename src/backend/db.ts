@@ -1,6 +1,5 @@
 import postgres from "postgres";
 import { environmentVariables } from "./env";
-import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { sql, desc, eq } from "drizzle-orm";
 import * as schema from "./schema";
@@ -56,5 +55,5 @@ export async function makePick({
   }
   return db
     .insert(picks)
-    .values({ id: randomUUID(), username, teamPicked, week, season });
+    .values({ username, teamPicked, week, season, poolId: 1 });
 }

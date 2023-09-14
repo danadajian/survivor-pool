@@ -13,7 +13,7 @@ export const picks = pgTable("picks", {
   teamPicked: varchar("team_picked", { length: 256 }).notNull(),
   week: integer("week").notNull(),
   season: integer("season").notNull(),
-  poolId: integer("pool_id"),
+  poolId: integer("pool_id").notNull(),
   timestamp: timestamp("timestamp").defaultNow(),
 });
 
