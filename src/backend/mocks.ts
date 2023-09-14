@@ -7,6 +7,7 @@ export const mockPick: RouterOutput["gamesAndPicks"]["pick"] = {
   teamPicked: "Chiefs",
   week: 1,
   season: 2023,
+  poolId: 1,
   timestamp: "123",
 };
 
