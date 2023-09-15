@@ -24,11 +24,11 @@ const PoolsComponent = ({ user: { username } }: PageProps) => {
           </tr>
         </thead>
         <tbody>
-          {picks.map((row) => {
+          {picks.map((row, index) => {
             const isUserRow = row.username === username;
             const userClasses = isUserRow ? "font-bold text-blue-800" : "";
             return (
-              <tr className={userClasses}>
+              <tr key={index} className={userClasses}>
                 <td>{row.username}</td>
                 <td>{row.teamPicked}</td>
               </tr>
