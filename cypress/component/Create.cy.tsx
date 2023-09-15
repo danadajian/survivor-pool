@@ -17,10 +17,10 @@ describe("Pools.cy.tsx", () => {
     );
 
     cy.findByRole("heading", { name: "Create New Pool" }).should("be.visible");
-    cy.findByLabelText("Pool Name").type("New Pool");
+    cy.findByLabelText("Pool Name").type("Test Pool");
     cy.findByRole("button", { name: "Create" }).click();
-    cy.findByRole("heading", { name: "Pool created successfully!" }).should(
-      "be.visible",
-    );
+    cy.findByRole("heading", {
+      name: "Pool Test Pool created successfully!",
+    }).should("be.visible");
   });
 });

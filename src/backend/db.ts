@@ -67,24 +67,47 @@ export async function createPool({
   });
 
   if (existingPool) {
-    return new TRPCError({
+    throw new TRPCError({
       message: "A pool with that name already exists.",
       code: "CONFLICT",
     });
   }
-  return db.insert(pools).values({ name, creator });
+  const insertResult = await db
+    .insert(pools)
+    .values({ name, creator })
+    .returning({ id: pools.id });
+  const poolId = insertResult.find(Boolean)?.id;
+  if (!poolId) {
+    throw new TRPCError({
+      message: "Pool was not created.",
+      code: "INTERNAL_SERVER_ERROR",
+    });
+  }
+  return joinPool({ username: creator, poolId });
 }
 
 export async function joinPool({
   username,
   poolId,
 }: typeof joinPoolInput.infer) {
-  const existingPoolMember = await db.query.poolMembers.findFirst({
-    where: sql`username = ${username} and pool_id = ${poolId}`,
-  });
+  const result = await db
+    .select({ poolId: pools.id, poolMembersId: poolMembers.id })
+    .from(pools)
+    .where(eq(pools.id, poolId))
+    .leftJoin(poolMembers, eq(pools.id, poolMembers.poolId));
 
-  if (existingPoolMember) {
-    return new TRPCError({
+  const poolExists = Boolean(result.find(({ poolId }) => poolId));
+  if (!poolExists) {
+    throw new TRPCError({
+      message: "Pool does not exist.",
+      code: "CONFLICT",
+    });
+  }
+  const poolMemberExists = Boolean(
+    result.find(({ poolMembersId }) => poolMembersId),
+  );
+  if (poolMemberExists) {
+    throw new TRPCError({
       message: "You have already joined this pool.",
       code: "CONFLICT",
     });
