@@ -5,6 +5,7 @@ import { sql, desc, eq } from "drizzle-orm";
 import * as schema from "./schema";
 import { picks, poolMembers, pools } from "./schema";
 import { TRPCError } from "@trpc/server";
+import type { makePickInput, poolsInput } from "./router";
 
 export const pgClient = postgres(environmentVariables.POSTGRES_URL);
 export const db = drizzle(pgClient, { schema });
@@ -13,7 +14,7 @@ export async function fetchPickForUser({
   username,
   week,
   season,
-}: Pick<typeof picks.$inferSelect, "username" | "week" | "season">) {
+}: Pick<typeof makePickInput.infer, "username" | "week" | "season">) {
   return db.query.picks.findFirst({
     where: sql`username = ${username} and week = ${week} and season = ${season}`,
   });
@@ -23,7 +24,7 @@ export async function fetchForbiddenTeamsForUser({
   username,
   week,
   season,
-}: Pick<typeof picks.$inferSelect, "username" | "week" | "season">) {
+}: Pick<typeof makePickInput.infer, "username" | "week" | "season">) {
   const result = await db.query.picks.findMany({
     columns: { teamPicked: true },
     where: sql`username = ${username} and week < ${week} and season = ${season}`,
@@ -38,10 +39,7 @@ export async function makePick({
   week,
   season,
   poolId,
-}: Pick<
-  typeof picks.$inferSelect,
-  "username" | "teamPicked" | "week" | "season" | "poolId"
->) {
+}: typeof makePickInput.infer) {
   const existingPick = await fetchPickForUser({ username, week, season });
   if (existingPick) {
     return db
@@ -85,14 +83,11 @@ export async function joinPool({
   return db.insert(poolMembers).values({ username, poolId });
 }
 
-export async function fetchPoolsForUser({
-  username,
-  poolId,
-}: typeof poolMembers.$inferSelect) {
+export async function fetchPoolsForUser({ username }: typeof poolsInput.infer) {
   return db
     .select({ poolId: pools.id, poolName: pools.name })
     .from(poolMembers)
-    .where(sql`username = ${username} and pool_id = ${poolId}`)
+    .where(sql`username = ${username}`)
     .innerJoin(pools, eq(poolMembers.poolId, pools.id));
 }
 

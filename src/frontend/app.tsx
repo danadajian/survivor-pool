@@ -1,3 +1,4 @@
+import React from "react";
 import { type RouterOutput, trpc } from "./trpc";
 import { ClientProvider } from "./client-provider";
 import { useMemo } from "react";

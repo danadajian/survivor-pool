@@ -1,3 +1,4 @@
+import React from "react";
 import { trpc } from "./trpc";
 import { useState } from "react";
 import { DialogWrapper } from "./dialog-wrapper";
@@ -44,8 +45,6 @@ export const TeamButton = ({ team, teamPicked, username }: TeamProps) => {
   return (
     <>
       <button
-        /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-        // @ts-ignore
         disabled={teamCurrentlyPicked || teamPreviouslyPicked}
         onClick={toggleDialog}
         className={`flex flex-col items-center rounded-lg border-2 border-slate-100 p-2 ${buttonClass}`}

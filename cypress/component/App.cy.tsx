@@ -1,3 +1,4 @@
+import React from "react";
 import { App } from "../../src/frontend/app";
 import {
   basicGamesAndPicksResponse,

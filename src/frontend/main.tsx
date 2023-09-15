@@ -12,8 +12,6 @@ import {
   SignedOut,
 } from "@clerk/clerk-react";
 
-const Redirect = RedirectToSignIn as React.JSXElementConstructor<unknown>;
-
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ClerkProvider
@@ -26,7 +24,7 @@ createRoot(document.getElementById("root")!).render(
         <App />
       </SignedIn>
       <SignedOut>
-        <Redirect />
+        <RedirectToSignIn />
       </SignedOut>
     </ClerkProvider>
   </React.StrictMode>,
