@@ -10,7 +10,7 @@ describe("Pools.cy.tsx", () => {
     });
   });
 
-  it("renders", () => {
+  it("renders all picks for the week", () => {
     cy.mount(
       <MockProviders>
         <Pools />
