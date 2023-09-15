@@ -13,10 +13,10 @@ const PoolsComponent = ({ user: { username } }: PageProps) => {
 
   return (
     <>
-      <h1 className="pt-2 text-2xl font-bold text-red-700">
+      <h1 className="pb-8 pt-8 text-2xl font-bold text-red-700">
         Week {week} Picks
       </h1>
-      <table className="mt-4 table-auto">
+      <table className="table-auto">
         <thead>
           <tr>
             <th>User</th>
