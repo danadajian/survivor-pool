@@ -1,5 +1,5 @@
 import React from "react";
-import { Pools } from "../../src/frontend/pools";
+import { Pools } from "../../src/frontend/pages/pools";
 import { picksForPoolResponse } from "../../src/backend/mocks";
 import { MockProviders } from "../support/mock-clerk-provider";
 

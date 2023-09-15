@@ -1,5 +1,5 @@
 import React from "react";
-import { Picks } from "../../src/frontend/picks";
+import { Picks } from "../../src/frontend/pages/picks";
 import {
   basicGamesAndPicksResponse,
   responseWithPick,

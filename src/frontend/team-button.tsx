@@ -3,7 +3,7 @@ import { trpc } from "./trpc";
 import { useState } from "react";
 import { DialogWrapper } from "./dialog-wrapper";
 import { Dialog } from "@headlessui/react";
-import type { Event } from "./picks";
+import type { Event } from "./pages/picks";
 
 type Team = Event["competitions"][number]["competitors"][number]["team"];
 type TeamProps = { team?: Team; teamPicked?: string; username: string };
