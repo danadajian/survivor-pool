@@ -1,5 +1,5 @@
 import React from "react";
-import { App } from "../../src/frontend/app";
+import { Picks } from "../../src/frontend/picks";
 import {
   basicGamesAndPicksResponse,
   responseWithPick,
@@ -17,16 +17,16 @@ const mockClerkState = {
     },
   },
 } as InitialState;
-const AppWithClerkProvider = () => (
+const PicksWithClerkProvider = () => (
   <ClerkProvider
     initialState={mockClerkState}
     publishableKey={Cypress.env("CLERK_PUBLISHABLE_KEY")}
   >
-    <App />
+    <Picks />
   </ClerkProvider>
 );
 
-describe("App.cy.tsx", () => {
+describe("Picks.cy.tsx", () => {
   beforeEach(() => {
     cy.intercept("/trpc/games*", {
       body: basicGamesAndPicksResponse,
@@ -34,7 +34,7 @@ describe("App.cy.tsx", () => {
   });
 
   it("renders without picks", () => {
-    cy.mount(<AppWithClerkProvider />);
+    cy.mount(<PicksWithClerkProvider />);
 
     cy.findByRole("heading", { name: "Survivor Pool 2023" }).should(
       "be.visible",
@@ -49,7 +49,7 @@ describe("App.cy.tsx", () => {
     cy.intercept("/trpc/makePick*", { body: { result: { data: {} } } }).as(
       "makePick",
     );
-    cy.mount(<AppWithClerkProvider />);
+    cy.mount(<PicksWithClerkProvider />);
 
     cy.findByRole("button", { name: /Chiefs/ })
       .should("be.visible")
@@ -72,7 +72,7 @@ describe("App.cy.tsx", () => {
     cy.intercept("/trpc/games*", {
       body: responseWithPickAndForbiddenTeams,
     });
-    cy.mount(<AppWithClerkProvider />);
+    cy.mount(<PicksWithClerkProvider />);
 
     cy.findByRole("button", { name: /Bills/ }).should("be.disabled");
     cy.findByRole("button", { name: /Jets/ }).should("be.disabled");

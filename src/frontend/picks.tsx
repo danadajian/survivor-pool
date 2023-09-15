@@ -1,27 +1,10 @@
 import React from "react";
 import { type RouterOutput, trpc } from "./trpc";
-import { ClientProvider } from "./client-provider";
-import { useMemo } from "react";
-import { Header } from "./header";
-import { useUser } from "@clerk/clerk-react";
 import type { UserResource } from "@clerk/types";
 import { TeamButton } from "./team-button";
+import { Page } from "./page";
 
-export const App = () => {
-  const userResult = useUser();
-  const { user } = useMemo(() => userResult, []);
-  const username = user?.primaryEmailAddress?.emailAddress;
-  if (!user || !username) return null;
-
-  return (
-    <ClientProvider>
-      <Header />
-      <Picks user={user} username={username} />
-    </ClientProvider>
-  );
-};
-
-const Picks = ({
+const PicksComponent = ({
   user,
   username,
 }: {
@@ -97,3 +80,5 @@ const EventRow = ({ event, teamPicked, username }: TeamRowProps) => {
     </div>
   );
 };
+
+export const Picks = Page(PicksComponent);

@@ -3,8 +3,6 @@
 
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { App } from "./app";
-import "./globals.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {
   ClerkProvider,
@@ -12,17 +10,9 @@ import {
   SignedIn,
   SignedOut,
 } from "@clerk/clerk-react";
+import { routes } from "./routes";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-  },
-  {
-    path: "/picks",
-    element: <App />,
-  },
-]);
+const router = createBrowserRouter(routes);
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

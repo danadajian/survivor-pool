@@ -6,18 +6,23 @@ import { staticPlugin } from "@elysiajs/static";
 import { rateLimit } from "elysia-rate-limit";
 import { appRouter } from "./router";
 import { environmentVariables } from "./env";
+import { routes } from "../frontend/routes";
 
-const app = new Elysia();
+async function renderHtml() {
+  return Bun.file("public/index.html").text();
+}
 
-app
+const app = new Elysia()
   .use(cors())
   .use(rateLimit({ max: 100 }))
   .use(trpc(appRouter))
   .use(html())
   .use(staticPlugin({ assets: "public", prefix: "/" }))
-  .get("/", () => Bun.file("public/index.html").text())
-  .get("/picks", () => Bun.file("public/index.html").text())
   .listen(environmentVariables.PORT ?? 8080);
+
+routes.forEach(({ path }) => {
+  app.get(path, renderHtml);
+});
 
 console.log(
   `App is running at http://${app.server?.hostname}:${app.server?.port}`,
