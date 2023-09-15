@@ -1,7 +1,7 @@
 import React from "react";
 import { Pools } from "../../src/frontend/pools";
 import { picksForPoolResponse } from "../../src/backend/mocks";
-import { MockClerkProvider } from "../support/mock-clerk-provider";
+import { MockProviders } from "../support/mock-clerk-provider";
 
 describe("Pools.cy.tsx", () => {
   beforeEach(() => {
@@ -12,9 +12,9 @@ describe("Pools.cy.tsx", () => {
 
   it("renders", () => {
     cy.mount(
-      <MockClerkProvider>
+      <MockProviders>
         <Pools />
-      </MockClerkProvider>,
+      </MockProviders>,
     );
 
     cy.findByRole("heading", { name: "Week 1 Picks" }).should("be.visible");

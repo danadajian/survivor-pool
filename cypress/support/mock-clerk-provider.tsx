@@ -1,6 +1,7 @@
 import { ClerkProvider } from "@clerk/clerk-react";
 import React, { type PropsWithChildren } from "react";
 import type { InitialState } from "@clerk/types";
+import { MemoryRouter } from "react-router-dom";
 
 const mockClerkState = {
   user: {
@@ -11,11 +12,11 @@ const mockClerkState = {
     },
   },
 } as InitialState;
-export const MockClerkProvider = ({ children }: PropsWithChildren) => (
+export const MockProviders = ({ children }: PropsWithChildren) => (
   <ClerkProvider
     initialState={mockClerkState}
     publishableKey={Cypress.env("CLERK_PUBLISHABLE_KEY")}
   >
-    {children}
+    <MemoryRouter initialEntries={["/"]}>{children}</MemoryRouter>
   </ClerkProvider>
 );

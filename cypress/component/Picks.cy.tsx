@@ -5,7 +5,7 @@ import {
   responseWithPick,
   responseWithPickAndForbiddenTeams,
 } from "../../src/backend/mocks";
-import { MockClerkProvider } from "../support/mock-clerk-provider";
+import { MockProviders } from "../support/mock-clerk-provider";
 
 describe("Picks.cy.tsx", () => {
   beforeEach(() => {
@@ -16,9 +16,9 @@ describe("Picks.cy.tsx", () => {
 
   it("renders without picks", () => {
     cy.mount(
-      <MockClerkProvider>
+      <MockProviders>
         <Picks />
-      </MockClerkProvider>,
+      </MockProviders>,
     );
 
     cy.findByRole("heading", { name: "Survivor Pool 2023" }).should(
@@ -35,9 +35,9 @@ describe("Picks.cy.tsx", () => {
       "makePick",
     );
     cy.mount(
-      <MockClerkProvider>
+      <MockProviders>
         <Picks />
-      </MockClerkProvider>,
+      </MockProviders>,
     );
 
     cy.findByRole("button", { name: /Chiefs/ })
@@ -62,9 +62,9 @@ describe("Picks.cy.tsx", () => {
       body: responseWithPickAndForbiddenTeams,
     });
     cy.mount(
-      <MockClerkProvider>
+      <MockProviders>
         <Picks />
-      </MockClerkProvider>,
+      </MockProviders>,
     );
 
     cy.findByRole("button", { name: /Bills/ }).should("be.disabled");
