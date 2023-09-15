@@ -3,7 +3,7 @@ import type { TRPCResponse } from "@trpc/server/rpc";
 
 export const mockPick: RouterOutput["gamesAndPicks"]["pick"] = {
   id: "123",
-  username: "user",
+  username: "test@user.com",
   teamPicked: "Chiefs",
   week: 1,
   season: 2023,
@@ -10736,3 +10736,29 @@ export const responseWithPickAndForbiddenTeams: TRPCResponse<
     },
   },
 };
+
+export const picksForPoolResponse: TRPCResponse<RouterOutput["picksForPool"]> =
+  {
+    result: {
+      data: [
+        {
+          id: "123",
+          username: "test1@user.com",
+          teamPicked: "Chiefs",
+          week: 1,
+          season: 2023,
+          poolId: 1,
+          timestamp: "123",
+        },
+        {
+          id: "456",
+          username: "test2@user.com",
+          teamPicked: "Bills",
+          week: 1,
+          season: 2023,
+          poolId: 1,
+          timestamp: "123",
+        },
+      ],
+    },
+  };

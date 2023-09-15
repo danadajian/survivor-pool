@@ -5,36 +5,21 @@ import {
   responseWithPick,
   responseWithPickAndForbiddenTeams,
 } from "../../src/backend/mocks";
-import { ClerkProvider } from "@clerk/clerk-react";
-import type { InitialState } from "@clerk/types";
-
-const mockClerkState = {
-  user: {
-    id: "user_123",
-    firstName: "Test",
-    primaryEmailAddress: {
-      emailAddress: "test@user.com",
-    },
-  },
-} as InitialState;
-const PicksWithClerkProvider = () => (
-  <ClerkProvider
-    initialState={mockClerkState}
-    publishableKey={Cypress.env("CLERK_PUBLISHABLE_KEY")}
-  >
-    <Picks />
-  </ClerkProvider>
-);
+import { MockClerkProvider } from "../support/mock-clerk-provider";
 
 describe("Picks.cy.tsx", () => {
   beforeEach(() => {
-    cy.intercept("/trpc/games*", {
+    cy.intercept("/trpc/gamesAndPicks*", {
       body: basicGamesAndPicksResponse,
     });
   });
 
   it("renders without picks", () => {
-    cy.mount(<PicksWithClerkProvider />);
+    cy.mount(
+      <MockClerkProvider>
+        <Picks />
+      </MockClerkProvider>,
+    );
 
     cy.findByRole("heading", { name: "Survivor Pool 2023" }).should(
       "be.visible",
@@ -49,7 +34,11 @@ describe("Picks.cy.tsx", () => {
     cy.intercept("/trpc/makePick*", { body: { result: { data: {} } } }).as(
       "makePick",
     );
-    cy.mount(<PicksWithClerkProvider />);
+    cy.mount(
+      <MockClerkProvider>
+        <Picks />
+      </MockClerkProvider>,
+    );
 
     cy.findByRole("button", { name: /Chiefs/ })
       .should("be.visible")
@@ -58,7 +47,7 @@ describe("Picks.cy.tsx", () => {
     cy.findByText(/Are you sure you want to pick the Chiefs?/).should(
       "be.visible",
     );
-    cy.intercept("/trpc/games*", {
+    cy.intercept("/trpc/gamesAndPicks*", {
       body: responseWithPick,
     });
     cy.findByRole("button", { name: "Lock it in" }).click();
@@ -69,10 +58,14 @@ describe("Picks.cy.tsx", () => {
   });
 
   it("prevents picking the same team twice", () => {
-    cy.intercept("/trpc/games*", {
+    cy.intercept("/trpc/gamesAndPicks*", {
       body: responseWithPickAndForbiddenTeams,
     });
-    cy.mount(<PicksWithClerkProvider />);
+    cy.mount(
+      <MockClerkProvider>
+        <Picks />
+      </MockClerkProvider>,
+    );
 
     cy.findByRole("button", { name: /Bills/ }).should("be.disabled");
     cy.findByRole("button", { name: /Jets/ }).should("be.disabled");

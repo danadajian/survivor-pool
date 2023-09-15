@@ -8,10 +8,6 @@ import { appRouter } from "./router";
 import { environmentVariables } from "./env";
 import { routes } from "../frontend/routes";
 
-async function renderHtml() {
-  return Bun.file("public/index.html").text();
-}
-
 const app = new Elysia()
   .use(cors())
   .use(rateLimit({ max: 100 }))
@@ -19,6 +15,10 @@ const app = new Elysia()
   .use(html())
   .use(staticPlugin({ assets: "public", prefix: "/" }))
   .listen(environmentVariables.PORT ?? 8080);
+
+async function renderHtml() {
+  return Bun.file("public/index.html").text();
+}
 
 routes.forEach(({ path }) => {
   app.get(path, renderHtml);

@@ -5,7 +5,13 @@ import { sql, desc, eq } from "drizzle-orm";
 import * as schema from "./schema";
 import { picks, poolMembers, pools } from "./schema";
 import { TRPCError } from "@trpc/server";
-import type { makePickInput, poolsInput } from "./router";
+import type {
+  makePickInput,
+  fetchPoolsForUserInput,
+  fetchPicksForPoolInput,
+} from "./router";
+import type { createPoolInput, joinPoolInput } from "./router";
+import { fetchGames } from "./fetch-games";
 
 export const pgClient = postgres(environmentVariables.POSTGRES_URL);
 export const db = drizzle(pgClient, { schema });
@@ -52,7 +58,10 @@ export async function makePick({
     .values({ username, teamPicked, week, season, poolId });
 }
 
-export async function createPool({ name, creator }: typeof pools.$inferInsert) {
+export async function createPool({
+  name,
+  creator,
+}: typeof createPoolInput.infer) {
   const existingPool = await db.query.poolMembers.findFirst({
     where: sql`name = ${name}`,
   });
@@ -69,7 +78,7 @@ export async function createPool({ name, creator }: typeof pools.$inferInsert) {
 export async function joinPool({
   username,
   poolId,
-}: typeof poolMembers.$inferInsert) {
+}: typeof joinPoolInput.infer) {
   const existingPoolMember = await db.query.poolMembers.findFirst({
     where: sql`username = ${username} and pool_id = ${poolId}`,
   });
@@ -83,7 +92,9 @@ export async function joinPool({
   return db.insert(poolMembers).values({ username, poolId });
 }
 
-export async function fetchPoolsForUser({ username }: typeof poolsInput.infer) {
+export async function fetchPoolsForUser({
+  username,
+}: typeof fetchPoolsForUserInput.infer) {
   return db
     .select({ poolId: pools.id, poolName: pools.name })
     .from(poolMembers)
@@ -92,13 +103,15 @@ export async function fetchPoolsForUser({ username }: typeof poolsInput.infer) {
 }
 
 export async function fetchPicksForPool({
-  week,
-  season,
   poolId,
-}: Pick<typeof picks.$inferSelect, "week" | "season" | "poolId">) {
+}: typeof fetchPicksForPoolInput.infer) {
+  const {
+    week,
+    season: { year },
+  } = await fetchGames();
   return db
     .select()
     .from(picks)
-    .where(sql`week = ${week} and season = ${season} and pool_id = ${poolId}`)
+    .where(sql`week = ${week} and season = ${year} and pool_id = ${poolId}`)
     .orderBy(desc(picks.season), desc(picks.week));
 }

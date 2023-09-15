@@ -1,24 +1,14 @@
 import React from "react";
 import { type RouterOutput, trpc } from "./trpc";
-import type { UserResource } from "@clerk/types";
 import { TeamButton } from "./team-button";
-import { Page } from "./page";
+import { type PageProps, withPage } from "./page-wrapper";
+import { Loader } from "./loader";
 
-const PicksComponent = ({
-  user,
-  username,
-}: {
-  user: UserResource;
-  username: string;
-}) => {
+const PicksComponent = ({ user: { username, firstName } }: PageProps) => {
   const { data } = trpc.gamesAndPicks.useQuery({ username });
 
   if (!data) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        Loading...
-      </div>
-    );
+    return <Loader />;
   }
   const {
     pick,
@@ -27,10 +17,10 @@ const PicksComponent = ({
 
   const pickHeader = pick
     ? `You're riding with the ${pick.teamPicked} this week!`
-    : `Make your pick, ${user.firstName}!`;
+    : `Make your pick, ${firstName}!`;
 
   return (
-    <div className="flex flex-col items-center pb-8 pt-16 text-center">
+    <>
       <h1 className="pt-2 text-2xl font-bold text-red-700">
         Survivor Pool {season.year}
       </h1>
@@ -46,7 +36,7 @@ const PicksComponent = ({
           />
         ))}
       </ul>
-    </div>
+    </>
   );
 };
 
@@ -81,4 +71,4 @@ const EventRow = ({ event, teamPicked, username }: TeamRowProps) => {
   );
 };
 
-export const Picks = Page(PicksComponent);
+export const Picks = withPage(PicksComponent);
