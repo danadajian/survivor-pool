@@ -1,7 +1,7 @@
 import React from "react";
-import { type PageProps, withPage } from "./page-wrapper";
-import { trpc } from "./trpc";
-import { Loader } from "./loader";
+import { type PageProps, withPage } from "../page-wrapper";
+import { trpc } from "../trpc";
+import { Loader } from "../loader";
 
 const PoolsComponent = ({ user: { username } }: PageProps) => {
   const { data } = trpc.picksForPool.useQuery({ poolId: 1 });

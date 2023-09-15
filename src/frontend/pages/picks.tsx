@@ -1,8 +1,8 @@
 import React from "react";
-import { type RouterOutput, trpc } from "./trpc";
-import { TeamButton } from "./team-button";
-import { type PageProps, withPage } from "./page-wrapper";
-import { Loader } from "./loader";
+import { type RouterOutput, trpc } from "../trpc";
+import { TeamButton } from "../team-button";
+import { type PageProps, withPage } from "../page-wrapper";
+import { Loader } from "../loader";
 
 const PicksComponent = ({ user: { username, firstName } }: PageProps) => {
   const { data } = trpc.gamesAndPicks.useQuery({ username });

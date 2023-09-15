@@ -1,6 +1,7 @@
 import React from "react";
-import { Picks } from "./picks";
-import { Pools } from "./pools";
+import { Picks } from "./pages/picks";
+import { Pools } from "./pages/pools";
+import { Create } from "./pages/create";
 
 export const routes = [
   {
@@ -10,5 +11,9 @@ export const routes = [
   {
     path: "/pools",
     element: <Pools />,
+  },
+  {
+    path: "/create",
+    element: <Create />,
   },
 ];

@@ -62,7 +62,7 @@ export async function createPool({
   name,
   creator,
 }: typeof createPoolInput.infer) {
-  const existingPool = await db.query.poolMembers.findFirst({
+  const existingPool = await db.query.pools.findFirst({
     where: sql`name = ${name}`,
   });
 
