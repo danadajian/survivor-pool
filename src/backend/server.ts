@@ -16,6 +16,7 @@ app
   .use(html())
   .use(staticPlugin({ assets: "public", prefix: "/" }))
   .get("/", () => Bun.file("public/index.html").text())
+  .get("/picks", () => Bun.file("public/index.html").text())
   .listen(environmentVariables.PORT ?? 8080);
 
 console.log(

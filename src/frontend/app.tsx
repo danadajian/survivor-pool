@@ -16,12 +16,18 @@ export const App = () => {
   return (
     <ClientProvider>
       <Header />
-      <Home user={user} username={username} />
+      <Picks user={user} username={username} />
     </ClientProvider>
   );
 };
 
-const Home = ({ user, username }: { user: UserResource; username: string }) => {
+const Picks = ({
+  user,
+  username,
+}: {
+  user: UserResource;
+  username: string;
+}) => {
   const { data } = trpc.gamesAndPicks.useQuery({ username });
 
   if (!data) {
