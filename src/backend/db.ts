@@ -105,13 +105,17 @@ export async function fetchPoolsForUser({
 export async function fetchPicksForPool({
   poolId,
 }: typeof fetchPicksForPoolInput.infer) {
-  const {
-    week,
-    season: { year },
-  } = await fetchGames();
-  return db
+  const { week, season } = await fetchGames();
+  const picksResult = await db
     .select()
     .from(picks)
-    .where(sql`week = ${week} and season = ${year} and pool_id = ${poolId}`)
+    .where(
+      sql`week = ${week.number} and season = ${season.year} and pool_id = ${poolId}`,
+    )
     .orderBy(desc(picks.season), desc(picks.week));
+
+  return {
+    picks: picksResult,
+    week: week.number,
+  };
 }

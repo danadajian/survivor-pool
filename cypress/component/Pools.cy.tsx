@@ -16,5 +16,9 @@ describe("Pools.cy.tsx", () => {
         <Pools />
       </MockClerkProvider>,
     );
+
+    cy.findByRole("heading", { name: "Week 1 Picks" }).should("be.visible");
+    cy.findByRole("table").should("be.visible");
+    cy.findByText("test@user.com").should("be.visible");
   });
 });
