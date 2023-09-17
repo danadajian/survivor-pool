@@ -10,16 +10,12 @@
     "moduleResolution": "node",
     "moduleDetection": "force",
     "resolveJsonModule": true,
+    "incremental": true,
     "isolatedModules": true,
     "jsx": "react",
     "jsxFactory": "React.createElement",
     "jsxFragmentFactory": "React.Fragment",
     "strict": true,
     "noEmit": true
-  },
-  "ts-node": {
-    "compilerOptions": {
-      "moduleResolution": "node"
-    }
   }
 }

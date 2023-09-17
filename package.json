@@ -10,7 +10,7 @@
     "lint": "eslint . --max-warnings=0",
     "start": "bun ./src/backend/server.ts",
     "transpile": "bun build.ts && bun css",
-    "type-check": "tsc"
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@clerk/clerk-react": "4.24.2",

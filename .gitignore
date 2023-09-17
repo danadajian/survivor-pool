@@ -26,3 +26,5 @@ yarn-error.log*
 .env
 .env*.local
 cypress.env.json
+
+tsconfig.tsbuildinfo

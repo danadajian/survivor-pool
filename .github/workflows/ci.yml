@@ -19,7 +19,7 @@ jobs:
       - run: bun install
       - run: bun format-check
       - run: bun lint
-      - run: bun type-check
+      - run: bun typecheck
       - run: bun test
       - uses: iamsauravsharma/create-dotenv@v1.2.2
         env:
