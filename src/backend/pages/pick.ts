@@ -29,10 +29,8 @@ export async function pickEndpoint({
   poolId,
 }: typeof fetchPicksInput.infer) {
   const userPools = await fetchPoolsForUser({ username });
-  const userIsInPool = Boolean(
-    userPools.find((pool) => pool.poolId === poolId),
-  );
-  if (!userIsInPool) {
+  const pool = userPools.find((pool) => pool.poolId === poolId);
+  if (!pool) {
     throw new TRPCError({
       message: "User is not a member of this pool.",
       code: "NOT_FOUND",
@@ -53,6 +51,7 @@ export async function pickEndpoint({
     games,
     userPick,
     forbiddenTeams,
+    poolName: pool.poolName,
   };
 }
 

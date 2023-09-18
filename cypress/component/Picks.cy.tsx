@@ -22,9 +22,7 @@ describe("Picks.cy.tsx", () => {
       </MockProviders>,
     );
 
-    cy.findByRole("heading", { name: "Survivor Pool 2023" }).should(
-      "be.visible",
-    );
+    cy.findByRole("heading", { name: "Test Pool 2023" }).should("be.visible");
     cy.findByRole("heading", { name: "Week 1" }).should("be.visible");
     cy.findByRole("heading", { name: "Make your pick, Test!" }).should(
       "be.visible",

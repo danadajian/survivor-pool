@@ -28,6 +28,7 @@ const PickContent = ({
   const {
     userPick,
     games: { events, season, week },
+    poolName,
   } = data;
 
   const pickHeader = userPick
@@ -36,8 +37,8 @@ const PickContent = ({
 
   return (
     <>
-      <h1 className="pt-2 text-2xl font-bold text-red-700">
-        Survivor Pool {season.year}
+      <h1 className="pt-8 text-2xl font-bold text-red-700">
+        {poolName} {season.year}
       </h1>
       <h2 className="pt-2 text-lg font-bold">Week {week.number}</h2>
       <h3 className="pt-2 text-lg">{pickHeader}</h3>

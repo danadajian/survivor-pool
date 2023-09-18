@@ -10712,6 +10712,7 @@ export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pick"]> = {
   result: {
     data: {
       games: mockEspnResponse,
+      poolName: "Test Pool",
     },
   },
 };
@@ -10720,6 +10721,7 @@ export const responseWithPick: TRPCResponse<RouterOutput["pick"]> = {
     data: {
       userPick: mockPick,
       games: mockEspnResponse,
+      poolName: "Test Pool",
     },
   },
 };
@@ -10732,6 +10734,7 @@ export const responseWithPickAndForbiddenTeams: TRPCResponse<
       userPick: mockPick,
       games: mockEspnResponse,
       forbiddenTeams: ["Bills", "Jets"],
+      poolName: "Test Pool",
     },
   },
 };
