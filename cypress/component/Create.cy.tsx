@@ -20,7 +20,7 @@ describe("Pools.cy.tsx", () => {
     cy.findByLabelText("Pool Name").type("Test Pool");
     cy.findByRole("button", { name: "Create" }).click();
     cy.findByRole("heading", {
-      name: "Pool Test Pool created successfully!",
+      name: "Test Pool created successfully!",
     }).should("be.visible");
   });
 });
