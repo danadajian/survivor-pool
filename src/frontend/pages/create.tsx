@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { type PageProps, withPage } from "../page-wrapper";
 import { trpc } from "../trpc";
 import { Loader } from "../loader";
+import { useNavigate } from "react-router-dom";
 
 const CreateComponent = ({ user: { username } }: PageProps) => {
-  const { mutateAsync, isLoading, isSuccess } = trpc.createPool.useMutation();
+  const { mutateAsync, data, isLoading, isSuccess } =
+    trpc.createPool.useMutation();
   const [poolName, setPoolName] = useState("");
+  const navigate = useNavigate();
 
   if (isLoading) {
     return <Loader />;
@@ -17,6 +20,34 @@ const CreateComponent = ({ user: { username } }: PageProps) => {
       creator: username,
     });
   };
+
+  if (isSuccess && data?.poolId) {
+    return (
+      <>
+        <h1 className="pb-8 pt-8 text-2xl font-bold text-red-700">
+          {`${poolName} created successfully!`}
+        </h1>
+        <button
+          onClick={() =>
+            navigator.clipboard.writeText(
+              `${window.location.origin}/join/${data.poolId}`,
+            )
+          }
+          className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+          type="button"
+        >
+          Copy invite link
+        </button>
+        <button
+          onClick={() => navigate(`/pick/${data.poolId}`)}
+          className="focus:shadow-outline ml-8 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+          type="button"
+        >
+          Make your first pick
+        </button>
+      </>
+    );
+  }
 
   return (
     <>

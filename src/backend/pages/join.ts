@@ -35,5 +35,9 @@ export async function joinPool({
       code: "CONFLICT",
     });
   }
-  return db.insert(members).values({ username, poolId });
+  const rows = await db
+    .insert(members)
+    .values({ username, poolId })
+    .returning({ poolId: members.poolId });
+  return rows.find(Boolean);
 }
