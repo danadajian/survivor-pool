@@ -1,5 +1,6 @@
 import React from "react";
-import { Picks } from "./pages/picks";
+import { Home } from "./pages/home";
+import { Pick } from "./pages/pick";
 import { Pools } from "./pages/pools";
 import { Create } from "./pages/create";
 import { Join } from "./pages/join";
@@ -7,7 +8,11 @@ import { Join } from "./pages/join";
 export const routes = [
   {
     path: "/",
-    element: <Picks />,
+    element: <Home />,
+  },
+  {
+    path: "/pick/:poolId",
+    element: <Pick />,
   },
   {
     path: "/pools",

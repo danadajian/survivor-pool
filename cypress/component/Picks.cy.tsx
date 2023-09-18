@@ -1,5 +1,5 @@
 import React from "react";
-import { Picks } from "../../src/frontend/pages/picks";
+import { Pick } from "../../src/frontend/pages/pick";
 import {
   basicGamesAndPicksResponse,
   responseWithPick,
@@ -9,15 +9,15 @@ import { MockProviders } from "../support/mock-clerk-provider";
 
 describe("Picks.cy.tsx", () => {
   beforeEach(() => {
-    cy.intercept("/trpc/gamesAndPicks*", {
+    cy.intercept("/trpc/pick*", {
       body: basicGamesAndPicksResponse,
     });
   });
 
   it("renders without picks", () => {
     cy.mount(
-      <MockProviders>
-        <Picks />
+      <MockProviders initialEntries={["/pick/123"]}>
+        <Pick />
       </MockProviders>,
     );
 
@@ -35,8 +35,8 @@ describe("Picks.cy.tsx", () => {
       "makePick",
     );
     cy.mount(
-      <MockProviders>
-        <Picks />
+      <MockProviders initialEntries={["/pick/123"]}>
+        <Pick />
       </MockProviders>,
     );
 
@@ -47,7 +47,7 @@ describe("Picks.cy.tsx", () => {
     cy.findByText(/Are you sure you want to pick the Chiefs?/).should(
       "be.visible",
     );
-    cy.intercept("/trpc/gamesAndPicks*", {
+    cy.intercept("/trpc/pick*", {
       body: responseWithPick,
     });
     cy.findByRole("button", { name: "Lock it in" }).click();
@@ -58,12 +58,12 @@ describe("Picks.cy.tsx", () => {
   });
 
   it("prevents picking the same team twice", () => {
-    cy.intercept("/trpc/gamesAndPicks*", {
+    cy.intercept("/trpc/pick*", {
       body: responseWithPickAndForbiddenTeams,
     });
     cy.mount(
-      <MockProviders>
-        <Picks />
+      <MockProviders initialEntries={["/pick/123"]}>
+        <Pick />
       </MockProviders>,
     );
 

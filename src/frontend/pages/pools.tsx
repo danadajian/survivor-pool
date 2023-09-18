@@ -2,9 +2,26 @@ import React from "react";
 import { type PageProps, withPage } from "../page-wrapper";
 import { trpc } from "../trpc";
 import { Loader } from "../loader";
+import { useMatch } from "react-router-dom";
 
 const PoolsComponent = ({ user: { username } }: PageProps) => {
-  const { data } = trpc.picksForPool.useQuery({ poolId: 1 });
+  const path = useMatch("/pools/:poolId");
+  const poolId = Number(path?.params.poolId);
+  if (!poolId) {
+    return null;
+  }
+
+  return <AllPicks username={username} poolId={poolId} />;
+};
+
+const AllPicks = ({
+  username,
+  poolId,
+}: {
+  username: string;
+  poolId: number;
+}) => {
+  const { data } = trpc.picksForPool.useQuery({ poolId });
 
   if (!data) {
     return <Loader />;

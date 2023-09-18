@@ -3,20 +3,34 @@ import { type RouterOutput, trpc } from "../trpc";
 import { TeamButton } from "../team-button";
 import { type PageProps, withPage } from "../page-wrapper";
 import { Loader } from "../loader";
+import { useMatch } from "react-router-dom";
 
-const PicksComponent = ({ user: { username, firstName } }: PageProps) => {
-  const { data } = trpc.gamesAndPicks.useQuery({ username });
+const PickComponent = (props: PageProps) => {
+  const path = useMatch("/pick/:poolId");
+  const poolId = Number(path?.params.poolId);
+  if (!poolId) {
+    return null;
+  }
+
+  return <PickContent {...props} poolId={poolId} />;
+};
+
+const PickContent = ({
+  user: { username, firstName },
+  poolId,
+}: PageProps & { poolId: number }) => {
+  const { data } = trpc.pick.useQuery({ username, poolId });
 
   if (!data) {
     return <Loader />;
   }
   const {
-    pick,
+    userPick,
     games: { events, season, week },
   } = data;
 
-  const pickHeader = pick
-    ? `You're riding with the ${pick.teamPicked} this week!`
+  const pickHeader = userPick
+    ? `You're riding with the ${userPick.teamPicked} this week!`
     : `Make your pick, ${firstName}!`;
 
   return (
@@ -31,8 +45,9 @@ const PicksComponent = ({ user: { username, firstName } }: PageProps) => {
           <EventRow
             key={index}
             event={event}
-            teamPicked={pick?.teamPicked}
+            teamPicked={userPick?.teamPicked}
             username={username}
+            poolId={poolId}
           />
         ))}
       </ul>
@@ -40,9 +55,14 @@ const PicksComponent = ({ user: { username, firstName } }: PageProps) => {
   );
 };
 
-export type Event = RouterOutput["gamesAndPicks"]["games"]["events"][number];
-type TeamRowProps = { event: Event; teamPicked?: string; username: string };
-const EventRow = ({ event, teamPicked, username }: TeamRowProps) => {
+export type Event = RouterOutput["pick"]["games"]["events"][number];
+type TeamRowProps = {
+  event: Event;
+  teamPicked?: string;
+  username: string;
+  poolId: number;
+};
+const EventRow = ({ event, teamPicked, username, poolId }: TeamRowProps) => {
   const competitors = event.competitions[0]?.competitors ?? [];
   const homeTeam = competitors.find(
     (competitor) => competitor.homeAway === "home",
@@ -50,25 +70,22 @@ const EventRow = ({ event, teamPicked, username }: TeamRowProps) => {
   const awayTeam = competitors.find(
     (competitor) => competitor.homeAway === "away",
   )?.team;
+  const commonProps = {
+    teamPicked,
+    username,
+    poolId,
+  };
   return (
     <div className="flex flex-row justify-center gap-4 pt-6">
       <li>
-        <TeamButton
-          team={awayTeam}
-          teamPicked={teamPicked}
-          username={username}
-        />
+        <TeamButton team={awayTeam} {...commonProps} />
       </li>
       <li className="flex items-center font-bold">@</li>
       <li>
-        <TeamButton
-          team={homeTeam}
-          teamPicked={teamPicked}
-          username={username}
-        />
+        <TeamButton team={homeTeam} {...commonProps} />
       </li>
     </div>
   );
 };
 
-export const Picks = withPage(PicksComponent);
+export const Pick = withPage(PickComponent);

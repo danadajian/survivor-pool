@@ -3,13 +3,23 @@ import { trpc } from "./trpc";
 import { useState } from "react";
 import { DialogWrapper } from "./dialog-wrapper";
 import { Dialog } from "@headlessui/react";
-import type { Event } from "./pages/picks";
+import type { Event } from "./pages/pick";
 
 type Team = Event["competitions"][number]["competitors"][number]["team"];
-type TeamProps = { team?: Team; teamPicked?: string; username: string };
-export const TeamButton = ({ team, teamPicked, username }: TeamProps) => {
+type TeamProps = {
+  team?: Team;
+  teamPicked?: string;
+  username: string;
+  poolId: number;
+};
+export const TeamButton = ({
+  team,
+  teamPicked,
+  username,
+  poolId,
+}: TeamProps) => {
   const context = trpc.useContext();
-  const gamesAndPicks = context.gamesAndPicks.getData({ username });
+  const gamesAndPicks = context.pick.getData({ username, poolId });
   const { mutateAsync } = trpc.makePick.useMutation();
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const toggleDialog = () => setDialogIsOpen(!dialogIsOpen);
@@ -21,9 +31,9 @@ export const TeamButton = ({ team, teamPicked, username }: TeamProps) => {
       teamPicked: team.name,
       week: gamesAndPicks.games.week.number,
       season: gamesAndPicks.games.season.year,
-      poolId: 1,
+      poolId,
     });
-    await context.gamesAndPicks.invalidate();
+    await context.pick.invalidate();
     toggleDialog();
     setTimeout(() => {
       window.scrollTo({

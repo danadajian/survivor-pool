@@ -1,6 +1,6 @@
 import { describe, expect, it, mock } from "bun:test";
-import { fetchGames } from "./fetch-games";
-import { mockEspnResponse } from "./mocks";
+import { fetchGames } from "./pick";
+import { mockEspnResponse } from "../mocks";
 
 const mockFetch = mock(fetch).mockResolvedValue(
   new Response(JSON.stringify(mockEspnResponse)),

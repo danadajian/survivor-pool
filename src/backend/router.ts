@@ -1,50 +1,22 @@
 import { initTRPC } from "@trpc/server";
 import {
-  createPool,
-  fetchPicksForPool,
+  pickEndpoint,
+  fetchPicksInput,
   fetchPoolsForUser,
-  joinPool,
+  fetchPoolsForUserInput,
   makePick,
-} from "./db";
-import { fetchGamesAndPicks } from "./fetch-games";
-import { type } from "arktype";
-
-export const fetchGamesAndPicksInput = type({
-  username: "string",
-});
-
-export const makePickInput = type({
-  username: "string",
-  teamPicked: "string",
-  week: "number",
-  season: "number",
-  poolId: "number",
-});
-
-export const fetchPoolsForUserInput = type({
-  username: "string",
-});
-
-export const fetchPicksForPoolInput = type({
-  poolId: "number",
-});
-
-export const createPoolInput = type({
-  name: "string",
-  creator: "string",
-});
-
-export const joinPoolInput = type({
-  username: "string",
-  poolId: "number",
-});
+  makePickInput,
+} from "./pages/pick";
+import { createPool, createPoolInput } from "./pages/create";
+import { joinPool, joinPoolInput } from "./pages/join";
+import { fetchPicksForPool, fetchPicksForPoolInput } from "./pages/pools";
 
 const t = initTRPC.create();
 
 export const appRouter = t.router({
-  gamesAndPicks: t.procedure
-    .input(fetchGamesAndPicksInput.assert)
-    .query(({ input }) => fetchGamesAndPicks(input)),
+  pick: t.procedure
+    .input(fetchPicksInput.assert)
+    .query(({ input }) => pickEndpoint(input)),
   makePick: t.procedure
     .input(makePickInput.assert)
     .mutation(({ input }) => makePick(input)),
