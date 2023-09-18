@@ -1,9 +1,10 @@
 import { useUser } from "@clerk/clerk-react";
+import { type } from "arktype";
 import React, { useMemo } from "react";
+
 import { ClientProvider } from "./client-provider";
 import { Header } from "./header";
 import { Loader } from "./loader";
-import { type } from "arktype";
 
 export const userSchema = type({
   username: "string",

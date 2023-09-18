@@ -1,9 +1,10 @@
 import React from "react";
-import { type RouterOutput, trpc } from "../trpc";
-import { TeamButton } from "../team-button";
-import { type PageProps, withPage } from "../page-wrapper";
-import { Loader } from "../loader";
 import { useMatch } from "react-router-dom";
+
+import { Loader } from "../loader";
+import { type PageProps, withPage } from "../page-wrapper";
+import { TeamButton } from "../team-button";
+import { type RouterOutput, trpc } from "../trpc";
 
 const PickComponent = (props: PageProps) => {
   const path = useMatch("/pick/:poolId");

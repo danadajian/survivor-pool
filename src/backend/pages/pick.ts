@@ -1,10 +1,11 @@
-import type { EspnResponse } from "../mocks";
-import { environmentVariables } from "../env";
-import { db } from "../db";
+import { TRPCError } from "@trpc/server";
 import { type } from "arktype";
 import { and, eq, lt } from "drizzle-orm";
-import { picks, members, pools } from "../schema";
-import { TRPCError } from "@trpc/server";
+
+import { db } from "../db";
+import { environmentVariables } from "../env";
+import type { EspnResponse } from "../mocks";
+import { members, picks, pools } from "../schema";
 
 export const fetchPicksInput = type({
   username: "string",

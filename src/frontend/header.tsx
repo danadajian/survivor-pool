@@ -1,5 +1,5 @@
-import React from "react";
 import { UserButton } from "@clerk/clerk-react";
+import React from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 
 export const Header = () => {

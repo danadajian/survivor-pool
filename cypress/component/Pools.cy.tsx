@@ -1,6 +1,7 @@
 import React from "react";
-import { Pools } from "../../src/frontend/pages/pools";
+
 import { picksForPoolResponse } from "../../src/backend/mocks";
+import { Pools } from "../../src/frontend/pages/pools";
 import { MockProviders } from "../support/mock-clerk-provider";
 
 describe("Pools.cy.tsx", () => {

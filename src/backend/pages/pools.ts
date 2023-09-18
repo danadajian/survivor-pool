@@ -1,5 +1,6 @@
 import { type } from "arktype";
-import { and, eq, desc } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
+
 import { db } from "../db";
 import { picks } from "../schema";
 import { fetchGames } from "./pick";

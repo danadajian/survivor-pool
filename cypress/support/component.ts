@@ -1,4 +1,5 @@
 import "@testing-library/cypress/add-commands";
+
 import { mount } from "cypress/react18";
 
 // Augment the Cypress namespace to include type definitions for

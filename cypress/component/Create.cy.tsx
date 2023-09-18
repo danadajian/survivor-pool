@@ -1,6 +1,7 @@
 import React from "react";
-import { MockProviders } from "../support/mock-clerk-provider";
+
 import { Create } from "../../src/frontend/pages/create";
+import { MockProviders } from "../support/mock-clerk-provider";
 
 describe("Pools.cy.tsx", () => {
   beforeEach(() => {

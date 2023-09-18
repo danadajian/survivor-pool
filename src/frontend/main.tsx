@@ -1,15 +1,16 @@
 /// <reference lib="dom" />
 /// <reference types="vite/client" />
 
-import React from "react";
-import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {
   ClerkProvider,
   RedirectToSignIn,
   SignedIn,
   SignedOut,
 } from "@clerk/clerk-react";
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import { routes } from "./routes";
 
 const router = createBrowserRouter(routes);

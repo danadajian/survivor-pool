@@ -1,8 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
+import { Loader } from "../loader";
 import { type PageProps, withPage } from "../page-wrapper";
 import { trpc } from "../trpc";
-import { Loader } from "../loader";
-import { useNavigate } from "react-router-dom";
 
 const HomeComponent = ({ user: { username } }: PageProps) => {
   const { data } = trpc.poolsForUser.useQuery({ username });

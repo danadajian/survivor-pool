@@ -1,6 +1,6 @@
 import { ClerkProvider } from "@clerk/clerk-react";
-import React, { type ComponentProps, type PropsWithChildren } from "react";
 import type { InitialState } from "@clerk/types";
+import React, { type ComponentProps, type PropsWithChildren } from "react";
 import { MemoryRouter } from "react-router-dom";
 
 const mockClerkState = {

@@ -1,8 +1,9 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { httpBatchLink } from "@trpc/client";
 import React from "react";
 import { type PropsWithChildren, useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { trpc } from "./trpc";
-import { httpBatchLink } from "@trpc/client";
 
 export const ClientProvider = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(

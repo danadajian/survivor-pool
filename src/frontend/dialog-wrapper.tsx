@@ -1,6 +1,6 @@
+import { Dialog, Transition } from "@headlessui/react";
 import React from "react";
 import { Fragment, type PropsWithChildren } from "react";
-import { Dialog, Transition } from "@headlessui/react";
 
 type DialogWrapperProps = {
   dialogIsOpen: boolean;

@@ -1,12 +1,13 @@
-import Elysia from "elysia";
 import cors from "@elysiajs/cors";
-import { trpc } from "@elysiajs/trpc";
 import { html } from "@elysiajs/html";
 import { staticPlugin } from "@elysiajs/static";
+import { trpc } from "@elysiajs/trpc";
+import Elysia from "elysia";
 import { rateLimit } from "elysia-rate-limit";
-import { appRouter } from "./router";
-import { environmentVariables } from "./env";
+
 import { routes } from "../frontend/routes";
+import { environmentVariables } from "./env";
+import { appRouter } from "./router";
 
 const app = new Elysia()
   .use(cors())

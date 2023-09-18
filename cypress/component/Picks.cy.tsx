@@ -1,10 +1,11 @@
 import React from "react";
-import { Pick } from "../../src/frontend/pages/pick";
+
 import {
   basicGamesAndPicksResponse,
   responseWithPick,
   responseWithPickAndForbiddenTeams,
 } from "../../src/backend/mocks";
+import { Pick } from "../../src/frontend/pages/pick";
 import { MockProviders } from "../support/mock-clerk-provider";
 
 describe("Picks.cy.tsx", () => {

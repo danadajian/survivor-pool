@@ -1,8 +1,9 @@
 import React from "react";
+import { useMatch, useNavigate } from "react-router-dom";
+
+import { Loader } from "../loader";
 import { type PageProps, withPage } from "../page-wrapper";
 import { trpc } from "../trpc";
-import { Loader } from "../loader";
-import { useMatch, useNavigate } from "react-router-dom";
 
 const JoinComponent = ({ user: { username } }: PageProps) => {
   const { mutateAsync, isLoading, isSuccess } = trpc.joinPool.useMutation();

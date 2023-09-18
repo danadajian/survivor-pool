@@ -1,9 +1,10 @@
 import React from "react";
+
+import { Create } from "./pages/create";
 import { Home } from "./pages/home";
+import { Join } from "./pages/join";
 import { Pick } from "./pages/pick";
 import { Pools } from "./pages/pools";
-import { Create } from "./pages/create";
-import { Join } from "./pages/join";
 
 export const routes = [
   {
