@@ -15,7 +15,7 @@ export const routes = [
     element: <Pick />,
   },
   {
-    path: "/pools",
+    path: "/pools/:poolId",
     element: <Pools />,
   },
   {

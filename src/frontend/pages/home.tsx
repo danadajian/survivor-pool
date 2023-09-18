@@ -19,13 +19,14 @@ const HomeComponent = ({ user: { username } }: PageProps) => {
       </h1>
       <div className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
         <p className="text-md block pb-8 font-bold text-gray-700">
-          Choose a pool:
+          Select a pool:
         </p>
         {data.map(({ poolId, poolName }) => (
           <button
+            key={poolId}
             id={String(poolId)}
             onClick={(event) => navigate(`/pick/${event.currentTarget.id}`)}
-            className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+            className="focus:shadow-outline ml-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
             type="button"
           >
             {poolName}
