@@ -7,7 +7,7 @@ export const mockPick: RouterOutput["pick"]["userPick"] = {
   teamPicked: "Chiefs",
   week: 1,
   season: 2023,
-  poolId: 1,
+  poolId: "12345",
   timestamp: "123",
 };
 
@@ -10747,7 +10747,7 @@ export const picksForPoolResponse: TRPCResponse<RouterOutput["picksForPool"]> =
             teamPicked: "Chiefs",
             week: 1,
             season: 2023,
-            poolId: 1,
+            poolId: "12345",
             timestamp: "123",
           },
           {
@@ -10756,7 +10756,7 @@ export const picksForPoolResponse: TRPCResponse<RouterOutput["picksForPool"]> =
             teamPicked: "Bills",
             week: 1,
             season: 2023,
-            poolId: 1,
+            poolId: "12345",
             timestamp: "123",
           },
         ],

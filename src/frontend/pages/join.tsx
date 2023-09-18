@@ -9,7 +9,7 @@ const JoinComponent = ({ user: { username } }: PageProps) => {
   const navigate = useNavigate();
 
   const path = useMatch("/join/:poolId");
-  const poolId = Number(path?.params.poolId);
+  const poolId = path?.params.poolId;
   if (isLoading || !poolId) {
     return <Loader />;
   }

@@ -5,7 +5,7 @@ import { picks } from "../schema";
 import { fetchGames } from "./pick";
 
 export const fetchPicksForPoolInput = type({
-  poolId: "number",
+  poolId: "string",
 });
 
 export async function fetchPicksForPool({

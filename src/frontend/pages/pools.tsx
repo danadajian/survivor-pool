@@ -6,7 +6,7 @@ import { useMatch } from "react-router-dom";
 
 const PoolsComponent = ({ user: { username } }: PageProps) => {
   const path = useMatch("/pools/:poolId");
-  const poolId = Number(path?.params.poolId);
+  const poolId = path?.params.poolId;
   if (!poolId) {
     return null;
   }
@@ -19,7 +19,7 @@ const AllPicks = ({
   poolId,
 }: {
   username: string;
-  poolId: number;
+  poolId: string;
 }) => {
   const { data } = trpc.picksForPool.useQuery({ poolId });
 

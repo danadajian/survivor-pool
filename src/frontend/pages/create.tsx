@@ -21,9 +21,7 @@ const CreateComponent = ({ user: { username } }: PageProps) => {
   return (
     <>
       <h1 className="pb-8 pt-8 text-2xl font-bold text-red-700">
-        {isSuccess
-          ? `Pool ${poolName} created successfully!`
-          : "Create New Pool"}
+        {isSuccess ? `${poolName} created successfully!` : "Create New Pool"}
       </h1>
       {!isSuccess && (
         <form className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">

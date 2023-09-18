@@ -7,7 +7,7 @@ import { useMatch } from "react-router-dom";
 
 const PickComponent = (props: PageProps) => {
   const path = useMatch("/pick/:poolId");
-  const poolId = Number(path?.params.poolId);
+  const poolId = path?.params.poolId;
   if (!poolId) {
     return null;
   }
@@ -18,7 +18,7 @@ const PickComponent = (props: PageProps) => {
 const PickContent = ({
   user: { username, firstName },
   poolId,
-}: PageProps & { poolId: number }) => {
+}: PageProps & { poolId: string }) => {
   const { data } = trpc.pick.useQuery({ username, poolId });
 
   if (!data) {
@@ -60,7 +60,7 @@ type TeamRowProps = {
   event: Event;
   teamPicked?: string;
   username: string;
-  poolId: number;
+  poolId: string;
 };
 const EventRow = ({ event, teamPicked, username, poolId }: TeamRowProps) => {
   const competitors = event.competitions[0]?.competitors ?? [];

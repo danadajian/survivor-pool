@@ -1,7 +1,6 @@
 import {
   integer,
   pgTable,
-  serial,
   timestamp,
   uuid,
   varchar,
@@ -13,19 +12,19 @@ export const picks = pgTable("picks", {
   teamPicked: varchar("team_picked", { length: 256 }).notNull(),
   week: integer("week").notNull(),
   season: integer("season").notNull(),
-  poolId: integer("pool_id").notNull(),
+  poolId: uuid("pool_id").notNull(),
   timestamp: timestamp("timestamp").notNull().defaultNow(),
 });
 
 export const pools = pgTable("pools", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 256 }).notNull(),
   creator: varchar("creator", { length: 256 }).notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const poolMembers = pgTable("poolMembers", {
+export const members = pgTable("members", {
   id: uuid("id").primaryKey().defaultRandom(),
-  poolId: integer("pool_id").notNull(),
+  poolId: uuid("pool_id").notNull(),
   username: varchar("username", { length: 256 }).notNull(),
 });

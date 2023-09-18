@@ -3,12 +3,12 @@ import { environmentVariables } from "../env";
 import { db } from "../db";
 import { type } from "arktype";
 import { and, eq, lt } from "drizzle-orm";
-import { picks, poolMembers, pools } from "../schema";
+import { picks, members, pools } from "../schema";
 import { TRPCError } from "@trpc/server";
 
 export const fetchPicksInput = type({
   username: "string",
-  poolId: "number",
+  poolId: "string",
 });
 
 export const fetchPoolsForUserInput = type({
@@ -20,7 +20,7 @@ export const makePickInput = type({
   teamPicked: "string",
   week: "number",
   season: "number",
-  poolId: "number",
+  poolId: "string",
 });
 
 export async function pickEndpoint({
@@ -96,9 +96,9 @@ export async function fetchPoolsForUser({
 }: typeof fetchPoolsForUserInput.infer) {
   return db
     .select({ poolId: pools.id, poolName: pools.name })
-    .from(poolMembers)
-    .where(eq(poolMembers.username, username))
-    .innerJoin(pools, eq(poolMembers.poolId, pools.id));
+    .from(members)
+    .where(eq(members.username, username))
+    .innerJoin(pools, eq(members.poolId, pools.id));
 }
 
 export async function makePick({

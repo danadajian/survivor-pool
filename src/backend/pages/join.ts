@@ -2,11 +2,11 @@ import { TRPCError } from "@trpc/server";
 import { type } from "arktype";
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { poolMembers, pools } from "../schema";
+import { members, pools } from "../schema";
 
 export const joinPoolInput = type({
   username: "string",
-  poolId: "number",
+  poolId: "string",
 });
 
 export async function joinPool({
@@ -14,10 +14,10 @@ export async function joinPool({
   poolId,
 }: typeof joinPoolInput.infer) {
   const result = await db
-    .select({ poolId: pools.id, poolMembersId: poolMembers.id })
+    .select({ poolId: pools.id, poolMembersId: members.id })
     .from(pools)
     .where(eq(pools.id, poolId))
-    .leftJoin(poolMembers, eq(pools.id, poolMembers.poolId));
+    .leftJoin(members, eq(pools.id, members.poolId));
 
   const poolExists = Boolean(result.find(({ poolId }) => poolId));
   if (!poolExists) {
@@ -35,5 +35,5 @@ export async function joinPool({
       code: "CONFLICT",
     });
   }
-  return db.insert(poolMembers).values({ username, poolId });
+  return db.insert(members).values({ username, poolId });
 }

@@ -10,7 +10,7 @@ type TeamProps = {
   team?: Team;
   teamPicked?: string;
   username: string;
-  poolId: number;
+  poolId: string;
 };
 export const TeamButton = ({
   team,
