@@ -101,10 +101,8 @@ describe("Picks.cy.tsx", () => {
       </MockProviders>,
     );
 
-    cy.findByRole("button", { name: /Chiefs/ }).should("be.disabled");
-    cy.findByRole("button", { name: /Bills/ }).should("be.disabled");
-    cy.findByRole("button", { name: /Falcons/ }).should("be.disabled");
-    cy.findByRole("button", { name: /Giants/ }).should("be.disabled");
+    cy.findByRole("button", { name: /Chiefs/ }).should("not.exist");
+    cy.findByRole("button", { name: /Bills/ }).should("not.exist");
     cy.findByRole("heading", {
       name: "Your Chiefs pick is locked. Good luck!",
     }).should("be.visible");
