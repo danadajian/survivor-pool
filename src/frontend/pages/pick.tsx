@@ -57,18 +57,18 @@ const PickContent = ({
         {poolName} {season.year}
       </h1>
       <h2 className="pt-2 text-lg font-bold">Week {week.number}</h2>
-      <h3 className="pt-2 text-lg">{pickHeader}</h3>
+      <h3 className="pt-4 text-lg">{pickHeader}</h3>
       <ul>
-        {events.map((event, index) => (
-          <EventRow
-            key={index}
-            event={event}
-            teamPicked={teamPicked}
-            username={username}
-            poolId={poolId}
-            pickIsLocked={pickIsLocked}
-          />
-        ))}
+        {!pickIsLocked &&
+          events.map((event, index) => (
+            <EventRow
+              key={index}
+              event={event}
+              teamPicked={teamPicked}
+              username={username}
+              poolId={poolId}
+            />
+          ))}
       </ul>
     </>
   );
@@ -80,15 +80,8 @@ type TeamRowProps = {
   teamPicked?: string;
   username: string;
   poolId: string;
-  pickIsLocked: boolean;
 };
-const EventRow = ({
-  event,
-  teamPicked,
-  username,
-  poolId,
-  pickIsLocked,
-}: TeamRowProps) => {
+const EventRow = ({ event, teamPicked, username, poolId }: TeamRowProps) => {
   const competition = event.competitions[0];
   const competitors = competition?.competitors ?? [];
   const homeTeam = competitors.find(
@@ -100,7 +93,6 @@ const EventRow = ({
   const gameTime = spacetime(competition.date).goto(null);
   const commonProps = {
     teamPicked,
-    pickIsLocked,
     username,
     poolId,
   };

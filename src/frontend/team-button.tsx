@@ -10,14 +10,12 @@ type Team = Event["competitions"][number]["competitors"][number]["team"];
 type TeamProps = {
   team?: Team;
   teamPicked?: string;
-  pickIsLocked?: boolean;
   username: string;
   poolId: string;
 };
 export const TeamButton = ({
   team,
   teamPicked,
-  pickIsLocked,
   username,
   poolId,
 }: TeamProps) => {
@@ -58,7 +56,7 @@ export const TeamButton = ({
   return (
     <>
       <button
-        disabled={teamCurrentlyPicked || teamPreviouslyPicked || pickIsLocked}
+        disabled={teamCurrentlyPicked || teamPreviouslyPicked}
         onClick={toggleDialog}
         className={`flex flex-col items-center rounded-lg border-2 border-slate-100 p-2 ${buttonClass}`}
       >
