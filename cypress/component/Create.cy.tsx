@@ -6,7 +6,7 @@ import { MockProviders } from "../support/mock-clerk-provider";
 describe("Pools.cy.tsx", () => {
   beforeEach(() => {
     cy.intercept("/trpc/createPool*", {
-      body: { result: { data: {} } },
+      body: { result: { data: { poolId: 123 } } },
     });
   });
 

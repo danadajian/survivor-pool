@@ -8,6 +8,8 @@ on:
 env:
   GAMES_API_URL: "https://some-api-url"
   POSTGRES_URL: "postgresql://some-postgres-url"
+  CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+  CYPRESS_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
 
 jobs:
   test:
@@ -22,8 +24,6 @@ jobs:
       - run: bun typecheck
       - run: bun test
       - uses: iamsauravsharma/create-dotenv@v1.2.2
-        env:
-          CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
       - run: bun docker
 
   cypress:
@@ -44,11 +44,7 @@ jobs:
         run: bun cypress install
 
       - name: Component Tests
-        uses: cypress-io/github-action@v6
-        with:
-          install: false
-          component: true
-          env: CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }}
+        run: cypress run --component
 
   db:
     name: Database Migration
