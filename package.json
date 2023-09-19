@@ -30,7 +30,8 @@
     "postgres": "3.3.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-router-dom": "6.16.0"
+    "react-router-dom": "6.16.0",
+    "spacetime": "7.4.7"
   },
   "devDependencies": {
     "@testing-library/cypress": "10.0.1",

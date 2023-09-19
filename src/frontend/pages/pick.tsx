@@ -1,5 +1,6 @@
 import React from "react";
 import { useMatch } from "react-router-dom";
+import spacetime from "spacetime";
 
 import { Loader } from "../loader";
 import { type PageProps, withPage } from "../page-wrapper";
@@ -31,7 +32,22 @@ const PickContent = ({
     poolName,
   } = data;
 
-  const pickHeader = userPick
+  const teamPicked = userPick?.teamPicked;
+  const teamPickedInEvent = events.find((event) =>
+    event.competitions[0].competitors.some(
+      (competitor) => competitor.team.name === teamPicked,
+    ),
+  );
+  const gameTime = teamPickedInEvent?.date;
+  const pickIsLocked =
+    Boolean(teamPicked) &&
+    Boolean(gameTime) &&
+    spacetime.now().toNativeDate() >
+      spacetime(gameTime).goto(null).toNativeDate();
+
+  const pickHeader = pickIsLocked
+    ? `Your ${teamPicked} pick is locked. Good luck!`
+    : userPick
     ? `You're riding with the ${userPick.teamPicked} this week!`
     : `Make your pick, ${firstName}!`;
 
@@ -47,9 +63,10 @@ const PickContent = ({
           <EventRow
             key={index}
             event={event}
-            teamPicked={userPick?.teamPicked}
+            teamPicked={teamPicked}
             username={username}
             poolId={poolId}
+            pickIsLocked={pickIsLocked}
           />
         ))}
       </ul>
@@ -63,29 +80,44 @@ type TeamRowProps = {
   teamPicked?: string;
   username: string;
   poolId: string;
+  pickIsLocked: boolean;
 };
-const EventRow = ({ event, teamPicked, username, poolId }: TeamRowProps) => {
-  const competitors = event.competitions[0]?.competitors ?? [];
+const EventRow = ({
+  event,
+  teamPicked,
+  username,
+  poolId,
+  pickIsLocked,
+}: TeamRowProps) => {
+  const competition = event.competitions[0];
+  const competitors = competition?.competitors ?? [];
   const homeTeam = competitors.find(
     (competitor) => competitor.homeAway === "home",
   )?.team;
   const awayTeam = competitors.find(
     (competitor) => competitor.homeAway === "away",
   )?.team;
+  const gameTime = spacetime(competition.date).goto(null);
   const commonProps = {
     teamPicked,
+    pickIsLocked,
     username,
     poolId,
   };
   return (
-    <div className="flex flex-row justify-center gap-4 pt-6">
-      <li>
-        <TeamButton team={awayTeam} {...commonProps} />
-      </li>
-      <li className="flex items-center font-bold">@</li>
-      <li>
-        <TeamButton team={homeTeam} {...commonProps} />
-      </li>
+    <div className="pt-2">
+      <div className="pt-4 font-semibold">
+        {gameTime.format("{day} {hour}:{minute-pad} {ampm}")}
+      </div>
+      <div className="flex flex-row justify-center gap-4 pt-2">
+        <li>
+          <TeamButton team={awayTeam} {...commonProps} />
+        </li>
+        <li className="flex items-center font-bold">@</li>
+        <li>
+          <TeamButton team={homeTeam} {...commonProps} />
+        </li>
+      </div>
     </div>
   );
 };
