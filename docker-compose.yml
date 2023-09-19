@@ -1,7 +1,11 @@
 version: "3"
+
 services:
-  survivor-pool:
-    image: survivor-pool
-    container_name: survivor-pool
+  survivor-pool-test-db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: survivor-pool-test
+      POSTGRES_PASSWORD: pwd
+      POSTGRES_USER: postgres
     ports:
-      - "8080:8080"
+      - "5433:5432"

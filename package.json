@@ -2,6 +2,7 @@
   "name": "survivor-pool",
   "scripts": {
     "css": "tailwindcss -o ./public/globals.css",
+    "db": "docker-compose up -d",
     "dev": "vite & bun --hot ./src/backend/server.ts",
     "drizzle": "drizzle-kit push:pg",
     "docker": "docker build . --tag survivor-pool",

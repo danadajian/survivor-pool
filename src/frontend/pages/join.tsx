@@ -1,12 +1,14 @@
 import React from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 
+import { Error } from "../error";
 import { Loader } from "../loader";
 import { type PageProps, withPage } from "../page-wrapper";
 import { trpc } from "../trpc";
 
 const JoinComponent = ({ user: { username } }: PageProps) => {
-  const { mutateAsync, isLoading, isSuccess } = trpc.joinPool.useMutation();
+  const { mutateAsync, isLoading, isSuccess, error } =
+    trpc.joinPool.useMutation();
   const navigate = useNavigate();
 
   const path = useMatch("/join/:poolId");
@@ -44,6 +46,7 @@ const JoinComponent = ({ user: { username } }: PageProps) => {
       <h1 className="pb-8 pt-8 text-2xl font-bold text-red-700">
         Join New Pool
       </h1>
+      {error && <Error message={error.message} />}
       <div className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
         <p className="text-md block pb-8 font-bold text-gray-700">
           You have been invited to join a new survivor pool!
