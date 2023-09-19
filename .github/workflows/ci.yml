@@ -38,13 +38,13 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/Cypress
-          key: ${{ runner.os }}-cypress-${{ hashFiles('package.json') }}
+          key: ${{ runner.os }}-cypress-${{ hashFiles('bun.lockb') }}
 
       - name: Install Cypress binary if not cached
         run: bun cypress install
 
       - name: Component Tests
-        run: cypress run --component
+        run: bun cypress run --component
 
   db:
     name: Database Migration
