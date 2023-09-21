@@ -11,7 +11,7 @@ import { appRouter } from "./router";
 
 const app = new Elysia()
   .use(cors())
-  .use(rateLimit({ max: 100 }))
+  .use(rateLimit({ max: 1000 }))
   .use(trpc(appRouter))
   .use(html())
   .use(staticPlugin({ assets: "public", prefix: "/" }))
