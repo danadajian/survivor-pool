@@ -5,6 +5,11 @@ export default defineConfig({
     devServer: {
       framework: "react",
       bundler: "vite",
+      viteConfig: {
+        define: {
+          "process.env.DEBUG_PRINT_LIMIT": 10000,
+        },
+      },
     },
   },
   screenshotOnRunFailure: false,
