@@ -3,14 +3,13 @@
   "scripts": {
     "css": "tailwindcss -o ./public/globals.css",
     "db": "docker-compose up -d",
-    "dev": "vite & bun --hot ./src/backend/server.ts",
+    "dev": "bun --hot ./src/backend/server.tsx",
     "drizzle": "drizzle-kit push:pg",
     "docker": "docker build . --tag survivor-pool",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "lint": "eslint . --fix --max-warnings=0",
-    "start": "bun ./src/backend/server.ts",
-    "transpile": "bun build.ts && bun css",
+    "start": "bun ./src/backend/server.tsx",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -40,7 +39,6 @@
     "@types/react-dom": "18.2.7",
     "@types/testing-library__cypress": "5.0.10",
     "@typescript-eslint/eslint-plugin": "6.7.0",
-    "@vitejs/plugin-react": "4.0.4",
     "arktype": "1.0.21-alpha",
     "bun-types": "1.0.2",
     "cypress": "13.2.0",
