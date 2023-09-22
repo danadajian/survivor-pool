@@ -91,10 +91,15 @@ const EventRow = ({ event, teamPicked, username, poolId }: TeamRowProps) => {
     (competitor) => competitor.homeAway === "away",
   )?.team;
   const gameTime = spacetime(competition.date).goto(null);
+  const gameStarted =
+    Boolean(gameTime) &&
+    spacetime.now().toNativeDate() >
+      spacetime(gameTime).goto(null).toNativeDate();
   const commonProps = {
     teamPicked,
     username,
     poolId,
+    gameStarted,
   };
   return (
     <div className="pt-2">

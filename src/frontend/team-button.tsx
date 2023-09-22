@@ -12,12 +12,14 @@ type TeamProps = {
   teamPicked?: string;
   username: string;
   poolId: string;
+  gameStarted: boolean;
 };
 export const TeamButton = ({
   team,
   teamPicked,
   username,
   poolId,
+  gameStarted,
 }: TeamProps) => {
   const context = trpc.useContext();
   const gamesAndPicks = context.pick.getData({ username, poolId });
@@ -51,12 +53,14 @@ export const TeamButton = ({
     ? "bg-blue-800 text-white"
     : teamPreviouslyPicked
     ? "bg-blue-800 text-white opacity-30"
+    : gameStarted
+    ? "bg-slate-300 opacity-30"
     : "bg-slate-300";
   const imageClass = teamPreviouslyPicked ? "opacity-80" : "";
   return (
     <>
       <button
-        disabled={teamCurrentlyPicked || teamPreviouslyPicked}
+        disabled={teamCurrentlyPicked || teamPreviouslyPicked || gameStarted}
         onClick={toggleDialog}
         className={`flex flex-col items-center rounded-lg border-2 border-slate-100 p-2 ${buttonClass}`}
       >
