@@ -3,7 +3,7 @@
   "scripts": {
     "css": "tailwindcss -o ./public/globals.css",
     "db": "docker-compose up -d",
-    "dev": "bun --hot ./src/backend/server.tsx",
+    "dev": "NODE_ENV=development bun --hot ./src/backend/server.tsx",
     "drizzle": "drizzle-kit push:pg",
     "docker": "docker build . --tag survivor-pool",
     "format": "prettier --write .",
@@ -15,7 +15,6 @@
   "dependencies": {
     "@clerk/clerk-react": "4.24.2",
     "@elysiajs/cors": "0.6.0",
-    "@elysiajs/html": "0.6.4",
     "@elysiajs/static": "0.6.0",
     "@elysiajs/trpc": "0.6.1",
     "@headlessui/react": "1.7.17",
