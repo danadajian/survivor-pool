@@ -1,7 +1,12 @@
+import {
+  ClerkProvider,
+  RedirectToSignIn,
+  SignedIn,
+  SignedOut,
+} from "@clerk/clerk-react";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { ClientProvider } from "./client-provider";
 import { Create } from "./pages/create";
 import { Home } from "./pages/home";
 import { Join } from "./pages/join";
@@ -23,20 +28,20 @@ export const App = () => (
       <link rel="stylesheet" href="/public/globals.css" />
     </head>
     <body>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ClientProvider>
-              <Home />
-            </ClientProvider>
-          }
-        />
-        <Route path="/pick/:poolId" element={<Pick />} />
-        <Route path="/pools/:poolId" element={<Pools />} />
-        <Route path="/create" element={<Create />} />
-        <Route path="/join" element={<Join />} />
-      </Routes>
+      <ClerkProvider publishableKey="pk_test_YW11c2luZy1tYW4tNjEuY2xlcmsuYWNjb3VudHMuZGV2JA">
+        <SignedIn>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/pick/:poolId" element={<Pick />} />
+            <Route path="/pools/:poolId" element={<Pools />} />
+            <Route path="/create" element={<Create />} />
+            <Route path="/join" element={<Join />} />
+          </Routes>
+        </SignedIn>
+        <SignedOut>
+          <RedirectToSignIn />
+        </SignedOut>
+      </ClerkProvider>
     </body>
   </html>
 );
