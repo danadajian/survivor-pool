@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . .
 
 RUN bun install
-RUN bun transpile
+RUN bun css
 
 ENV PORT 8080
 CMD [ "bun", "start" ]

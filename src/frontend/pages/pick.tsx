@@ -33,10 +33,11 @@ const PickContent = ({
   } = data;
 
   const teamPicked = userPick?.teamPicked;
-  const teamPickedInEvent = events.find((event) =>
-    event.competitions[0].competitors.some(
-      (competitor) => competitor.team.name === teamPicked,
-    ),
+  const teamPickedInEvent = events.find(
+    (event) =>
+      event.competitions[0]?.competitors.some(
+        (competitor) => competitor.team.name === teamPicked,
+      ),
   );
   const gameTime = teamPickedInEvent?.date;
   const pickIsLocked =
@@ -59,16 +60,15 @@ const PickContent = ({
       <h2 className="pt-2 text-lg font-bold">Week {week.number}</h2>
       <h3 className="pt-4 text-lg">{pickHeader}</h3>
       <ul>
-        {!pickIsLocked &&
-          events.map((event, index) => (
-            <EventRow
-              key={index}
-              event={event}
-              teamPicked={teamPicked}
-              username={username}
-              poolId={poolId}
-            />
-          ))}
+        {events.map((event, index) => (
+          <EventRow
+            key={index}
+            event={event}
+            teamPicked={teamPicked}
+            username={username}
+            poolId={poolId}
+          />
+        ))}
       </ul>
     </>
   );
@@ -90,11 +90,16 @@ const EventRow = ({ event, teamPicked, username, poolId }: TeamRowProps) => {
   const awayTeam = competitors.find(
     (competitor) => competitor.homeAway === "away",
   )?.team;
-  const gameTime = spacetime(competition.date).goto(null);
+  const gameTime = spacetime(competition?.date).goto(null);
+  const gameStarted =
+    Boolean(gameTime) &&
+    spacetime.now().toNativeDate() >
+      spacetime(gameTime).goto(null).toNativeDate();
   const commonProps = {
     teamPicked,
     username,
     poolId,
+    gameStarted,
   };
   return (
     <div className="pt-2">

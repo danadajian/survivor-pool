@@ -108,13 +108,13 @@ describe("Picks.cy.tsx", () => {
     }).should("be.visible");
   });
 
-  it("indicates when the week has ended", () => {
+  it("prevents picking a game that has started", () => {
     cy.intercept("/trpc/pick*", {
-      body: responseWithPickAndResults,
+      body: basicGamesAndPicksResponse,
     });
     cy.stub(spacetime, "now").returns({
       toNativeDate: () =>
-        new Date("Mon Sep 12 2023 22:50:04 GMT-0500 (Central Daylight Time)"),
+        new Date("Mon Sep 08 2023 22:50:04 GMT-0500 (Central Daylight Time)"),
     });
     cy.mount(
       <MockProviders initialEntries={["/pick/123"]}>
@@ -122,10 +122,32 @@ describe("Picks.cy.tsx", () => {
       </MockProviders>,
     );
 
-    cy.findByRole("button", { name: /Chiefs/ }).should("not.exist");
-    cy.findByRole("button", { name: /Bills/ }).should("not.exist");
+    cy.findByRole("button", { name: /Chiefs/ }).should("be.disabled");
+    cy.findByRole("button", { name: /Lions/ }).should("be.disabled");
+    cy.findByRole("button", { name: /Bills/ }).should("be.enabled");
     cy.findByRole("heading", {
-      name: "The Chiefs won, and you're still alive!",
+      name: "Make your pick, Test!",
     }).should("be.visible");
   });
+
+    it("indicates when the week has ended", () => {
+        cy.intercept("/trpc/pick*", {
+            body: responseWithPickAndResults,
+        });
+        cy.stub(spacetime, "now").returns({
+            toNativeDate: () =>
+                new Date("Mon Sep 12 2023 22:50:04 GMT-0500 (Central Daylight Time)"),
+        });
+        cy.mount(
+            <MockProviders initialEntries={["/pick/123"]}>
+                <Pick />
+            </MockProviders>,
+        );
+
+        cy.findByRole("button", { name: /Chiefs/ }).should("not.exist");
+        cy.findByRole("button", { name: /Bills/ }).should("not.exist");
+        cy.findByRole("heading", {
+            name: "The Chiefs won, and you're still alive!",
+        }).should("be.visible");
+    });
 });
