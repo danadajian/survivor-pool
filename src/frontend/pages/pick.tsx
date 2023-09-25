@@ -60,16 +60,15 @@ const PickContent = ({
       <h2 className="pt-2 text-lg font-bold">Week {week.number}</h2>
       <h3 className="pt-4 text-lg">{pickHeader}</h3>
       <ul>
-        {!pickIsLocked &&
-          events.map((event, index) => (
-            <EventRow
-              key={index}
-              event={event}
-              teamPicked={teamPicked}
-              username={username}
-              poolId={poolId}
-            />
-          ))}
+        {events.map((event, index) => (
+          <EventRow
+            key={index}
+            event={event}
+            teamPicked={teamPicked}
+            username={username}
+            poolId={poolId}
+          />
+        ))}
       </ul>
     </>
   );
