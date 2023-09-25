@@ -33,10 +33,11 @@ const PickContent = ({
   } = data;
 
   const teamPicked = userPick?.teamPicked;
-  const teamPickedInEvent = events.find((event) =>
-    event.competitions[0].competitors.some(
-      (competitor) => competitor.team.name === teamPicked,
-    ),
+  const teamPickedInEvent = events.find(
+    (event) =>
+      event.competitions[0]?.competitors.some(
+        (competitor) => competitor.team.name === teamPicked,
+      ),
   );
   const gameTime = teamPickedInEvent?.date;
   const pickIsLocked =
@@ -90,7 +91,7 @@ const EventRow = ({ event, teamPicked, username, poolId }: TeamRowProps) => {
   const awayTeam = competitors.find(
     (competitor) => competitor.homeAway === "away",
   )?.team;
-  const gameTime = spacetime(competition.date).goto(null);
+  const gameTime = spacetime(competition?.date).goto(null);
   const gameStarted =
     Boolean(gameTime) &&
     spacetime.now().toNativeDate() >

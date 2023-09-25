@@ -18,10 +18,6 @@ await Bun.build({
 });
 
 const app = new Elysia()
-  .use(cors())
-  .use(rateLimit({ max: 1000 }))
-  .use(trpc(appRouter))
-  .use(staticPlugin())
   .get("*", async (context) => {
     const stream = await renderToReadableStream(
       <StaticRouter location={context.path}>
@@ -35,6 +31,10 @@ const app = new Elysia()
       headers: { "Content-Type": "text/html" },
     });
   })
+  .use(cors())
+  .use(rateLimit({ max: 1000 }))
+  .use(trpc(appRouter))
+  .use(staticPlugin())
   .listen(environmentVariables.PORT ?? 8080);
 
 console.log(
