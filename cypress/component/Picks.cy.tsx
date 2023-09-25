@@ -4,7 +4,8 @@ import spacetime from "spacetime";
 import {
   basicGamesAndPicksResponse,
   responseWithPick,
-  responseWithPickAndForbiddenTeams, responseWithPickAndResults,
+  responseWithPickAndForbiddenTeams,
+  responseWithPickAndResults,
 } from "../../src/backend/mocks";
 import { Pick } from "../../src/frontend/pages/pick";
 import { MockProviders } from "../support/mock-clerk-provider";
@@ -130,24 +131,24 @@ describe("Picks.cy.tsx", () => {
     }).should("be.visible");
   });
 
-    it("indicates when the week has ended", () => {
-        cy.intercept("/trpc/pick*", {
-            body: responseWithPickAndResults,
-        });
-        cy.stub(spacetime, "now").returns({
-            toNativeDate: () =>
-                new Date("Mon Sep 12 2023 22:50:04 GMT-0500 (Central Daylight Time)"),
-        });
-        cy.mount(
-            <MockProviders initialEntries={["/pick/123"]}>
-                <Pick />
-            </MockProviders>,
-        );
-
-        cy.findByRole("button", { name: /Chiefs/ }).should("not.exist");
-        cy.findByRole("button", { name: /Bills/ }).should("not.exist");
-        cy.findByRole("heading", {
-            name: "The Chiefs won, and you're still alive!",
-        }).should("be.visible");
+  it("indicates when you survived a week", () => {
+    cy.intercept("/trpc/pick*", {
+      body: responseWithPickAndResults,
     });
+    cy.stub(spacetime, "now").returns({
+      toNativeDate: () =>
+        new Date("Mon Sep 12 2023 22:50:04 GMT-0500 (Central Daylight Time)"),
+    });
+    cy.mount(
+      <MockProviders initialEntries={["/pick/123"]}>
+        <Pick />
+      </MockProviders>,
+    );
+
+    cy.findByRole("button", { name: /Chiefs/ }).should("not.exist");
+    cy.findByRole("button", { name: /Bills/ }).should("not.exist");
+    cy.findByRole("heading", {
+      name: "The Chiefs won, and you're still alive!",
+    }).should("be.visible");
+  });
 });

@@ -1,5 +1,5 @@
 import React from "react";
-import { useMatch } from "react-router-dom";
+import { useMatch, useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
 
 import { Loader } from "../loader";
@@ -22,6 +22,7 @@ const PickContent = ({
   poolId,
 }: PageProps & { poolId: string }) => {
   const { data } = trpc.pick.useQuery({ username, poolId });
+  const navigate = useNavigate();
 
   if (!data) {
     return <Loader />;
@@ -46,7 +47,37 @@ const PickContent = ({
     spacetime.now().toNativeDate() >
       spacetime(gameTime).goto(null).toNativeDate();
 
-  const pickHeader = pickIsLocked
+  const teamPickedFromApi =
+    teamPickedInEvent?.competitions[0]?.competitors.find(
+      (competitor) => competitor.team.name === teamPicked,
+    );
+  const teamPickedIsWinner =
+    teamPickedFromApi &&
+    "winner" in teamPickedFromApi &&
+    typeof teamPickedFromApi.winner === "boolean"
+      ? teamPickedFromApi.winner
+      : undefined;
+
+  if (typeof teamPickedIsWinner === "boolean" && !teamPickedIsWinner) {
+    return (
+      <>
+        <h1 className="pb-8 pt-8 text-2xl font-bold text-red-700">
+          Sorry, you have been eliminated from this pool.
+        </h1>
+        <button
+          onClick={() => navigate(`/`)}
+          className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+          type="button"
+        >
+          Back to pools
+        </button>
+      </>
+    );
+  }
+
+  const pickHeader = teamPickedIsWinner
+    ? `The ${teamPicked} won, and you're still alive!`
+    : pickIsLocked
     ? `Your ${teamPicked} pick is locked. Good luck!`
     : userPick
     ? `You're riding with the ${userPick.teamPicked} this week!`
