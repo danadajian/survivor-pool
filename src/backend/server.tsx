@@ -12,9 +12,12 @@ import { environmentVariables } from "./env";
 import { appRouter } from "./router";
 
 await Bun.build({
-  entrypoints: ["./src/frontend/main.tsx"],
+  entrypoints: ["./src/frontend/client.tsx"],
   outdir: "./public",
   minify: true,
+  define: {
+    "process.env": JSON.stringify(environmentVariables),
+  },
 });
 
 const app = new Elysia()
@@ -24,7 +27,7 @@ const app = new Elysia()
         <App />
       </StaticRouter>,
       {
-        bootstrapScripts: ["/public/main.js"],
+        bootstrapScripts: ["/public/client.js"],
       },
     );
     return new Response(stream, {

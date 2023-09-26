@@ -24,7 +24,7 @@ export const App = () => (
       />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Survivor Pool</title>
-      {process.env.NODE_ENV === "development" && (
+      {process.env.ENVIRONMENT !== "production" && (
         <script src="https://cdn.tailwindcss.com"></script>
       )}
       <link rel="stylesheet" href="/public/globals.css" />

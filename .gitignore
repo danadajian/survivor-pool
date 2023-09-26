@@ -8,7 +8,7 @@
 .pnp.js
 
 # production
-/public/main.js
+/public/client.js
 /public/globals*
 
 # misc
