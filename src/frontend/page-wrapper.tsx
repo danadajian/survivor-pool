@@ -3,8 +3,8 @@ import { type } from "arktype";
 import React, { useMemo } from "react";
 
 import { ClientProvider } from "./client-provider";
-import { Header } from "./header";
 import { Loader } from "./loader";
+import { NavBar } from "./nav-bar";
 
 export const userSchema = type({
   username: "string",
@@ -30,7 +30,7 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
 
     return (
       <ClientProvider>
-        <Header />
+        <NavBar />
         <div className="flex flex-col items-center pb-8 pt-16 text-center">
           <Component user={validatedUser} />
         </div>

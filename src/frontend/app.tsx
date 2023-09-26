@@ -10,6 +10,7 @@ import { Route, Routes } from "react-router-dom";
 import { Create } from "./pages/create";
 import { Home } from "./pages/home";
 import { Join } from "./pages/join";
+import { NotFound } from "./pages/not-found";
 import { Pick } from "./pages/pick";
 import { Pools } from "./pages/pools";
 
@@ -38,6 +39,7 @@ export const App = () => (
             <Route path="/pools/:poolId" element={<Pools />} />
             <Route path="/create" element={<Create />} />
             <Route path="/join" element={<Join />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </SignedIn>
         <SignedOut>

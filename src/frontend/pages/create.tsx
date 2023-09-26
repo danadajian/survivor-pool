@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Error } from "../error";
+import { Header } from "../header";
 import { Loader } from "../loader";
 import { type PageProps, withPage } from "../page-wrapper";
 import { trpc } from "../trpc";
@@ -26,9 +27,7 @@ const CreateComponent = ({ user: { username } }: PageProps) => {
   if (isSuccess && data?.poolId) {
     return (
       <>
-        <h1 className="pb-8 pt-8 text-2xl font-bold text-red-700">
-          {`${poolName} created successfully!`}
-        </h1>
+        <Header>{`${poolName} created successfully!`}</Header>
         <div className="flex">
           <button
             onClick={() =>
@@ -55,9 +54,7 @@ const CreateComponent = ({ user: { username } }: PageProps) => {
 
   return (
     <>
-      <h1 className="pb-8 pt-8 text-2xl font-bold text-red-700">
-        Create New Pool
-      </h1>
+      <Header>Create New Pool</Header>
       {error && <Error message={error.message} />}
       <form className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
         <div className="pb-6">

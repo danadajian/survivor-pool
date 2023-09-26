@@ -2,6 +2,7 @@ import React from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 
 import { Error } from "../error";
+import { Header } from "../header";
 import { Loader } from "../loader";
 import { type PageProps, withPage } from "../page-wrapper";
 import { trpc } from "../trpc";
@@ -27,9 +28,7 @@ const JoinComponent = ({ user: { username } }: PageProps) => {
   if (isSuccess) {
     return (
       <>
-        <h1 className="pb-8 pt-8 text-2xl font-bold text-red-700">
-          You have joined the pool!
-        </h1>
+        <Header>You have joined the pool!</Header>
         <button
           onClick={() => navigate(`/pick/${poolId}`)}
           className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
@@ -43,9 +42,7 @@ const JoinComponent = ({ user: { username } }: PageProps) => {
 
   return (
     <>
-      <h1 className="pb-8 pt-8 text-2xl font-bold text-red-700">
-        Join New Pool
-      </h1>
+      <Header>Join New Pool</Header>
       {error && <Error message={error.message} />}
       <div className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
         <p className="text-md block pb-8 font-bold text-gray-700">

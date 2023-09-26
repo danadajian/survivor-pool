@@ -3,6 +3,7 @@ import { useMatch, useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
 
 import { Error } from "../error";
+import { Header } from "../header";
 import { Loader } from "../loader";
 import { type PageProps, withPage } from "../page-wrapper";
 import { TeamButton } from "../team-button";
@@ -65,9 +66,7 @@ const PickContent = ({
   if (typeof teamPickedIsWinner === "boolean" && !teamPickedIsWinner) {
     return (
       <>
-        <h1 className="pb-8 pt-8 text-2xl font-bold text-red-700">
-          Sorry, you have been eliminated from this pool.
-        </h1>
+        <Header>Sorry, you have been eliminated from this pool.</Header>
         <button
           onClick={() => navigate(`/`)}
           className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"

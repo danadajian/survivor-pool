@@ -2,6 +2,7 @@ import React from "react";
 import { useMatch } from "react-router-dom";
 
 import { Error } from "../error";
+import { Header } from "../header";
 import { Loader } from "../loader";
 import { type PageProps, withPage } from "../page-wrapper";
 import { trpc } from "../trpc";
@@ -33,11 +34,13 @@ const AllPicks = ({
   }
   const { picks, week } = data;
 
+  if (!picks.length) {
+    return <Header>No picks yet for week {week}</Header>;
+  }
+
   return (
     <>
-      <h1 className="pb-8 pt-8 text-2xl font-bold text-red-700">
-        Week {week} Picks
-      </h1>
+      <Header>Week {week} Picks</Header>
       <table className="table-auto">
         <thead>
           <tr>
