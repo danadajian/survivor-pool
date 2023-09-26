@@ -5,7 +5,8 @@ import {
   basicGamesAndPicksResponse,
   responseWithPick,
   responseWithPickAndForbiddenTeams,
-  responseWithPickAndResults,
+  responseWithPickAndResultsTeamLost,
+  responseWithPickAndResultsTeamWon,
 } from "../../src/mocks";
 import { Pick } from "../../src/pages/pick/frontend";
 import { MockProviders } from "../support/mock-clerk-provider";
@@ -129,11 +130,7 @@ describe("Picks.cy.tsx", () => {
 
   it("indicates when you survived a week", () => {
     cy.intercept("/trpc/pick*", {
-      body: responseWithPickAndResults,
-    });
-    cy.stub(spacetime, "now").returns({
-      toNativeDate: () =>
-        new Date("Mon Sep 12 2023 22:50:04 GMT-0500 (Central Daylight Time)"),
+      body: responseWithPickAndResultsTeamWon,
     });
     cy.mount(
       <MockProviders initialEntries={["/pick/123"]}>
@@ -143,6 +140,21 @@ describe("Picks.cy.tsx", () => {
 
     cy.findByRole("heading", {
       name: "The 49ers won, and you're still alive!",
+    }).should("be.visible");
+  });
+
+  it("indicates when you have been eliminated", () => {
+    cy.intercept("/trpc/pick*", {
+      body: responseWithPickAndResultsTeamLost,
+    });
+    cy.mount(
+      <MockProviders initialEntries={["/pick/123"]}>
+        <Pick />
+      </MockProviders>,
+    );
+
+    cy.findByRole("heading", {
+      name: "Sorry, the 49ers lost and you have been eliminated from this pool.",
     }).should("be.visible");
   });
 });

@@ -1,4 +1,5 @@
 import {
+  boolean,
   integer,
   pgTable,
   timestamp,
@@ -10,6 +11,7 @@ export const picks = pgTable("picks", {
   id: uuid("id").primaryKey().defaultRandom(),
   username: varchar("username", { length: 256 }).notNull(),
   teamPicked: varchar("team_picked", { length: 256 }).notNull(),
+  teamWon: boolean("team_won"),
   week: integer("week").notNull(),
   season: integer("season").notNull(),
   poolId: uuid("pool_id").notNull(),

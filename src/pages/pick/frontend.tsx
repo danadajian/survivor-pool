@@ -38,35 +38,13 @@ const PickContent = ({
     poolName,
   } = data;
 
-  const teamPicked = userPick?.teamPicked;
-  const teamPickedInEvent = events.find(
-    (event) =>
-      event.competitions[0]?.competitors.some(
-        (competitor) => competitor.team.name === teamPicked,
-      ),
-  );
-  const gameTime = teamPickedInEvent?.date;
-  const pickIsLocked =
-    Boolean(teamPicked) &&
-    Boolean(gameTime) &&
-    spacetime.now().toNativeDate() >
-      spacetime(gameTime).goto(null).toNativeDate();
-
-  const teamPickedFromApi =
-    teamPickedInEvent?.competitions[0]?.competitors.find(
-      (competitor) => competitor.team.name === teamPicked,
-    );
-  const teamPickedIsWinner =
-    teamPickedFromApi &&
-    "winner" in teamPickedFromApi &&
-    typeof teamPickedFromApi.winner === "boolean"
-      ? teamPickedFromApi.winner
-      : undefined;
-
-  if (typeof teamPickedIsWinner === "boolean" && !teamPickedIsWinner) {
+  if (userPick?.teamWon === false) {
     return (
       <>
-        <Header>Sorry, you have been eliminated from this pool.</Header>
+        <Header>
+          Sorry, the {userPick.teamPicked} lost and you have been eliminated
+          from this pool.
+        </Header>
         <button
           onClick={() => navigate(`/`)}
           className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
@@ -85,7 +63,21 @@ const PickContent = ({
     );
   }
 
-  const pickHeader = teamPickedIsWinner
+  const teamPicked = userPick?.teamPicked;
+  const teamPickedInEvent = events.find(
+    (event) =>
+      event.competitions[0]?.competitors.some(
+        (competitor) => competitor.team.name === teamPicked,
+      ),
+  );
+  const gameTime = teamPickedInEvent?.date;
+  const pickIsLocked =
+    Boolean(teamPicked) &&
+    Boolean(gameTime) &&
+    spacetime.now().toNativeDate() >
+      spacetime(gameTime).goto(null).toNativeDate();
+
+  const pickHeader = userPick?.teamWon
     ? `The ${teamPicked} won, and you're still alive!`
     : pickIsLocked
     ? `Your ${teamPicked} pick is locked. Good luck!`
