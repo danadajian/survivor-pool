@@ -1,9 +1,9 @@
 import { type } from "arktype";
 import { and, desc, eq } from "drizzle-orm";
 
-import { db } from "../db";
-import { picks } from "../schema";
-import { fetchGames } from "./pick";
+import { db } from "../../db";
+import { picks } from "../../schema";
+import { fetchGames } from "../pick/backend";
 
 export const fetchPicksForPoolInput = type({
   poolId: "string",

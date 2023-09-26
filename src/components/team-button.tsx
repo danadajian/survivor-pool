@@ -2,9 +2,9 @@ import { Dialog } from "@headlessui/react";
 import React from "react";
 import { useState } from "react";
 
+import type { Event } from "../pages/pick/frontend";
+import { trpc } from "../trpc";
 import { DialogWrapper } from "./dialog-wrapper";
-import type { Event } from "./pages/pick";
-import { trpc } from "./trpc";
 
 type Team = Event["competitions"][number]["competitors"][number]["team"];
 type TeamProps = {

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Join } from "../../src/frontend/pages/join";
+import { Join } from "../../src/pages/join/frontend";
 import { MockProviders } from "../support/mock-clerk-provider";
 
 describe("Join.cy.tsx", () => {

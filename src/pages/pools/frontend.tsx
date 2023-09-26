@@ -1,11 +1,11 @@
 import React from "react";
 import { useMatch } from "react-router-dom";
 
-import { Error } from "../error";
-import { Header } from "../header";
-import { Loader } from "../loader";
-import { type PageProps, withPage } from "../page-wrapper";
-import { trpc } from "../trpc";
+import { Error } from "../../components/error";
+import { Header } from "../../components/header";
+import { Loader } from "../../components/loader";
+import { type PageProps, withPage } from "../../components/page-wrapper";
+import { trpc } from "../../trpc";
 
 const PoolsComponent = ({ user: { username } }: PageProps) => {
   const path = useMatch("/pools/:poolId");

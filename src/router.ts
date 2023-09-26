@@ -1,16 +1,21 @@
 import { initTRPC } from "@trpc/server";
 
-import { createPool, createPoolInput } from "./pages/create";
-import { joinPool, joinPoolInput } from "./pages/join";
+import { createPool, createPoolInput } from "./pages/create/backend";
 import {
-  fetchPicksInput,
   fetchPoolsForUser,
   fetchPoolsForUserInput,
+} from "./pages/home/backend";
+import { joinPool, joinPoolInput } from "./pages/join/backend";
+import {
+  fetchPicksInput,
   makePick,
   makePickInput,
   pickEndpoint,
-} from "./pages/pick";
-import { fetchPicksForPool, fetchPicksForPoolInput } from "./pages/pools";
+} from "./pages/pick/backend";
+import {
+  fetchPicksForPool,
+  fetchPicksForPoolInput,
+} from "./pages/pools/backend";
 
 const t = initTRPC.create();
 

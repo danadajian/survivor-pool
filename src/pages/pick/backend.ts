@@ -2,18 +2,15 @@ import { TRPCError } from "@trpc/server";
 import { type } from "arktype";
 import { and, eq, lt } from "drizzle-orm";
 
-import { db } from "../db";
-import { environmentVariables } from "../env";
-import type { EspnResponse } from "../mocks";
-import { members, picks, pools } from "../schema";
+import { db } from "../../db";
+import { environmentVariables } from "../../env";
+import { type EspnResponse } from "../../mocks";
+import { picks } from "../../schema";
+import { fetchPoolsForUser } from "../home/backend";
 
 export const fetchPicksInput = type({
   username: "string",
   poolId: "string",
-});
-
-export const fetchPoolsForUserInput = type({
-  username: "string",
 });
 
 export const makePickInput = type({
@@ -95,16 +92,6 @@ export async function fetchForbiddenTeamsForUser({
   });
 
   return result.length ? result.map(({ teamPicked }) => teamPicked) : undefined;
-}
-
-export async function fetchPoolsForUser({
-  username,
-}: typeof fetchPoolsForUserInput.infer) {
-  return db
-    .select({ poolId: pools.id, poolName: pools.name })
-    .from(members)
-    .where(eq(members.username, username))
-    .innerJoin(pools, eq(members.poolId, pools.id));
 }
 
 export async function makePick({

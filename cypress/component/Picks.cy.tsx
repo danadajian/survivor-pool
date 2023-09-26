@@ -6,8 +6,8 @@ import {
   responseWithPick,
   responseWithPickAndForbiddenTeams,
   responseWithPickAndResults,
-} from "../../src/backend/mocks";
-import { Pick } from "../../src/frontend/pages/pick";
+} from "../../src/mocks";
+import { Pick } from "../../src/pages/pick/frontend";
 import { MockProviders } from "../support/mock-clerk-provider";
 
 describe("Picks.cy.tsx", () => {

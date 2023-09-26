@@ -2,12 +2,12 @@ import React from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
 
-import { Error } from "../error";
-import { Header } from "../header";
-import { Loader } from "../loader";
-import { type PageProps, withPage } from "../page-wrapper";
-import { TeamButton } from "../team-button";
-import { type RouterOutput, trpc } from "../trpc";
+import { Error } from "../../components/error";
+import { Header } from "../../components/header";
+import { Loader } from "../../components/loader";
+import { type PageProps, withPage } from "../../components/page-wrapper";
+import { TeamButton } from "../../components/team-button";
+import { type RouterOutput, trpc } from "../../trpc";
 
 const PickComponent = (props: PageProps) => {
   const path = useMatch("/pick/:poolId");

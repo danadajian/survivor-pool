@@ -7,12 +7,12 @@ import React from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
 
-import { App } from "../frontend/app";
+import { App } from "./app";
 import { environmentVariables } from "./env";
 import { appRouter } from "./router";
 
 await Bun.build({
-  entrypoints: ["./src/frontend/client.tsx"],
+  entrypoints: ["./src/client.tsx"],
   outdir: "./public",
   minify: true,
   define: {

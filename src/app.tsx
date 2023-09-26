@@ -7,12 +7,13 @@ import {
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { Create } from "./pages/create";
-import { Home } from "./pages/home";
-import { Join } from "./pages/join";
-import { NotFound } from "./pages/not-found";
-import { Pick } from "./pages/pick";
-import { Pools } from "./pages/pools";
+import { Header } from "./components/header";
+import { withPage } from "./components/page-wrapper";
+import { Create } from "./pages/create/frontend";
+import { Home } from "./pages/home/frontend";
+import { Join } from "./pages/join/frontend";
+import { Pick } from "./pages/pick/frontend";
+import { Pools } from "./pages/pools/frontend";
 
 export const App = () => (
   <html>
@@ -49,3 +50,5 @@ export const App = () => (
     </body>
   </html>
 );
+
+const NotFound = withPage(() => <Header>Not Found</Header>);

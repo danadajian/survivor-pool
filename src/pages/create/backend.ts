@@ -2,9 +2,9 @@ import { TRPCError } from "@trpc/server";
 import { type } from "arktype";
 import { eq } from "drizzle-orm";
 
-import { db } from "../db";
-import { pools } from "../schema";
-import { joinPool } from "./join";
+import { db } from "../../db";
+import { pools } from "../../schema";
+import { joinPool } from "../join/backend";
 
 export const createPoolInput = type({
   name: "string",

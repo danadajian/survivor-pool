@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Create } from "../../src/frontend/pages/create";
+import { Create } from "../../src/pages/create/frontend";
 import { MockProviders } from "../support/mock-clerk-provider";
 
 describe("Pools.cy.tsx", () => {

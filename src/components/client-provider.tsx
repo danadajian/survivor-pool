@@ -3,7 +3,7 @@ import { httpBatchLink } from "@trpc/client";
 import React from "react";
 import { type PropsWithChildren, useState } from "react";
 
-import { trpc } from "./trpc";
+import { trpc } from "../trpc";
 
 export const ClientProvider = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(
