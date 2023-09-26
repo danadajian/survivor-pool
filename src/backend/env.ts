@@ -2,7 +2,7 @@ import { type } from "arktype";
 
 export const envSchema = type({
   "PORT?": "string",
-  ENVIRONMENT: "'development' | 'production'",
+  "ENVIRONMENT?": "'development' | 'production'",
   GAMES_API_URL: "string",
   POSTGRES_URL: "string",
 });
