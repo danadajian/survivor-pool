@@ -12,7 +12,11 @@ export async function fetchPoolsForUser({
   username,
 }: typeof fetchPoolsForUserInput.infer) {
   return db
-    .select({ poolId: pools.id, poolName: pools.name })
+    .select({
+      poolId: pools.id,
+      poolName: pools.name,
+      eliminated: members.eliminated,
+    })
     .from(members)
     .where(eq(members.username, username))
     .innerJoin(pools, eq(members.poolId, pools.id));

@@ -19622,6 +19622,7 @@ export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pick"]> = {
     data: {
       games: mockEspnResponse,
       poolName: "Test Pool",
+      eliminated: false,
     },
   },
 };
@@ -19631,6 +19632,7 @@ export const responseWithPick: TRPCResponse<RouterOutput["pick"]> = {
       userPick: mockNinersPick,
       games: mockEspnResponse,
       poolName: "Test Pool",
+      eliminated: false,
     },
   },
 };
@@ -19643,6 +19645,7 @@ export const responseWithPickAndResultsTeamWon: TRPCResponse<
       userPick: { ...mockNinersPick, teamWon: true },
       games: mockEspnResponseResults,
       poolName: "Test Pool",
+      eliminated: false,
     },
   },
 };
@@ -19652,6 +19655,7 @@ export const responseWithPickAndResultsTeamLost = {
     data: {
       ...responseWithPickAndResultsTeamWon.result.data,
       userPick: { ...mockNinersPick, teamWon: false },
+      eliminated: true,
     },
   },
 };
@@ -19665,6 +19669,7 @@ export const responseWithPickAndForbiddenTeams: TRPCResponse<
       games: mockEspnResponse,
       forbiddenTeams: ["Bills", "Jets"],
       poolName: "Test Pool",
+      eliminated: false,
     },
   },
 };

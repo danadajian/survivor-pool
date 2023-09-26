@@ -154,7 +154,7 @@ describe("Picks.cy.tsx", () => {
     );
 
     cy.findByRole("heading", {
-      name: "Sorry, the 49ers lost and you have been eliminated from this pool.",
+      name: "Sorry, you have been eliminated from this pool.",
     }).should("be.visible");
   });
 });

@@ -51,6 +51,7 @@ export async function pickEndpoint({
     userPick,
     forbiddenTeams,
     poolName: pool.poolName,
+    eliminated: pool.eliminated,
   };
 }
 

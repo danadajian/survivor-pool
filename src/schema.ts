@@ -29,4 +29,5 @@ export const members = pgTable("members", {
   id: uuid("id").primaryKey().defaultRandom(),
   poolId: uuid("pool_id").notNull(),
   username: varchar("username", { length: 256 }).notNull(),
+  eliminated: boolean("eliminated").notNull().default(false),
 });

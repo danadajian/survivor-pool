@@ -36,15 +36,13 @@ const PickContent = ({
     userPick,
     games: { events, season, week },
     poolName,
+    eliminated,
   } = data;
 
-  if (userPick?.teamWon === false) {
+  if (eliminated) {
     return (
       <>
-        <Header>
-          Sorry, the {userPick.teamPicked} lost and you have been eliminated
-          from this pool.
-        </Header>
+        <Header>Sorry, you have been eliminated from this pool.</Header>
         <button
           onClick={() => navigate(`/`)}
           className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
