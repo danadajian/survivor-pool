@@ -23,6 +23,7 @@ const PickContent = ({
 }: PageProps & { poolId: string }) => {
   const { data } = trpc.pick.useQuery({ username, poolId });
   const navigate = useNavigate();
+  console.log(process.env.NODE_ENV);
 
   if (!data) {
     return <Loader />;
@@ -58,6 +59,7 @@ const PickContent = ({
       ? teamPickedFromApi.winner
       : undefined;
 
+  console.log("teamPickedFromApi", teamPickedFromApi);
   if (typeof teamPickedIsWinner === "boolean" && !teamPickedIsWinner) {
     return (
       <>
@@ -66,14 +68,14 @@ const PickContent = ({
         </h1>
         <button
           onClick={() => navigate(`/`)}
-          className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+          className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
           type="button"
         >
           Back to pools
         </button>
         <button
           onClick={() => navigate(`/create`)}
-          className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+          className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
           type="button"
         >
           Start a new pool
