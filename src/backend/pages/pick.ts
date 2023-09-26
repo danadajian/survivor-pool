@@ -39,11 +39,13 @@ export async function pickEndpoint({
   const games = await fetchGames();
   const userPick = await fetchPickForUser({
     username,
+    poolId,
     week: games.week.number,
     season: games.season.year,
   });
   const forbiddenTeams = await fetchForbiddenTeamsForUser({
     username,
+    poolId,
     week: games.week.number,
     season: games.season.year,
   });
@@ -62,12 +64,14 @@ export async function fetchGames(fetchMethod = fetch): Promise<EspnResponse> {
 
 export async function fetchPickForUser({
   username,
+  poolId,
   week,
   season,
-}: Pick<typeof makePickInput.infer, "username" | "week" | "season">) {
+}: Omit<typeof makePickInput.infer, "teamPicked">) {
   return db.query.picks.findFirst({
     where: and(
       eq(picks.username, username),
+      eq(picks.poolId, poolId),
       eq(picks.week, week),
       eq(picks.season, season),
     ),
@@ -76,13 +80,15 @@ export async function fetchPickForUser({
 
 export async function fetchForbiddenTeamsForUser({
   username,
+  poolId,
   week,
   season,
-}: Pick<typeof makePickInput.infer, "username" | "week" | "season">) {
+}: Omit<typeof makePickInput.infer, "teamPicked">) {
   const result = await db.query.picks.findMany({
     columns: { teamPicked: true },
     where: and(
       eq(picks.username, username),
+      eq(picks.poolId, poolId),
       lt(picks.week, week),
       eq(picks.season, season),
     ),
@@ -108,7 +114,12 @@ export async function makePick({
   season,
   poolId,
 }: typeof makePickInput.infer) {
-  const existingPick = await fetchPickForUser({ username, week, season });
+  const existingPick = await fetchPickForUser({
+    username,
+    poolId,
+    week,
+    season,
+  });
   if (existingPick) {
     return db
       .update(picks)

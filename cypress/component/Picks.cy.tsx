@@ -5,6 +5,7 @@ import {
   basicGamesAndPicksResponse,
   responseWithPick,
   responseWithPickAndForbiddenTeams,
+  responseWithPickAndResults,
 } from "../../src/backend/mocks";
 import { Pick } from "../../src/frontend/pages/pick";
 import { MockProviders } from "../support/mock-clerk-provider";
@@ -48,20 +49,18 @@ describe("Picks.cy.tsx", () => {
       </MockProviders>,
     );
 
-    cy.findByRole("button", { name: /Chiefs/ })
-      .should("be.visible")
-      .click();
+    cy.findByRole("button", { name: /49ers/ }).should("be.visible").click();
     cy.findByRole("heading", { name: "Confirm pick" }).should("be.visible");
-    cy.findByText(/Are you sure you want to pick the Chiefs?/).should(
+    cy.findByText(/Are you sure you want to pick the 49ers?/).should(
       "be.visible",
     );
     cy.intercept("/trpc/pick*", {
       body: responseWithPick,
     });
     cy.findByRole("button", { name: "Lock it in" }).click();
-    cy.findByRole("button", { name: /Chiefs/ }).should("be.disabled");
+    cy.findByRole("button", { name: /49ers/ }).should("be.disabled");
     cy.findByRole("heading", {
-      name: "You're riding with the Chiefs this week!",
+      name: "You're riding with the 49ers this week!",
     }).should("be.visible");
   });
 
@@ -79,11 +78,11 @@ describe("Picks.cy.tsx", () => {
       </MockProviders>,
     );
 
+    cy.findByRole("button", { name: /49ers/ }).should("be.disabled");
     cy.findByRole("button", { name: /Bills/ }).should("be.disabled");
     cy.findByRole("button", { name: /Jets/ }).should("be.disabled");
-    cy.findByRole("button", { name: /Chiefs/ }).should("be.disabled");
     cy.findByRole("heading", {
-      name: "You're riding with the Chiefs this week!",
+      name: "You're riding with the 49ers this week!",
     }).should("be.visible");
   });
 
@@ -93,7 +92,7 @@ describe("Picks.cy.tsx", () => {
     });
     cy.stub(spacetime, "now").returns({
       toNativeDate: () =>
-        new Date("Mon Sep 10 2023 22:50:04 GMT-0500 (Central Daylight Time)"),
+        new Date("Mon Sep 10 2023 17:50:04 GMT-0500 (Central Daylight Time)"),
     });
     cy.mount(
       <MockProviders initialEntries={["/pick/123"]}>
@@ -101,10 +100,9 @@ describe("Picks.cy.tsx", () => {
       </MockProviders>,
     );
 
-    cy.findByRole("button", { name: /Chiefs/ }).should("not.exist");
-    cy.findByRole("button", { name: /Bills/ }).should("not.exist");
+    cy.findByRole("button", { name: /49ers/ }).should("be.disabled");
     cy.findByRole("heading", {
-      name: "Your Chiefs pick is locked. Good luck!",
+      name: "Your 49ers pick is locked. Good luck!",
     }).should("be.visible");
   });
 
@@ -114,7 +112,7 @@ describe("Picks.cy.tsx", () => {
     });
     cy.stub(spacetime, "now").returns({
       toNativeDate: () =>
-        new Date("Mon Sep 08 2023 22:50:04 GMT-0500 (Central Daylight Time)"),
+        new Date("Mon Sep 10 2023 17:50:04 GMT-0500 (Central Daylight Time)"),
     });
     cy.mount(
       <MockProviders initialEntries={["/pick/123"]}>
@@ -122,11 +120,29 @@ describe("Picks.cy.tsx", () => {
       </MockProviders>,
     );
 
-    cy.findByRole("button", { name: /Chiefs/ }).should("be.disabled");
-    cy.findByRole("button", { name: /Lions/ }).should("be.disabled");
+    cy.findByRole("button", { name: /49ers/ }).should("be.disabled");
     cy.findByRole("button", { name: /Bills/ }).should("be.enabled");
     cy.findByRole("heading", {
       name: "Make your pick, Test!",
+    }).should("be.visible");
+  });
+
+  it("indicates when you survived a week", () => {
+    cy.intercept("/trpc/pick*", {
+      body: responseWithPickAndResults,
+    });
+    cy.stub(spacetime, "now").returns({
+      toNativeDate: () =>
+        new Date("Mon Sep 12 2023 22:50:04 GMT-0500 (Central Daylight Time)"),
+    });
+    cy.mount(
+      <MockProviders initialEntries={["/pick/123"]}>
+        <Pick />
+      </MockProviders>,
+    );
+
+    cy.findByRole("heading", {
+      name: "The 49ers won, and you're still alive!",
     }).should("be.visible");
   });
 });
