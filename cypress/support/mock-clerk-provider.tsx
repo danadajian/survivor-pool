@@ -20,7 +20,7 @@ export const MockProviders = ({
 }) => (
   <ClerkProvider
     initialState={mockClerkState}
-    publishableKey={Cypress.env("CLERK_PUBLISHABLE_KEY")}
+    publishableKey="pk_test_YW11c2luZy1tYW4tNjEuY2xlcmsuYWNjb3VudHMuZGV2JA"
   >
     <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
   </ClerkProvider>

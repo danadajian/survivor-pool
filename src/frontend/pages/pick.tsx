@@ -2,6 +2,7 @@ import React from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
 
+import { Error } from "../error";
 import { Loader } from "../loader";
 import { type PageProps, withPage } from "../page-wrapper";
 import { TeamButton } from "../team-button";
@@ -21,12 +22,14 @@ const PickContent = ({
   user: { username, firstName },
   poolId,
 }: PageProps & { poolId: string }) => {
-  const { data } = trpc.pick.useQuery({ username, poolId });
+  const { data, isLoading, error } = trpc.pick.useQuery({ username, poolId });
   const navigate = useNavigate();
-  console.log(process.env.NODE_ENV);
 
-  if (!data) {
+  if (isLoading) {
     return <Loader />;
+  }
+  if (error) {
+    return <Error message={error.message} />;
   }
   const {
     userPick,
@@ -59,7 +62,6 @@ const PickContent = ({
       ? teamPickedFromApi.winner
       : undefined;
 
-  console.log("teamPickedFromApi", teamPickedFromApi);
   if (typeof teamPickedIsWinner === "boolean" && !teamPickedIsWinner) {
     return (
       <>

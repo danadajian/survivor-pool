@@ -1,16 +1,20 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Error } from "../error";
 import { Loader } from "../loader";
 import { type PageProps, withPage } from "../page-wrapper";
 import { trpc } from "../trpc";
 
 const HomeComponent = ({ user: { username } }: PageProps) => {
-  const { data } = trpc.poolsForUser.useQuery({ username });
+  const { data, isLoading, error } = trpc.poolsForUser.useQuery({ username });
   const navigate = useNavigate();
 
-  if (!data) {
+  if (isLoading) {
     return <Loader />;
+  }
+  if (error) {
+    return <Error message={error.message} />;
   }
 
   return (

@@ -37,6 +37,7 @@ const app = new Elysia()
   .use(staticPlugin())
   .listen(environmentVariables.PORT ?? 8080);
 
-console.log(
+// eslint-disable-next-line no-console
+console.info(
   `App is running at http://${app.server?.hostname}:${app.server?.port}`,
 );

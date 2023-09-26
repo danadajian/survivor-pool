@@ -30,6 +30,7 @@ const config = {
       },
     ],
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    "no-console": "error",
     "simple-import-sort/imports": "error",
     "no-only-tests/no-only-tests": "error",
   },

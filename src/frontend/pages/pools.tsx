@@ -1,6 +1,7 @@
 import React from "react";
 import { useMatch } from "react-router-dom";
 
+import { Error } from "../error";
 import { Loader } from "../loader";
 import { type PageProps, withPage } from "../page-wrapper";
 import { trpc } from "../trpc";
@@ -22,10 +23,13 @@ const AllPicks = ({
   username: string;
   poolId: string;
 }) => {
-  const { data } = trpc.picksForPool.useQuery({ poolId });
+  const { data, isLoading, error } = trpc.picksForPool.useQuery({ poolId });
 
-  if (!data) {
+  if (isLoading) {
     return <Loader />;
+  }
+  if (error) {
+    return <Error message={error.message} />;
   }
   const { picks, week } = data;
 

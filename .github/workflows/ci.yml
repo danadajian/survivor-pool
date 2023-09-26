@@ -9,8 +9,6 @@ on:
 env:
   GAMES_API_URL: "https://some-api-url"
   POSTGRES_URL: "postgresql://some-postgres-url"
-  CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
-  CYPRESS_CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
 
 jobs:
   test:

@@ -1,7 +1,5 @@
 FROM oven/bun
 
-ARG CLERK_PUBLISHABLE_KEY
-
 WORKDIR /app
 COPY . .
 
