@@ -34,7 +34,7 @@ const config = {
     "simple-import-sort/imports": "error",
     "no-only-tests/no-only-tests": "error",
   },
-  ignorePatterns: ["public"],
+  ignorePatterns: ["public", "scripts"],
 };
 
 module.exports = config;

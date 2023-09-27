@@ -1,0 +1,21 @@
+name: Weekly Update
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 12 * * 2"
+
+env:
+  GAMES_API_URL: "https://some-api-url"
+
+jobs:
+  update:
+    name: Run Weekly Update
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install
+      - run: bun run ./scripts/weekly-update.ts
+        env:
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
