@@ -5,9 +5,6 @@ on:
   schedule:
     - cron: "0 12 * * 2"
 
-env:
-  GAMES_API_URL: "https://some-api-url"
-
 jobs:
   update:
     name: Run Weekly Update
@@ -18,4 +15,5 @@ jobs:
       - run: bun install
       - run: bun run ./scripts/weekly-update.ts
         env:
+          GAMES_API_URL: ${{ secrets.GAMES_API_URL }}
           POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
