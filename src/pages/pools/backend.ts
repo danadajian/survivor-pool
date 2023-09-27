@@ -1,5 +1,5 @@
 import { type } from "arktype";
-import { and, desc, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 
 import { db } from "../../db";
 import { picks } from "../../schema";
@@ -23,7 +23,7 @@ export async function fetchPicksForPool({
         eq(picks.poolId, poolId),
       ),
     )
-    .orderBy(desc(picks.season), desc(picks.week));
+    .orderBy(asc(picks.timestamp));
 
   return {
     picks: picksResult,
