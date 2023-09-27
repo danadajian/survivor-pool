@@ -34,7 +34,6 @@ function getWinnerValue(teamPicked: string) {
 for (const { username, teamPicked, poolId } of userPicks) {
   const teamWon = getWinnerValue(teamPicked);
   if (typeof teamWon === "boolean") {
-    console.log(`Eliminating user ${username} from poolId ${poolId}...`);
     await db
       .update(picks)
       .set({ teamWon })
@@ -46,9 +45,14 @@ for (const { username, teamPicked, poolId } of userPicks) {
           eq(picks.season, season.year),
         ),
       );
-    await db
-      .update(members)
-      .set({ eliminated: true })
-      .where(and(eq(members.username, username), eq(members.poolId, poolId)));
+    if (!teamWon) {
+      console.log(`Eliminating user ${username} from poolId ${poolId}...`);
+      await db
+        .update(members)
+        .set({ eliminated: true })
+        .where(and(eq(members.username, username), eq(members.poolId, poolId)));
+    }
   }
 }
+
+process.exit(0);
