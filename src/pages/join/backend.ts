@@ -15,7 +15,11 @@ export async function joinPool({
   poolId,
 }: typeof joinPoolInput.infer) {
   const result = await db
-    .select({ poolId: pools.id, poolMembersId: members.id })
+    .select({
+      poolId: pools.id,
+      poolMembersId: members.id,
+      username: members.username,
+    })
     .from(pools)
     .where(eq(pools.id, poolId))
     .leftJoin(members, eq(pools.id, members.poolId));
@@ -28,7 +32,7 @@ export async function joinPool({
     });
   }
   const poolMemberExists = Boolean(
-    result.find(({ poolMembersId }) => poolMembersId),
+    result.find(({ username: existingMember }) => username === existingMember),
   );
   if (poolMemberExists) {
     throw new TRPCError({

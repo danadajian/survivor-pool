@@ -14,6 +14,20 @@ jobs:
   test:
     name: Build and Test
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: survivor-pool-test
+          POSTGRES_PASSWORD: pwd
+          POSTGRES_USER: postgres
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
@@ -21,7 +35,7 @@ jobs:
       - run: bun format-check
       - run: bun lint
       - run: bun typecheck
-      - run: bun test
+      - run: bun run test
       - uses: iamsauravsharma/create-dotenv@v1.2.2
       - run: bun docker
 
