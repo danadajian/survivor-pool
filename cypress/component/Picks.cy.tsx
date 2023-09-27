@@ -1,14 +1,14 @@
 import React from "react";
 import spacetime from "spacetime";
 
+import { Pick } from "../../src/pages/pick/frontend";
 import {
   basicGamesAndPicksResponse,
   responseWithPick,
   responseWithPickAndForbiddenTeams,
   responseWithPickAndResultsTeamLost,
   responseWithPickAndResultsTeamWon,
-} from "../../src/mocks";
-import { Pick } from "../../src/pages/pick/frontend";
+} from "../../test/mocks";
 import { MockProviders } from "../support/mock-clerk-provider";
 
 describe("Picks.cy.tsx", () => {

@@ -1,7 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, mock } from "bun:test";
 
 import { db } from "../src/db";
-import { mockEspnResponse } from "../src/mocks";
 import { createPool } from "../src/pages/create/backend";
 import { joinPool } from "../src/pages/join/backend";
 import {
@@ -11,6 +10,7 @@ import {
   makePick,
 } from "../src/pages/pick/backend";
 import { members, picks, pools } from "../src/schema";
+import { mockEspnResponse } from "./mocks";
 
 const mockFetch = mock(fetch).mockResolvedValue(
   new Response(JSON.stringify(mockEspnResponse)),

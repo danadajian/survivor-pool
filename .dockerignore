@@ -1,3 +1,7 @@
 .github
+.husky
+cypress
 node_modules
+scripts
+test
 *.md

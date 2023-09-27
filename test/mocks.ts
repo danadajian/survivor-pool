@@ -1,6 +1,6 @@
 import type { TRPCResponse } from "@trpc/server/rpc";
 
-import type { RouterOutput } from "./trpc";
+import type { RouterOutput } from "../src/trpc";
 
 export const mockNinersPick: RouterOutput["pick"]["userPick"] = {
   id: "123",
