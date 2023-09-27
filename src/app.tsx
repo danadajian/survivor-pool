@@ -39,7 +39,7 @@ export const App = () => (
             <Route path="/pick/:poolId" element={<Pick />} />
             <Route path="/pools/:poolId" element={<Pools />} />
             <Route path="/create" element={<Create />} />
-            <Route path="/join" element={<Join />} />
+            <Route path="/join/:poolId" element={<Join />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </SignedIn>

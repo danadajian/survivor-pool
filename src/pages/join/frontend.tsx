@@ -17,6 +17,9 @@ const JoinComponent = ({ user: { username } }: PageProps) => {
   if (isLoading || !poolId) {
     return <Loader />;
   }
+  if (error) {
+    return <Error message={error.message} />;
+  }
 
   const joinPool = async () => {
     await mutateAsync({
@@ -43,7 +46,6 @@ const JoinComponent = ({ user: { username } }: PageProps) => {
   return (
     <>
       <Header>Join New Pool</Header>
-      {error && <Error message={error.message} />}
       <div className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
         <p className="text-md block pb-8 font-bold text-gray-700">
           You have been invited to join a new survivor pool!

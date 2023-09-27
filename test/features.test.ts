@@ -1,4 +1,4 @@
-import { afterAll, describe, expect, it, mock } from "bun:test";
+import { afterAll, beforeAll, describe, expect, it, mock } from "bun:test";
 
 import { db } from "../src/db";
 import { mockEspnResponse } from "../src/mocks";
@@ -10,13 +10,29 @@ import {
   fetchPickForUser,
   makePick,
 } from "../src/pages/pick/backend";
-import { members, pools } from "../src/schema";
+import { members, picks, pools } from "../src/schema";
 
 const mockFetch = mock(fetch).mockResolvedValue(
   new Response(JSON.stringify(mockEspnResponse)),
 );
 
+async function clearAllTables() {
+  await db.delete(picks);
+  await db.delete(pools);
+  await db.delete(members);
+}
+
 describe("feature tests", () => {
+  beforeAll(async () => {
+    Bun.spawnSync(["bun", "drizzle"]);
+    await clearAllTables();
+  });
+
+  afterAll(async () => {
+    await clearAllTables();
+    process.exit(0);
+  });
+
   const username = "user1@test.com";
   const week = 1;
   const season = 2023;
@@ -91,9 +107,5 @@ describe("feature tests", () => {
     expect(newMembers).toHaveLength(2);
     expect(newMembers[0].username).toEqual(username);
     expect(newMembers[1].username).toEqual(newUser);
-  });
-
-  afterAll(() => {
-    process.exit(0);
   });
 });

@@ -8,9 +8,7 @@
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "lint": "eslint . --fix --max-warnings=0",
-    "posttest": "POSTGRES_URL=postgresql://postgres:pwd@localhost:5433/survivor-pool-test bun run ./scripts/cleanup-tables.ts",
     "preprod": "tailwindcss -o ./public/globals.css",
-    "pretest": "POSTGRES_URL=postgresql://postgres:pwd@localhost:5433/survivor-pool-test bun drizzle",
     "prod": "ENVIRONMENT=production bun ./src/server.tsx",
     "test": "POSTGRES_URL=postgresql://postgres:pwd@localhost:5433/survivor-pool-test bun test",
     "typecheck": "tsc"
