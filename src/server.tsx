@@ -1,4 +1,3 @@
-import cors from "@elysiajs/cors";
 import { staticPlugin } from "@elysiajs/static";
 import { trpc } from "@elysiajs/trpc";
 import Elysia from "elysia";
@@ -40,7 +39,6 @@ const app = new Elysia()
       headers: { "Content-Type": "text/html" },
     });
   })
-  .use(cors())
   .use(rateLimit({ max: 1000 }))
   .use(trpc(appRouter))
   .use(staticPlugin())
