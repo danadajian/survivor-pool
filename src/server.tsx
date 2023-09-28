@@ -40,6 +40,19 @@ const app = new Elysia()
   .use(staticPlugin())
   .listen(environmentVariables.PORT ?? 8080);
 
+declare global {
+  // eslint-disable-next-line no-var
+  var ws: typeof Elysia.arguments;
+}
+if (environmentVariables.ENVIRONMENT === "development") {
+  global.ws?.send("reload");
+  app.ws("/ws", {
+    open: (ws) => {
+      global.ws = ws;
+    },
+  });
+}
+
 // eslint-disable-next-line no-console
 console.info(
   `App is running at http://${app.server?.hostname}:${app.server?.port}`,

@@ -19,17 +19,23 @@ export const App = () => (
   <html>
     <head>
       <meta charSet="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="icon" type="image/svg+xml" href="" />
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
       />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Survivor Pool</title>
-      {process.env.ENVIRONMENT !== "production" && (
-        <script src="https://cdn.tailwindcss.com"></script>
-      )}
       <link rel="stylesheet" href="/public/globals.css" />
+      <title>Survivor Pool</title>
+      {process.env.ENVIRONMENT === "development" && (
+        <>
+          <script src="https://cdn.tailwindcss.com" />
+          <script
+            type="text/javascript"
+            dangerouslySetInnerHTML={{ __html: hotReloadScript }}
+          />
+        </>
+      )}
     </head>
     <body>
       <ClerkProvider publishableKey="pk_test_YW11c2luZy1tYW4tNjEuY2xlcmsuYWNjb3VudHMuZGV2JA">
@@ -52,3 +58,13 @@ export const App = () => (
 );
 
 const NotFound = withPage(() => <Header>Not Found</Header>);
+const hotReloadScript = `
+function hotReload() {
+  const socket = new WebSocket("ws://localhost:8080/ws");
+  socket.onmessage = () => {
+    location.reload()
+  };
+  console.log('Hot reload enabled.');
+}
+hotReload();
+`;

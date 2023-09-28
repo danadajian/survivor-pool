@@ -52,17 +52,19 @@ const PoolSelect = ({ data }: { data: RouterOutput["poolsForUser"] }) => {
       <p className="text-md block pb-8 font-bold text-gray-700">
         Select a pool:
       </p>
-      {data.map(({ poolId, poolName }) => (
-        <button
-          key={poolId}
-          id={String(poolId)}
-          onClick={(event) => navigate(`/pick/${event.currentTarget.id}`)}
-          className="focus:shadow-outline my-2 ml-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-          type="button"
-        >
-          {poolName}
-        </button>
-      ))}
+      <div className="flex justify-around">
+        {data.map(({ poolId, poolName }) => (
+          <button
+            key={poolId}
+            id={String(poolId)}
+            onClick={(event) => navigate(`/pick/${event.currentTarget.id}`)}
+            className="focus:shadow-outline my-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+            type="button"
+          >
+            {poolName}
+          </button>
+        ))}
+      </div>
     </>
   );
 };
