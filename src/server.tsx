@@ -9,22 +9,28 @@ import { StaticRouter } from "react-router-dom/server";
 
 import { App } from "./app";
 import { environmentVariables } from "./env";
+import { hmrPlugin, HmrScript } from "./hmr/plugin";
 import { appRouter } from "./router";
 
 await Bun.build({
   entrypoints: ["./src/client.tsx"],
   outdir: "./public",
   minify: true,
-  define: {
-    "process.env": JSON.stringify(environmentVariables),
-  },
 });
+
+const isDev = environmentVariables.ENVIRONMENT === "development";
 
 const app = new Elysia()
   .get("*", async (context) => {
     const stream = await renderToReadableStream(
       <StaticRouter location={context.path}>
         <App />
+        {isDev && (
+          <>
+            <script src="https://cdn.tailwindcss.com" />
+            <HmrScript app={app} />
+          </>
+        )}
       </StaticRouter>,
       {
         bootstrapScripts: ["/public/client.js"],
@@ -40,17 +46,8 @@ const app = new Elysia()
   .use(staticPlugin())
   .listen(environmentVariables.PORT ?? 8080);
 
-declare global {
-  // eslint-disable-next-line no-var
-  var ws: typeof Elysia.arguments;
-}
-if (environmentVariables.ENVIRONMENT === "development") {
-  global.ws?.send("reload");
-  app.ws("/ws", {
-    open: (ws) => {
-      global.ws = ws;
-    },
-  });
+if (isDev) {
+  app.use(hmrPlugin());
 }
 
 // eslint-disable-next-line no-console
