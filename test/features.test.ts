@@ -89,14 +89,14 @@ describe("feature tests", () => {
     await createPool({ name: "Test Pool", creator: username });
     const result = await db.select().from(pools);
     expect(result).toHaveLength(1);
-    expect(result[0].name).toEqual("Test Pool");
-    expect(result[0].creator).toEqual(username);
+    expect(result[0]?.name).toEqual("Test Pool");
+    expect(result[0]?.creator).toEqual(username);
   });
 
   it("should have added the creator as a member", async () => {
     const newMembers = await db.select().from(members);
     expect(newMembers).toHaveLength(1);
-    expect(newMembers[0].username).toEqual(username);
+    expect(newMembers[0]?.username).toEqual(username);
   });
 
   it("should allow another user to join the pool", async () => {
@@ -105,7 +105,7 @@ describe("feature tests", () => {
     await joinPool({ username: newUser, poolId: pool!.id });
     const newMembers = await db.select().from(members);
     expect(newMembers).toHaveLength(2);
-    expect(newMembers[0].username).toEqual(username);
-    expect(newMembers[1].username).toEqual(newUser);
+    expect(newMembers[0]?.username).toEqual(username);
+    expect(newMembers[1]?.username).toEqual(newUser);
   });
 });
