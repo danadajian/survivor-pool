@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "terraform/**"
 
 env:
   GAMES_API_URL: "https://some-api-url"
