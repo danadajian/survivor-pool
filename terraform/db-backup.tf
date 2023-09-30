@@ -20,7 +20,7 @@ resource "aws_iam_policy" "db_backup_policy" {
   })
 }
 
-resource "aws_iam_user_policy_attachment" "test-attach" {
+resource "aws_iam_user_policy_attachment" "backup_attachment" {
   user       = aws_iam_user.db_backup_user.name
   policy_arn = aws_iam_policy.db_backup_policy.arn
 }
