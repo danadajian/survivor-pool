@@ -5,7 +5,7 @@
     "dev": "ENVIRONMENT=development bun --hot ./src/server.tsx",
     "drizzle": "drizzle-kit push:pg",
     "docker": "docker build . --tag survivor-pool",
-    "format": "prettier --write .",
+    "format": "prettier --write . && terraform fmt terraform",
     "format-check": "prettier --check .",
     "lint": "eslint . --fix --max-warnings=0",
     "preprod": "tailwindcss -o ./public/globals.css",
