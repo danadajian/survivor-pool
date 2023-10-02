@@ -19679,6 +19679,7 @@ export const picksForPoolResponse: TRPCResponse<RouterOutput["picksForPool"]> =
     result: {
       data: {
         week: 1,
+        season: 2023,
         picks: [
           {
             id: "123",

@@ -7,19 +7,28 @@ import { fetchGames } from "../pick/backend";
 
 export const fetchPicksForPoolInput = type({
   poolId: "string",
+  "week?": "number | null",
+  "season?": "number | null",
 });
 
 export async function fetchPicksForPool({
   poolId,
+  week,
+  season,
 }: typeof fetchPicksForPoolInput.infer) {
-  const { week, season } = await fetchGames();
+  const {
+    week: { number: currentWeek },
+    season: { year: currentSeason },
+  } = await fetchGames();
+  const weekToUse = week ?? currentWeek;
+  const seasonToUse = season ?? currentSeason;
   const picksResult = await db
     .select()
     .from(picks)
     .where(
       and(
-        eq(picks.week, week.number),
-        eq(picks.season, season.year),
+        eq(picks.week, weekToUse),
+        eq(picks.season, seasonToUse),
         eq(picks.poolId, poolId),
       ),
     )
@@ -27,6 +36,7 @@ export async function fetchPicksForPool({
 
   return {
     picks: picksResult,
-    week: week.number,
+    week: currentWeek,
+    season: currentSeason,
   };
 }

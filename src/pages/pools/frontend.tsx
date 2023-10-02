@@ -1,6 +1,7 @@
 import React from "react";
-import { useMatch } from "react-router-dom";
+import { useMatch, useSearchParams } from "react-router-dom";
 
+import { Dropdown } from "../../components/dropdown";
 import { Error } from "../../components/error";
 import { Header } from "../../components/header";
 import { Loader } from "../../components/loader";
@@ -24,7 +25,14 @@ const AllPicks = ({
   username: string;
   poolId: string;
 }) => {
-  const { data, isLoading, error } = trpc.picksForPool.useQuery({ poolId });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { week, season }: Record<string, string | undefined> =
+    Object.fromEntries(searchParams.entries());
+  const { data, isLoading, error } = trpc.picksForPool.useQuery({
+    poolId,
+    week: Number(week),
+    season: Number(season),
+  });
 
   if (isLoading) {
     return <Loader />;
@@ -32,7 +40,7 @@ const AllPicks = ({
   if (error) {
     return <Error message={error.message} />;
   }
-  const { picks, week } = data;
+  const { picks, week: currentWeek } = data;
 
   if (!picks.length) {
     return <Header>No picks yet for week {week}</Header>;
@@ -41,7 +49,7 @@ const AllPicks = ({
   return (
     <>
       <Header>Week {week} Picks</Header>
-      <table className="table-auto">
+      <table className="mb-8 table-auto">
         <thead>
           <tr>
             <th>User</th>
@@ -61,6 +69,11 @@ const AllPicks = ({
           })}
         </tbody>
       </table>
+      <Dropdown
+        options={Array.from({ length: currentWeek }, (_, i) => i + 1)}
+        selected={Number(week)}
+        onSelect={setSearchParams}
+      />
     </>
   );
 };
