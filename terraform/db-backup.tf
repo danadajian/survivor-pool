@@ -14,7 +14,7 @@ resource "aws_iam_policy" "db_backup_policy" {
       {
         Action   = ["s3:PutObject"]
         Effect   = "Allow"
-        Resource = [aws_s3_bucket.db_backup_bucket.arn]
+        Resource = ["*"]
       },
     ]
   })
