@@ -48,7 +48,7 @@ const AllPicks = ({
 
   return (
     <>
-      <Header>Week {week} Picks</Header>
+      <Header>Week {week ?? currentWeek} Picks</Header>
       <table className="mb-8 table-auto">
         <thead>
           <tr>
