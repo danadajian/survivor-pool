@@ -52,18 +52,28 @@ const AllPicks = ({
       <table className="mb-8 table-auto">
         <thead>
           <tr>
-            <th>User</th>
-            <th>Team Picked</th>
+            <th className="px-4">User</th>
+            <th className="px-4">Team Picked</th>
+            <th className="px-4">Result</th>
           </tr>
         </thead>
         <tbody>
-          {picks.map((row, index) => {
-            const isUserRow = row.username === username;
-            const userClasses = isUserRow ? "font-bold text-blue-800" : "";
+          {picks.map((pick, index) => {
+            const isUserRow = pick.username === username;
+            const userClasses = isUserRow ? "font-semibold text-blue-800" : "";
+            const resultClasses =
+              pick.result === "WON"
+                ? "text-green-600"
+                : pick.result === "LOST"
+                ? "text-red-600"
+                : "";
             return (
               <tr key={index} className={userClasses}>
-                <td>{row.username}</td>
-                <td>{row.teamPicked}</td>
+                <td>{pick.username}</td>
+                <td>{pick.teamPicked}</td>
+                <td className={`font-semibold ${resultClasses}`}>
+                  {pick.result ?? "PENDING"}
+                </td>
               </tr>
             );
           })}
