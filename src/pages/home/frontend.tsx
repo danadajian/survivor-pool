@@ -19,7 +19,7 @@ const HomeComponent = ({ user: { username } }: PageProps) => {
 
   return (
     <>
-      <Header>Welcome to Survival Pool!</Header>
+      <Header>Welcome to Survivor Pool!</Header>
       <div className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
         <PoolSelect data={data} />
       </div>
