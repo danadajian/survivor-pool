@@ -33,7 +33,7 @@ export async function pickEndpoint({
       code: "NOT_FOUND",
     });
   }
-  const games = await fetchGames();
+  const games = await fetchCurrentGames();
   const userPick = await fetchPickForUser({
     username,
     poolId,
@@ -55,7 +55,9 @@ export async function pickEndpoint({
   };
 }
 
-export async function fetchGames(fetchMethod = fetch): Promise<EspnResponse> {
+export async function fetchCurrentGames(
+  fetchMethod = fetch,
+): Promise<EspnResponse> {
   const response = await fetchMethod(environmentVariables.GAMES_API_URL);
   return response.json();
 }

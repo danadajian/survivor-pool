@@ -4,8 +4,8 @@ import { db } from "../src/db";
 import { createPool } from "../src/pages/create/backend";
 import { joinPool } from "../src/pages/join/backend";
 import {
+  fetchCurrentGames,
   fetchForbiddenTeamsForUser,
-  fetchGames,
   fetchPickForUser,
   makePick,
 } from "../src/pages/pick/backend";
@@ -40,7 +40,7 @@ describe("feature tests", () => {
   const teamPicked = "Giants";
 
   it("should parse api response", async () => {
-    const result = await fetchGames(mockFetch);
+    const result = await fetchCurrentGames(mockFetch);
     expect(result).toEqual(mockEspnResponse);
   });
 

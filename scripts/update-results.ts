@@ -1,12 +1,10 @@
 import { and, eq } from "drizzle-orm";
 
 import { db } from "../src/db";
-import { fetchGames } from "../src/pages/pick/backend";
+import { fetchCurrentGames } from "../src/pages/pick/backend";
 import { members, picks } from "../src/schema";
 
-const results = await fetchGames();
-
-const { events, season, week } = results;
+const { events, season, week } = await fetchCurrentGames();
 
 const userPicks = await db
   .select()

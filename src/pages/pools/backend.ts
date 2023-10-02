@@ -3,7 +3,7 @@ import { and, asc, eq } from "drizzle-orm";
 
 import { db } from "../../db";
 import { picks } from "../../schema";
-import { fetchGames } from "../pick/backend";
+import { fetchCurrentGames } from "../pick/backend";
 
 export const fetchPicksForPoolInput = type({
   poolId: "string",
@@ -19,7 +19,7 @@ export async function fetchPicksForPool({
   const {
     week: { number: currentWeek },
     season: { year: currentSeason },
-  } = await fetchGames();
+  } = await fetchCurrentGames();
   const weekToUse = week ?? currentWeek;
   const seasonToUse = season ?? currentSeason;
   const picksResult = await db
