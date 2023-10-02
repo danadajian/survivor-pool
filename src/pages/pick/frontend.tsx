@@ -75,13 +75,14 @@ const PickContent = ({
     spacetime.now().toNativeDate() >
       spacetime(gameTime).goto(null).toNativeDate();
 
-  const pickHeader = userPick?.teamWon
-    ? `The ${teamPicked} won, and you're still alive!`
-    : pickIsLocked
-    ? `Your ${teamPicked} pick is locked. Good luck!`
-    : userPick
-    ? `You're riding with the ${userPick.teamPicked} this week!`
-    : `Make your pick, ${firstName}!`;
+  const pickHeader =
+    userPick?.result === "WON"
+      ? `The ${teamPicked} won, and you're still alive!`
+      : pickIsLocked
+      ? `Your ${teamPicked} pick is locked. Good luck!`
+      : userPick
+      ? `You're riding with the ${userPick.teamPicked} this week!`
+      : `Make your pick, ${firstName}!`;
 
   return (
     <>

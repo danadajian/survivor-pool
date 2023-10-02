@@ -13,7 +13,7 @@ const userPicks = await db
   .from(picks)
   .where(and(eq(picks.week, week.number), eq(picks.season, season.year)));
 
-function getWinnerValue(teamPicked: string) {
+function getResult(teamPicked: string) {
   const teamPickedInEvent = events.find(
     (event) =>
       event.competitions[0]?.competitors.some(
@@ -24,34 +24,36 @@ function getWinnerValue(teamPicked: string) {
     teamPickedInEvent?.competitions[0]?.competitors.find(
       (competitor) => competitor.team.name === teamPicked,
     );
-  return teamPickedFromApi &&
-    "winner" in teamPickedFromApi &&
-    typeof teamPickedFromApi.winner === "boolean"
-    ? teamPickedFromApi.winner
-    : undefined;
+  if (
+    !teamPickedFromApi ||
+    !("winner" in teamPickedFromApi) ||
+    typeof teamPickedFromApi.winner !== "boolean"
+  ) {
+    return null;
+  }
+
+  return teamPickedFromApi.winner === true ? "WON" : "LOST";
 }
 
 for (const { username, teamPicked, poolId } of userPicks) {
-  const teamWon = getWinnerValue(teamPicked);
-  if (typeof teamWon === "boolean") {
+  const result = getResult(teamPicked);
+  await db
+    .update(picks)
+    .set({ result })
+    .where(
+      and(
+        eq(picks.username, username),
+        eq(picks.poolId, poolId),
+        eq(picks.week, week.number),
+        eq(picks.season, season.year),
+      ),
+    );
+  if (result === "LOST") {
+    console.log(`Eliminating user ${username} from poolId ${poolId}...`);
     await db
-      .update(picks)
-      .set({ teamWon })
-      .where(
-        and(
-          eq(picks.username, username),
-          eq(picks.poolId, poolId),
-          eq(picks.week, week.number),
-          eq(picks.season, season.year),
-        ),
-      );
-    if (!teamWon) {
-      console.log(`Eliminating user ${username} from poolId ${poolId}...`);
-      await db
-        .update(members)
-        .set({ eliminated: true })
-        .where(and(eq(members.username, username), eq(members.poolId, poolId)));
-    }
+      .update(members)
+      .set({ eliminated: true })
+      .where(and(eq(members.username, username), eq(members.poolId, poolId)));
   }
 }
 

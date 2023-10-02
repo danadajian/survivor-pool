@@ -1,11 +1,14 @@
 import {
   boolean,
   integer,
+  pgEnum,
   pgTable,
   timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+
+export const resultEnum = pgEnum("result", ["WON", "LOST"]);
 
 export const picks = pgTable("picks", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -16,6 +19,7 @@ export const picks = pgTable("picks", {
   season: integer("season").notNull(),
   poolId: uuid("pool_id").notNull(),
   timestamp: timestamp("timestamp").notNull().defaultNow(),
+  result: resultEnum("result"),
 });
 
 export const pools = pgTable("pools", {
