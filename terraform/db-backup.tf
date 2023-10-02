@@ -12,10 +12,15 @@ resource "aws_iam_policy" "db_backup_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action   = ["s3:PutObject"]
-        Effect   = "Allow"
-        Resource = ["*"]
-      },
+        Action = [
+          "s3:PutObject"
+        ]
+        Effect = "Allow"
+        Resource = [
+          aws_s3_bucket.db_backup_bucket.arn,
+          "${aws_s3_bucket.db_backup_bucket.arn}/*"
+        ]
+      }
     ]
   })
 }
