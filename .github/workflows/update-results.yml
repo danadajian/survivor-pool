@@ -1,19 +1,18 @@
-name: Weekly Update
+name: Update Results
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 12 * * 2"
+    - cron: "0 8 * * *" # updates daily at 3am
 
 jobs:
   update:
-    name: Run Weekly Update
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
       - run: bun install
-      - run: bun run ./scripts/weekly-update.ts
+      - run: bun run ./scripts/update-results.ts
         env:
           GAMES_API_URL: ${{ secrets.GAMES_API_URL }}
           POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
