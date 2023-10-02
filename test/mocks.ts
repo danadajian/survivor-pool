@@ -9,7 +9,6 @@ export const mockNinersPick: RouterOutput["pick"]["userPick"] = {
   week: 1,
   season: 2023,
   poolId: "12345",
-  teamWon: null,
   result: null,
   timestamp: "123",
 };
@@ -19643,7 +19642,7 @@ export const responseWithPickAndResultsTeamWon: TRPCResponse<
 > = {
   result: {
     data: {
-      userPick: { ...mockNinersPick, teamWon: true, result: "WON" },
+      userPick: { ...mockNinersPick, result: "WON" },
       games: mockEspnResponseResults,
       poolName: "Test Pool",
       eliminated: false,
@@ -19655,7 +19654,7 @@ export const responseWithPickAndResultsTeamLost = {
   result: {
     data: {
       ...responseWithPickAndResultsTeamWon.result.data,
-      userPick: { ...mockNinersPick, teamWon: false, result: "LOST" },
+      userPick: { ...mockNinersPick, result: "LOST" },
       eliminated: true,
     },
   },
@@ -19689,7 +19688,6 @@ export const picksForPoolResponse: TRPCResponse<RouterOutput["picksForPool"]> =
             week: 1,
             season: 2023,
             poolId: "12345",
-            teamWon: null,
             result: null,
             timestamp: "123",
           },
@@ -19700,7 +19698,6 @@ export const picksForPoolResponse: TRPCResponse<RouterOutput["picksForPool"]> =
             week: 1,
             season: 2023,
             poolId: "12345",
-            teamWon: null,
             result: null,
             timestamp: "123",
           },
