@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { type useSearchParams } from "react-router-dom";
 
 export const Dropdown = ({
   selected,
@@ -8,12 +7,12 @@ export const Dropdown = ({
 }: {
   selected: string | number;
   options: (string | number)[];
-  onSelect: ReturnType<typeof useSearchParams>[1];
+  onSelect: (option: string | number) => void;
 }) => {
   const [showOptions, setShowOptions] = useState(false);
 
   const onClick = (option: string | number) => {
-    onSelect({ week: String(option) });
+    onSelect(option);
     setShowOptions(false);
   };
 

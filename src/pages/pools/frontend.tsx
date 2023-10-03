@@ -82,7 +82,7 @@ const AllPicks = ({
       <Dropdown
         options={Array.from({ length: currentWeek }, (_, i) => i + 1)}
         selected={Number(week)}
-        onSelect={setSearchParams}
+        onSelect={(option) => setSearchParams({ week: String(option) })}
       />
     </>
   );
