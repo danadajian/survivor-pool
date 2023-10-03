@@ -35,17 +35,20 @@ function getResult(teamPicked: string) {
 
 for (const { username, teamPicked, poolId } of userPicks) {
   const result = getResult(teamPicked);
-  await db
-    .update(picks)
-    .set({ result })
-    .where(
-      and(
-        eq(picks.username, username),
-        eq(picks.poolId, poolId),
-        eq(picks.week, week.number),
-        eq(picks.season, season.year),
-      ),
-    );
+  if (result) {
+    console.log(`Updating ${username}'s pick ${teamPicked} to ${result}...`);
+    await db
+      .update(picks)
+      .set({ result })
+      .where(
+        and(
+          eq(picks.username, username),
+          eq(picks.poolId, poolId),
+          eq(picks.week, week.number),
+          eq(picks.season, season.year),
+        ),
+      );
+  }
   if (result === "LOST") {
     console.log(`Eliminating user ${username} from poolId ${poolId}...`);
     await db

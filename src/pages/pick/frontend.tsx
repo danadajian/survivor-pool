@@ -34,7 +34,11 @@ const PickContent = ({
   }
   const {
     userPick,
-    games: { events, season, week },
+    games: {
+      events,
+      season: { year: currentSeason },
+      week: { number: currentWeek },
+    },
     poolName,
     eliminated,
   } = data;
@@ -87,9 +91,9 @@ const PickContent = ({
   return (
     <>
       <h1 className="pt-8 text-2xl font-bold text-red-700">
-        {poolName} {season.year}
+        {poolName} {currentSeason}
       </h1>
-      <h2 className="pt-2 text-lg font-bold">Week {week.number}</h2>
+      <h2 className="pt-2 text-lg font-bold">Week {currentWeek}</h2>
       <h3 className="pt-4 text-lg">{pickHeader}</h3>
       <ul>
         {events.map((event, index) => (

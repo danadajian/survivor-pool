@@ -1,5 +1,5 @@
 import React from "react";
-import { useMatch, useSearchParams } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 
 import { Dropdown } from "../../components/dropdown";
 import { Error } from "../../components/error";
@@ -7,6 +7,7 @@ import { Header } from "../../components/header";
 import { Loader } from "../../components/loader";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { trpc } from "../../trpc";
+import { useUrlParams } from "../../utils/useUrlParams";
 
 const PoolsComponent = ({ user: { username } }: PageProps) => {
   const path = useMatch("/pools/:poolId");
@@ -25,9 +26,10 @@ const AllPicks = ({
   username: string;
   poolId: string;
 }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { week, season }: Record<string, string | undefined> =
-    Object.fromEntries(searchParams.entries());
+  const {
+    urlParams: { week, season },
+    setUrlParams,
+  } = useUrlParams();
   const { data, isLoading, error } = trpc.picksForPool.useQuery({
     poolId,
     week: Number(week),
@@ -82,7 +84,7 @@ const AllPicks = ({
       <Dropdown
         options={Array.from({ length: currentWeek }, (_, i) => i + 1)}
         selected={Number(week)}
-        onSelect={(option) => setSearchParams({ week: String(option) })}
+        onSelect={(option) => setUrlParams({ week: String(option) })}
       />
     </>
   );
