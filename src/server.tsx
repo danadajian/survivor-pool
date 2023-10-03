@@ -27,7 +27,7 @@ const app = new Elysia()
         {isDev && (
           <>
             <script src="https://cdn.tailwindcss.com" />
-            <HmrScript app={app} />
+            <HmrScript />
           </>
         )}
       </StaticRouter>,

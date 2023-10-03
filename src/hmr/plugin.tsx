@@ -3,9 +3,9 @@ import React from "react";
 
 const reloadMessage = "reload";
 
-const buildHotReloadScript = (app: Elysia, webSocketPath: string) => `
+const buildHotReloadScript = (webSocketPath: string) => `
 function hotReload() {
-  const socket = new WebSocket("ws://${app.server?.hostname}:${app.server?.port}/${webSocketPath}");
+  const socket = new WebSocket("ws://" + location.host + "/${webSocketPath}");
   socket.onmessage = (message) => {
     if (message.data === "${reloadMessage}") {
       location.reload()
@@ -16,17 +16,11 @@ function hotReload() {
 hotReload();
 `;
 
-export const HmrScript = ({
-  app,
-  webSocketPath = "ws",
-}: {
-  app: Elysia;
-  webSocketPath?: string;
-}) => (
+export const HmrScript = ({ webSocketPath = "ws" }) => (
   <script
     type="text/javascript"
     dangerouslySetInnerHTML={{
-      __html: buildHotReloadScript(app, webSocketPath),
+      __html: buildHotReloadScript(webSocketPath),
     }}
   />
 );
