@@ -31,14 +31,13 @@ declare global {
 }
 
 export const hmrPlugin = ({ webSocketPath = "ws" } = {}) => {
-  const app = new Elysia({
-    name: "elysia-hmr",
-  });
   global.ws?.send(reloadMessage);
-  app.ws(`/${webSocketPath}`, {
+
+  return new Elysia({
+    name: "elysia-hmr",
+  }).ws(`/${webSocketPath}`, {
     open: (ws) => {
       global.ws = ws;
     },
   });
-  return app;
 };
