@@ -20,7 +20,7 @@ export const App = () => (
     <head>
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="icon" type="image/svg+xml" href="" />
+      <link rel="icon" type="image/x-icon" href="/public/favicon.ico" />
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
