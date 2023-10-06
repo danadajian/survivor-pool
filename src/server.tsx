@@ -1,6 +1,7 @@
 import { staticPlugin } from "@elysiajs/static";
 import { trpc } from "@elysiajs/trpc";
 import Elysia from "elysia";
+import { HotModuleReload, hotModuleReload } from "elysia-hot-module-reload";
 import { rateLimit } from "elysia-rate-limit";
 import React from "react";
 import { renderToReadableStream } from "react-dom/server";
@@ -8,7 +9,6 @@ import { StaticRouter } from "react-router-dom/server";
 
 import { App } from "./app";
 import { environmentVariables } from "./env";
-import { hmrPlugin, HmrScript } from "./hmr/plugin";
 import { appRouter } from "./router";
 
 await Bun.build({
@@ -27,7 +27,7 @@ const app = new Elysia()
         {isDev && (
           <>
             <script src="https://cdn.tailwindcss.com" />
-            <HmrScript />
+            <HotModuleReload />
           </>
         )}
       </StaticRouter>,
@@ -45,7 +45,7 @@ const app = new Elysia()
   .listen(environmentVariables.PORT ?? 8080);
 
 if (isDev) {
-  app.use(hmrPlugin());
+  app.use(hotModuleReload());
 }
 
 // eslint-disable-next-line no-console

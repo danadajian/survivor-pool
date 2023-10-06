@@ -10,7 +10,7 @@
     "moduleResolution": "node",
     "moduleDetection": "force",
     "resolveJsonModule": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "incremental": true,
     "isolatedModules": true,
     "strict": true,
