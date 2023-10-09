@@ -51,8 +51,9 @@ export const Dropdown = ({
           tabIndex={-1}
         >
           <div className="py-1">
-            {options.map((option) => (
+            {options.map((option, index) => (
               <button
+                key={index}
                 type="button"
                 onClick={() => onClick(option)}
                 className={`block w-full px-4 py-2 text-center text-sm hover:bg-gray-300 ${
