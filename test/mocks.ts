@@ -19682,8 +19682,9 @@ export const picksForPoolResponse: TRPCResponse<RouterOutput["picksForPool"]> =
         season: 2023,
         picks: [
           {
-            id: "123",
             username: "test@user.com",
+            firstName: "Test",
+            lastName: "User1",
             teamPicked: "Chiefs",
             week: 1,
             season: 2023,
@@ -19692,8 +19693,9 @@ export const picksForPoolResponse: TRPCResponse<RouterOutput["picksForPool"]> =
             timestamp: "123",
           },
           {
-            id: "456",
             username: "test2@user.com",
+            firstName: "Test",
+            lastName: "User2",
             teamPicked: "Bills",
             week: 1,
             season: 2023,

@@ -2,16 +2,19 @@ import { TRPCError } from "@trpc/server";
 import { type } from "arktype";
 import { eq } from "drizzle-orm";
 
+import { userFields } from "../../components/page-wrapper";
 import { db } from "../../db";
 import { members, pools } from "../../schema";
 
 export const joinPoolInput = type({
-  username: "string",
+  ...userFields,
   poolId: "string",
 });
 
 export async function joinPool({
   username,
+  firstName,
+  lastName,
   poolId,
 }: typeof joinPoolInput.infer) {
   const result = await db
@@ -42,7 +45,7 @@ export async function joinPool({
   }
   const rows = await db
     .insert(members)
-    .values({ username, poolId })
+    .values({ username, firstName, lastName, poolId })
     .returning({ poolId: members.poolId });
   return rows.find(Boolean);
 }

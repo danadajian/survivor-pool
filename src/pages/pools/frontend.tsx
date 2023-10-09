@@ -69,9 +69,13 @@ const AllPicks = ({
                 : pick.result === "LOST"
                 ? "text-red-600"
                 : "";
+            const userFullName =
+              pick.firstName && pick.lastName
+                ? `${pick.firstName} ${pick.lastName}`
+                : undefined;
             return (
               <tr key={index} className={userClasses}>
-                <td>{pick.username}</td>
+                <td>{userFullName ?? pick.username}</td>
                 <td>{pick.teamPicked}</td>
                 <td className={`font-semibold ${resultClasses}`}>
                   {pick.result ?? "PENDING"}

@@ -7,7 +7,7 @@ import { Loader } from "../../components/loader";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { trpc } from "../../trpc";
 
-const CreateComponent = ({ user: { username } }: PageProps) => {
+const CreateComponent = ({ user }: PageProps) => {
   const { mutateAsync, data, isLoading, isSuccess, error } =
     trpc.createPool.useMutation();
   const [poolName, setPoolName] = useState("");
@@ -19,8 +19,8 @@ const CreateComponent = ({ user: { username } }: PageProps) => {
 
   const onSubmit = async () => {
     await mutateAsync({
-      name: poolName,
-      creator: username,
+      ...user,
+      poolName,
     });
   };
 

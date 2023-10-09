@@ -3,13 +3,16 @@ import { type } from "arktype";
 import React, { useMemo } from "react";
 
 import { ClientProvider } from "./client-provider";
+import { Error } from "./error";
 import { Loader } from "./loader";
 import { NavBar } from "./nav-bar";
 
-export const userSchema = type({
+export const userFields = {
   username: "string",
-  firstName: "string",
-});
+  "firstName?": "string",
+  "lastName?": "string",
+} as const;
+const userSchema = type(userFields);
 
 export type PageProps = {
   user: typeof userSchema.infer;
@@ -19,12 +22,20 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
   const PageComponent = () => {
     const userResult = useUser();
     const { user: userResource } = useMemo(() => userResult, []);
-    const user = {
+    const userInfo = {
       username: userResource?.primaryEmailAddress?.emailAddress,
-      firstName: userResource?.firstName,
+      ...(userResource?.firstName
+        ? { firstName: userResource.firstName }
+        : undefined),
+      ...(userResource?.lastName
+        ? { lastName: userResource.lastName }
+        : undefined),
     };
-    const { data: validatedUser } = userSchema(user);
-    if (!validatedUser) {
+    const { data: user, problems } = userSchema(userInfo);
+    if (problems) {
+      return <Error message={problems.summary} />;
+    }
+    if (!user) {
       return <Loader text={"Authenticating..."} />;
     }
 
@@ -32,7 +43,7 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
       <ClientProvider>
         <NavBar />
         <div className="flex flex-col items-center pb-8 pt-16 text-center">
-          <Component user={validatedUser} />
+          <Component user={user} />
         </div>
       </ClientProvider>
     );

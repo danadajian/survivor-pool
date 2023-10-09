@@ -228,7 +228,8 @@ describe("App Tests", () => {
 
       cy.findByRole("heading", { name: "Week 1 Picks" }).should("be.visible");
       cy.findByRole("table").should("be.visible");
-      cy.findByText("test@user.com").should("be.visible");
+      cy.findByText("Test User1").should("be.visible");
+      cy.findByText("Test User2").should("be.visible");
     });
   });
 });

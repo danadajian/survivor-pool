@@ -86,7 +86,7 @@ describe("feature tests", () => {
   });
 
   it("should create a new pool", async () => {
-    await createPool({ name: "Test Pool", creator: username });
+    await createPool({ poolName: "Test Pool", username });
     const result = await db.select().from(pools);
     expect(result).toHaveLength(1);
     expect(result[0]?.name).toEqual("Test Pool");

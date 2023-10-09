@@ -2,7 +2,7 @@ import { type } from "arktype";
 import { and, asc, eq } from "drizzle-orm";
 
 import { db } from "../../db";
-import { picks } from "../../schema";
+import { members, picks } from "../../schema";
 import { fetchCurrentGames } from "../pick/backend";
 
 export const fetchPicksForPoolInput = type({
@@ -23,8 +23,19 @@ export async function fetchPicksForPool({
   const weekToUse = week ?? currentWeek;
   const seasonToUse = season ?? currentSeason;
   const picksResult = await db
-    .select()
+    .select({
+      username: members.username,
+      firstName: members.firstName,
+      lastName: members.lastName,
+      teamPicked: picks.teamPicked,
+      week: picks.week,
+      season: picks.season,
+      poolId: picks.poolId,
+      result: picks.result,
+      timestamp: picks.timestamp,
+    })
     .from(picks)
+    .innerJoin(members, eq(picks.username, members.username))
     .where(
       and(
         eq(picks.week, weekToUse),

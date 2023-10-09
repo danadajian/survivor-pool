@@ -2,21 +2,24 @@ import { TRPCError } from "@trpc/server";
 import { type } from "arktype";
 import { eq } from "drizzle-orm";
 
+import { userFields } from "../../components/page-wrapper";
 import { db } from "../../db";
 import { pools } from "../../schema";
 import { joinPool } from "../join/backend";
 
 export const createPoolInput = type({
-  name: "string",
-  creator: "string",
+  ...userFields,
+  poolName: "string",
 });
 
 export async function createPool({
-  name,
-  creator,
+  poolName,
+  username,
+  firstName,
+  lastName,
 }: typeof createPoolInput.infer) {
   const existingPool = await db.query.pools.findFirst({
-    where: eq(pools.name, name),
+    where: eq(pools.name, poolName),
   });
 
   if (existingPool) {
@@ -27,7 +30,7 @@ export async function createPool({
   }
   const insertResult = await db
     .insert(pools)
-    .values({ name, creator })
+    .values({ name: poolName, creator: username })
     .returning({ id: pools.id });
   const poolId = insertResult.find(Boolean)?.id;
   if (!poolId) {
@@ -36,5 +39,5 @@ export async function createPool({
       code: "INTERNAL_SERVER_ERROR",
     });
   }
-  return joinPool({ username: creator, poolId });
+  return joinPool({ username, firstName, lastName, poolId });
 }

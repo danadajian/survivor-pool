@@ -7,7 +7,7 @@ import { Loader } from "../../components/loader";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { trpc } from "../../trpc";
 
-const JoinComponent = ({ user: { username } }: PageProps) => {
+const JoinComponent = ({ user }: PageProps) => {
   const { mutateAsync, isLoading, isSuccess, error } =
     trpc.joinPool.useMutation();
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const JoinComponent = ({ user: { username } }: PageProps) => {
 
   const joinPool = async () => {
     await mutateAsync({
-      username,
+      ...user,
       poolId,
     });
   };
