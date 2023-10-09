@@ -139,9 +139,12 @@ const EventRow = ({ event, teamPicked, username, poolId }: TeamRowProps) => {
   };
   return (
     <div className="pt-2">
-      <div className="pt-4 font-semibold">
+      <h4 className="pt-4 font-semibold">
         {gameTime.format("{day} {hour}:{minute-pad} {ampm}")}
-      </div>
+      </h4>
+      <h5 className="pt-1 text-sm">
+        {"odds" in competition && competition.odds[0].details}
+      </h5>
       <div className="flex flex-row justify-center gap-4 pt-2">
         <li>
           <TeamButton team={awayTeam} {...commonProps} />

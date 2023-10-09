@@ -86,6 +86,8 @@ describe("App Tests", () => {
       cy.findByRole("heading", { name: "Make your pick, Test!" }).should(
         "be.visible",
       );
+      cy.findByRole("heading", { name: "Monday 7:15 pm" }).should("be.visible");
+      cy.findByRole("heading", { name: "BUF -2.0" }).should("be.visible");
     });
 
     it("can make a pick", () => {
