@@ -10,13 +10,10 @@ import {
   responseWithPickAndResultsTeamWon,
 } from "../../test/mocks";
 import { MockProviders } from "../mock-providers";
+import { mockResponse } from "../utils";
 
 test.beforeEach(async ({ page }) => {
-  await page.route("/trpc/pick*", (route) =>
-    route.fulfill({
-      body: JSON.stringify(basicGamesAndPicksResponse),
-    }),
-  );
+  await mockResponse(page, "/trpc/pick*", basicGamesAndPicksResponse);
   await page.evaluate(() => {
     Date.now = () =>
       new Date(
@@ -46,17 +43,11 @@ test("renders without picks", async ({ mount }) => {
 });
 
 test("can make a pick", async ({ mount, page }) => {
-  await page.route("/trpc/pick*", (route) =>
-    route.fulfill({
-      body: JSON.stringify(basicGamesAndPicksResponse),
-    }),
-  );
   await page.route("/trpc/makePick*", (route) =>
     route.fulfill({
       body: JSON.stringify({ result: { data: {} } }),
     }),
   );
-
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
       <Pick />

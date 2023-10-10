@@ -12,22 +12,29 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Configure projects for major browsers */
-  projects: [
-    {
-      name: "chromium",
-      use: { ...devices["iPhone 14 Pro"] },
-    },
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
-    {
-      name: "webkit",
-      use: { ...devices["iPhone 14 Pro"] },
-    },
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"] },
-    },
-  ],
+  projects: process.env.CI
+    ? [
+        {
+          name: "chromium",
+          use: { ...devices["iPhone 14 Pro"] },
+        },
+        {
+          name: "chromium",
+          use: { ...devices["Desktop Chrome"] },
+        },
+        {
+          name: "webkit",
+          use: { ...devices["iPhone 14 Pro"] },
+        },
+        {
+          name: "webkit",
+          use: { ...devices["Desktop Safari"] },
+        },
+      ]
+    : [
+        {
+          name: "chromium",
+          use: { ...devices["iPhone 14 Pro"] },
+        },
+      ],
 });

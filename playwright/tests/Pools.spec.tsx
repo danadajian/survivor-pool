@@ -4,13 +4,10 @@ import React from "react";
 import { Pools } from "../../src/pages/pools/frontend";
 import { picksForPoolResponse } from "../../test/mocks";
 import { MockProviders } from "../mock-providers";
+import { mockResponse } from "../utils";
 
 test("renders all picks for the week", async ({ mount, page }) => {
-  await page.route("/trpc/picksForPool*", (route) =>
-    route.fulfill({
-      body: JSON.stringify(picksForPoolResponse),
-    }),
-  );
+  await mockResponse(page, "/trpc/picksForPool*", picksForPoolResponse);
 
   const component = await mount(
     <MockProviders initialEntries={["/pools/123"]}>

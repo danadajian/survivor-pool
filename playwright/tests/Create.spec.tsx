@@ -3,13 +3,12 @@ import React from "react";
 
 import { Create } from "../../src/pages/create/frontend";
 import { MockProviders } from "../mock-providers";
+import { mockResponse } from "../utils";
 
 test("create a pool", async ({ mount, page }) => {
-  await page.route("/trpc/createPool*", (route) =>
-    route.fulfill({
-      body: JSON.stringify({ result: { data: { poolId: 123 } } }),
-    }),
-  );
+  await mockResponse(page, "/trpc/createPool*", {
+    result: { data: { poolId: 123 } },
+  });
 
   const component = await mount(
     <MockProviders>

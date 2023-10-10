@@ -3,13 +3,10 @@ import React from "react";
 
 import { Join } from "../../src/pages/join/frontend";
 import { MockProviders } from "../mock-providers";
+import { mockResponse } from "../utils";
 
 test("join a pool", async ({ mount, page }) => {
-  await page.route("/trpc/joinPool*", (route) =>
-    route.fulfill({
-      body: JSON.stringify({ result: { data: {} } }),
-    }),
-  );
+  await mockResponse(page, "/trpc/joinPool*", { result: { data: {} } });
 
   const component = await mount(
     <MockProviders initialEntries={["/join/123"]}>
