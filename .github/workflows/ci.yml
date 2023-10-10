@@ -54,7 +54,6 @@ jobs:
   test-frontend:
     name: Frontend Tests
     runs-on: ubuntu-latest
-    container: mcr.microsoft.com/playwright:latest
     strategy:
       fail-fast: false
       matrix:
@@ -63,6 +62,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
       - run: bun install
+
+      - name: Install Browsers
+        run: bun playwright install --with-deps chromium webkit
 
       - name: Run Component Tests
         run: bun playwright test --shard ${{ matrix.shard }}
