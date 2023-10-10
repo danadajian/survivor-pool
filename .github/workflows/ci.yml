@@ -64,7 +64,7 @@ jobs:
       - run: bun install
 
       - name: Install Browsers
-        run: bun playwright install --with-deps
+        run: bun playwright install --with-deps chromium webkit
 
       - name: Run Component Tests
         run: bun playwright test --shard ${{ matrix.shard }}
