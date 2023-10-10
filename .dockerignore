@@ -1,7 +1,7 @@
 .github
 .husky
-cypress
 node_modules
+playwright
 scripts
 test
 *.md

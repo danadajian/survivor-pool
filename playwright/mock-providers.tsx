@@ -7,6 +7,7 @@ const mockClerkState = {
   user: {
     id: "user_123",
     firstName: "Test",
+    lastName: "User",
     primaryEmailAddress: {
       emailAddress: "test@user.com",
     },

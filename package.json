@@ -10,7 +10,7 @@
     "lint": "eslint . --fix --max-warnings=0",
     "preprod": "tailwindcss -o ./public/globals.css",
     "prod": "ENVIRONMENT=production bun ./src/server.tsx",
-    "test": "POSTGRES_URL=postgresql://postgres:pwd@localhost:5433/survivor-pool-test bun test",
+    "test": "POSTGRES_URL=postgresql://postgres:pwd@localhost:5433/survivor-pool-test bun test test/features.test.ts",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -33,14 +33,12 @@
     "spacetime": "7.4.7"
   },
   "devDependencies": {
-    "@testing-library/cypress": "10.0.1",
+    "@playwright/experimental-ct-react": "1.38.1",
     "@types/react": "18.2.25",
     "@types/react-dom": "18.2.11",
-    "@types/testing-library__cypress": "5.0.10",
     "@typescript-eslint/eslint-plugin": "6.7.4",
     "arktype": "1.0.21-alpha",
     "bun-types": "1.0.4",
-    "cypress": "13.3.0",
     "drizzle-kit": "0.19.13",
     "eslint": "8.50.0",
     "eslint-plugin-no-only-tests": "3.1.0",

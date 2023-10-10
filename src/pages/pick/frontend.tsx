@@ -8,6 +8,7 @@ import { Loader } from "../../components/loader";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { TeamButton } from "../../components/team-button";
 import { type RouterOutput, trpc } from "../../trpc";
+import { gameHasStartedOrFinished } from "../../utils/gameHasStartedOrFinished";
 
 const PickComponent = (props: PageProps) => {
   const path = useMatch("/pick/:poolId");
@@ -74,11 +75,7 @@ const PickContent = ({
   );
   const gameTime = teamPickedInEvent?.date;
   const pickIsLocked =
-    Boolean(teamPicked) &&
-    Boolean(gameTime) &&
-    spacetime.now().toNativeDate() >
-      spacetime(gameTime).goto(null).toNativeDate();
-
+    Boolean(teamPicked) && gameHasStartedOrFinished(gameTime);
   const pickHeader =
     userPick?.result === "WON"
       ? `The ${teamPicked} won, and you're still alive!`
@@ -127,10 +124,7 @@ const EventRow = ({ event, teamPicked, username, poolId }: TeamRowProps) => {
     (competitor) => competitor.homeAway === "away",
   )?.team;
   const gameTime = spacetime(competition?.date).goto(null);
-  const gameStarted =
-    Boolean(gameTime) &&
-    spacetime.now().toNativeDate() >
-      spacetime(gameTime).goto(null).toNativeDate();
+  const gameStarted = gameHasStartedOrFinished(gameTime);
   const commonProps = {
     teamPicked,
     username,
