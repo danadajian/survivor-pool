@@ -67,16 +67,7 @@ jobs:
         id: playwright-version
         run: echo "PLAYWRIGHT_VERSION=$(bun playwright --version)" >> $GITHUB_ENV
 
-      - name: Cache browser binaries
-        uses: actions/cache@v3
-        id: playwright-cache
-        with:
-          path: |
-            ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-
       - name: Install Browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: bun playwright install --with-deps chromium webkit
 
       - name: Run Component Tests
