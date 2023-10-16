@@ -10,7 +10,7 @@
     "lint": "eslint . --fix --max-warnings=0",
     "preprod": "tailwindcss -o ./public/globals.css",
     "prod": "ENVIRONMENT=production bun ./src/server.tsx",
-    "test": "POSTGRES_URL=postgresql://postgres:pwd@localhost:5433/survivor-pool-test bun test test/features.test.ts",
+    "test": "POSTGRES_URL=postgresql://postgres:pwd@localhost:5433/survivor-pool-test bun test",
     "typecheck": "tsc"
   },
   "dependencies": {

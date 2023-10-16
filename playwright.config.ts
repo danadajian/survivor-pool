@@ -5,13 +5,9 @@ import { defineConfig, devices } from "@playwright/experimental-ct-react";
  */
 export default defineConfig({
   testDir: "./playwright",
-  /* Run tests in files in parallel */
-  fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
-  forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
+  outputDir: "./playwright/test-results",
+  preserveOutput: "failures-only",
   retries: process.env.CI ? 2 : 0,
-  /* Configure projects for major browsers */
   projects: process.env.CI
     ? [
         {
