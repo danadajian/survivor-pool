@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, mock } from "bun:test";
+import { eq } from "drizzle-orm";
 
 import { db } from "../src/db";
 import { createPool } from "../src/pages/create/backend";
@@ -7,6 +8,7 @@ import {
   fetchCurrentGames,
   fetchForbiddenTeamsForUser,
   fetchPickForUser,
+  fetchPoolWinner,
   makePick,
 } from "../src/pages/pick/backend";
 import { members, picks, pools } from "../src/schema";
@@ -42,6 +44,30 @@ describe("feature tests", () => {
   it("should parse api response", async () => {
     const result = await fetchCurrentGames(mockFetch);
     expect(result).toEqual(mockEspnResponse);
+  });
+
+  it("should create a new pool", async () => {
+    await createPool({ poolName: "Test Pool", username });
+    const result = await db.select().from(pools);
+    expect(result).toHaveLength(1);
+    expect(result[0]?.name).toEqual("Test Pool");
+    expect(result[0]?.creator).toEqual(username);
+  });
+
+  it("should have added the creator as a member", async () => {
+    const newMembers = await db.select().from(members);
+    expect(newMembers).toHaveLength(1);
+    expect(newMembers[0]?.username).toEqual(username);
+  });
+
+  it("should allow another user to join the pool", async () => {
+    const newUser = "user2@test.com";
+    const pool = await db.query.pools.findFirst();
+    await joinPool({ username: newUser, poolId: pool!.id });
+    const newMembers = await db.select().from(members);
+    expect(newMembers).toHaveLength(2);
+    expect(newMembers[0]?.username).toEqual(username);
+    expect(newMembers[1]?.username).toEqual(newUser);
   });
 
   it("should allow user to make a new pick", async () => {
@@ -85,27 +111,21 @@ describe("feature tests", () => {
     expect(forbiddenTeams).toEqual([teamPicked]);
   });
 
-  it("should create a new pool", async () => {
-    await createPool({ poolName: "Test Pool", username });
-    const result = await db.select().from(pools);
-    expect(result).toHaveLength(1);
-    expect(result[0]?.name).toEqual("Test Pool");
-    expect(result[0]?.creator).toEqual(username);
+  it("should not return poolWinner when no one has won the pool yet", async () => {
+    const [{ poolId }] = await db.query.members.findMany();
+
+    const poolWinner = await fetchPoolWinner({ poolId });
+    expect(poolWinner).toBeUndefined();
   });
 
-  it("should have added the creator as a member", async () => {
-    const newMembers = await db.select().from(members);
-    expect(newMembers).toHaveLength(1);
-    expect(newMembers[0]?.username).toEqual(username);
-  });
+  it("should return poolWinner when someone has won the pool", async () => {
+    const [{ poolId }] = await db
+      .update(members)
+      .set({ eliminated: true })
+      .where(eq(members.username, "user2@test.com"))
+      .returning({ poolId: members.poolId });
 
-  it("should allow another user to join the pool", async () => {
-    const newUser = "user2@test.com";
-    const pool = await db.query.pools.findFirst();
-    await joinPool({ username: newUser, poolId: pool!.id });
-    const newMembers = await db.select().from(members);
-    expect(newMembers).toHaveLength(2);
-    expect(newMembers[0]?.username).toEqual(username);
-    expect(newMembers[1]?.username).toEqual(newUser);
+    const poolWinner = await fetchPoolWinner({ poolId });
+    expect(poolWinner?.username).toEqual(username);
   });
 });

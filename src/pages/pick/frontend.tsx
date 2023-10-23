@@ -42,7 +42,32 @@ const PickContent = ({
     },
     poolName,
     eliminated,
+    poolWinner,
   } = data;
+
+  if (poolWinner) {
+    return (
+      <>
+        <Header>
+          {`${poolWinner.firstName} ${poolWinner.lastName}`} has won this pool!
+        </Header>
+        <button
+          onClick={() => navigate(`/`)}
+          className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+          type="button"
+        >
+          Back to pools
+        </button>
+        <button
+          onClick={() => navigate(`/create`)}
+          className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+          type="button"
+        >
+          Start a new pool
+        </button>
+      </>
+    );
+  }
 
   if (eliminated) {
     return (

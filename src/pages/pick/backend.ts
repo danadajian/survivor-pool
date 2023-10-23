@@ -5,7 +5,7 @@ import { and, eq, lt } from "drizzle-orm";
 import { type EspnResponse } from "../../../test/mocks";
 import { db } from "../../db";
 import { environmentVariables } from "../../env";
-import { picks } from "../../schema";
+import { members, picks } from "../../schema";
 import { fetchPoolsForUser } from "../home/backend";
 
 export const fetchPicksInput = type({
@@ -46,12 +46,14 @@ export async function pickEndpoint({
     week: games.week.number,
     season: games.season.year,
   });
+  const poolWinner = await fetchPoolWinner({ poolId });
   return {
     games,
     userPick,
     forbiddenTeams,
     poolName: pool.poolName,
     eliminated: pool.eliminated,
+    poolWinner,
   };
 }
 
@@ -95,6 +97,14 @@ export async function fetchForbiddenTeamsForUser({
   });
 
   return result.length ? result.map(({ teamPicked }) => teamPicked) : undefined;
+}
+
+export async function fetchPoolWinner({ poolId }: { poolId: string }) {
+  const membersStillAlive = await db.query.members.findMany({
+    where: and(eq(members.poolId, poolId), eq(members.eliminated, false)),
+  });
+
+  return membersStillAlive.length === 1 ? membersStillAlive[0] : undefined;
 }
 
 export async function makePick({
