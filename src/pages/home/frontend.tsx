@@ -52,7 +52,7 @@ const PoolSelect = ({ data }: { data: RouterOutput["poolsForUser"] }) => {
       <p className="text-md block pb-8 font-bold text-gray-700">
         Select a pool:
       </p>
-      <div className="flex justify-around">
+      <div className="flex flex-col justify-around">
         {data.map(({ poolId, poolName }) => (
           <button
             key={poolId}
