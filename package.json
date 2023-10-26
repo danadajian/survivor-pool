@@ -13,7 +13,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@clerk/clerk-react": "4.26.6",
+    "@clerk/clerk-react": "4.27.0",
     "@elysiajs/static": "0.7.1",
     "@elysiajs/trpc": "0.7.0",
     "@headlessui/react": "1.7.17",
@@ -25,7 +25,7 @@
     "elysia": "0.7.20",
     "elysia-hot-module-reload": "1.0.1",
     "elysia-rate-limit": "1.2.0",
-    "postgres": "3.3.5",
+    "postgres": "3.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.17.0",
@@ -33,10 +33,10 @@
   },
   "devDependencies": {
     "@playwright/experimental-ct-react": "1.39.0",
-    "@types/react": "18.2.31",
+    "@types/react": "18.2.33",
     "@types/react-dom": "18.2.14",
-    "@typescript-eslint/eslint-plugin": "6.8.0",
-    "arktype": "1.0.24-alpha",
+    "@typescript-eslint/eslint-plugin": "6.9.0",
+    "arktype": "1.0.25-alpha",
     "bun-types": "1.0.7",
     "drizzle-kit": "0.19.13",
     "eslint": "8.52.0",
@@ -45,7 +45,7 @@
     "husky": "8.0.3",
     "prettier": "3.0.3",
     "prettier-plugin-tailwindcss": "0.5.6",
-    "tailwindcss": "3.3.3",
+    "tailwindcss": "3.3.5",
     "typescript": "5.2.2"
   }
 }
