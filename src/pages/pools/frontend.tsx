@@ -51,7 +51,7 @@ const AllPicks = ({
         <PickTable picks={picks} username={username} />
       ) : (
         <h2 className="pb-4 text-lg font-bold">
-          No picks for Week {currentWeek}
+          No picks for Week {week ?? currentWeek}
         </h2>
       )}
       <Dropdown
