@@ -35,7 +35,13 @@ export async function fetchPicksForPool({
       timestamp: picks.timestamp,
     })
     .from(picks)
-    .innerJoin(members, eq(picks.username, members.username))
+    .innerJoin(
+      members,
+      and(
+        eq(picks.username, members.username),
+        eq(picks.poolId, members.poolId),
+      ),
+    )
     .where(
       and(
         eq(picks.week, weekToUse),
