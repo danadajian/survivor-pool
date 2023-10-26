@@ -22,7 +22,7 @@
     "@trpc/react-query": "10.41.0",
     "@trpc/server": "10.41.0",
     "drizzle-orm": "0.28.6",
-    "elysia": "0.7.17",
+    "elysia": "0.7.20",
     "elysia-hot-module-reload": "1.0.1",
     "elysia-rate-limit": "1.2.0",
     "postgres": "3.3.5",
