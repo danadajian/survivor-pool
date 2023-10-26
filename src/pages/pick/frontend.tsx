@@ -162,7 +162,7 @@ const EventRow = ({ event, teamPicked, username, poolId }: TeamRowProps) => {
         {gameTime.format("{day} {hour}:{minute-pad} {ampm}")}
       </h4>
       <h5 className="pt-1 text-sm">
-        {"odds" in competition && competition.odds[0].details}
+        {competition && "odds" in competition && competition.odds[0]?.details}
       </h5>
       <div className="flex flex-row justify-center gap-4 pt-2">
         <li>

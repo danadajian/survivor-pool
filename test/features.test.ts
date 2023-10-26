@@ -112,18 +112,22 @@ describe("feature tests", () => {
   });
 
   it("should not return poolWinner when no one has won the pool yet", async () => {
-    const [{ poolId }] = await db.query.members.findMany();
+    const results = await db.query.members.findMany();
+    if (!results[0]) throw new Error();
+    const poolId = results[0].poolId;
 
     const poolWinner = await fetchPoolWinner({ poolId });
     expect(poolWinner).toBeUndefined();
   });
 
   it("should return poolWinner when someone has won the pool", async () => {
-    const [{ poolId }] = await db
+    const results = await db
       .update(members)
       .set({ eliminated: true })
       .where(eq(members.username, "user2@test.com"))
       .returning({ poolId: members.poolId });
+    if (!results[0]) throw new Error();
+    const poolId = results[0].poolId;
 
     const poolWinner = await fetchPoolWinner({ poolId });
     expect(poolWinner?.username).toEqual(username);
