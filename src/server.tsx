@@ -20,6 +20,7 @@ await Bun.build({
 const isDev = environmentVariables.ENVIRONMENT === "development";
 
 const app = new Elysia()
+  .get("/health", () => "all good")
   .get("*", async (context) => {
     const stream = await renderToReadableStream(
       <StaticRouter location={context.path}>
