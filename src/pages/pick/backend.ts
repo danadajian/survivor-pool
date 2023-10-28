@@ -57,11 +57,9 @@ export async function pickEndpoint({
   };
 }
 
-export async function fetchCurrentGames(
-  fetchMethod = fetch,
-): Promise<EspnResponse> {
+export async function fetchCurrentGames(fetchMethod = fetch) {
   const response = await fetchMethod(environmentVariables.GAMES_API_URL);
-  return response.json();
+  return (await response.json()) as Promise<EspnResponse>;
 }
 
 export async function fetchPickForUser({
