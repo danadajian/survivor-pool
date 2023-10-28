@@ -49,7 +49,7 @@ export async function fetchPicksForPool({
         eq(picks.poolId, poolId),
       ),
     )
-    .orderBy(asc(picks.timestamp));
+    .orderBy(asc(picks.teamPicked), asc(picks.timestamp));
 
   return {
     picks: picksResult,
