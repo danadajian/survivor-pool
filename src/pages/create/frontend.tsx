@@ -3,19 +3,13 @@ import { useNavigate } from "react-router-dom";
 
 import { Error } from "../../components/error";
 import { Header } from "../../components/header";
-import { Loader } from "../../components/loader";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { trpc } from "../../trpc";
 
 const CreateComponent = ({ user }: PageProps) => {
-  const { mutateAsync, data, isLoading, isSuccess, error } =
-    trpc.createPool.useMutation();
+  const { mutateAsync, data, isSuccess, error } = trpc.createPool.useMutation();
   const [poolName, setPoolName] = useState("");
   const navigate = useNavigate();
-
-  if (isLoading) {
-    return <Loader />;
-  }
 
   const onSubmit = async () => {
     await mutateAsync({

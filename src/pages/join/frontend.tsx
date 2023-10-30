@@ -1,25 +1,15 @@
 import React from "react";
-import { useMatch, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { Error } from "../../components/error";
 import { Header } from "../../components/header";
-import { Loader } from "../../components/loader";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { trpc } from "../../trpc";
 
-const JoinComponent = ({ user }: PageProps) => {
-  const { mutateAsync, isLoading, isSuccess, error } =
-    trpc.joinPool.useMutation();
+const JoinComponent = ({ user, poolId }: PageProps) => {
+  const { mutateAsync, isSuccess } = trpc.joinPool.useMutation();
   const navigate = useNavigate();
 
-  const path = useMatch("/join/:poolId");
-  const poolId = path?.params.poolId;
-  if (isLoading || !poolId) {
-    return <Loader />;
-  }
-  if (error) {
-    return <Error message={error.message} />;
-  }
+  const [pool] = trpc.getPool.useSuspenseQuery({ poolId });
 
   const joinPool = async () => {
     await mutateAsync({
@@ -31,7 +21,7 @@ const JoinComponent = ({ user }: PageProps) => {
   if (isSuccess) {
     return (
       <>
-        <Header>You have joined the pool!</Header>
+        <Header>You have joined {pool.name}!</Header>
         <button
           onClick={() => navigate(`/pick/${poolId}`)}
           className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
@@ -45,10 +35,10 @@ const JoinComponent = ({ user }: PageProps) => {
 
   return (
     <>
-      <Header>Join New Pool</Header>
+      <Header>Join New Survivor Pool</Header>
       <div className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
         <p className="text-md block pb-8 font-bold text-gray-700">
-          You have been invited to join a new survivor pool!
+          You have been invited to join {pool.name}!
         </p>
         <button
           onClick={joinPool}

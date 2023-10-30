@@ -10,7 +10,7 @@ import { fetchPoolsForUser } from "../home/backend";
 
 export const fetchPicksInput = type({
   username: "string",
-  poolId: "string",
+  poolId: "string>=1",
 });
 
 export const makePickInput = type({
@@ -18,7 +18,7 @@ export const makePickInput = type({
   teamPicked: "string",
   week: "number",
   season: "number",
-  poolId: "string",
+  poolId: "string>=1",
 });
 
 export async function pickEndpoint({

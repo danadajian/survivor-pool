@@ -1,47 +1,22 @@
 import React from "react";
-import { useMatch } from "react-router-dom";
 
 import { Dropdown } from "../../components/dropdown";
-import { Error } from "../../components/error";
 import { Header } from "../../components/header";
-import { Loader } from "../../components/loader";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { type RouterOutput, trpc } from "../../trpc";
 import { useUrlParams } from "../../utils/useUrlParams";
 
-const PoolsComponent = ({ user: { username } }: PageProps) => {
-  const path = useMatch("/pools/:poolId");
-  const poolId = path?.params.poolId;
-  if (!poolId) {
-    return null;
-  }
-
-  return <AllPicks username={username} poolId={poolId} />;
-};
-
-const AllPicks = ({
-  username,
-  poolId,
-}: {
-  username: string;
-  poolId: string;
-}) => {
+const PoolsComponent = ({ user: { username }, poolId }: PageProps) => {
   const {
     urlParams: { week, season },
     setUrlParams,
   } = useUrlParams();
-  const { data, isLoading, error } = trpc.picksForPool.useQuery({
+  const [data] = trpc.picksForPool.useSuspenseQuery({
     poolId,
     week: Number(week),
     season: Number(season),
   });
 
-  if (isLoading) {
-    return <Loader />;
-  }
-  if (error) {
-    return <Error message={error.message} />;
-  }
   const { picks, week: currentWeek } = data;
 
   return (

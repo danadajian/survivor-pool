@@ -5,7 +5,12 @@ import {
   fetchPoolsForUser,
   fetchPoolsForUserInput,
 } from "./pages/home/backend";
-import { joinPool, joinPoolInput } from "./pages/join/backend";
+import {
+  getPool,
+  getPoolInput,
+  joinPool,
+  joinPoolInput,
+} from "./pages/join/backend";
 import {
   fetchPicksInput,
   makePick,
@@ -38,6 +43,9 @@ export const appRouter = t.router({
   joinPool: t.procedure
     .input(joinPoolInput.assert)
     .mutation(({ input }) => joinPool(input)),
+  getPool: t.procedure
+    .input(getPoolInput.assert)
+    .query(({ input }) => getPool(input)),
 });
 
 export type AppRouter = typeof appRouter;

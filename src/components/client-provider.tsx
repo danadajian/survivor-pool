@@ -14,6 +14,8 @@ export const ClientProvider = ({ children }: PropsWithChildren) => {
             keepPreviousData: true,
             refetchOnWindowFocus: false,
             staleTime: Infinity,
+            suspense: true,
+            useErrorBoundary: true,
           },
         },
       }),

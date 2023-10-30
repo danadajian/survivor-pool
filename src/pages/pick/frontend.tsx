@@ -1,38 +1,20 @@
 import React from "react";
-import { useMatch, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
 
-import { Error } from "../../components/error";
 import { Header } from "../../components/header";
-import { Loader } from "../../components/loader";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { TeamButton } from "../../components/team-button";
 import { type RouterOutput, trpc } from "../../trpc";
 import { gameHasStartedOrFinished } from "../../utils/gameHasStartedOrFinished";
 
-const PickComponent = (props: PageProps) => {
-  const path = useMatch("/pick/:poolId");
-  const poolId = path?.params.poolId;
-  if (!poolId) {
-    return null;
-  }
-
-  return <PickContent {...props} poolId={poolId} />;
-};
-
-const PickContent = ({
+const PickComponent = ({
   user: { username, firstName },
   poolId,
-}: PageProps & { poolId: string }) => {
-  const { data, isLoading, error } = trpc.pick.useQuery({ username, poolId });
+}: PageProps) => {
+  const [data] = trpc.pick.useSuspenseQuery({ username, poolId });
   const navigate = useNavigate();
 
-  if (isLoading) {
-    return <Loader />;
-  }
-  if (error) {
-    return <Error message={error.message} />;
-  }
   const {
     userPick,
     games: {

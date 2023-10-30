@@ -8,7 +8,7 @@ import { members, pools } from "../../schema";
 
 export const joinPoolInput = type({
   ...userFields,
-  poolId: "string",
+  poolId: "string>=1",
 });
 
 export async function joinPool({
@@ -48,4 +48,19 @@ export async function joinPool({
     .values({ username, firstName, lastName, poolId })
     .returning({ poolId: members.poolId });
   return rows.find(Boolean);
+}
+
+export const getPoolInput = type({
+  poolId: "string>=1",
+});
+
+export async function getPool({ poolId }: typeof getPoolInput.infer) {
+  const pool = await db.query.pools.findFirst({ where: eq(pools.id, poolId) });
+  if (!pool) {
+    throw new TRPCError({
+      message: "Pool not found.",
+      code: "NOT_FOUND",
+    });
+  }
+  return pool;
 }

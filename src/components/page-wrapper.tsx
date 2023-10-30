@@ -1,6 +1,8 @@
 import { useUser } from "@clerk/clerk-react";
 import { type } from "arktype";
-import React, { useMemo } from "react";
+import React, { Suspense, useMemo } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { useLocation, useMatch } from "react-router-dom";
 
 import { ClientProvider } from "./client-provider";
 import { Error } from "./error";
@@ -16,10 +18,16 @@ const userSchema = type(userFields);
 
 export type PageProps = {
   user: typeof userSchema.infer;
+  poolId: string;
 };
 
 export const withPage = (Component: React.FC<PageProps>) => () => {
   const PageComponent = () => {
+    const location = useLocation();
+    const currentRoute = location.pathname.split("/")[1];
+    const path = currentRoute ? useMatch(`/${currentRoute}/:poolId`) : null;
+    const poolId = path?.params.poolId ?? "";
+
     const userResult = useUser();
     const { user: userResource } = useMemo(() => userResult, []);
     const userInfo = {
@@ -43,7 +51,15 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
       <ClientProvider>
         <NavBar />
         <div className="flex flex-col items-center pb-8 pt-16 text-center">
-          <Component user={user} />
+          <ErrorBoundary
+            FallbackComponent={({ error }) => (
+              <Error message={(error as Error).message} />
+            )}
+          >
+            <Suspense fallback={<Loader />}>
+              <Component user={user} poolId={poolId} />
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </ClientProvider>
     );
