@@ -81,16 +81,16 @@ const PickComponent = ({
       ),
   );
   const gameTime = teamPickedInEvent?.date;
+  const userSurvived = userPick?.result === "WON";
   const pickIsLocked =
     Boolean(teamPicked) && gameHasStartedOrFinished(gameTime);
-  const pickHeader =
-    userPick?.result === "WON"
-      ? `The ${teamPicked} won, and you're still alive!`
-      : pickIsLocked
-      ? `Your ${teamPicked} pick is locked. Good luck!`
-      : userPick
-      ? `You're riding with the ${userPick.teamPicked} this week!`
-      : `Make your pick, ${firstName}!`;
+  const pickHeader = userSurvived
+    ? `The ${teamPicked} won, and you're still alive!`
+    : pickIsLocked
+    ? `Your ${teamPicked} pick is locked. Good luck!`
+    : userPick
+    ? `You're riding with the ${userPick.teamPicked} this week!`
+    : `Make your pick, ${firstName}!`;
 
   return (
     <>
@@ -107,6 +107,7 @@ const PickComponent = ({
             teamPicked={teamPicked}
             username={username}
             poolId={poolId}
+            userSurvived={userSurvived}
           />
         ))}
       </ul>
@@ -120,8 +121,15 @@ type TeamRowProps = {
   teamPicked?: string;
   username: string;
   poolId: string;
+  userSurvived: boolean;
 };
-const EventRow = ({ event, teamPicked, username, poolId }: TeamRowProps) => {
+const EventRow = ({
+  event,
+  teamPicked,
+  username,
+  poolId,
+  userSurvived,
+}: TeamRowProps) => {
   const competition = event.competitions[0];
   const competitors = competition?.competitors ?? [];
   const homeTeam = competitors.find(
@@ -136,7 +144,7 @@ const EventRow = ({ event, teamPicked, username, poolId }: TeamRowProps) => {
     teamPicked,
     username,
     poolId,
-    gameStarted,
+    pickIsLocked: gameStarted || userSurvived,
   };
   return (
     <div className="pt-2">
