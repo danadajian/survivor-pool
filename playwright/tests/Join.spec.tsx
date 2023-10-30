@@ -6,6 +6,9 @@ import { MockProviders } from "../mock-providers";
 import { mockResponse } from "../utils";
 
 test("join a pool", async ({ mount, page }) => {
+  await mockResponse(page, "/trpc/getPool*", {
+    result: { data: { id: "123", name: "Test Pool" } },
+  });
   await mockResponse(page, "/trpc/joinPool*", { result: { data: {} } });
 
   const component = await mount(
@@ -14,10 +17,10 @@ test("join a pool", async ({ mount, page }) => {
     </MockProviders>,
   );
   await expect(
-    component.getByRole("heading", { name: "Join New Pool" }),
+    component.getByRole("heading", { name: "Join New Survivor Pool" }),
   ).toBeVisible();
   await component.getByRole("button", { name: "Join" }).click();
   await expect(
-    component.getByRole("heading", { name: "You have joined the pool!" }),
+    component.getByRole("heading", { name: "You have joined Test Pool!" }),
   ).toBeVisible();
 });
