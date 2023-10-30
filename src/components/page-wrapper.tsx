@@ -11,8 +11,8 @@ import { NavBar } from "./nav-bar";
 
 export const userFields = {
   username: "string",
-  "firstName?": "string",
-  "lastName?": "string",
+  "firstName?": "string | null",
+  "lastName?": "string | null",
 } as const;
 const userSchema = type(userFields);
 
@@ -32,12 +32,8 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
     const { user: userResource } = useMemo(() => userResult, []);
     const userInfo = {
       username: userResource?.primaryEmailAddress?.emailAddress,
-      ...(userResource?.firstName
-        ? { firstName: userResource.firstName }
-        : undefined),
-      ...(userResource?.lastName
-        ? { lastName: userResource.lastName }
-        : undefined),
+      firstName: userResource?.firstName,
+      lastName: userResource?.lastName,
     };
     const { data: user, problems } = userSchema(userInfo);
     if (problems) {
