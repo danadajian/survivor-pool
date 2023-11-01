@@ -20,6 +20,7 @@ export const ClientProvider = ({ children }: PropsWithChildren) => {
             staleTime: Infinity,
             suspense: true,
             throwOnError: true,
+            retry: 1,
           },
         },
       }),
