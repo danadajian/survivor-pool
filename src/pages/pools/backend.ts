@@ -6,7 +6,7 @@ import { members, picks } from "../../schema";
 import { fetchCurrentGames } from "../pick/backend";
 
 export const fetchPicksForPoolInput = type({
-  poolId: "string>=1",
+  poolId: "string>0",
   "week?": "number | null",
   "season?": "number | null",
 });

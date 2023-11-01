@@ -10,9 +10,9 @@ import { Loader } from "./loader";
 import { NavBar } from "./nav-bar";
 
 export const userFields = {
-  username: "string",
-  "firstName?": "string | null",
-  "lastName?": "string | null",
+  username: "string>0",
+  "firstName?": "string>0 | null",
+  "lastName?": "string>0 | null",
 } as const;
 const userSchema = type(userFields);
 
@@ -38,9 +38,6 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
     const { data: user, problems } = userSchema(userInfo);
     if (problems) {
       return <Error message={problems.summary} />;
-    }
-    if (!user) {
-      return <Loader text={"Authenticating..."} />;
     }
 
     return (

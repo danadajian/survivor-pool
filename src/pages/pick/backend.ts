@@ -9,16 +9,16 @@ import { members, picks } from "../../schema";
 import { fetchPoolsForUser } from "../home/backend";
 
 export const fetchPicksInput = type({
-  username: "string",
-  poolId: "string>=1",
+  username: "string>0",
+  poolId: "string>0",
 });
 
 export const makePickInput = type({
-  username: "string",
-  teamPicked: "string",
+  username: "string>0",
+  teamPicked: "string>0",
   week: "number",
   season: "number",
-  poolId: "string>=1",
+  poolId: "string>0",
 });
 
 export async function pickEndpoint({

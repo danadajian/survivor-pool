@@ -8,7 +8,7 @@ import { members, pools } from "../../schema";
 
 export const joinPoolInput = type({
   ...userFields,
-  poolId: "string>=1",
+  poolId: "string>0",
 });
 
 export async function joinPool({
@@ -51,7 +51,7 @@ export async function joinPool({
 }
 
 export const getPoolInput = type({
-  poolId: "string>=1",
+  poolId: "string>0",
 });
 
 export async function getPool({ poolId }: typeof getPoolInput.infer) {

@@ -5,7 +5,7 @@ import { db } from "../../db";
 import { members, pools } from "../../schema";
 
 export const fetchPoolsForUserInput = type({
-  username: "string",
+  username: "string>0",
 });
 
 export async function fetchPoolsForUser({

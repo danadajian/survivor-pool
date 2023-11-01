@@ -9,7 +9,7 @@ import { joinPool } from "../join/backend";
 
 export const createPoolInput = type({
   ...userFields,
-  poolName: "string",
+  poolName: "string>=1",
 });
 
 export async function createPool({
