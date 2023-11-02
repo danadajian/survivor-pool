@@ -4,7 +4,6 @@ import React, { Suspense, useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useLocation, useMatch } from "react-router-dom";
 
-import { ClientProvider } from "./client-provider";
 import { Error } from "./error";
 import { Loader } from "./loader";
 import { NavBar } from "./nav-bar";
@@ -41,7 +40,7 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
     }
 
     return (
-      <ClientProvider>
+      <>
         <NavBar />
         <ErrorBoundary
           FallbackComponent={({ error }) => (
@@ -54,7 +53,7 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
             </div>
           </Suspense>
         </ErrorBoundary>
-      </ClientProvider>
+      </>
     );
   };
 

@@ -17,7 +17,7 @@ export const ClientProvider = ({ children }: PropsWithChildren) => {
           queries: {
             placeholderData: keepPreviousData,
             refetchOnWindowFocus: false,
-            staleTime: Infinity,
+            staleTime: 1000 * 60 * 5, // 5 minutes
             suspense: true,
             throwOnError: true,
             retry: 1,
