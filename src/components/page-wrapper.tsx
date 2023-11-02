@@ -43,17 +43,17 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
     return (
       <ClientProvider>
         <NavBar />
-        <div className="flex flex-col items-center pb-8 pt-16 text-center">
-          <ErrorBoundary
-            FallbackComponent={({ error }) => (
-              <Error message={(error as Error).message} />
-            )}
-          >
-            <Suspense fallback={<Loader />}>
+        <ErrorBoundary
+          FallbackComponent={({ error }) => (
+            <Error message={(error as Error).message} />
+          )}
+        >
+          <Suspense fallback={<Loader />}>
+            <div className="flex flex-col items-center pt-16 text-center">
               <Component user={user} poolId={poolId} />
-            </Suspense>
-          </ErrorBoundary>
-        </div>
+            </div>
+          </Suspense>
+        </ErrorBoundary>
       </ClientProvider>
     );
   };
