@@ -54,10 +54,6 @@ jobs:
   test-frontend:
     name: Frontend Tests
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1/4, 2/4]
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
@@ -71,7 +67,7 @@ jobs:
         run: bun playwright install --with-deps chromium webkit
 
       - name: Run Component Tests
-        run: bun playwright test --shard ${{ matrix.shard }}
+        run: bun playwright test
 
   db:
     name: Database Update
