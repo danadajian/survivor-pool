@@ -9,7 +9,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Route, Routes } from "react-router-dom";
 
 import { ClientProvider } from "./components/client-provider";
-import { Error } from "./components/error";
+import { ErrorPage } from "./components/error";
 import { Header } from "./components/header";
 import { Loader } from "./components/loader";
 import { withPage } from "./components/page-wrapper";
@@ -35,10 +35,7 @@ export const App = () => (
     <body>
       <ClerkProvider publishableKey="pk_test_YW11c2luZy1tYW4tNjEuY2xlcmsuYWNjb3VudHMuZGV2JA">
         <ErrorBoundary
-          FallbackComponent={({ error }) => (
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            <Error error={error} />
-          )}
+          fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
         >
           <Suspense fallback={<Loader />}>
             <ClientProvider>

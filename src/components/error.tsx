@@ -4,16 +4,18 @@ import React from "react";
 import { type AppRouter } from "../router";
 import { NavBar } from "./nav-bar";
 
-export const Error = ({
+export const ErrorPage = ({
   error,
 }: {
-  error: Partial<TRPCClientError<AppRouter>>;
+  error: Error | TRPCClientError<AppRouter>;
 }) => (
   <>
     <NavBar />
     <div className="flex flex-col items-center pt-16 text-center">
-      {error.data && <ErrorMessage message={error.data?.code} />}
-      <ErrorMessage message={error.message ?? "An unknown error occurred."} />
+      {"data" in error && error.data?.code && (
+        <ErrorMessage message={error.data?.code} />
+      )}
+      <ErrorMessage message={error.message} />
     </div>
   </>
 );
