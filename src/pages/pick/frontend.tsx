@@ -99,7 +99,7 @@ const PickComponent = ({
       </h1>
       <h2 className="pt-2 text-lg font-bold">Week {currentWeek}</h2>
       <h3 className="pt-4 text-lg">{pickHeader}</h3>
-      <ul>
+      <ul className="pb-8">
         {events.map((event, index) => (
           <EventRow
             key={index}
