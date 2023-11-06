@@ -7,7 +7,7 @@ import { MockProviders } from "../mock-providers";
 import { mockResponse } from "../utils";
 
 test("renders all picks for the week", async ({ mount, page }) => {
-  await mockResponse(page, "/trpc/picksForPool*", picksForPoolResponse);
+  await mockResponse(page, "/trpc/*", picksForPoolResponse);
 
   const component = await mount(
     <MockProviders initialEntries={["/pools/123"]}>

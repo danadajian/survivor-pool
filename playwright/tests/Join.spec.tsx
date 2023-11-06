@@ -6,7 +6,7 @@ import { MockProviders } from "../mock-providers";
 import { mockResponse } from "../utils";
 
 test("join a pool", async ({ mount, page }) => {
-  await mockResponse(page, "/trpc/getPool*", {
+  await mockResponse(page, "/trpc/*", {
     result: { data: { id: "123", name: "Test Pool" } },
   });
   await mockResponse(page, "/trpc/joinPool*", { result: { data: {} } });

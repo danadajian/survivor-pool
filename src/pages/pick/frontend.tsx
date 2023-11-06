@@ -6,7 +6,7 @@ import { Header } from "../../components/header";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { TeamButton } from "../../components/team-button";
 import { type RouterOutput, trpc } from "../../trpc";
-import { gameHasStartedOrFinished } from "../../utils/gameHasStartedOrFinished";
+import { gameHasStartedOrFinished } from "../../utils/game-has-started-or-finished";
 
 const PickComponent = ({
   user: { username, firstName },

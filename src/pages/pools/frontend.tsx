@@ -4,7 +4,7 @@ import { Dropdown } from "../../components/dropdown";
 import { Header } from "../../components/header";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { type RouterOutput, trpc } from "../../trpc";
-import { useUrlParams } from "../../utils/useUrlParams";
+import { useUrlParams } from "../../utils/use-url-params";
 
 const PoolsComponent = ({ user: { username }, poolId }: PageProps) => {
   const {
@@ -13,8 +13,8 @@ const PoolsComponent = ({ user: { username }, poolId }: PageProps) => {
   } = useUrlParams();
   const [data] = trpc.picksForPool.useSuspenseQuery({
     poolId,
-    week: Number(week),
-    season: Number(season),
+    ...(week ? { week: Number(week) } : {}),
+    ...(season ? { season: Number(season) } : {}),
   });
 
   const { picks, week: currentWeek } = data;

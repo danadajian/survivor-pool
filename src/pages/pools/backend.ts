@@ -7,8 +7,8 @@ import { fetchCurrentGames } from "../pick/backend";
 
 export const fetchPicksForPoolInput = type({
   poolId: "string>0",
-  "week?": "number | null",
-  "season?": "number | null",
+  "week?": "number",
+  "season?": "number",
 });
 
 export async function fetchPicksForPool({

@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { Header } from "../../components/header";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { type RouterOutput, trpc } from "../../trpc";
+import { usePrefetch } from "../../utils/use-prefetch";
 
 const HomeComponent = ({ user: { username } }: PageProps) => {
   const [data] = trpc.poolsForUser.useSuspenseQuery({ username });
+
+  usePrefetch({ poolIds: data.map(({ poolId }) => poolId), username });
 
   return (
     <>

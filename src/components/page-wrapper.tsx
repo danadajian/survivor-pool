@@ -4,6 +4,7 @@ import React, { Suspense, useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useLocation, useMatch } from "react-router-dom";
 
+import { usePrefetch } from "../utils/use-prefetch";
 import { ErrorPage } from "./error";
 import { Loader } from "./loader";
 import { NavBar } from "./nav-bar";
@@ -35,6 +36,8 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
       lastName: userResource?.lastName,
     };
     const { data: user, problems } = userSchema(userInfo);
+    usePrefetch({ username: user?.username, poolIds: [poolId] });
+
     if (problems) {
       return <ErrorPage error={new Error(problems.summary)} />;
     }
