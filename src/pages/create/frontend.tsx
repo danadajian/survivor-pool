@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Error } from "../../components/error";
+import { ErrorMessage } from "../../components/error";
 import { Header } from "../../components/header";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { trpc } from "../../trpc";
@@ -49,7 +49,7 @@ const CreateComponent = ({ user }: PageProps) => {
   return (
     <>
       <Header>Create New Pool</Header>
-      {error && <Error message={error.message} />}
+      {error && <ErrorMessage message={error.message} />}
       <form className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
         <div className="pb-6">
           <label

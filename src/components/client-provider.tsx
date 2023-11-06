@@ -20,7 +20,7 @@ export const ClientProvider = ({ children }: PropsWithChildren) => {
             staleTime: 1000 * 60 * 5, // 5 minutes
             suspense: true,
             throwOnError: true,
-            retry: 1,
+            retry: false,
           },
         },
       }),

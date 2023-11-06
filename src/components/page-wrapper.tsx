@@ -1,11 +1,9 @@
 import { useUser } from "@clerk/clerk-react";
 import { type } from "arktype";
-import React, { Suspense, useMemo } from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import React, { useMemo } from "react";
 import { useLocation, useMatch } from "react-router-dom";
 
 import { Error } from "./error";
-import { Loader } from "./loader";
 import { NavBar } from "./nav-bar";
 
 export const userFields = {
@@ -36,23 +34,15 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
     };
     const { data: user, problems } = userSchema(userInfo);
     if (problems) {
-      return <Error message={problems.summary} />;
+      return <Error error={{ message: problems.summary }} />;
     }
 
     return (
       <>
         <NavBar />
-        <ErrorBoundary
-          FallbackComponent={({ error }) => (
-            <Error message={(error as Error).message} />
-          )}
-        >
-          <Suspense fallback={<Loader />}>
-            <div className="flex flex-col items-center pt-16 text-center">
-              <Component user={user} poolId={poolId} />
-            </div>
-          </Suspense>
-        </ErrorBoundary>
+        <div className="flex flex-col items-center pt-16 text-center">
+          <Component user={user} poolId={poolId} />
+        </div>
       </>
     );
   };
