@@ -41,10 +41,10 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
 
     return (
       <>
-        <NavBar />
         <ErrorBoundary
           fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
         >
+          <NavBar />
           <Suspense fallback={<Loader />}>
             <div className="flex flex-col items-center pt-16 text-center">
               <Component user={user} poolId={poolId} />

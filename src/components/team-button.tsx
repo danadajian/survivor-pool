@@ -21,8 +21,8 @@ export const TeamButton = ({
   poolId,
   pickIsLocked,
 }: TeamProps) => {
-  const context = trpc.useContext();
-  const gamesAndPicks = context.pick.getData({ username, poolId });
+  const utils = trpc.useUtils();
+  const gamesAndPicks = utils.pick.getData({ username, poolId });
   const { mutateAsync } = trpc.makePick.useMutation();
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const toggleDialog = () => setDialogIsOpen(!dialogIsOpen);
@@ -36,7 +36,7 @@ export const TeamButton = ({
       season: gamesAndPicks.games.season.year,
       poolId,
     });
-    await context.pick.invalidate();
+    await utils.pick.invalidate();
     toggleDialog();
     setTimeout(() => {
       window.scrollTo({

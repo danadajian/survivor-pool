@@ -1,5 +1,6 @@
 import { UserButton } from "@clerk/clerk-react";
 import React from "react";
+import { useErrorBoundary } from "react-error-boundary";
 import { useMatch, useNavigate } from "react-router-dom";
 
 export const NavBar = () => {
@@ -11,6 +12,11 @@ export const NavBar = () => {
     : pickMatch?.pathname
     ? `/pools/${pickMatch?.params.poolId}`
     : "";
+  const { resetBoundary } = useErrorBoundary();
+  const onClick = (path: string) => () => {
+    resetBoundary();
+    navigate(path);
+  };
 
   const linkText = pickMatch ? "View All Picks" : "View Your Picks";
   return (
@@ -22,14 +28,14 @@ export const NavBar = () => {
           </div>
           <div>
             <button
-              onClick={() => navigate("/")}
+              onClick={onClick("/")}
               className="rounded-lg border-2 border-slate-100 p-2"
             >
               Home
             </button>
             {path && (
               <button
-                onClick={() => navigate(path)}
+                onClick={onClick(path)}
                 className="ml-2 rounded-lg border-2 border-slate-100 p-2"
               >
                 {linkText}
