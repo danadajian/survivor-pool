@@ -1,6 +1,6 @@
 {
   "name": "survivor-pool",
-  "packageManager": "bun@1.0.9",
+  "packageManager": "bun@1.0.11",
   "scripts": {
     "db": "docker-compose up -d",
     "dev": "ENVIRONMENT=development bun --hot ./src/server.tsx",
