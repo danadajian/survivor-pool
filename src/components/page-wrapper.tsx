@@ -2,8 +2,9 @@ import { useUser } from "@clerk/clerk-react";
 import { type } from "arktype";
 import React, { Suspense, useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useLocation, useMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 
+import { useEndpoint } from "../utils/use-endpoint";
 import { usePrefetch } from "../utils/use-prefetch";
 import { ErrorPage } from "./error";
 import { Loader } from "./loader";
@@ -23,9 +24,8 @@ export type PageProps = {
 
 export const withPage = (Component: React.FC<PageProps>) => () => {
   const PageComponent = () => {
-    const location = useLocation();
-    const currentRoute = location.pathname.split("/")[1];
-    const path = currentRoute ? useMatch(`/${currentRoute}/:poolId`) : null;
+    const endpoint = useEndpoint();
+    const path = endpoint ? useMatch(`/${endpoint}/:poolId`) : null;
     const poolId = path?.params.poolId ?? "";
 
     const userResult = useUser();
