@@ -57,8 +57,11 @@ export async function pickEndpoint({
   };
 }
 
-export async function fetchCurrentGames(fetchMethod = fetch) {
-  const response = await fetchMethod(environmentVariables.GAMES_API_URL);
+export async function fetchCurrentGames() {
+  if (!environmentVariables.GAMES_API_URL) {
+    throw new Error("Missing GAMES_API_URL environment variable.");
+  }
+  const response = await fetch(environmentVariables.GAMES_API_URL);
   return (await response.json()) as Promise<EspnResponse>;
 }
 

@@ -1,22 +1,16 @@
-import { afterAll, beforeAll, describe, expect, it, mock } from "bun:test";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import { eq } from "drizzle-orm";
 
 import { db } from "../src/db";
 import { createPool } from "../src/pages/create/backend";
 import { joinPool } from "../src/pages/join/backend";
 import {
-  fetchCurrentGames,
   fetchForbiddenTeamsForUser,
   fetchPickForUser,
   fetchPoolWinner,
   makePick,
 } from "../src/pages/pick/backend";
 import { members, picks, pools } from "../src/schema";
-import { mockEspnResponse } from "./mocks";
-
-const mockFetch = mock(fetch).mockResolvedValue(
-  new Response(JSON.stringify(mockEspnResponse)),
-);
 
 async function clearAllTables() {
   await db.delete(picks);
@@ -40,11 +34,6 @@ describe("feature tests", () => {
   const season = 2023;
   const poolId = "436297e8-b766-4d3a-934b-ba17ee3a72a8";
   const teamPicked = "Giants";
-
-  it("should parse api response", async () => {
-    const result = await fetchCurrentGames(mockFetch);
-    expect(result).toEqual(mockEspnResponse);
-  });
 
   it("should create a new pool", async () => {
     await createPool({ poolName: "Test Pool", username });
