@@ -34,7 +34,7 @@ export const App = () => {
         />
         <meta
           name="og:image"
-          content="https://survivor-pool.up.railway.app/og.png"
+          content="https://survivor-pool.up.railway.app/public/og.png"
         />
         <link rel="icon" type="image/x-icon" href="/public/favicon.ico" />
         <link
