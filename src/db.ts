@@ -5,6 +5,6 @@ import { environmentVariables } from "./env";
 import * as schema from "./schema";
 
 export const pgClient = postgres(environmentVariables.POSTGRES_URL, {
-  idle_timeout: 60,
+  max_lifetime: 3600,
 });
 export const db = drizzle(pgClient, { schema });
