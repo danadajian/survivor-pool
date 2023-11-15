@@ -87,10 +87,10 @@ const PickComponent = ({
   const pickHeader = userSurvived
     ? `The ${teamPicked} won, and you're still alive!`
     : pickIsLocked
-    ? `Your ${teamPicked} pick is locked. Good luck!`
-    : userPick
-    ? `You're riding with the ${userPick.teamPicked} this week!`
-    : `Make your pick, ${firstName}!`;
+      ? `Your ${teamPicked} pick is locked. Good luck!`
+      : userPick
+        ? `You're riding with the ${userPick.teamPicked} this week!`
+        : `Make your pick, ${firstName}!`;
 
   return (
     <>

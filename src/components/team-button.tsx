@@ -52,10 +52,10 @@ export const TeamButton = ({
   const buttonClass = teamCurrentlyPicked
     ? "bg-blue-800 text-white"
     : teamPreviouslyPicked
-    ? "bg-blue-800 text-white opacity-30"
-    : pickIsLocked
-    ? "bg-slate-300 opacity-30"
-    : "bg-slate-300";
+      ? "bg-blue-800 text-white opacity-30"
+      : pickIsLocked
+        ? "bg-slate-300 opacity-30"
+        : "bg-slate-300";
   const imageClass = teamPreviouslyPicked ? "opacity-80" : "";
   return (
     <>

@@ -10,8 +10,8 @@ export const NavBar = () => {
   const path = poolsMatch?.pathname
     ? `/pick/${poolsMatch.params.poolId}`
     : pickMatch?.pathname
-    ? `/pools/${pickMatch?.params.poolId}`
-    : "";
+      ? `/pools/${pickMatch?.params.poolId}`
+      : "";
   const { resetBoundary } = useErrorBoundary();
   const onClick = (path: string) => () => {
     resetBoundary();

@@ -62,8 +62,8 @@ const PickTable = ({ picks, username }: PickTableProps) => (
           pick.result === "WON"
             ? "text-green-600"
             : pick.result === "LOST"
-            ? "text-red-600"
-            : "";
+              ? "text-red-600"
+              : "";
         const userFullName =
           pick.firstName && pick.lastName
             ? `${pick.firstName} ${pick.lastName}`
