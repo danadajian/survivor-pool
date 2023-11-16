@@ -49,10 +49,19 @@ describe("feature tests", () => {
     expect(newMembers[0]?.username).toEqual(username);
   });
 
+  it("should not return poolWinner when only one person is in the pool", async () => {
+    const pool = await db.query.pools.findFirst();
+    if (!pool) throw new Error();
+
+    const poolWinner = await fetchPoolWinner({ poolId: pool.id });
+    expect(poolWinner).toBeUndefined();
+  });
+
   it("should allow another user to join the pool", async () => {
     const newUser = "user2@test.com";
     const pool = await db.query.pools.findFirst();
-    await joinPool({ username: newUser, poolId: pool!.id });
+    if (!pool) throw new Error();
+    await joinPool({ username: newUser, poolId: pool.id });
     const newMembers = await db.select().from(members);
     expect(newMembers).toHaveLength(2);
     expect(newMembers[0]?.username).toEqual(username);

@@ -1,6 +1,6 @@
 {
   "name": "survivor-pool",
-  "packageManager": "bun@1.0.11",
+  "packageManager": "bun@1.0.12",
   "scripts": {
     "db": "docker-compose up -d",
     "dev": "ENVIRONMENT=development bun --hot ./src/server.tsx",
@@ -39,7 +39,7 @@
     "@types/react-dom": "18.2.15",
     "@typescript-eslint/eslint-plugin": "6.11.0",
     "arktype": "1.0.28-alpha",
-    "bun-types": "1.0.11",
+    "bun-types": "1.0.12",
     "drizzle-kit": "0.20.2",
     "eslint": "8.53.0",
     "eslint-plugin-no-only-tests": "3.1.0",

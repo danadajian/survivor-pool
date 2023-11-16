@@ -101,11 +101,14 @@ export async function fetchForbiddenTeamsForUser({
 }
 
 export async function fetchPoolWinner({ poolId }: { poolId: string }) {
-  const membersStillAlive = await db.query.members.findMany({
-    where: and(eq(members.poolId, poolId), eq(members.eliminated, false)),
+  const poolMembers = await db.query.members.findMany({
+    where: and(eq(members.poolId, poolId)),
   });
+  const membersStillAlive = poolMembers.filter((member) => !member.eliminated);
 
-  return membersStillAlive.length === 1 ? membersStillAlive[0] : undefined;
+  return poolMembers.length > 1 && membersStillAlive.length === 1
+    ? membersStillAlive[0]
+    : undefined;
 }
 
 export async function makePick({
