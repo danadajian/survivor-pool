@@ -16,7 +16,6 @@ export const ClientProvider = ({ children }: PropsWithChildren) => {
         defaultOptions: {
           queries: {
             placeholderData: keepPreviousData,
-            refetchOnWindowFocus: false,
             staleTime: 1000 * 60 * 5, // 5 minutes
             throwOnError: true,
             retry: false,

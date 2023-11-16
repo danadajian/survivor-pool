@@ -6,19 +6,18 @@ import { type PageProps, withPage } from "../../components/page-wrapper";
 import { trpc } from "../../trpc";
 
 const JoinComponent = ({ user, poolId }: PageProps) => {
-  const { mutateAsync, isSuccess } = trpc.joinPool.useMutation({
+  const { mutate, isSuccess } = trpc.joinPool.useMutation({
     throwOnError: true,
   });
   const navigate = useNavigate();
 
   const [pool] = trpc.getPool.useSuspenseQuery({ poolId });
 
-  const joinPool = async () => {
-    await mutateAsync({
+  const joinPool = () =>
+    mutate({
       ...user,
       poolId,
     });
-  };
 
   if (isSuccess) {
     return (

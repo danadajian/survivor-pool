@@ -23,29 +23,44 @@ export const TeamButton = ({
 }: TeamProps) => {
   const utils = trpc.useUtils();
   const gamesAndPicks = utils.pick.getData({ username, poolId });
-  const { mutateAsync } = trpc.makePick.useMutation();
+  const { mutate } = trpc.makePick.useMutation({
+    throwOnError: true,
+    onMutate: ({ teamPicked }) => {
+      utils.pick.setData({ username, poolId }, (data) => {
+        if (data?.userPick) {
+          return {
+            ...data,
+            userPick: {
+              ...data.userPick,
+              teamPicked,
+            },
+          };
+        }
+      });
+      toggleDialog();
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: "smooth",
+        });
+      }, 50);
+    },
+    onSettled: () =>
+      Promise.all([utils.pick.invalidate(), utils.picksForPool.invalidate()]),
+  });
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const toggleDialog = () => setDialogIsOpen(!dialogIsOpen);
 
   if (!gamesAndPicks || !team) return <div>No team found.</div>;
-  const handleUpdate = async () => {
-    await mutateAsync({
+  const handleUpdate = () =>
+    mutate({
       username,
       teamPicked: team.name,
       week: gamesAndPicks.games.week.number,
       season: gamesAndPicks.games.season.year,
       poolId,
     });
-    await utils.pick.invalidate();
-    toggleDialog();
-    setTimeout(() => {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "smooth",
-      });
-    }, 50);
-  };
   const { forbiddenTeams } = gamesAndPicks;
   const teamCurrentlyPicked = team.name === teamPicked;
   const teamPreviouslyPicked = Boolean(forbiddenTeams?.includes(team.name));
