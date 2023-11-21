@@ -9,17 +9,15 @@ import { DialogWrapper } from "./dialog-wrapper";
 type Team = Event["competitions"][number]["competitors"][number]["team"];
 type TeamProps = {
   team?: Team;
-  teamPicked?: string;
   username: string;
   poolId: string;
-  pickIsLocked: boolean;
+  gameStarted: boolean;
 };
 export const TeamButton = ({
   team,
-  teamPicked,
   username,
   poolId,
-  pickIsLocked,
+  gameStarted,
 }: TeamProps) => {
   const utils = trpc.useUtils();
   const gamesAndPicks = utils.pick.getData({ username, poolId });
@@ -62,8 +60,10 @@ export const TeamButton = ({
       poolId,
     });
   const { forbiddenTeams } = gamesAndPicks;
-  const teamCurrentlyPicked = team.name === teamPicked;
+  const teamCurrentlyPicked = team.name === gamesAndPicks.userPick?.teamPicked;
   const teamPreviouslyPicked = Boolean(forbiddenTeams?.includes(team.name));
+  const userSurvived = gamesAndPicks.userPick?.result === "WON";
+  const pickIsLocked = gameStarted || userSurvived;
   const buttonClass = teamCurrentlyPicked
     ? "bg-blue-800 text-white"
     : teamPreviouslyPicked
@@ -75,7 +75,12 @@ export const TeamButton = ({
   return (
     <>
       <button
-        disabled={teamCurrentlyPicked || teamPreviouslyPicked || pickIsLocked}
+        disabled={
+          teamCurrentlyPicked ||
+          teamPreviouslyPicked ||
+          pickIsLocked ||
+          gamesAndPicks.eliminated
+        }
         onClick={toggleDialog}
         className={`flex flex-col items-center rounded-lg border-2 border-slate-100 p-2 ${buttonClass}`}
       >

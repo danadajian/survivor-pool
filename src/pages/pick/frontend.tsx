@@ -51,28 +51,6 @@ const PickComponent = ({
     );
   }
 
-  if (eliminated) {
-    return (
-      <>
-        <Header>Sorry, you have been eliminated from this pool.</Header>
-        <button
-          onClick={() => navigate(`/`)}
-          className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-          type="button"
-        >
-          Back to pools
-        </button>
-        <button
-          onClick={() => navigate(`/create`)}
-          className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-          type="button"
-        >
-          Start a new pool
-        </button>
-      </>
-    );
-  }
-
   const teamPicked = userPick?.teamPicked;
   const teamPickedInEvent = events.find(
     (event) =>
@@ -84,13 +62,15 @@ const PickComponent = ({
   const userSurvived = userPick?.result === "WON";
   const pickIsLocked =
     Boolean(teamPicked) && gameHasStartedOrFinished(gameTime);
-  const pickHeader = userSurvived
-    ? `The ${teamPicked} won, and you're still alive!`
-    : pickIsLocked
-      ? `Your ${teamPicked} pick is locked. Good luck!`
-      : userPick
-        ? `You're riding with the ${userPick.teamPicked} this week!`
-        : `Make your pick, ${firstName}!`;
+  const pickHeader = eliminated
+    ? "Sorry, you have been eliminated from this pool."
+    : userSurvived
+      ? `The ${teamPicked} won, and you're still alive!`
+      : pickIsLocked
+        ? `Your ${teamPicked} pick is locked. Good luck!`
+        : userPick
+          ? `You're riding with the ${userPick.teamPicked} this week!`
+          : `Make your pick, ${firstName}!`;
 
   return (
     <>
@@ -104,10 +84,8 @@ const PickComponent = ({
           <EventRow
             key={index}
             event={event}
-            teamPicked={teamPicked}
             username={username}
             poolId={poolId}
-            userSurvived={userSurvived}
           />
         ))}
       </ul>
@@ -118,18 +96,10 @@ const PickComponent = ({
 export type Event = RouterOutput["pick"]["games"]["events"][number];
 type TeamRowProps = {
   event: Event;
-  teamPicked?: string;
   username: string;
   poolId: string;
-  userSurvived: boolean;
 };
-const EventRow = ({
-  event,
-  teamPicked,
-  username,
-  poolId,
-  userSurvived,
-}: TeamRowProps) => {
+const EventRow = ({ event, username, poolId }: TeamRowProps) => {
   const competition = event.competitions[0];
   const competitors = competition?.competitors ?? [];
   const homeTeam = competitors.find(
@@ -141,10 +111,9 @@ const EventRow = ({
   const gameTime = spacetime(competition?.date).goto(null);
   const gameStarted = gameHasStartedOrFinished(gameTime);
   const commonProps = {
-    teamPicked,
     username,
     poolId,
-    pickIsLocked: gameStarted || userSurvived,
+    gameStarted,
   };
   return (
     <div className="pt-2">
