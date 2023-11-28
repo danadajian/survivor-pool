@@ -4,13 +4,13 @@ import { useErrorBoundary } from "react-error-boundary";
 import { useMatch, useNavigate } from "react-router-dom";
 
 export const NavBar = () => {
-  const poolsMatch = useMatch("/pools/:poolId");
+  const poolsMatch = useMatch("/picks/:poolId");
   const pickMatch = useMatch("/pick/:poolId");
   const navigate = useNavigate();
   const path = poolsMatch?.pathname
     ? `/pick/${poolsMatch.params.poolId}`
     : pickMatch?.pathname
-      ? `/pools/${pickMatch?.params.poolId}`
+      ? `/picks/${pickMatch?.params.poolId}`
       : "";
   const { resetBoundary } = useErrorBoundary();
   const onClick = (path: string) => () => {

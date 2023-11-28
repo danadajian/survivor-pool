@@ -6,7 +6,7 @@ import { type PageProps, withPage } from "../../components/page-wrapper";
 import { type RouterOutput, trpc } from "../../trpc";
 import { useUrlParams } from "../../utils/use-url-params";
 
-const PoolsComponent = ({ user: { username }, poolId }: PageProps) => {
+const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
   const {
     urlParams: { week, season },
     setUrlParams,
@@ -38,7 +38,7 @@ const PoolsComponent = ({ user: { username }, poolId }: PageProps) => {
   );
 };
 
-export const Pools = withPage(PoolsComponent);
+export const Picks = withPage(PicksComponent);
 
 type PickTableProps = {
   picks: RouterOutput["picksForPool"]["picks"];

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/experimental-ct-react";
 import React from "react";
 
-import { Pools } from "../../src/pages/pools/frontend";
+import { Picks } from "../../src/pages/picks/frontend";
 import { picksForPoolResponse } from "../../test/mocks";
 import { MockProviders } from "../mock-providers";
 import { mockResponse } from "../utils";
@@ -10,8 +10,8 @@ test("renders all picks for the week", async ({ mount, page }) => {
   await mockResponse(page, "/trpc/*", picksForPoolResponse);
 
   const component = await mount(
-    <MockProviders initialEntries={["/pools/123"]}>
-      <Pools />
+    <MockProviders initialEntries={["/picks/123"]}>
+      <Picks />
     </MockProviders>,
   );
   await expect(

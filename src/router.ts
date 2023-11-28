@@ -20,7 +20,7 @@ import {
 import {
   fetchPicksForPool,
   fetchPicksForPoolInput,
-} from "./pages/pools/backend";
+} from "./pages/picks/backend";
 
 const t = initTRPC.create();
 
