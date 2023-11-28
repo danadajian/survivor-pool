@@ -44,7 +44,7 @@ export const Dropdown = ({
       </div>
       {showOptions && (
         <div
-          className="z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          className="absolute z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"
@@ -56,7 +56,7 @@ export const Dropdown = ({
                 key={index}
                 type="button"
                 onClick={() => onClick(option)}
-                className={`block w-full px-4 py-2 text-center text-sm hover:bg-gray-300 ${
+                className={`w-1/2 px-4 py-2 text-center text-sm hover:bg-gray-300 ${
                   option === selected
                     ? "bg-gray-200 text-gray-900"
                     : "text-gray-700"

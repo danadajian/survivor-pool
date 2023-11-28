@@ -17,23 +17,27 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
     ...(season ? { season: Number(season) } : {}),
   });
 
-  const { picks, week: currentWeek } = data;
+  const { eliminatedUsers, week: currentWeek } = data;
 
   return (
     <>
       <Header>Week {week ?? currentWeek} Picks</Header>
-      {picks.length ? (
-        <PickTable picks={picks} username={username} />
-      ) : (
-        <h2 className="pb-4 text-lg font-bold">
-          No picks for Week {week ?? currentWeek}
-        </h2>
-      )}
+      <PickTable
+        picksForPool={data}
+        username={username}
+        week={week ?? currentWeek}
+      />
       <Dropdown
         options={Array.from({ length: currentWeek }, (_, i) => i + 1)}
         selected={Number(week)}
         onSelect={(option) => setUrlParams({ week: String(option) })}
       />
+      {Number(week) === currentWeek && (
+        <EliminatedUserTable
+          eliminatedUsers={eliminatedUsers}
+          username={username}
+        />
+      )}
     </>
   );
 };
@@ -41,40 +45,84 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
 export const Picks = withPage(PicksComponent);
 
 type PickTableProps = {
-  picks: RouterOutput["picksForPool"]["picks"];
+  picksForPool: RouterOutput["picksForPool"];
+  username: string;
+  week: string | number;
+};
+
+const PickTable = ({
+  picksForPool: { picks },
+  username,
+  week,
+}: PickTableProps) => {
+  if (!picks.length) {
+    return <h2 className="pb-4 text-lg font-bold">No picks for Week {week}</h2>;
+  }
+
+  return (
+    <table className="mb-8 table-auto">
+      <thead>
+        <tr>
+          <th className="px-4">User</th>
+          <th className="px-4">Team Picked</th>
+          <th className="px-4">Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {picks.map((pick, index) => {
+          const isUserRow = pick.username === username;
+          const userClasses = isUserRow ? "font-semibold text-blue-800" : "";
+          const resultClasses =
+            pick.result === "WON"
+              ? "text-green-600"
+              : pick.result === "LOST"
+                ? "text-red-600"
+                : "";
+          const userFullName =
+            pick.firstName && pick.lastName
+              ? `${pick.firstName} ${pick.lastName}`
+              : undefined;
+          return (
+            <tr key={index} className={userClasses}>
+              <td>{userFullName ?? pick.username}</td>
+              <td>{pick.teamPicked}</td>
+              <td className={`font-semibold ${resultClasses}`}>
+                {pick.result ?? "PENDING"}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+};
+
+type EliminatedUserTableProps = {
+  eliminatedUsers: RouterOutput["picksForPool"]["eliminatedUsers"];
   username: string;
 };
 
-const PickTable = ({ picks, username }: PickTableProps) => (
-  <table className="mb-8 table-auto">
+const EliminatedUserTable = ({
+  eliminatedUsers,
+  username,
+}: EliminatedUserTableProps) => (
+  <table className="m-8 table-auto">
     <thead>
       <tr>
-        <th className="px-4">User</th>
-        <th className="px-4">Team Picked</th>
-        <th className="px-4">Result</th>
+        <th className="px-4">Eliminated Users</th>
       </tr>
     </thead>
     <tbody>
-      {picks.map((pick, index) => {
-        const isUserRow = pick.username === username;
+      {eliminatedUsers.map((user, index) => {
+        const isUserRow = user.username === username;
         const userClasses = isUserRow ? "font-semibold text-blue-800" : "";
-        const resultClasses =
-          pick.result === "WON"
-            ? "text-green-600"
-            : pick.result === "LOST"
-              ? "text-red-600"
-              : "";
         const userFullName =
-          pick.firstName && pick.lastName
-            ? `${pick.firstName} ${pick.lastName}`
+          user.firstName && user.lastName
+            ? `${user.firstName} ${user.lastName}`
             : undefined;
         return (
           <tr key={index} className={userClasses}>
-            <td>{userFullName ?? pick.username}</td>
-            <td>{pick.teamPicked}</td>
-            <td className={`font-semibold ${resultClasses}`}>
-              {pick.result ?? "PENDING"}
-            </td>
+            <td>{userFullName ?? user.username}</td>
           </tr>
         );
       })}

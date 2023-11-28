@@ -51,8 +51,13 @@ export async function fetchPicksForPool({
     )
     .orderBy(asc(picks.teamPicked), asc(picks.timestamp));
 
+  const eliminatedUsers = await db.query.members.findMany({
+    where: and(eq(members.eliminated, true), eq(members.poolId, poolId)),
+  });
+
   return {
     picks: picksResult,
+    eliminatedUsers,
     week: currentWeek,
     season: currentSeason,
   };
