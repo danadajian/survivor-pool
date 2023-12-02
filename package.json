@@ -1,6 +1,6 @@
 {
   "name": "survivor-pool",
-  "packageManager": "bun@1.0.13",
+  "packageManager": "bun@1.0.14",
   "scripts": {
     "db": "docker-compose up -d",
     "dev": "ENVIRONMENT=development bun --hot ./src/server.tsx",
@@ -15,14 +15,14 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@clerk/clerk-react": "4.28.0",
+    "@clerk/clerk-react": "4.28.1",
     "@elysiajs/static": "0.7.1",
     "@headlessui/react": "1.7.17",
     "@tanstack/react-query": "5.7.2",
     "@trpc/client": "11.0.0-next.92",
     "@trpc/react-query": "11.0.0-next.92",
     "@trpc/server": "11.0.0-next.92",
-    "drizzle-orm": "0.29.0",
+    "drizzle-orm": "0.29.1",
     "elysia": "0.7.20",
     "elysia-hot-module-reload": "1.0.1",
     "elysia-rate-limit": "1.2.0",
@@ -34,14 +34,14 @@
     "spacetime": "7.4.8"
   },
   "devDependencies": {
-    "@playwright/experimental-ct-react": "1.40.0",
-    "@types/react": "18.2.38",
-    "@types/react-dom": "18.2.16",
-    "@typescript-eslint/eslint-plugin": "6.12.0",
+    "@playwright/experimental-ct-react": "1.40.1",
+    "@types/react": "18.2.40",
+    "@types/react-dom": "18.2.17",
+    "@typescript-eslint/eslint-plugin": "6.13.1",
     "arktype": "1.0.28-alpha",
-    "bun-types": "1.0.13",
-    "drizzle-kit": "0.20.4",
-    "eslint": "8.54.0",
+    "bun-types": "1.0.14",
+    "drizzle-kit": "0.20.6",
+    "eslint": "8.55.0",
     "eslint-plugin-no-only-tests": "3.1.0",
     "eslint-plugin-simple-import-sort": "10.0.0",
     "husky": "8.0.3",
