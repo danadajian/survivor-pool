@@ -52,11 +52,10 @@ const PickComponent = ({
   }
 
   const teamPicked = userPick?.teamPicked;
-  const teamPickedInEvent = events.find(
-    (event) =>
-      event.competitions[0]?.competitors.some(
-        (competitor) => competitor.team.name === teamPicked,
-      ),
+  const teamPickedInEvent = events.find((event) =>
+    event.competitions[0]?.competitors.some(
+      (competitor) => competitor.team.name === teamPicked,
+    ),
   );
   const gameTime = teamPickedInEvent?.date;
   const userSurvived = userPick?.result === "WON";
