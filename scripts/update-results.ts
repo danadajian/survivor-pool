@@ -12,10 +12,11 @@ const userPicks = await db
   .where(and(eq(picks.week, week.number), eq(picks.season, season.year)));
 
 function getResult(teamPicked: string) {
-  const teamPickedInEvent = events.find((event) =>
-    event.competitions[0]?.competitors.some(
-      (competitor) => competitor.team.name === teamPicked,
-    ),
+  const teamPickedInEvent = events.find(
+    (event) =>
+      event.competitions[0]?.competitors.some(
+        (competitor) => competitor.team.name === teamPicked,
+      ),
   );
   const teamPickedFromApi =
     teamPickedInEvent?.competitions[0]?.competitors.find(
