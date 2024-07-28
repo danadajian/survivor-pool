@@ -2,7 +2,7 @@
   "name": "survivor-pool",
   "packageManager": "bun@1.0.18",
   "scripts": {
-    "db": "docker-compose up -d",
+    "db": "docker compose up -d",
     "dev": "ENVIRONMENT=development bun --hot ./src/server.tsx",
     "drizzle": "drizzle-kit push:pg",
     "docker": "docker build . --tag survivor-pool",
