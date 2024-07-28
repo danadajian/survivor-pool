@@ -4,8 +4,8 @@ import { environmentVariables } from "./src/env";
 
 export default defineConfig({
   schema: "./src/schema.ts",
-  driver: "pg",
+  dialect: "postgresql",
   dbCredentials: {
-    connectionString: environmentVariables.POSTGRES_URL,
+    url: environmentVariables.POSTGRES_URL,
   },
 });
