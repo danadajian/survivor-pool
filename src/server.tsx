@@ -1,4 +1,5 @@
 import { staticPlugin } from "@elysiajs/static";
+import { trpc } from "@elysiajs/trpc";
 import Elysia from "elysia";
 import { HotModuleReload, hotModuleReload } from "elysia-hot-module-reload";
 import { rateLimit } from "elysia-rate-limit";
@@ -9,7 +10,6 @@ import { StaticRouter } from "react-router-dom/server";
 import { App } from "./app";
 import { environmentVariables } from "./env";
 import { appRouter } from "./router";
-import { trpcRouter } from "./trpc";
 
 await Bun.build({
   entrypoints: ["./src/client.tsx"],
@@ -41,7 +41,7 @@ const app = new Elysia()
     });
   })
   .use(rateLimit({ max: 1000 }))
-  .use(trpcRouter(appRouter))
+  .use(trpc(appRouter))
   .use(staticPlugin())
   .listen(environmentVariables.PORT ?? 8080);
 
