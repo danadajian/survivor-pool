@@ -48,7 +48,7 @@ jobs:
         with:
           bun-version-file: package.json
       - run: bun install
-      - run: bun run test
+      - run: bun test-backend
 
   test-frontend:
     name: Frontend Tests
@@ -64,7 +64,7 @@ jobs:
         run: bun playwright install --with-deps chromium webkit
 
       - name: Run Component Tests
-        run: bun playwright test
+        run: bun test-frontend
 
   db:
     name: Database Update
