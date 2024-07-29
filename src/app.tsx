@@ -10,7 +10,7 @@ import { Route, Routes } from "react-router-dom";
 
 import { ClientProvider } from "./components/client-provider";
 import { ErrorPage } from "./components/error";
-import { Header } from "./components/header";
+import { Heading } from "./components/heading";
 import { withPage } from "./components/page-wrapper";
 import { Create } from "./pages/create/frontend";
 import { Home } from "./pages/home/frontend";
@@ -71,4 +71,4 @@ export const App = () => {
   );
 };
 
-const NotFound = withPage(() => <Header>Not Found</Header>);
+const NotFound = withPage(() => <Heading>Not Found</Heading>);

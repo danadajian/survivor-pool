@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
 
-import { Header } from "../../components/header";
+import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { TeamButton } from "../../components/team-button";
 import { type RouterOutput, trpc } from "../../trpc";
@@ -27,12 +27,25 @@ const PickComponent = ({
     poolWinner,
   } = data;
 
+  if (!events.filter((event) => event.season.slug !== "preseason").length) {
+    return (
+      <>
+        <h1 className="pt-8 text-2xl font-bold text-red-700">
+          {poolName} {currentSeason}
+        </h1>
+        <h2 className="pt-8 text-lg font-bold text-slate-700">
+          Hang tight! The season hasn't started yet...
+        </h2>
+      </>
+    );
+  }
+
   if (poolWinner) {
     return (
       <>
-        <Header>
+        <Heading>
           {`${poolWinner.firstName} ${poolWinner.lastName}`} has won this pool!
-        </Header>
+        </Heading>
         <button
           onClick={() => navigate(`/`)}
           className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"

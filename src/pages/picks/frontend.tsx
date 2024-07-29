@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Dropdown } from "../../components/dropdown";
-import { Header } from "../../components/header";
+import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { type RouterOutput, trpc } from "../../trpc";
 import { useUrlParams } from "../../utils/use-url-params";
@@ -21,7 +21,7 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
 
   return (
     <>
-      <Header>Week {week ?? currentWeek} Picks</Header>
+      <Heading>Week {week ?? currentWeek} Picks</Heading>
       <PickTable
         picksForPool={data}
         username={username}

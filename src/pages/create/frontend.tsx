@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Header } from "../../components/header";
+import { Heading, Subheading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { trpc } from "../../trpc";
 
@@ -27,7 +27,8 @@ const CreateComponent = ({ user }: PageProps) => {
   if (isSuccess && data?.poolId) {
     return (
       <>
-        <Header>{`${poolName} created successfully!`}</Header>
+        <Heading>{`${poolName} created successfully!`}</Heading>
+        <Subheading>You are now a member of this pool.</Subheading>
         <div className="flex">
           <button
             onClick={() => {
@@ -56,7 +57,7 @@ const CreateComponent = ({ user }: PageProps) => {
 
   return (
     <>
-      <Header>Create New Pool</Header>
+      <Heading>Create New Pool</Heading>
       <form className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
         <div className="pb-6">
           <label

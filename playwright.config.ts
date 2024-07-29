@@ -19,5 +19,7 @@ export default defineConfig({
   outputDir: "./playwright/test-results",
   preserveOutput: "failures-only",
   retries: process.env.CI ? 2 : 0,
-  projects: devicesToTest.map(deviceToProject),
+  projects: process.env.CI
+    ? devicesToTest.map(deviceToProject)
+    : [deviceToProject("Desktop Chrome")],
 });

@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Header } from "../../components/header";
+import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { trpc } from "../../trpc";
 
@@ -22,7 +22,7 @@ const JoinComponent = ({ user, poolId }: PageProps) => {
   if (isSuccess) {
     return (
       <>
-        <Header>You have joined {pool.name}!</Header>
+        <Heading>You have joined {pool.name}!</Heading>
         <button
           onClick={() => navigate(`/pick/${poolId}`)}
           className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
@@ -36,7 +36,7 @@ const JoinComponent = ({ user, poolId }: PageProps) => {
 
   return (
     <>
-      <Header>Join New Survivor Pool</Header>
+      <Heading>Join New Survivor Pool</Heading>
       <div className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
         <p className="text-md block pb-8 font-bold text-gray-700">
           You have been invited to join {pool.name}!

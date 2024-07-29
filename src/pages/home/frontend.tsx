@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Header } from "../../components/header";
+import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { type RouterOutput, trpc } from "../../trpc";
 import { usePrefetch } from "../../utils/use-prefetch";
@@ -13,7 +13,7 @@ const HomeComponent = ({ user: { username } }: PageProps) => {
 
   return (
     <>
-      <Header>Welcome to Survivor Pool!</Header>
+      <Heading>Welcome to Survivor Pool!</Heading>
       <div className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
         <PoolSelect data={data} />
       </div>

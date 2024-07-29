@@ -15,7 +15,7 @@ export const mockNinersPick: RouterOutput["pick"]["userPick"] = {
 
 export type EspnResponse =
   | typeof mockEspnResponse
-  | typeof mockEspnResponseResults;
+  | typeof mockEspnResponseWithResults;
 export const mockEspnResponse = {
   leagues: [
     {
@@ -10708,8 +10708,1328 @@ export const mockEspnResponse = {
     },
   ],
 };
+export const mockEspnPreseasonResponse = {
+  leagues: [
+    {
+      id: "28",
+      uid: "s:20~l:28",
+      name: "National Football League",
+      abbreviation: "NFL",
+      slug: "nfl",
+      season: {
+        year: 2023,
+        startDate: "2023-08-01T07:00Z",
+        endDate: "2024-02-15T07:59Z",
+        displayName: "2023",
+        type: {
+          id: "2",
+          type: 2,
+          name: "Regular Season",
+          abbreviation: "reg",
+        },
+      },
+      logos: [
+        {
+          href: "https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png",
+          width: 500,
+          height: 500,
+          alt: "",
+          rel: ["full", "default"],
+          lastUpdated: "2018-06-05T12:07Z",
+        },
+      ],
+      calendarType: "list",
+      calendarIsWhitelist: true,
+      calendarStartDate: "2023-08-01T07:00Z",
+      calendarEndDate: "2024-02-15T07:59Z",
+      calendar: [
+        {
+          label: "Preseason",
+          value: "1",
+          startDate: "2023-08-01T07:00Z",
+          endDate: "2023-09-07T06:59Z",
+          entries: [
+            {
+              label: "Hall of Fame Weekend",
+              alternateLabel: "HOF",
+              detail: "Aug 1-8",
+              value: "1",
+              startDate: "2023-08-01T07:00Z",
+              endDate: "2023-08-09T06:59Z",
+            },
+            {
+              label: "Preseason Week 1",
+              alternateLabel: "Pre Wk 1",
+              detail: "Aug 9-15",
+              value: "2",
+              startDate: "2023-08-09T07:00Z",
+              endDate: "2023-08-16T06:59Z",
+            },
+            {
+              label: "Preseason Week 2",
+              alternateLabel: "Pre Wk 2",
+              detail: "Aug 16-22",
+              value: "3",
+              startDate: "2023-08-16T07:00Z",
+              endDate: "2023-08-23T06:59Z",
+            },
+            {
+              label: "Preseason Week 3",
+              alternateLabel: "Pre Wk 3",
+              detail: "Aug 23-Sep 6",
+              value: "4",
+              startDate: "2023-08-23T07:00Z",
+              endDate: "2023-09-07T06:59Z",
+            },
+          ],
+        },
+        {
+          label: "Regular Season",
+          value: "2",
+          startDate: "2023-09-07T07:00Z",
+          endDate: "2024-01-13T07:59Z",
+          entries: [
+            {
+              label: "Week 1",
+              alternateLabel: "Week 1",
+              detail: "Sep 7-12",
+              value: "1",
+              startDate: "2023-09-07T07:00Z",
+              endDate: "2023-09-13T06:59Z",
+            },
+            {
+              label: "Week 2",
+              alternateLabel: "Week 2",
+              detail: "Sep 13-19",
+              value: "2",
+              startDate: "2023-09-13T07:00Z",
+              endDate: "2023-09-20T06:59Z",
+            },
+            {
+              label: "Week 3",
+              alternateLabel: "Week 3",
+              detail: "Sep 20-26",
+              value: "3",
+              startDate: "2023-09-20T07:00Z",
+              endDate: "2023-09-27T06:59Z",
+            },
+            {
+              label: "Week 4",
+              alternateLabel: "Week 4",
+              detail: "Sep 27-Oct 3",
+              value: "4",
+              startDate: "2023-09-27T07:00Z",
+              endDate: "2023-10-04T06:59Z",
+            },
+            {
+              label: "Week 5",
+              alternateLabel: "Week 5",
+              detail: "Oct 4-10",
+              value: "5",
+              startDate: "2023-10-04T07:00Z",
+              endDate: "2023-10-11T06:59Z",
+            },
+            {
+              label: "Week 6",
+              alternateLabel: "Week 6",
+              detail: "Oct 11-17",
+              value: "6",
+              startDate: "2023-10-11T07:00Z",
+              endDate: "2023-10-18T06:59Z",
+            },
+            {
+              label: "Week 7",
+              alternateLabel: "Week 7",
+              detail: "Oct 18-24",
+              value: "7",
+              startDate: "2023-10-18T07:00Z",
+              endDate: "2023-10-25T06:59Z",
+            },
+            {
+              label: "Week 8",
+              alternateLabel: "Week 8",
+              detail: "Oct 25-31",
+              value: "8",
+              startDate: "2023-10-25T07:00Z",
+              endDate: "2023-11-01T06:59Z",
+            },
+            {
+              label: "Week 9",
+              alternateLabel: "Week 9",
+              detail: "Nov 1-7",
+              value: "9",
+              startDate: "2023-11-01T07:00Z",
+              endDate: "2023-11-08T07:59Z",
+            },
+            {
+              label: "Week 10",
+              alternateLabel: "Week 10",
+              detail: "Nov 8-14",
+              value: "10",
+              startDate: "2023-11-08T08:00Z",
+              endDate: "2023-11-15T07:59Z",
+            },
+            {
+              label: "Week 11",
+              alternateLabel: "Week 11",
+              detail: "Nov 15-21",
+              value: "11",
+              startDate: "2023-11-15T08:00Z",
+              endDate: "2023-11-22T07:59Z",
+            },
+            {
+              label: "Week 12",
+              alternateLabel: "Week 12",
+              detail: "Nov 22-28",
+              value: "12",
+              startDate: "2023-11-22T08:00Z",
+              endDate: "2023-11-29T07:59Z",
+            },
+            {
+              label: "Week 13",
+              alternateLabel: "Week 13",
+              detail: "Nov 29-Dec 5",
+              value: "13",
+              startDate: "2023-11-29T08:00Z",
+              endDate: "2023-12-06T07:59Z",
+            },
+            {
+              label: "Week 14",
+              alternateLabel: "Week 14",
+              detail: "Dec 6-12",
+              value: "14",
+              startDate: "2023-12-06T08:00Z",
+              endDate: "2023-12-13T07:59Z",
+            },
+            {
+              label: "Week 15",
+              alternateLabel: "Week 15",
+              detail: "Dec 13-19",
+              value: "15",
+              startDate: "2023-12-13T08:00Z",
+              endDate: "2023-12-20T07:59Z",
+            },
+            {
+              label: "Week 16",
+              alternateLabel: "Week 16",
+              detail: "Dec 20-26",
+              value: "16",
+              startDate: "2023-12-20T08:00Z",
+              endDate: "2023-12-27T07:59Z",
+            },
+            {
+              label: "Week 17",
+              alternateLabel: "Week 17",
+              detail: "Dec 27-Jan 2",
+              value: "17",
+              startDate: "2023-12-27T08:00Z",
+              endDate: "2024-01-03T07:59Z",
+            },
+            {
+              label: "Week 18",
+              alternateLabel: "Week 18",
+              detail: "Jan 3-12",
+              value: "18",
+              startDate: "2024-01-03T08:00Z",
+              endDate: "2024-01-13T07:59Z",
+            },
+          ],
+        },
+        {
+          label: "Postseason",
+          value: "3",
+          startDate: "2024-01-13T08:00Z",
+          endDate: "2024-02-15T07:59Z",
+          entries: [
+            {
+              label: "Wild Card",
+              alternateLabel: "Wild Card",
+              detail: "Jan 13-16",
+              value: "1",
+              startDate: "2024-01-13T08:00Z",
+              endDate: "2024-01-17T07:59Z",
+            },
+            {
+              label: "Divisional Round",
+              alternateLabel: "Div Rd",
+              detail: "Jan 17-23",
+              value: "2",
+              startDate: "2024-01-17T08:00Z",
+              endDate: "2024-01-24T07:59Z",
+            },
+            {
+              label: "Conference Championship",
+              alternateLabel: "Conf Champ",
+              detail: "Jan 24-30",
+              value: "3",
+              startDate: "2024-01-24T08:00Z",
+              endDate: "2024-01-31T07:59Z",
+            },
+            {
+              label: "Pro Bowl",
+              alternateLabel: "Pro Bowl",
+              detail: "Jan 31-Feb 6",
+              value: "4",
+              startDate: "2024-01-31T08:00Z",
+              endDate: "2024-02-07T07:59Z",
+            },
+            {
+              label: "Super Bowl",
+              alternateLabel: "Super Bowl",
+              detail: "Feb 7-14",
+              value: "5",
+              startDate: "2024-02-07T08:00Z",
+              endDate: "2024-02-15T07:59Z",
+            },
+          ],
+        },
+        {
+          label: "Off Season",
+          value: "4",
+          startDate: "2024-02-15T08:00Z",
+          endDate: "2024-08-01T06:59Z",
+          entries: [
+            {
+              label: "Week 1",
+              alternateLabel: "Week 1",
+              detail: "Mar 7-Jul 31",
+              value: "1",
+              startDate: "2024-03-07T08:00Z",
+              endDate: "2024-08-01T06:59Z",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  season: {
+    type: 2,
+    year: 2023,
+  },
+  week: {
+    number: 1,
+  },
+  events: [
+    {
+      id: "401547352",
+      uid: "s:20~l:28~e:401547352",
+      date: "2023-09-12T00:15Z",
+      name: "Buffalo Bills at New York Jets",
+      shortName: "BUF @ NYJ",
+      season: {
+        year: 2023,
+        type: 2,
+        slug: "preseason",
+      },
+      week: {
+        number: 1,
+      },
+      competitions: [
+        {
+          id: "401547352",
+          uid: "s:20~l:28~e:401547352~c:401547352",
+          date: "2023-09-12T00:15Z",
+          attendance: 0,
+          type: {
+            id: "1",
+            abbreviation: "STD",
+          },
+          timeValid: true,
+          neutralSite: false,
+          conferenceCompetition: false,
+          playByPlayAvailable: false,
+          recent: false,
+          venue: {
+            id: "3839",
+            fullName: "MetLife Stadium",
+            address: {
+              city: "East Rutherford",
+              state: "NJ",
+            },
+            capacity: 82500,
+            indoor: false,
+          },
+          competitors: [
+            {
+              id: "20",
+              uid: "s:20~l:28~t:20",
+              type: "team",
+              order: 0,
+              homeAway: "home",
+              team: {
+                id: "20",
+                uid: "s:20~l:28~t:20",
+                location: "New York",
+                name: "Jets",
+                abbreviation: "NYJ",
+                displayName: "New York Jets",
+                shortDisplayName: "Jets",
+                color: "115740",
+                alternateColor: "ffffff",
+                isActive: true,
+                venue: {
+                  id: "3839",
+                },
+                links: [
+                  {
+                    rel: ["clubhouse", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/_/name/nyj/new-york-jets",
+                    text: "Clubhouse",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["roster", "desktop", "team"],
+                    href: "http://www.espn.com/nfl/team/roster/_/name/nyj/new-york-jets",
+                    text: "Roster",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["stats", "desktop", "team"],
+                    href: "http://www.espn.com/nfl/team/stats/_/name/nyj/new-york-jets",
+                    text: "Statistics",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["schedule", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/schedule/_/name/nyj",
+                    text: "Schedule",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["photos", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/photos/_/name/nyj",
+                    text: "photos",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["tickets", "desktop", "team"],
+                    href: "https://www.vividseats.com/new-york-jets-tickets--sports-nfl-football/performer/601?wsUser=717",
+                    text: "Tickets",
+                    isExternal: true,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["draftpicks", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/draft/teams/_/name/nyj/new-york-jets",
+                    text: "Draft Picks",
+                    isExternal: false,
+                    isPremium: true,
+                  },
+                  {
+                    rel: ["transactions", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/transactions/_/name/nyj",
+                    text: "Transactions",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["injuries", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/injuries/_/name/nyj",
+                    text: "Injuries",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["depthchart", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/depth/_/name/nyj",
+                    text: "Depth Chart",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                ],
+                logo: "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nyj.png",
+              },
+              score: "0",
+              statistics: [],
+              records: [
+                {
+                  name: "overall",
+                  abbreviation: "Any",
+                  type: "total",
+                  summary: "0-0",
+                },
+                {
+                  name: "Home",
+                  type: "home",
+                  summary: "0-0",
+                },
+                {
+                  name: "Road",
+                  type: "road",
+                  summary: "0-0",
+                },
+              ],
+            },
+            {
+              id: "2",
+              uid: "s:20~l:28~t:2",
+              type: "team",
+              order: 1,
+              homeAway: "away",
+              team: {
+                id: "2",
+                uid: "s:20~l:28~t:2",
+                location: "Buffalo",
+                name: "Bills",
+                abbreviation: "BUF",
+                displayName: "Buffalo Bills",
+                shortDisplayName: "Bills",
+                color: "00338d",
+                alternateColor: "d50a0a",
+                isActive: true,
+                venue: {
+                  id: "3883",
+                },
+                links: [
+                  {
+                    rel: ["clubhouse", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/_/name/buf/buffalo-bills",
+                    text: "Clubhouse",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["roster", "desktop", "team"],
+                    href: "http://www.espn.com/nfl/team/roster/_/name/buf/buffalo-bills",
+                    text: "Roster",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["stats", "desktop", "team"],
+                    href: "http://www.espn.com/nfl/team/stats/_/name/buf/buffalo-bills",
+                    text: "Statistics",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["schedule", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/schedule/_/name/buf",
+                    text: "Schedule",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["photos", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/photos/_/name/buf",
+                    text: "photos",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["tickets", "desktop", "team"],
+                    href: "https://www.vividseats.com/buffalo-bills-tickets--sports-nfl-football/performer/128?wsUser=717",
+                    text: "Tickets",
+                    isExternal: true,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["draftpicks", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/draft/teams/_/name/buf/buffalo-bills",
+                    text: "Draft Picks",
+                    isExternal: false,
+                    isPremium: true,
+                  },
+                  {
+                    rel: ["transactions", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/transactions/_/name/buf",
+                    text: "Transactions",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["injuries", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/injuries/_/name/buf",
+                    text: "Injuries",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["depthchart", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/depth/_/name/buf",
+                    text: "Depth Chart",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                ],
+                logo: "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/buf.png",
+              },
+              score: "0",
+              statistics: [],
+              records: [
+                {
+                  name: "overall",
+                  abbreviation: "Any",
+                  type: "total",
+                  summary: "0-0",
+                },
+                {
+                  name: "Home",
+                  type: "home",
+                  summary: "0-0",
+                },
+                {
+                  name: "Road",
+                  type: "road",
+                  summary: "0-0",
+                },
+              ],
+            },
+          ],
+          notes: [],
+          status: {
+            clock: 0,
+            displayClock: "0:00",
+            period: 0,
+            type: {
+              id: "1",
+              name: "STATUS_SCHEDULED",
+              state: "pre",
+              completed: false,
+              description: "Scheduled",
+              detail: "Mon, September 11th at 8:15 PM EDT",
+              shortDetail: "9/11 - 8:15 PM EDT",
+            },
+          },
+          broadcasts: [
+            {
+              market: "national",
+              names: ["ESPN", "ABC", "ESPN+"],
+            },
+          ],
+          format: {
+            regulation: {
+              periods: 4,
+            },
+          },
+          tickets: [
+            {
+              summary: "Tickets as low as $137",
+              numberAvailable: 2673,
+              links: [
+                {
+                  href: "https://www.vividseats.com/new-york-jets-tickets-metlife-stadium-3-11-2024--sports-nfl-football/production/4311892?wsUser=717",
+                },
+                {
+                  href: "https://www.vividseats.com/metlife-stadium-tickets/venue/8136?wsUser=717",
+                },
+              ],
+            },
+          ],
+          startDate: "2023-09-12T00:15Z",
+          geoBroadcasts: [
+            {
+              type: {
+                id: "1",
+                shortName: "TV",
+              },
+              market: {
+                id: "1",
+                type: "National",
+              },
+              media: {
+                shortName: "ESPN",
+              },
+              lang: "en",
+              region: "us",
+            },
+            {
+              type: {
+                id: "1",
+                shortName: "TV",
+              },
+              market: {
+                id: "1",
+                type: "National",
+              },
+              media: {
+                shortName: "ABC",
+              },
+              lang: "en",
+              region: "us",
+            },
+            {
+              type: {
+                id: "4",
+                shortName: "Web",
+              },
+              market: {
+                id: "1",
+                type: "National",
+              },
+              media: {
+                shortName: "ESPN+",
+              },
+              lang: "en",
+              region: "us",
+            },
+          ],
+          odds: [
+            {
+              provider: {
+                id: "45",
+                name: "Caesars Sportsbook (New Jersey)",
+                priority: 1,
+              },
+              details: "BUF -2.0",
+              overUnder: 45,
+            },
+          ],
+        },
+      ],
+      links: [
+        {
+          language: "en-US",
+          rel: ["summary", "desktop", "event"],
+          href: "https://www.espn.com/nfl/game/_/gameId/401547352",
+          text: "Gamecast",
+          shortText: "Gamecast",
+          isExternal: false,
+          isPremium: false,
+        },
+      ],
+      weather: {
+        displayValue: "Clear",
+        temperature: 76,
+        highTemperature: 76,
+        conditionId: "33",
+        link: {
+          language: "en-US",
+          rel: ["07073"],
+          href: "http://www.accuweather.com/en/us/metlife-stadium-nj/07073/hourly-weather-forecast/52866_poi?day=11&hbhhour=20&lang=en-us",
+          text: "Weather",
+          shortText: "Weather",
+          isExternal: true,
+          isPremium: false,
+        },
+      },
+      status: {
+        clock: 0,
+        displayClock: "0:00",
+        period: 0,
+        type: {
+          id: "1",
+          name: "STATUS_SCHEDULED",
+          state: "pre",
+          completed: false,
+          description: "Scheduled",
+          detail: "Mon, September 11th at 8:15 PM EDT",
+          shortDetail: "9/11 - 8:15 PM EDT",
+        },
+      },
+    },
+    {
+      id: "401547353",
+      uid: "s:20~l:28~e:401547353",
+      date: "2023-09-08T00:20Z",
+      name: "Detroit Lions at Kansas City Chiefs",
+      shortName: "DET @ KC",
+      season: {
+        year: 2023,
+        type: 2,
+        slug: "preseason",
+      },
+      week: {
+        number: 1,
+      },
+      competitions: [
+        {
+          id: "401547353",
+          uid: "s:20~l:28~e:401547353~c:401547353",
+          date: "2023-09-08T00:20Z",
+          attendance: 73522,
+          type: {
+            id: "1",
+            abbreviation: "STD",
+          },
+          timeValid: true,
+          neutralSite: false,
+          conferenceCompetition: false,
+          playByPlayAvailable: true,
+          recent: false,
+          venue: {
+            id: "3622",
+            fullName: "GEHA Field at Arrowhead Stadium",
+            address: {
+              city: "Kansas City",
+              state: "MO",
+            },
+            capacity: 73426,
+            indoor: false,
+          },
+          competitors: [
+            {
+              id: "12",
+              uid: "s:20~l:28~t:12",
+              type: "team",
+              order: 0,
+              homeAway: "home",
+              winner: false,
+              team: {
+                id: "12",
+                uid: "s:20~l:28~t:12",
+                location: "Kansas City",
+                name: "Chiefs",
+                abbreviation: "KC",
+                displayName: "Kansas City Chiefs",
+                shortDisplayName: "Chiefs",
+                color: "e31837",
+                alternateColor: "ffb612",
+                isActive: true,
+                venue: {
+                  id: "3622",
+                },
+                links: [
+                  {
+                    rel: ["clubhouse", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/_/name/kc/kansas-city-chiefs",
+                    text: "Clubhouse",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["roster", "desktop", "team"],
+                    href: "http://www.espn.com/nfl/team/roster/_/name/kc/kansas-city-chiefs",
+                    text: "Roster",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["stats", "desktop", "team"],
+                    href: "http://www.espn.com/nfl/team/stats/_/name/kc/kansas-city-chiefs",
+                    text: "Statistics",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["schedule", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/schedule/_/name/kc",
+                    text: "Schedule",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["photos", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/photos/_/name/kc",
+                    text: "photos",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["tickets", "desktop", "team"],
+                    href: "https://www.vividseats.com/kansas-city-chiefs-tickets--sports-nfl-football/performer/427?wsUser=717",
+                    text: "Tickets",
+                    isExternal: true,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["draftpicks", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/draft/teams/_/name/kc/kansas-city-chiefs",
+                    text: "Draft Picks",
+                    isExternal: false,
+                    isPremium: true,
+                  },
+                  {
+                    rel: ["transactions", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/transactions/_/name/kc",
+                    text: "Transactions",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["injuries", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/injuries/_/name/kc",
+                    text: "Injuries",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["depthchart", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/depth/_/name/kc",
+                    text: "Depth Chart",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                ],
+                logo: "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/kc.png",
+              },
+              score: "20",
+              linescores: [
+                {
+                  value: 0,
+                },
+                {
+                  value: 14,
+                },
+                {
+                  value: 3,
+                },
+                {
+                  value: 3,
+                },
+              ],
+              statistics: [],
+              records: [
+                {
+                  name: "overall",
+                  abbreviation: "Game",
+                  type: "total",
+                  summary: "0-1",
+                },
+                {
+                  name: "Home",
+                  type: "home",
+                  summary: "0-1",
+                },
+                {
+                  name: "Road",
+                  type: "road",
+                  summary: "0-0",
+                },
+              ],
+            },
+            {
+              id: "8",
+              uid: "s:20~l:28~t:8",
+              type: "team",
+              order: 1,
+              homeAway: "away",
+              winner: true,
+              team: {
+                id: "8",
+                uid: "s:20~l:28~t:8",
+                location: "Detroit",
+                name: "Lions",
+                abbreviation: "DET",
+                displayName: "Detroit Lions",
+                shortDisplayName: "Lions",
+                color: "0076b6",
+                alternateColor: "bbbbbb",
+                isActive: true,
+                venue: {
+                  id: "3727",
+                },
+                links: [
+                  {
+                    rel: ["clubhouse", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/_/name/det/detroit-lions",
+                    text: "Clubhouse",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["roster", "desktop", "team"],
+                    href: "http://www.espn.com/nfl/team/roster/_/name/det/detroit-lions",
+                    text: "Roster",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["stats", "desktop", "team"],
+                    href: "http://www.espn.com/nfl/team/stats/_/name/det/detroit-lions",
+                    text: "Statistics",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["schedule", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/schedule/_/name/det",
+                    text: "Schedule",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["photos", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/photos/_/name/det",
+                    text: "photos",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["tickets", "desktop", "team"],
+                    href: "https://www.vividseats.com/detroit-lions-tickets--sports-nfl-football/performer/238?wsUser=717",
+                    text: "Tickets",
+                    isExternal: true,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["draftpicks", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/draft/teams/_/name/det/detroit-lions",
+                    text: "Draft Picks",
+                    isExternal: false,
+                    isPremium: true,
+                  },
+                  {
+                    rel: ["transactions", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/transactions/_/name/det",
+                    text: "Transactions",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["injuries", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/injuries/_/name/det",
+                    text: "Injuries",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                  {
+                    rel: ["depthchart", "desktop", "team"],
+                    href: "https://www.espn.com/nfl/team/depth/_/name/det",
+                    text: "Depth Chart",
+                    isExternal: false,
+                    isPremium: false,
+                  },
+                ],
+                logo: "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/det.png",
+              },
+              score: "21",
+              linescores: [
+                {
+                  value: 7,
+                },
+                {
+                  value: 0,
+                },
+                {
+                  value: 7,
+                },
+                {
+                  value: 7,
+                },
+              ],
+              statistics: [],
+              records: [
+                {
+                  name: "overall",
+                  abbreviation: "Game",
+                  type: "total",
+                  summary: "1-0",
+                },
+                {
+                  name: "Home",
+                  type: "home",
+                  summary: "0-0",
+                },
+                {
+                  name: "Road",
+                  type: "road",
+                  summary: "1-0",
+                },
+              ],
+            },
+          ],
+          notes: [],
+          status: {
+            clock: 0,
+            displayClock: "0:00",
+            period: 4,
+            type: {
+              id: "3",
+              name: "STATUS_FINAL",
+              state: "post",
+              completed: true,
+              description: "Final",
+              detail: "Final",
+              shortDetail: "Final",
+            },
+          },
+          broadcasts: [
+            {
+              market: "national",
+              names: ["NBC"],
+            },
+          ],
+          leaders: [
+            {
+              name: "passingYards",
+              displayName: "Passing Leader",
+              shortDisplayName: "PASS",
+              abbreviation: "PYDS",
+              leaders: [
+                {
+                  displayValue: "253 YDS, 1 TD",
+                  value: 253,
+                  athlete: {
+                    id: "3046779",
+                    fullName: "Jared Goff",
+                    displayName: "Jared Goff",
+                    shortName: "J. Goff",
+                    links: [
+                      {
+                        rel: ["playercard", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/_/id/3046779/jared-goff",
+                      },
+                      {
+                        rel: ["stats", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/stats/_/id/3046779/jared-goff",
+                      },
+                      {
+                        rel: ["splits", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/splits/_/id/3046779/jared-goff",
+                      },
+                      {
+                        rel: ["gamelog", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/gamelog/_/id/3046779/jared-goff",
+                      },
+                      {
+                        rel: ["news", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/news/_/id/3046779/jared-goff",
+                      },
+                      {
+                        rel: ["bio", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/bio/_/id/3046779/jared-goff",
+                      },
+                      {
+                        rel: ["overview", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/_/id/3046779/jared-goff",
+                      },
+                    ],
+                    headshot:
+                      "https://a.espncdn.com/i/headshots/nfl/players/full/3046779.png",
+                    jersey: "16",
+                    position: {
+                      abbreviation: "QB",
+                    },
+                    team: {
+                      id: "8",
+                    },
+                    active: true,
+                  },
+                  team: {
+                    id: "8",
+                  },
+                },
+              ],
+            },
+            {
+              name: "rushingYards",
+              displayName: "Rushing Leader",
+              shortDisplayName: "RUSH",
+              abbreviation: "RYDS",
+              leaders: [
+                {
+                  displayValue: "21 CAR, 74 YDS, 1 TD",
+                  value: 74,
+                  athlete: {
+                    id: "4035538",
+                    fullName: "David Montgomery",
+                    displayName: "David Montgomery",
+                    shortName: "D. Montgomery",
+                    links: [
+                      {
+                        rel: ["playercard", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/_/id/4035538/david-montgomery",
+                      },
+                      {
+                        rel: ["stats", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/stats/_/id/4035538/david-montgomery",
+                      },
+                      {
+                        rel: ["splits", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/splits/_/id/4035538/david-montgomery",
+                      },
+                      {
+                        rel: ["gamelog", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/gamelog/_/id/4035538/david-montgomery",
+                      },
+                      {
+                        rel: ["news", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/news/_/id/4035538/david-montgomery",
+                      },
+                      {
+                        rel: ["bio", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/bio/_/id/4035538/david-montgomery",
+                      },
+                      {
+                        rel: ["overview", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/_/id/4035538/david-montgomery",
+                      },
+                    ],
+                    headshot:
+                      "https://a.espncdn.com/i/headshots/nfl/players/full/4035538.png",
+                    jersey: "5",
+                    position: {
+                      abbreviation: "RB",
+                    },
+                    team: {
+                      id: "8",
+                    },
+                    active: true,
+                  },
+                  team: {
+                    id: "8",
+                  },
+                },
+              ],
+            },
+            {
+              name: "receivingYards",
+              displayName: "Receiving Leader",
+              shortDisplayName: "REC",
+              abbreviation: "RECYDS",
+              leaders: [
+                {
+                  displayValue: "4 REC, 80 YDS",
+                  value: 80,
+                  athlete: {
+                    id: "3115306",
+                    fullName: "Josh Reynolds",
+                    displayName: "Josh Reynolds",
+                    shortName: "J. Reynolds",
+                    links: [
+                      {
+                        rel: ["playercard", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/_/id/3115306/josh-reynolds",
+                      },
+                      {
+                        rel: ["stats", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/stats/_/id/3115306/josh-reynolds",
+                      },
+                      {
+                        rel: ["splits", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/splits/_/id/3115306/josh-reynolds",
+                      },
+                      {
+                        rel: ["gamelog", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/gamelog/_/id/3115306/josh-reynolds",
+                      },
+                      {
+                        rel: ["news", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/news/_/id/3115306/josh-reynolds",
+                      },
+                      {
+                        rel: ["bio", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/bio/_/id/3115306/josh-reynolds",
+                      },
+                      {
+                        rel: ["overview", "desktop", "athlete"],
+                        href: "http://www.espn.com/nfl/player/_/id/3115306/josh-reynolds",
+                      },
+                    ],
+                    headshot:
+                      "https://a.espncdn.com/i/headshots/nfl/players/full/3115306.png",
+                    jersey: "8",
+                    position: {
+                      abbreviation: "WR",
+                    },
+                    team: {
+                      id: "8",
+                    },
+                    active: true,
+                  },
+                  team: {
+                    id: "8",
+                  },
+                },
+              ],
+            },
+          ],
+          format: {
+            regulation: {
+              periods: 4,
+            },
+          },
+          startDate: "2023-09-08T00:20Z",
+          geoBroadcasts: [
+            {
+              type: {
+                id: "1",
+                shortName: "TV",
+              },
+              market: {
+                id: "1",
+                type: "National",
+              },
+              media: {
+                shortName: "NBC",
+              },
+              lang: "en",
+              region: "us",
+            },
+          ],
+          headlines: [
+            {
+              description:
+                "— The Lions walked into roaring Arrowhead Stadium on Thursday night, where the Kansas City Chiefs are nearly unbeatable and were trying to open their latest Super Bowl title defense with a win, and proved what Detroit coach Dan Campbell has come to...",
+              type: "Recap",
+              shortLinkText:
+                "Lions spoil Chiefs' celebration of Super Bowl title by rallying for a 21-20 win in the NFL's opener",
+            },
+          ],
+        },
+      ],
+      links: [
+        {
+          language: "en-US",
+          rel: ["summary", "desktop", "event"],
+          href: "https://www.espn.com/nfl/game/_/gameId/401547353",
+          text: "Gamecast",
+          shortText: "Gamecast",
+          isExternal: false,
+          isPremium: false,
+        },
+        {
+          language: "en-US",
+          rel: ["boxscore", "desktop", "event"],
+          href: "https://www.espn.com/nfl/boxscore/_/gameId/401547353",
+          text: "Box Score",
+          shortText: "Box Score",
+          isExternal: false,
+          isPremium: false,
+        },
+        {
+          language: "en-US",
+          rel: ["highlights", "desktop"],
+          href: "https://www.espn.com/nfl/video?gameId=401547353",
+          text: "Highlights",
+          shortText: "Highlights",
+          isExternal: false,
+          isPremium: false,
+        },
+        {
+          language: "en-US",
+          rel: ["pbp", "desktop", "event"],
+          href: "https://www.espn.com/nfl/playbyplay/_/gameId/401547353",
+          text: "Play-by-Play",
+          shortText: "Play-by-Play",
+          isExternal: false,
+          isPremium: false,
+        },
+        {
+          language: "en-US",
+          rel: ["recap", "desktop", "event"],
+          href: "https://www.espn.com/nfl/recap?gameId=401547353",
+          text: "Recap",
+          shortText: "Recap",
+          isExternal: false,
+          isPremium: false,
+        },
+      ],
+      status: {
+        clock: 0,
+        displayClock: "0:00",
+        period: 4,
+        type: {
+          id: "3",
+          name: "STATUS_FINAL",
+          state: "post",
+          completed: true,
+          description: "Final",
+          detail: "Final",
+          shortDetail: "Final",
+        },
+      },
+    },
+  ],
+};
 
-export const mockEspnResponseResults = {
+export const mockEspnResponseWithResults = {
   leagues: [
     {
       id: "28",
@@ -19626,6 +20946,17 @@ export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pick"]> = {
     },
   },
 };
+export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
+  RouterOutput["pick"]
+> = {
+  result: {
+    data: {
+      games: mockEspnPreseasonResponse,
+      poolName: "Test Pool",
+      eliminated: false,
+    },
+  },
+};
 export const responseWithPick: TRPCResponse<RouterOutput["pick"]> = {
   result: {
     data: {
@@ -19643,7 +20974,7 @@ export const responseWithPickAndResultsTeamWon: TRPCResponse<
   result: {
     data: {
       userPick: { ...mockNinersPick, result: "WON" },
-      games: mockEspnResponseResults,
+      games: mockEspnResponseWithResults,
       poolName: "Test Pool",
       eliminated: false,
     },

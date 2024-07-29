@@ -3,6 +3,7 @@ import React from "react";
 
 import { Pick } from "../../src/pages/pick/frontend";
 import {
+  basicGamesAndPicksPreseasonResponse,
   basicGamesAndPicksResponse,
   responseWithPick,
   responseWithPickAndForbiddenTeams,
@@ -41,11 +42,8 @@ test("renders without picks", async ({ mount }) => {
 });
 
 test("can make a pick", async ({ mount, page }) => {
-  await page.route("/trpc/makePick*", (route) =>
-    route.fulfill({
-      body: JSON.stringify({ result: { data: {} } }),
-    }),
-  );
+  await mockResponse(page, "/trpc/makePick*", { result: { data: {} } });
+
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
       <Pick />
@@ -73,11 +71,7 @@ test("can make a pick", async ({ mount, page }) => {
 });
 
 test("prevents picking the same team twice", async ({ mount, page }) => {
-  await page.route("/trpc/pick*", (route) =>
-    route.fulfill({
-      body: JSON.stringify(responseWithPickAndForbiddenTeams),
-    }),
-  );
+  await mockResponse(page, "/trpc/pick*", responseWithPickAndForbiddenTeams);
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
       <Pick />
@@ -90,6 +84,24 @@ test("prevents picking the same team twice", async ({ mount, page }) => {
   await expect(
     component.getByRole("heading", {
       name: "You're riding with the 49ers this week!",
+    }),
+  ).toBeVisible();
+});
+
+test("shows no picks during preseason", async ({ mount, page }) => {
+  await mockResponse(page, "/trpc/pick*", basicGamesAndPicksPreseasonResponse);
+
+  const component = await mount(
+    <MockProviders initialEntries={["/pick/123"]}>
+      <Pick />
+    </MockProviders>,
+  );
+  await expect(
+    component.getByRole("heading", { name: "Test Pool 2023" }),
+  ).toBeVisible();
+  await expect(
+    component.getByRole("heading", {
+      name: "Hang tight! The season hasn't started yet.",
     }),
   ).toBeVisible();
 });
