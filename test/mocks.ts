@@ -21039,3 +21039,21 @@ export const picksForPoolResponse: TRPCResponse<RouterOutput["picksForPool"]> =
       },
     },
   };
+
+export const poolsForUserResponse: TRPCResponse<RouterOutput["poolsForUser"]> =
+  {
+    result: {
+      data: [
+        {
+          poolId: "1",
+          poolName: "Pool 1",
+          eliminated: false,
+        },
+        {
+          poolId: "2",
+          poolName: "Pool 2",
+          eliminated: false,
+        },
+      ],
+    },
+  };
