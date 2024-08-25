@@ -5,7 +5,7 @@ export const envSchema = v.object({
   ENVIRONMENT: v.optional(
     v.union([v.literal("development"), v.literal("production")]),
   ),
-  GAMES_API_URL: v.string(),
+  GAMES_API_URL: v.optional(v.string()),
   POSTGRES_URL: v.string(),
 });
 const result = v.safeParse(envSchema, process.env);

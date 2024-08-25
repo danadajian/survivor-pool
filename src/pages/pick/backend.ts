@@ -60,6 +60,9 @@ export async function pickEndpoint({
 }
 
 export async function fetchCurrentGames() {
+  if (!environmentVariables.GAMES_API_URL) {
+    throw new Error("GAMES_API_URL is required");
+  }
   const response = await fetch(environmentVariables.GAMES_API_URL);
   return (await response.json()) as Promise<EspnResponse>;
 }
