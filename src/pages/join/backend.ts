@@ -1,14 +1,14 @@
 import { TRPCError } from "@trpc/server";
-import { type } from "arktype";
 import { eq } from "drizzle-orm";
+import * as v from "valibot";
 
 import { userFields } from "../../components/page-wrapper";
 import { db } from "../../db";
 import { members, pools } from "../../schema";
 
-export const joinPoolInput = type({
+export const joinPoolInput = v.object({
   ...userFields,
-  poolId: "string>0",
+  poolId: v.string(),
 });
 
 export async function joinPool({
@@ -16,7 +16,7 @@ export async function joinPool({
   firstName,
   lastName,
   poolId,
-}: typeof joinPoolInput.infer) {
+}: v.InferInput<typeof joinPoolInput>) {
   const result = await db
     .select({
       poolId: pools.id,
@@ -50,11 +50,11 @@ export async function joinPool({
   return rows.find(Boolean);
 }
 
-export const getPoolInput = type({
-  poolId: "string>0",
+export const getPoolInput = v.object({
+  poolId: v.string(),
 });
 
-export async function getPool({ poolId }: typeof getPoolInput.infer) {
+export async function getPool({ poolId }: v.InferInput<typeof getPoolInput>) {
   const pool = await db.query.pools.findFirst({ where: eq(pools.id, poolId) });
   if (!pool) {
     throw new TRPCError({

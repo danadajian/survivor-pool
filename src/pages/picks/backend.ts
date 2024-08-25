@@ -1,21 +1,21 @@
-import { type } from "arktype";
 import { and, asc, eq } from "drizzle-orm";
+import * as v from "valibot";
 
 import { db } from "../../db";
 import { members, picks } from "../../schema";
 import { fetchCurrentGames } from "../pick/backend";
 
-export const fetchPicksForPoolInput = type({
-  poolId: "string>0",
-  "week?": "number",
-  "season?": "number",
+export const fetchPicksForPoolInput = v.object({
+  poolId: v.string(),
+  week: v.optional(v.number()),
+  season: v.optional(v.number()),
 });
 
 export async function fetchPicksForPool({
   poolId,
   week,
   season,
-}: typeof fetchPicksForPoolInput.infer) {
+}: v.InferInput<typeof fetchPicksForPoolInput>) {
   const {
     week: { number: currentWeek },
     season: { year: currentSeason },

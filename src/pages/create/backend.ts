@@ -1,15 +1,15 @@
 import { TRPCError } from "@trpc/server";
-import { type } from "arktype";
 import { eq } from "drizzle-orm";
+import * as v from "valibot";
 
 import { userFields } from "../../components/page-wrapper";
 import { db } from "../../db";
 import { pools } from "../../schema";
 import { joinPool } from "../join/backend";
 
-export const createPoolInput = type({
+export const createPoolInput = v.object({
   ...userFields,
-  poolName: "string>=1",
+  poolName: v.string(),
 });
 
 export async function createPool({
@@ -17,7 +17,7 @@ export async function createPool({
   username,
   firstName,
   lastName,
-}: typeof createPoolInput.infer) {
+}: v.InferInput<typeof createPoolInput>) {
   const existingPool = await db.query.pools.findFirst({
     where: eq(pools.name, poolName),
   });

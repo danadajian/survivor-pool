@@ -1,16 +1,16 @@
-import { type } from "arktype";
 import { eq } from "drizzle-orm";
+import * as v from "valibot";
 
 import { db } from "../../db";
 import { members, pools } from "../../schema";
 
-export const fetchPoolsForUserInput = type({
-  username: "string>0",
+export const fetchPoolsForUserInput = v.object({
+  username: v.string(),
 });
 
 export async function fetchPoolsForUser({
   username,
-}: typeof fetchPoolsForUserInput.infer) {
+}: v.InferInput<typeof fetchPoolsForUserInput>) {
   return db
     .select({
       poolId: pools.id,

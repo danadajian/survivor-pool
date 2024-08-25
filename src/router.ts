@@ -1,4 +1,5 @@
 import { initTRPC } from "@trpc/server";
+import * as v from "valibot";
 
 import { createPool, createPoolInput } from "./pages/create/backend";
 import {
@@ -26,25 +27,25 @@ const t = initTRPC.create();
 
 export const appRouter = t.router({
   pick: t.procedure
-    .input(fetchPicksInput.assert)
+    .input(v.parser(fetchPicksInput))
     .query(({ input }) => pickEndpoint(input)),
   makePick: t.procedure
-    .input(makePickInput.assert)
+    .input(v.parser(makePickInput))
     .mutation(({ input }) => makePick(input)),
   poolsForUser: t.procedure
-    .input(fetchPoolsForUserInput.assert)
+    .input(v.parser(fetchPoolsForUserInput))
     .query(({ input }) => fetchPoolsForUser(input)),
   picksForPool: t.procedure
-    .input(fetchPicksForPoolInput.assert)
+    .input(v.parser(fetchPicksForPoolInput))
     .query(({ input }) => fetchPicksForPool(input)),
   createPool: t.procedure
-    .input(createPoolInput.assert)
+    .input(v.parser(createPoolInput))
     .mutation(({ input }) => createPool(input)),
   joinPool: t.procedure
-    .input(joinPoolInput.assert)
+    .input(v.parser(joinPoolInput))
     .mutation(({ input }) => joinPool(input)),
   getPool: t.procedure
-    .input(getPoolInput.assert)
+    .input(v.parser(getPoolInput))
     .query(({ input }) => getPool(input)),
 });
 

@@ -1,8 +1,8 @@
 import { useUser } from "@clerk/clerk-react";
-import { type } from "arktype";
 import React, { Suspense, useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useMatch } from "react-router-dom";
+import * as v from "valibot";
 
 import { useEndpoint } from "../utils/use-endpoint";
 import { usePrefetch } from "../utils/use-prefetch";
@@ -11,14 +11,14 @@ import { Loader } from "./loader";
 import { NavBar } from "./nav-bar";
 
 export const userFields = {
-  username: "string>0",
-  "firstName?": "string>0 | null",
-  "lastName?": "string>0 | null",
+  username: v.string(),
+  firstName: v.optional(v.string()),
+  lastName: v.optional(v.string()),
 } as const;
-const userSchema = type(userFields);
+const userSchema = v.object(userFields);
 
 export type PageProps = {
-  user: typeof userSchema.infer;
+  user: v.InferInput<typeof userSchema>;
   poolId: string;
 };
 
@@ -35,12 +35,8 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
       firstName: userResource?.firstName,
       lastName: userResource?.lastName,
     };
-    const { data: user, problems } = userSchema(userInfo);
+    const user = v.parse(userSchema, userInfo);
     usePrefetch({ username: user?.username, poolIds: [poolId] });
-
-    if (problems) {
-      return <ErrorPage error={new Error(problems.summary)} />;
-    }
 
     return (
       <>

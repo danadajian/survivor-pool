@@ -1,13 +1,15 @@
-import { type } from "arktype";
+import * as v from "valibot";
 
-export const envSchema = type({
-  "PORT?": "string",
-  "ENVIRONMENT?": "'development' | 'production'",
-  "GAMES_API_URL?": "string",
-  POSTGRES_URL: "string",
+export const envSchema = v.object({
+  PORT: v.optional(v.string()),
+  ENVIRONMENT: v.optional(
+    v.union([v.literal("development"), v.literal("production")]),
+  ),
+  GAMES_API_URL: v.string(),
+  POSTGRES_URL: v.string(),
 });
-const { data, problems } = envSchema(process.env);
-if (problems) {
-  throw new Error(`Environment schema invalid. ${problems.summary}`);
+const result = v.safeParse(envSchema, process.env);
+if (!result.success) {
+  throw new Error("Environment variable schema invalid.");
 }
-export const environmentVariables = data;
+export const environmentVariables = result.output;

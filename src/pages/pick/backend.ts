@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
-import { type } from "arktype";
 import { and, eq, lt } from "drizzle-orm";
+import * as v from "valibot";
 
 import { type EspnResponse } from "../../../test/mocks";
 import { db } from "../../db";
@@ -8,23 +8,23 @@ import { environmentVariables } from "../../env";
 import { members, picks } from "../../schema";
 import { fetchPoolsForUser } from "../home/backend";
 
-export const fetchPicksInput = type({
-  username: "string>0",
-  poolId: "string>0",
+export const fetchPicksInput = v.object({
+  username: v.string(),
+  poolId: v.string(),
 });
 
-export const makePickInput = type({
-  username: "string>0",
-  teamPicked: "string>0",
-  week: "number",
-  season: "number",
-  poolId: "string>0",
+export const makePickInput = v.object({
+  username: v.string(),
+  teamPicked: v.string(),
+  week: v.number(),
+  season: v.number(),
+  poolId: v.string(),
 });
 
 export async function pickEndpoint({
   username,
   poolId,
-}: typeof fetchPicksInput.infer) {
+}: v.InferInput<typeof fetchPicksInput>) {
   const userPools = await fetchPoolsForUser({ username });
   const pool = userPools.find((pool) => pool.poolId === poolId);
   if (!pool) {
@@ -60,9 +60,6 @@ export async function pickEndpoint({
 }
 
 export async function fetchCurrentGames() {
-  if (!environmentVariables.GAMES_API_URL) {
-    throw new Error("Missing GAMES_API_URL environment variable.");
-  }
   const response = await fetch(environmentVariables.GAMES_API_URL);
   return (await response.json()) as Promise<EspnResponse>;
 }
@@ -72,7 +69,12 @@ export async function fetchPickForUser({
   poolId,
   week,
   season,
-}: Omit<typeof makePickInput.infer, "teamPicked">) {
+}: {
+  username: string;
+  poolId: string;
+  week: number;
+  season: number;
+}) {
   return db.query.picks.findFirst({
     where: and(
       eq(picks.username, username),
@@ -88,7 +90,12 @@ export async function fetchForbiddenTeamsForUser({
   poolId,
   week,
   season,
-}: Omit<typeof makePickInput.infer, "teamPicked">) {
+}: {
+  username: string;
+  poolId: string;
+  week: number;
+  season: number;
+}) {
   const result = await db.query.picks.findMany({
     columns: { teamPicked: true },
     where: and(
@@ -124,7 +131,13 @@ export async function makePick({
   week,
   season,
   poolId,
-}: typeof makePickInput.infer) {
+}: {
+  username: string;
+  teamPicked: string;
+  week: number;
+  season: number;
+  poolId: string;
+}) {
   const existingPick = await fetchPickForUser({
     username,
     poolId,
