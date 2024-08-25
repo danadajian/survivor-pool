@@ -45,7 +45,7 @@ export const App = () => {
         <title>Survivor Pool</title>
       </head>
       <body>
-        <ClerkProvider publishableKey="pk_test_YW11c2luZy1tYW4tNjEuY2xlcmsuYWNjb3VudHMuZGV2JA">
+        <ClerkProvider publishableKey="pk_test_ZHJpdmVuLXNwYXJyb3ctNDguY2xlcmsuYWNjb3VudHMuZGV2JA">
           <ErrorBoundary
             fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
           >
