@@ -46,13 +46,15 @@ export async function pickEndpoint({
     week: games.week.number,
     season: games.season.year,
   });
-  const poolWinner = await fetchPoolWinner({ poolId });
+  const poolMembers = await fetchPoolMembers(poolId);
+  const poolWinner = await fetchPoolWinner(poolMembers);
   return {
     games,
     userPick,
     forbiddenTeams,
     poolName: pool.poolName,
     eliminated: pool.eliminated,
+    poolMembers,
     poolWinner,
   };
 }
@@ -92,18 +94,23 @@ export async function fetchForbiddenTeamsForUser({
     where: and(
       eq(picks.username, username),
       eq(picks.poolId, poolId),
-      lt(picks.week, week),
       eq(picks.season, season),
+      lt(picks.week, week),
     ),
   });
 
   return result.length ? result.map(({ teamPicked }) => teamPicked) : undefined;
 }
 
-export async function fetchPoolWinner({ poolId }: { poolId: string }) {
-  const poolMembers = await db.query.members.findMany({
+export async function fetchPoolMembers(poolId: string) {
+  return db.query.members.findMany({
     where: and(eq(members.poolId, poolId)),
   });
+}
+
+export async function fetchPoolWinner(
+  poolMembers: (typeof members.$inferSelect)[],
+) {
   const membersStillAlive = poolMembers.filter((member) => !member.eliminated);
 
   return poolMembers.length > 1 && membersStillAlive.length === 1

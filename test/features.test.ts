@@ -7,6 +7,7 @@ import { joinPool } from "../src/pages/join/backend";
 import {
   fetchForbiddenTeamsForUser,
   fetchPickForUser,
+  fetchPoolMembers,
   fetchPoolWinner,
   makePick,
 } from "../src/pages/pick/backend";
@@ -53,7 +54,8 @@ describe("feature tests", () => {
     const pool = await db.query.pools.findFirst();
     if (!pool) throw new Error();
 
-    const poolWinner = await fetchPoolWinner({ poolId: pool.id });
+    const poolMembers = await fetchPoolMembers(pool.id);
+    const poolWinner = await fetchPoolWinner(poolMembers);
     expect(poolWinner).toBeUndefined();
   });
 
@@ -114,7 +116,8 @@ describe("feature tests", () => {
     if (!results[0]) throw new Error();
     const poolId = results[0].poolId;
 
-    const poolWinner = await fetchPoolWinner({ poolId });
+    const poolMembers = await fetchPoolMembers(poolId);
+    const poolWinner = await fetchPoolWinner(poolMembers);
     expect(poolWinner).toBeUndefined();
   });
 
@@ -127,7 +130,8 @@ describe("feature tests", () => {
     if (!results[0]) throw new Error();
     const poolId = results[0].poolId;
 
-    const poolWinner = await fetchPoolWinner({ poolId });
+    const poolMembers = await fetchPoolMembers(poolId);
+    const poolWinner = await fetchPoolWinner(poolMembers);
     expect(poolWinner?.username).toEqual(username);
   });
 });

@@ -25,6 +25,7 @@ const PickComponent = ({
     poolName,
     eliminated,
     poolWinner,
+    poolMembers,
   } = data;
 
   const regularSeasonEvents = events.filter(
@@ -39,6 +40,14 @@ const PickComponent = ({
         <h2 className="pt-8 text-lg font-bold text-slate-700">
           Hang tight! The season hasn't started yet...
         </h2>
+        <h3 className="pt-16 text-lg font-bold text-blue-700">Pool Members</h3>
+        <ul className="pt-4">
+          {poolMembers.map((member) => (
+            <li className="pt-2">
+              {member.firstName} {member.lastName}
+            </li>
+          ))}
+        </ul>
       </>
     );
   }

@@ -20943,6 +20943,7 @@ export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pick"]> = {
       games: mockEspnResponse,
       poolName: "Test Pool",
       eliminated: false,
+      poolMembers: [],
     },
   },
 };
@@ -20954,6 +20955,7 @@ export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
       games: mockEspnPreseasonResponse,
       poolName: "Test Pool",
       eliminated: false,
+      poolMembers: [],
     },
   },
 };
@@ -20964,6 +20966,7 @@ export const responseWithPick: TRPCResponse<RouterOutput["pick"]> = {
       games: mockEspnResponse,
       poolName: "Test Pool",
       eliminated: false,
+      poolMembers: [],
     },
   },
 };
@@ -20977,6 +20980,7 @@ export const responseWithPickAndResultsTeamWon: TRPCResponse<
       games: mockEspnResponseWithResults,
       poolName: "Test Pool",
       eliminated: false,
+      poolMembers: [],
     },
   },
 };
@@ -21001,6 +21005,7 @@ export const responseWithPickAndForbiddenTeams: TRPCResponse<
       forbiddenTeams: ["Bills", "Jets"],
       poolName: "Test Pool",
       eliminated: false,
+      poolMembers: [],
     },
   },
 };
