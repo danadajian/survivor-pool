@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 import { and, eq, lt } from "drizzle-orm";
 import * as v from "valibot";
 
-import { type EspnResponse } from "../../../playwright/mocks";
 import { db } from "../../db";
 import { environmentVariables } from "../../env";
 import { members, picks } from "../../schema";
@@ -59,12 +58,75 @@ export async function fetchPoolInfo({
   };
 }
 
-export async function fetchCurrentGames() {
+const eventsSchema = v.array(
+  v.object({
+    season: v.object({
+      slug: v.string(),
+    }),
+    date: v.string(),
+    competitions: v.array(
+      v.object({
+        date: v.string(),
+        odds: v.optional(
+          v.array(
+            v.object({
+              details: v.string(),
+            }),
+          ),
+        ),
+        competitors: v.array(
+          v.object({
+            homeAway: v.string(),
+            team: v.object({
+              name: v.string(),
+              abbreviation: v.string(),
+              logo: v.string(),
+            }),
+          }),
+        ),
+      }),
+    ),
+  }),
+);
+const gamesSchema = v.object({
+  week: v.object({
+    number: v.number(),
+  }),
+  season: v.object({
+    year: v.number(),
+  }),
+  events: eventsSchema,
+});
+type GamesResponse = {
+  events: v.InferInput<typeof eventsSchema>;
+  week: {
+    number: number;
+  };
+  season: {
+    year: number;
+  };
+};
+export async function fetchCurrentGames(): Promise<GamesResponse> {
   if (!environmentVariables.GAMES_API_URL) {
     throw new Error("GAMES_API_URL is required");
   }
   const response = await fetch(environmentVariables.GAMES_API_URL);
-  return (await response.json()) as Promise<EspnResponse>;
+  const games = await response.json();
+  const parseResult = v.safeParse(gamesSchema, games);
+  if (!parseResult.success)
+    throw new TRPCError({
+      message: "ESPN has changed their API recently, an update is needed.",
+      code: "INTERNAL_SERVER_ERROR",
+    });
+  const parsedGames = parseResult.output;
+  const filteredEvents = parsedGames.events.filter(
+    (event) => event.season.slug !== "preseason",
+  );
+  return {
+    events: filteredEvents,
+    week: parsedGames.week,
+    season: parsedGames.season,
+  };
 }
 
 export async function fetchPickForUser({

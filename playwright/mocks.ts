@@ -1,8 +1,6 @@
 import type { TRPCResponse } from "@trpc/server/rpc";
 
-import type { RouterOutput } from "../src/trpc";
-
-export const mockNinersPick: RouterOutput["pool"]["userPick"] = {
+export const mockNinersPick = {
   id: "123",
   username: "test@user.com",
   teamPicked: "49ers",
@@ -13,9 +11,6 @@ export const mockNinersPick: RouterOutput["pool"]["userPick"] = {
   timestamp: "123",
 };
 
-export type EspnResponse =
-  | typeof mockEspnResponse
-  | typeof mockEspnResponseWithResults;
 export const mockEspnResponse = {
   leagues: [
     {
@@ -20937,7 +20932,7 @@ export const mockEspnResponseWithResults = {
   ],
 };
 
-export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pool"]> = {
+export const basicGamesAndPicksResponse: TRPCResponse = {
   result: {
     data: {
       games: mockEspnResponse,
@@ -20947,9 +20942,7 @@ export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pool"]> = {
     },
   },
 };
-export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
-  RouterOutput["pool"]
-> = {
+export const basicGamesAndPicksPreseasonResponse: TRPCResponse = {
   result: {
     data: {
       games: mockEspnPreseasonResponse,
@@ -20959,7 +20952,7 @@ export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
     },
   },
 };
-export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
+export const responseWithPick: TRPCResponse = {
   result: {
     data: {
       userPick: mockNinersPick,
@@ -20971,9 +20964,7 @@ export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
   },
 };
 
-export const responseWithPickAndResultsTeamWon: TRPCResponse<
-  RouterOutput["pool"]
-> = {
+export const responseWithPickAndResultsTeamWon: TRPCResponse = {
   result: {
     data: {
       userPick: { ...mockNinersPick, result: "WON" },
@@ -20985,19 +20976,19 @@ export const responseWithPickAndResultsTeamWon: TRPCResponse<
   },
 };
 
-export const responseWithPickAndResultsTeamLost = {
+export const responseWithPickAndResultsTeamLost: TRPCResponse = {
   result: {
     data: {
-      ...responseWithPickAndResultsTeamWon.result.data,
       userPick: { ...mockNinersPick, result: "LOST" },
+      games: mockEspnResponseWithResults,
+      poolName: "Test Pool",
       eliminated: true,
+      poolMembers: [],
     },
   },
 };
 
-export const responseWithPickAndForbiddenTeams: TRPCResponse<
-  RouterOutput["pool"]
-> = {
+export const responseWithPickAndForbiddenTeams: TRPCResponse = {
   result: {
     data: {
       userPick: mockNinersPick,
@@ -21010,55 +21001,53 @@ export const responseWithPickAndForbiddenTeams: TRPCResponse<
   },
 };
 
-export const picksForPoolResponse: TRPCResponse<RouterOutput["picksForPool"]> =
-  {
-    result: {
-      data: {
-        week: 1,
-        season: 2023,
-        eliminatedUsers: [],
-        picks: [
-          {
-            username: "test@user.com",
-            firstName: "Test",
-            lastName: "User1",
-            teamPicked: "Chiefs",
-            week: 1,
-            season: 2023,
-            poolId: "12345",
-            result: null,
-            timestamp: "123",
-          },
-          {
-            username: "test2@user.com",
-            firstName: "Test",
-            lastName: "User2",
-            teamPicked: "Bills",
-            week: 1,
-            season: 2023,
-            poolId: "12345",
-            result: null,
-            timestamp: "123",
-          },
-        ],
-      },
-    },
-  };
-
-export const poolsForUserResponse: TRPCResponse<RouterOutput["poolsForUser"]> =
-  {
-    result: {
-      data: [
+export const picksForPoolResponse: TRPCResponse = {
+  result: {
+    data: {
+      week: 1,
+      season: 2023,
+      eliminatedUsers: [],
+      picks: [
         {
-          poolId: "1",
-          poolName: "Pool 1",
-          eliminated: false,
+          username: "test@user.com",
+          firstName: "Test",
+          lastName: "User1",
+          teamPicked: "Chiefs",
+          week: 1,
+          season: 2023,
+          poolId: "12345",
+          result: null,
+          timestamp: "123",
         },
         {
-          poolId: "2",
-          poolName: "Pool 2",
-          eliminated: false,
+          username: "test2@user.com",
+          firstName: "Test",
+          lastName: "User2",
+          teamPicked: "Bills",
+          week: 1,
+          season: 2023,
+          poolId: "12345",
+          result: null,
+          timestamp: "123",
         },
       ],
     },
-  };
+  },
+};
+
+export const poolsForUserResponse: TRPCResponse = {
+  result: {
+    data: [
+      {
+        poolId: "1",
+        poolName: "Pool 1",
+        eliminated: false,
+      },
+      {
+        poolId: "2",
+        poolName: "Pool 2",
+        eliminated: false,
+      },
+    ],
+  },
+};
