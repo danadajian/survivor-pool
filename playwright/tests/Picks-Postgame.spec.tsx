@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/experimental-ct-react";
 import React from "react";
 
-import { Pick } from "../../src/pages/pick/frontend";
+import { Pool } from "../../src/pages/pool/frontend";
 import {
   basicGamesAndPicksResponse,
   responseWithPick,
@@ -12,7 +12,7 @@ import { MockProviders } from "../mock-providers";
 import { mockResponse } from "../utils";
 
 test.beforeEach(async ({ page }) => {
-  await mockResponse(page, "/trpc/pick*", basicGamesAndPicksResponse);
+  await mockResponse(page, "/trpc/pool*", basicGamesAndPicksResponse);
   await page.evaluate(() => {
     Date.now = () =>
       new Date(
@@ -25,7 +25,7 @@ test("prevents changing pick after picking a game that has started", async ({
   mount,
   page,
 }) => {
-  await page.route("/trpc/pick*", (route) =>
+  await page.route("/trpc/pool*", (route) =>
     route.fulfill({
       body: JSON.stringify(responseWithPick),
     }),
@@ -38,7 +38,7 @@ test("prevents changing pick after picking a game that has started", async ({
   });
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
-      <Pick />
+      <Pool />
     </MockProviders>,
   );
 
@@ -51,7 +51,7 @@ test("prevents changing pick after picking a game that has started", async ({
 });
 
 test("prevents picking a game that has started", async ({ mount, page }) => {
-  await page.route("/trpc/pick*", (route) =>
+  await page.route("/trpc/pool*", (route) =>
     route.fulfill({
       body: JSON.stringify(basicGamesAndPicksResponse),
     }),
@@ -64,7 +64,7 @@ test("prevents picking a game that has started", async ({ mount, page }) => {
   });
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
-      <Pick />
+      <Pool />
     </MockProviders>,
   );
 
@@ -76,14 +76,14 @@ test("prevents picking a game that has started", async ({ mount, page }) => {
 });
 
 test("indicates when you survived a week", async ({ mount, page }) => {
-  await page.route("/trpc/pick*", (route) =>
+  await page.route("/trpc/pool*", (route) =>
     route.fulfill({
       body: JSON.stringify(responseWithPickAndResultsTeamWon),
     }),
   );
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
-      <Pick />
+      <Pool />
     </MockProviders>,
   );
 
@@ -95,14 +95,14 @@ test("indicates when you survived a week", async ({ mount, page }) => {
 });
 
 test("indicates when you have been eliminated", async ({ mount, page }) => {
-  await page.route("/trpc/pick*", (route) =>
+  await page.route("/trpc/pool*", (route) =>
     route.fulfill({
       body: JSON.stringify(responseWithPickAndResultsTeamLost),
     }),
   );
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
-      <Pick />
+      <Pool />
     </MockProviders>,
   );
 

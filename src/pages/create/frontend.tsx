@@ -44,7 +44,7 @@ const CreateComponent = ({ user }: PageProps) => {
             {copyButtonText}
           </button>
           <button
-            onClick={() => navigate(`/pick/${data.poolId}`)}
+            onClick={() => navigate(`/pool/${data.poolId}`)}
             className="focus:shadow-outline ml-8 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
             type="button"
           >

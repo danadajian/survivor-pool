@@ -3,7 +3,7 @@ import * as v from "valibot";
 
 import { db } from "../../db";
 import { members, picks } from "../../schema";
-import { fetchCurrentGames } from "../pick/backend";
+import { fetchCurrentGames } from "../pool/backend";
 
 export const fetchPicksForPoolInput = v.object({
   poolId: v.string(),

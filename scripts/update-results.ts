@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 
 import { db } from "../src/db";
-import { fetchCurrentGames } from "../src/pages/pick/backend";
+import { fetchCurrentGames } from "../src/pages/pool/backend";
 import { members, picks } from "../src/schema";
 
 const { events, season, week } = await fetchCurrentGames();

@@ -2,7 +2,7 @@ import { Dialog } from "@headlessui/react";
 import React from "react";
 import { useState } from "react";
 
-import type { Event } from "../pages/pick/frontend";
+import type { Event } from "../pages/pool/frontend";
 import { trpc } from "../trpc";
 import { DialogWrapper } from "./dialog-wrapper";
 
@@ -20,11 +20,11 @@ export const TeamButton = ({
   gameStarted,
 }: TeamProps) => {
   const utils = trpc.useUtils();
-  const gamesAndPicks = utils.pick.getData({ username, poolId });
+  const gamesAndPicks = utils.pool.getData({ username, poolId });
   const { mutate } = trpc.makePick.useMutation({
     throwOnError: true,
     onMutate: ({ teamPicked }) => {
-      utils.pick.setData({ username, poolId }, (data) => {
+      utils.pool.setData({ username, poolId }, (data) => {
         if (data?.userPick) {
           return {
             ...data,
@@ -45,7 +45,7 @@ export const TeamButton = ({
       }, 50);
     },
     onSettled: () =>
-      Promise.all([utils.pick.invalidate(), utils.picksForPool.invalidate()]),
+      Promise.all([utils.pool.invalidate(), utils.picksForPool.invalidate()]),
   });
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const toggleDialog = () => setDialogIsOpen(!dialogIsOpen);

@@ -21,7 +21,7 @@ export const makePickInput = v.object({
   poolId: v.string(),
 });
 
-export async function pickEndpoint({
+export async function fetchPoolInfo({
   username,
   poolId,
 }: v.InferInput<typeof fetchPicksInput>) {

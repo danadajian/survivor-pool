@@ -24,7 +24,7 @@ const JoinComponent = ({ user, poolId }: PageProps) => {
       <>
         <Heading>You have joined {pool.name}!</Heading>
         <button
-          onClick={() => navigate(`/pick/${poolId}`)}
+          onClick={() => navigate(`/pool/${poolId}`)}
           className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
           type="button"
         >

@@ -8,11 +8,11 @@ import { TeamButton } from "../../components/team-button";
 import { type RouterOutput, trpc } from "../../trpc";
 import { gameHasStartedOrFinished } from "../../utils/game-has-started-or-finished";
 
-const PickComponent = ({
+const PoolComponent = ({
   user: { username, firstName },
   poolId,
 }: PageProps) => {
-  const [data] = trpc.pick.useSuspenseQuery({ username, poolId });
+  const [data] = trpc.pool.useSuspenseQuery({ username, poolId });
   const navigate = useNavigate();
 
   const {
@@ -40,7 +40,7 @@ const PickComponent = ({
         <h2 className="pt-8 text-lg font-bold text-slate-700">
           Hang tight! The season hasn't started yet...
         </h2>
-        <h3 className="pt-16 text-lg font-bold text-blue-700">Pool Members</h3>
+        <h3 className="pt-16 text-lg font-bold text-blue-700">Members</h3>
         <ul className="pt-4">
           {poolMembers.map((member) => (
             <li className="pt-2">
@@ -117,7 +117,7 @@ const PickComponent = ({
   );
 };
 
-export type Event = RouterOutput["pick"]["games"]["events"][number];
+export type Event = RouterOutput["pool"]["games"]["events"][number];
 type TeamRowProps = {
   event: Event;
   username: string;
@@ -160,4 +160,4 @@ const EventRow = ({ event, username, poolId }: TeamRowProps) => {
   );
 };
 
-export const Pick = withPage(PickComponent);
+export const Pool = withPage(PoolComponent);

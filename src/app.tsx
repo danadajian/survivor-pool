@@ -15,8 +15,8 @@ import { withPage } from "./components/page-wrapper";
 import { Create } from "./pages/create/frontend";
 import { Home } from "./pages/home/frontend";
 import { Join } from "./pages/join/frontend";
-import { Pick } from "./pages/pick/frontend";
 import { Picks } from "./pages/picks/frontend";
+import { Pool } from "./pages/pool/frontend";
 import { useEndpoint } from "./utils/use-endpoint";
 
 export const App = () => {
@@ -53,7 +53,7 @@ export const App = () => {
               <SignedIn>
                 <Routes>
                   <Route path="/" element={<Home />} />
-                  <Route path="/pick/:poolId" element={<Pick />} />
+                  <Route path="/pool/:poolId" element={<Pool />} />
                   <Route path="/picks/:poolId" element={<Picks />} />
                   <Route path="/create" element={<Create />} />
                   <Route path="/join/:poolId" element={<Join />} />

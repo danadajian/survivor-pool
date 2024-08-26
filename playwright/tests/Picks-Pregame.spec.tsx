@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/experimental-ct-react";
 import React from "react";
 
-import { Pick } from "../../src/pages/pick/frontend";
+import { Pool } from "../../src/pages/pool/frontend";
 import {
   basicGamesAndPicksPreseasonResponse,
   basicGamesAndPicksResponse,
@@ -12,7 +12,7 @@ import { MockProviders } from "../mock-providers";
 import { mockResponse } from "../utils";
 
 test.beforeEach(async ({ page }) => {
-  await mockResponse(page, "/trpc/pick*", basicGamesAndPicksResponse);
+  await mockResponse(page, "/trpc/pool*", basicGamesAndPicksResponse);
   await page.evaluate(() => {
     Date.now = () =>
       new Date(
@@ -24,7 +24,7 @@ test.beforeEach(async ({ page }) => {
 test("renders without picks", async ({ mount }) => {
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
-      <Pick />
+      <Pool />
     </MockProviders>,
   );
   await expect(
@@ -46,7 +46,7 @@ test("can make a pick", async ({ mount, page }) => {
 
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
-      <Pick />
+      <Pool />
     </MockProviders>,
   );
   await component.getByRole("button", { name: /49ers/ }).click();
@@ -56,7 +56,7 @@ test("can make a pick", async ({ mount, page }) => {
   await expect(
     page.getByText(/Are you sure you want to pick the 49ers?/),
   ).toBeVisible();
-  await page.route("/trpc/pick*", (route) =>
+  await page.route("/trpc/pool*", (route) =>
     route.fulfill({
       body: JSON.stringify(responseWithPick),
     }),
@@ -71,10 +71,10 @@ test("can make a pick", async ({ mount, page }) => {
 });
 
 test("prevents picking the same team twice", async ({ mount, page }) => {
-  await mockResponse(page, "/trpc/pick*", responseWithPickAndForbiddenTeams);
+  await mockResponse(page, "/trpc/pool*", responseWithPickAndForbiddenTeams);
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
-      <Pick />
+      <Pool />
     </MockProviders>,
   );
 
@@ -89,11 +89,11 @@ test("prevents picking the same team twice", async ({ mount, page }) => {
 });
 
 test("shows no picks during preseason", async ({ mount, page }) => {
-  await mockResponse(page, "/trpc/pick*", basicGamesAndPicksPreseasonResponse);
+  await mockResponse(page, "/trpc/pool*", basicGamesAndPicksPreseasonResponse);
 
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
-      <Pick />
+      <Pool />
     </MockProviders>,
   );
   await expect(

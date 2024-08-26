@@ -10,7 +10,7 @@ import {
   fetchPoolMembers,
   fetchPoolWinner,
   makePick,
-} from "../src/pages/pick/backend";
+} from "../src/pages/pool/backend";
 import { members, picks, pools } from "../src/schema";
 
 async function clearAllTables() {

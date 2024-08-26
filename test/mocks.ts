@@ -2,7 +2,7 @@ import type { TRPCResponse } from "@trpc/server/rpc";
 
 import type { RouterOutput } from "../src/trpc";
 
-export const mockNinersPick: RouterOutput["pick"]["userPick"] = {
+export const mockNinersPick: RouterOutput["pool"]["userPick"] = {
   id: "123",
   username: "test@user.com",
   teamPicked: "49ers",
@@ -20937,7 +20937,7 @@ export const mockEspnResponseWithResults = {
   ],
 };
 
-export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pick"]> = {
+export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
       games: mockEspnResponse,
@@ -20948,7 +20948,7 @@ export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pick"]> = {
   },
 };
 export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
-  RouterOutput["pick"]
+  RouterOutput["pool"]
 > = {
   result: {
     data: {
@@ -20959,7 +20959,7 @@ export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
     },
   },
 };
-export const responseWithPick: TRPCResponse<RouterOutput["pick"]> = {
+export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
       userPick: mockNinersPick,
@@ -20972,7 +20972,7 @@ export const responseWithPick: TRPCResponse<RouterOutput["pick"]> = {
 };
 
 export const responseWithPickAndResultsTeamWon: TRPCResponse<
-  RouterOutput["pick"]
+  RouterOutput["pool"]
 > = {
   result: {
     data: {
@@ -20996,7 +20996,7 @@ export const responseWithPickAndResultsTeamLost = {
 };
 
 export const responseWithPickAndForbiddenTeams: TRPCResponse<
-  RouterOutput["pick"]
+  RouterOutput["pool"]
 > = {
   result: {
     data: {

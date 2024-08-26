@@ -51,7 +51,7 @@ const PoolSelect = ({ data }: { data: RouterOutput["poolsForUser"] }) => {
           <button
             key={poolId}
             id={String(poolId)}
-            onClick={(event) => navigate(`/pick/${event.currentTarget.id}`)}
+            onClick={(event) => navigate(`/pool/${event.currentTarget.id}`)}
             className="focus:shadow-outline my-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
             type="button"
           >

@@ -13,22 +13,22 @@ import {
   joinPoolInput,
 } from "./pages/join/backend";
 import {
-  fetchPicksInput,
-  makePick,
-  makePickInput,
-  pickEndpoint,
-} from "./pages/pick/backend";
-import {
   fetchPicksForPool,
   fetchPicksForPoolInput,
 } from "./pages/picks/backend";
+import {
+  fetchPicksInput,
+  fetchPoolInfo,
+  makePick,
+  makePickInput,
+} from "./pages/pool/backend";
 
 const t = initTRPC.create();
 
 export const appRouter = t.router({
-  pick: t.procedure
+  pool: t.procedure
     .input(v.parser(fetchPicksInput))
-    .query(({ input }) => pickEndpoint(input)),
+    .query(({ input }) => fetchPoolInfo(input)),
   makePick: t.procedure
     .input(v.parser(makePickInput))
     .mutation(({ input }) => makePick(input)),
