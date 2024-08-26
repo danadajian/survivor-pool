@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { and, eq, lt } from "drizzle-orm";
 import * as v from "valibot";
 
-import { type EspnResponse } from "../../../test/mocks";
+import { type EspnResponse } from "../../../playwright/mocks";
 import { db } from "../../db";
 import { environmentVariables } from "../../env";
 import { members, picks } from "../../schema";

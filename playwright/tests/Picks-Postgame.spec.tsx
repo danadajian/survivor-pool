@@ -2,13 +2,13 @@ import { expect, test } from "@playwright/experimental-ct-react";
 import React from "react";
 
 import { Pool } from "../../src/pages/pool/frontend";
+import { MockProviders } from "../mock-providers";
 import {
   basicGamesAndPicksResponse,
   responseWithPick,
   responseWithPickAndResultsTeamLost,
   responseWithPickAndResultsTeamWon,
-} from "../../test/mocks";
-import { MockProviders } from "../mock-providers";
+} from "../mocks";
 import { mockResponse } from "../utils";
 
 test.beforeEach(async ({ page }) => {

@@ -6,11 +6,11 @@ export function usePrefetch({
 }: {
   username?: string;
   poolIds: string[];
-}) {
+}): void {
   const utils = trpc.useUtils();
 
   if (username && poolIds.every(Boolean)) {
-    return poolIds.map(async (poolId) => {
+    poolIds.forEach(async (poolId) => {
       await utils.pool.prefetch({ username, poolId });
       await utils.picksForPool.prefetch({ poolId });
     });

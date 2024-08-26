@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/experimental-ct-react";
 import React from "react";
 
 import { Home } from "../../src/pages/home/frontend";
-import { poolsForUserResponse } from "../../test/mocks";
 import { MockProviders } from "../mock-providers";
+import { poolsForUserResponse } from "../mocks";
 import { mockResponse } from "../utils";
 
 test("should display available pools", async ({ mount, page }) => {
