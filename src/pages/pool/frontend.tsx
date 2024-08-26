@@ -28,10 +28,7 @@ const PoolComponent = ({
     poolMembers,
   } = data;
 
-  const regularSeasonEvents = events.filter(
-    (event) => event.season.slug !== "preseason",
-  );
-  if (!regularSeasonEvents.length) {
+  if (!events.length) {
     return (
       <>
         <h1 className="pt-8 text-2xl font-bold text-red-700">
