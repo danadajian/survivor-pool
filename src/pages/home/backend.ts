@@ -16,6 +16,7 @@ export async function fetchPoolsForUser({
       poolId: pools.id,
       poolName: pools.name,
       eliminated: members.eliminated,
+      creator: pools.creator,
     })
     .from(members)
     .where(eq(members.username, username))

@@ -14,6 +14,8 @@ const PoolComponent = ({
 }: PageProps) => {
   const [data] = trpc.pool.useSuspenseQuery({ username, poolId });
   const navigate = useNavigate();
+  const utils = trpc.useUtils();
+  utils.picksForPool.prefetch({ poolId });
 
   const {
     userPick,

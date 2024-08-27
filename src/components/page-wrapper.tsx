@@ -5,7 +5,6 @@ import { useMatch } from "react-router-dom";
 import * as v from "valibot";
 
 import { useEndpoint } from "../utils/use-endpoint";
-import { usePrefetch } from "../utils/use-prefetch";
 import { ErrorPage } from "./error";
 import { Loader } from "./loader";
 import { NavBar } from "./nav-bar";
@@ -36,7 +35,6 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
       lastName: userResource?.lastName,
     };
     const user = v.parse(userSchema, userInfo);
-    usePrefetch({ username: user?.username, poolIds: [poolId] });
 
     return (
       <>
