@@ -82,6 +82,7 @@ const eventsSchema = v.array(
               abbreviation: v.string(),
               logo: v.string(),
             }),
+            winner: v.optional(v.boolean()),
           }),
         ),
       }),

@@ -21,11 +21,7 @@ function getResult(teamPicked: string) {
     teamPickedInEvent?.competitions[0]?.competitors.find(
       (competitor) => competitor.team.name === teamPicked,
     );
-  if (
-    !teamPickedFromApi ||
-    !("winner" in teamPickedFromApi) ||
-    typeof teamPickedFromApi.winner !== "boolean"
-  ) {
+  if (!teamPickedFromApi?.winner) {
     return null;
   }
 
