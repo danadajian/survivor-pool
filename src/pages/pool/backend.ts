@@ -4,7 +4,7 @@ import * as v from "valibot";
 
 import { db } from "../../db";
 import { environmentVariables } from "../../env";
-import { members, picks } from "../../schema";
+import { members, picks, pools } from "../../schema";
 import { fetchPoolsForUser } from "../home/backend";
 
 export const fetchPicksInput = v.object({
@@ -220,4 +220,14 @@ export async function makePick({
   return db
     .insert(picks)
     .values({ username, teamPicked, week, season, poolId });
+}
+
+export const deletePoolInput = v.object({
+  poolId: v.string(),
+});
+
+export async function deletePool({
+  poolId,
+}: v.InferInput<typeof deletePoolInput>) {
+  return db.delete(pools).where(eq(pools.id, poolId));
 }

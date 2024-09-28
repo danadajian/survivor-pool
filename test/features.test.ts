@@ -5,6 +5,7 @@ import { db } from "../src/db";
 import { createPool } from "../src/pages/create/backend";
 import { joinPool } from "../src/pages/join/backend";
 import {
+  deletePool,
   fetchForbiddenTeamsForUser,
   fetchPickForUser,
   fetchPoolMembers,
@@ -133,5 +134,14 @@ describe("feature tests", () => {
     const poolMembers = await fetchPoolMembers(poolId);
     const poolWinner = await fetchPoolWinner(poolMembers);
     expect(poolWinner?.username).toEqual(username);
+  });
+
+  it("should delete the pool", async () => {
+    const pool = await db.query.pools.findFirst();
+    if (!pool) throw new Error();
+
+    await deletePool({ poolId: pool.id });
+    const pools = await db.query.pools.findMany();
+    expect(pools.length).toEqual(0);
   });
 });

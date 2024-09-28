@@ -16,7 +16,7 @@ export const CopyInviteLinkButton = ({ poolId }: { poolId: string }) => {
         );
       }}
       disabled={copied}
-      className={`focus:shadow-outline rounded px-4 py-2 font-bold text-white focus:outline-none ${copyButtonClasses}`}
+      className={`focus:shadow-outline mb-2 rounded px-4 py-2 font-bold text-white focus:outline-none ${copyButtonClasses}`}
       type="button"
     >
       {copyButtonText}

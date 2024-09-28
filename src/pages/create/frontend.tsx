@@ -31,7 +31,7 @@ const CreateComponent = ({ user }: PageProps) => {
           <CopyInviteLinkButton poolId={data.poolId} />
           <button
             onClick={() => navigate(`/pool/${data.poolId}`)}
-            className="focus:shadow-outline ml-8 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+            className="focus:shadow-outline mb-2 ml-8 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
             type="button"
           >
             Make your first pick

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
 
 import { CopyInviteLinkButton } from "../../components/copy-invite-link-button";
+import { DeletePoolButton } from "../../components/delete-pool-button";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { TeamButton } from "../../components/team-button";
@@ -97,13 +98,18 @@ const PoolComponent = ({
           ? `You're riding with the ${userPick.teamPicked} this week!`
           : `Make your pick, ${firstName}!`;
 
+  const isPoolCreator = username === poolCreator;
+
   return (
     <>
       <h1 className="pb-4 pt-8 text-2xl font-bold text-red-700">
         {poolName} {currentSeason}
       </h1>
-      {username === poolCreator ? (
-        <CopyInviteLinkButton poolId={poolId} />
+      {isPoolCreator ? (
+        <>
+          <CopyInviteLinkButton poolId={poolId} />
+          <DeletePoolButton poolId={poolId} />
+        </>
       ) : (
         <p className="text-md font-semibold">{`Creator: ${firstName} ${lastName}`}</p>
       )}

@@ -17,6 +17,8 @@ import {
   fetchPicksForPoolInput,
 } from "./pages/picks/backend";
 import {
+  deletePool,
+  deletePoolInput,
   fetchPicksInput,
   fetchPoolInfo,
   makePick,
@@ -41,6 +43,9 @@ export const appRouter = t.router({
   createPool: t.procedure
     .input(v.parser(createPoolInput))
     .mutation(({ input }) => createPool(input)),
+  deletePool: t.procedure
+    .input(v.parser(deletePoolInput))
+    .mutation(({ input }) => deletePool(input)),
   joinPool: t.procedure
     .input(v.parser(joinPoolInput))
     .mutation(({ input }) => joinPool(input)),
