@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
 
+import { CopyInviteLinkButton } from "../../components/copy-invite-link-button";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { TeamButton } from "../../components/team-button";
@@ -9,7 +10,7 @@ import { type RouterOutput, trpc } from "../../trpc";
 import { gameHasStartedOrFinished } from "../../utils/game-has-started-or-finished";
 
 const PoolComponent = ({
-  user: { username, firstName },
+  user: { username, firstName, lastName },
   poolId,
 }: PageProps) => {
   const [data] = trpc.pool.useSuspenseQuery({ username, poolId });
@@ -28,6 +29,7 @@ const PoolComponent = ({
     eliminated,
     poolWinner,
     poolMembers,
+    poolCreator,
   } = data;
 
   if (!events.length) {
@@ -97,10 +99,15 @@ const PoolComponent = ({
 
   return (
     <>
-      <h1 className="pt-8 text-2xl font-bold text-red-700">
+      <h1 className="pb-4 pt-8 text-2xl font-bold text-red-700">
         {poolName} {currentSeason}
       </h1>
-      <h2 className="pt-2 text-lg font-bold">Week {currentWeek}</h2>
+      {username === poolCreator ? (
+        <CopyInviteLinkButton poolId={poolId} />
+      ) : (
+        <p className="text-md font-semibold">{`Creator: ${firstName} ${lastName}`}</p>
+      )}
+      <h2 className="pt-4 text-lg font-bold">Week {currentWeek}</h2>
       <h3 className="pt-4 text-lg">{pickHeader}</h3>
       <ul className="pb-8">
         {events.map((event, index) => (

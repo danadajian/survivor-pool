@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { CopyInviteLinkButton } from "../../components/copy-invite-link-button";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { type RouterOutput, trpc } from "../../trpc";
@@ -38,7 +37,6 @@ const CreatePoolLink = () => {
 
 const PoolSelect = ({
   data,
-  username,
 }: {
   data: RouterOutput["poolsForUser"];
   username: string;
@@ -62,21 +60,16 @@ const PoolSelect = ({
         Select a pool:
       </p>
       <div className="flex flex-col justify-around">
-        {data.map(({ poolId, poolName, creator }) => (
-          <div className="flex-row">
-            <button
-              key={poolId}
-              id={String(poolId)}
-              onClick={(event) => navigate(`/pool/${event.currentTarget.id}`)}
-              className="focus:shadow-outline m-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-              type="button"
-            >
-              {poolName}
-            </button>
-            {username === creator ? (
-              <CopyInviteLinkButton poolId={poolId} />
-            ) : null}
-          </div>
+        {data.map(({ poolId, poolName }) => (
+          <button
+            key={poolId}
+            id={String(poolId)}
+            onClick={(event) => navigate(`/pool/${event.currentTarget.id}`)}
+            className="focus:shadow-outline m-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+            type="button"
+          >
+            {poolName}
+          </button>
         ))}
       </div>
     </>

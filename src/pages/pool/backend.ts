@@ -53,6 +53,7 @@ export async function fetchPoolInfo({
     forbiddenTeams,
     poolName: pool.poolName,
     eliminated: pool.eliminated,
+    poolCreator: pool.creator,
     poolMembers,
     poolWinner,
   };
