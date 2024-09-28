@@ -46,10 +46,9 @@ const PoolSelect = ({
   if (!data.length) {
     return (
       <>
-        <p className="text-md block pb-8 font-bold text-gray-700">
+        <p className="text-md block font-bold text-gray-700">
           You have not joined any pools.
         </p>
-        <CreatePoolLink />
       </>
     );
   }
