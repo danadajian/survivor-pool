@@ -87,7 +87,7 @@ const PickTable = ({
               <td>{userFullName ?? pick.username}</td>
               <td>{pick.teamPicked}</td>
               <td className={`font-semibold ${resultClasses}`}>
-                {pick.result ?? "PENDING"}
+                {pick.result}
               </td>
             </tr>
           );

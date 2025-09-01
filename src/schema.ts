@@ -8,7 +8,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-export const resultEnum = pgEnum("result", ["WON", "LOST"]);
+export const resultEnum = pgEnum("result", ["WON", "LOST", "PENDING"]);
 
 export const picks = pgTable("picks", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -18,7 +18,7 @@ export const picks = pgTable("picks", {
   season: integer("season").notNull(),
   poolId: uuid("pool_id").notNull(),
   timestamp: timestamp("timestamp").notNull().defaultNow(),
-  result: resultEnum("result"),
+  result: resultEnum("result").notNull().default("PENDING"),
 });
 
 export const pools = pgTable("pools", {
