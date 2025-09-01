@@ -38,6 +38,7 @@ const CreatePoolLink = () => {
 
 const PoolSelect = ({
   data,
+  username,
 }: {
   data: RouterOutput["poolsForUser"];
   username: string;
@@ -60,7 +61,7 @@ const PoolSelect = ({
         Select a pool:
       </p>
       <div className="flex flex-col justify-around">
-        {data.map(({ poolId, poolName }) => (
+        {data.map(({ poolId, poolName, creator }) => (
           <div className="m-2 flex">
             <button
               key={poolId}
@@ -71,7 +72,9 @@ const PoolSelect = ({
             >
               <p className="px-4 py-2">{poolName}</p>
             </button>
-            <DeletePoolButton key={poolId} poolId={poolId} />
+            {username === creator ? (
+              <DeletePoolButton key={poolId} poolId={poolId} />
+            ) : null}
           </div>
         ))}
       </div>
