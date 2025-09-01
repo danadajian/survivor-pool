@@ -62,19 +62,23 @@ const PoolComponent = ({
     navigate(`/pool/${poolId}`);
   }
 
+  const isPoolCreator = username === poolCreator;
+
   if (poolWinner) {
     return (
       <>
         <Heading>
           {`${poolWinner.firstName} ${poolWinner.lastName}`} has won this pool!
         </Heading>
-        <button
-          onClick={onReactivate}
-          className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-          type="button"
-        >
-          Reactivate pool
-        </button>
+        {isPoolCreator ? (
+          <button
+            onClick={onReactivate}
+            className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+            type="button"
+          >
+            Reactivate pool
+          </button>
+        ) : null}
         <button
           onClick={() => navigate(`/create`)}
           className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
@@ -105,8 +109,6 @@ const PoolComponent = ({
         : userPick
           ? `You're riding with the ${userPick.teamPicked} this week!`
           : `Make your pick, ${firstName}!`;
-
-  const isPoolCreator = username === poolCreator;
 
   return (
     <>
