@@ -59,7 +59,7 @@ const PoolComponent = ({
 
   async function onReactivate() {
     await mutate({ poolId });
-    navigate(`/${poolId}`);
+    navigate(`/pool/${poolId}`);
   }
 
   if (poolWinner) {
