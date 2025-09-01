@@ -61,7 +61,7 @@ const PoolSelect = ({
       </p>
       <div className="flex flex-col justify-around">
         {data.map(({ poolId, poolName }) => (
-          <div className="flex">
+          <div className="m-2 flex">
             <button
               key={poolId}
               id={poolId}
