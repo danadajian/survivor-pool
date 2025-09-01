@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "db": "docker compose up -d",
-    "dev": "bun db && ENVIRONMENT=development bun --hot ./src/server.tsx",
+    "dev": "bun db && bun drizzle && ENVIRONMENT=development bun --hot ./src/server.tsx",
     "drizzle": "drizzle-kit push",
     "docker": "docker build . --tag survivor-pool",
     "format": "prettier --write .",

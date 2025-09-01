@@ -22,15 +22,15 @@ export const DeletePoolButton = ({ poolId }: { poolId: string }) => {
     navigate("/");
   };
   return (
-    <>
+    <div className="flex items-center">
       <button
         onClick={toggleDialog}
         className={
-          "focus:shadow-outline rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700 focus:outline-none"
+          "focus:shadow-outline h-6 rounded-full bg-red-500 px-2 font-bold text-white hover:bg-red-700 focus:outline-none"
         }
         type="button"
       >
-        Delete Pool
+        X
       </button>
       <DialogWrapper dialogIsOpen={dialogIsOpen} toggleDialog={toggleDialog}>
         <>
@@ -61,6 +61,6 @@ export const DeletePoolButton = ({ poolId }: { poolId: string }) => {
           </div>
         </>
       </DialogWrapper>
-    </>
+    </div>
   );
 };

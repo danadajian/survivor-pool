@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
 
 import { CopyInviteLinkButton } from "../../components/copy-invite-link-button";
-import { DeletePoolButton } from "../../components/delete-pool-button";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { TeamButton } from "../../components/team-button";
@@ -106,10 +105,7 @@ const PoolComponent = ({
         {poolName} {currentSeason}
       </h1>
       {isPoolCreator ? (
-        <>
-          <CopyInviteLinkButton poolId={poolId} />
-          <DeletePoolButton poolId={poolId} />
-        </>
+        <CopyInviteLinkButton poolId={poolId} />
       ) : (
         <p className="text-md font-semibold">{`Creator: ${firstName} ${lastName}`}</p>
       )}
