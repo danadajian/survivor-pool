@@ -44,7 +44,7 @@ const CreateComponent = ({ user }: PageProps) => {
   return (
     <>
       <Heading>Create New Pool</Heading>
-      <form className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
+      <form className="mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md">
         <div className="pb-6">
           <label
             className="text-md mb-2 block font-bold text-gray-700"

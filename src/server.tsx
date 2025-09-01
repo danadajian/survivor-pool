@@ -4,7 +4,7 @@ import { HotModuleReload, hotModuleReload } from "elysia-hot-module-reload";
 import { rateLimit } from "elysia-rate-limit";
 import React from "react";
 import { renderToReadableStream } from "react-dom/server";
-import { StaticRouter } from "react-router-dom/server";
+import { StaticRouter } from "react-router-dom";
 
 import { App } from "./app";
 import { environmentVariables } from "./env";

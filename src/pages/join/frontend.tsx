@@ -37,7 +37,7 @@ const JoinComponent = ({ user, poolId }: PageProps) => {
   return (
     <>
       <Heading>Join New Survivor Pool</Heading>
-      <div className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
+      <div className="mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md">
         <p className="text-md block pb-8 font-bold text-gray-700">
           You have been invited to join {pool.name}!
         </p>

@@ -21,5 +21,5 @@ export const ErrorPage = ({
 );
 
 export const ErrorMessage = ({ message }: { message: string }) => (
-  <p className="pb-8 pt-8 text-lg font-bold text-red-700">{message}</p>
+  <p className="pt-8 pb-8 text-lg font-bold text-red-700">{message}</p>
 );

@@ -11,10 +11,10 @@ const HomeComponent = ({ user: { username } }: PageProps) => {
   return (
     <>
       <Heading>Welcome to Survivor Pool!</Heading>
-      <div className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
+      <div className="mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md">
         <PoolSelect data={data} username={username} />
       </div>
-      <div className="mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md">
+      <div className="mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md">
         <CreatePoolLink />
       </div>
     </>

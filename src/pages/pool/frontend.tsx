@@ -102,7 +102,7 @@ const PoolComponent = ({
 
   return (
     <>
-      <h1 className="pb-4 pt-8 text-2xl font-bold text-red-700">
+      <h1 className="pt-8 pb-4 text-2xl font-bold text-red-700">
         {poolName} {currentSeason}
       </h1>
       {isPoolCreator ? (

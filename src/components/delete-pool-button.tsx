@@ -36,7 +36,7 @@ export const DeletePoolButton = ({ poolId }: { poolId: string }) => {
         <>
           <Dialog.Title
             as="h3"
-            className="pt-2 text-xl font-semibold leading-6"
+            className="pt-2 text-xl leading-6 font-semibold"
           >
             Confirm pool deletion
           </Dialog.Title>
@@ -46,14 +46,14 @@ export const DeletePoolButton = ({ poolId }: { poolId: string }) => {
 
           <div className="flex justify-end pt-5">
             <button
-              className="rounded-md bg-red-500 px-3 py-2 font-medium uppercase text-white hover:bg-red-800"
+              className="rounded-md bg-red-500 px-3 py-2 font-medium text-white uppercase hover:bg-red-800"
               autoFocus
               onClick={onClick}
             >
               Delete
             </button>
             <button
-              className="ml-3 rounded-md border border-blue-800 px-3 py-2 font-medium uppercase text-blue-800 hover:bg-blue-300"
+              className="ml-3 rounded-md border border-blue-800 px-3 py-2 font-medium text-blue-800 uppercase hover:bg-blue-300"
               onClick={toggleDialog}
             >
               Cancel
