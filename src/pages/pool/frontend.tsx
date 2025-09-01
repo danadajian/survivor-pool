@@ -18,6 +18,10 @@ const PoolComponent = ({
   const utils = trpc.useUtils();
   utils.picksForPool.prefetch({ poolId });
 
+  const { mutate } = trpc.reactivatePool.useMutation({
+    throwOnError: true,
+  });
+
   const {
     userPick,
     games: {
@@ -53,6 +57,11 @@ const PoolComponent = ({
     );
   }
 
+  async function onReactivate() {
+    await mutate({ poolId });
+    navigate(`/${poolId}`);
+  }
+
   if (poolWinner) {
     return (
       <>
@@ -65,6 +74,13 @@ const PoolComponent = ({
           type="button"
         >
           Back to pools
+        </button>
+        <button
+          onClick={onReactivate}
+          className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+          type="button"
+        >
+          Reactivate pool
         </button>
         <button
           onClick={() => navigate(`/create`)}

@@ -6,6 +6,7 @@ import { db } from "../../db";
 import { environmentVariables } from "../../env";
 import { members, picks, pools } from "../../schema";
 import { fetchPoolsForUser } from "../home/backend";
+import { poolInput } from "../join/backend";
 
 export const fetchPicksInput = v.object({
   username: v.string(),
@@ -222,12 +223,15 @@ export async function makePick({
     .values({ username, teamPicked, week, season, poolId });
 }
 
-export const deletePoolInput = v.object({
-  poolId: v.string(),
-});
-
-export async function deletePool({
-  poolId,
-}: v.InferInput<typeof deletePoolInput>) {
+export async function deletePool({ poolId }: v.InferInput<typeof poolInput>) {
   return db.delete(pools).where(eq(pools.id, poolId));
+}
+
+export async function reactivatePool({
+  poolId,
+}: v.InferInput<typeof poolInput>) {
+  await db
+    .update(members)
+    .set({ eliminated: false })
+    .where(eq(members.poolId, poolId));
 }

@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from "bun:test";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { db } from "../src/db";
 import { createPool } from "../src/pages/create/backend";
@@ -11,6 +11,7 @@ import {
   fetchPoolMembers,
   fetchPoolWinner,
   makePick,
+  reactivatePool,
 } from "../src/pages/pool/backend";
 import { members, picks, pools } from "../src/schema";
 
@@ -134,6 +135,21 @@ describe("feature tests", () => {
     const poolMembers = await fetchPoolMembers(poolId);
     const poolWinner = await fetchPoolWinner(poolMembers);
     expect(poolWinner?.username).toEqual(username);
+  });
+
+  it("should reactivate the pool", async () => {
+    const pool = await db.query.pools.findFirst();
+    if (!pool) throw new Error();
+    const eliminatedMembersBefore = await db.query.members.findMany({
+      where: and(eq(members.poolId, pool.id), eq(members.eliminated, true)),
+    });
+    expect(eliminatedMembersBefore.length).toBeGreaterThan(0);
+
+    await reactivatePool({ poolId: pool.id });
+    const eliminatedMembersAfter = await db.query.members.findMany({
+      where: and(eq(members.poolId, pool.id), eq(members.eliminated, true)),
+    });
+    expect(eliminatedMembersAfter.length).toEqual(0);
   });
 
   it("should delete the pool", async () => {

@@ -50,11 +50,11 @@ export async function joinPool({
   return rows.find(Boolean);
 }
 
-export const getPoolInput = v.object({
+export const poolInput = v.object({
   poolId: v.string(),
 });
 
-export async function getPool({ poolId }: v.InferInput<typeof getPoolInput>) {
+export async function getPool({ poolId }: v.InferInput<typeof poolInput>) {
   const pool = await db.query.pools.findFirst({ where: eq(pools.id, poolId) });
   if (!pool) {
     throw new TRPCError({

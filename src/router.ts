@@ -8,9 +8,9 @@ import {
 } from "./pages/home/backend";
 import {
   getPool,
-  getPoolInput,
   joinPool,
   joinPoolInput,
+  poolInput,
 } from "./pages/join/backend";
 import {
   fetchPicksForPool,
@@ -18,11 +18,11 @@ import {
 } from "./pages/picks/backend";
 import {
   deletePool,
-  deletePoolInput,
   fetchPicksInput,
   fetchPoolInfo,
   makePick,
   makePickInput,
+  reactivatePool,
 } from "./pages/pool/backend";
 
 const t = initTRPC.create();
@@ -44,14 +44,17 @@ export const appRouter = t.router({
     .input(v.parser(createPoolInput))
     .mutation(({ input }) => createPool(input)),
   deletePool: t.procedure
-    .input(v.parser(deletePoolInput))
+    .input(v.parser(poolInput))
     .mutation(({ input }) => deletePool(input)),
   joinPool: t.procedure
     .input(v.parser(joinPoolInput))
     .mutation(({ input }) => joinPool(input)),
   getPool: t.procedure
-    .input(v.parser(getPoolInput))
+    .input(v.parser(poolInput))
     .query(({ input }) => getPool(input)),
+  reactivatePool: t.procedure
+    .input(v.parser(poolInput))
+    .mutation(({ input }) => reactivatePool(input)),
 });
 
 export type AppRouter = typeof appRouter;
