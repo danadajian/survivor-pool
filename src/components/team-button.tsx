@@ -1,4 +1,4 @@
-import { Dialog } from "@headlessui/react";
+import { Description, DialogTitle } from "@headlessui/react";
 import React from "react";
 import { useState } from "react";
 
@@ -93,16 +93,13 @@ export const TeamButton = ({
       </button>
       <DialogWrapper dialogIsOpen={dialogIsOpen} toggleDialog={toggleDialog}>
         <>
-          <Dialog.Title
-            as="h3"
-            className="pt-2 text-xl leading-6 font-semibold"
-          >
+          <DialogTitle as="h3" className="pt-2 text-xl leading-6 font-semibold">
             Confirm pick
-          </Dialog.Title>
-          <Dialog.Description className="pt-5 font-semibold text-slate-500">
+          </DialogTitle>
+          <Description className="pt-5 font-semibold text-slate-500">
             Are you sure you want to pick the {team.name}? You won't be able to
             pick them again this season.
-          </Dialog.Description>
+          </Description>
 
           <div className="flex justify-end pt-5">
             <button
