@@ -27,6 +27,7 @@
         "@tailwindcss/cli": "4.1.12",
         "@types/react": "19.1.12",
         "@types/react-dom": "19.1.9",
+        "@typescript/native-preview": "7.0.0-dev.20250831.1",
         "bun-types": "1.2.21",
         "drizzle-kit": "0.31.4",
         "eslint": "9.34.0",
@@ -36,7 +37,6 @@
         "prettier": "3.6.2",
         "prettier-plugin-tailwindcss": "0.6.14",
         "tailwindcss": "4.1.12",
-        "typescript": "5.9.2",
         "typescript-eslint": "8.41.0",
         "valibot": "1.1.0",
       },
@@ -390,6 +390,22 @@
     "@typescript-eslint/utils": ["@typescript-eslint/utils@8.41.0", "", { "dependencies": { "@eslint-community/eslint-utils": "^4.7.0", "@typescript-eslint/scope-manager": "8.41.0", "@typescript-eslint/types": "8.41.0", "@typescript-eslint/typescript-estree": "8.41.0" }, "peerDependencies": { "eslint": "^8.57.0 || ^9.0.0", "typescript": ">=4.8.4 <6.0.0" } }, "sha512-udbCVstxZ5jiPIXrdH+BZWnPatjlYwJuJkDA4Tbo3WyYLh8NvB+h/bKeSZHDOFKfphsZYJQqaFtLeXEqurQn1A=="],
 
     "@typescript-eslint/visitor-keys": ["@typescript-eslint/visitor-keys@8.41.0", "", { "dependencies": { "@typescript-eslint/types": "8.41.0", "eslint-visitor-keys": "^4.2.1" } }, "sha512-+GeGMebMCy0elMNg67LRNoVnUFPIm37iu5CmHESVx56/9Jsfdpsvbv605DQ81Pi/x11IdKUsS5nzgTYbCQU9fg=="],
+
+    "@typescript/native-preview": ["@typescript/native-preview@7.0.0-dev.20250831.1", "", { "optionalDependencies": { "@typescript/native-preview-darwin-arm64": "7.0.0-dev.20250831.1", "@typescript/native-preview-darwin-x64": "7.0.0-dev.20250831.1", "@typescript/native-preview-linux-arm": "7.0.0-dev.20250831.1", "@typescript/native-preview-linux-arm64": "7.0.0-dev.20250831.1", "@typescript/native-preview-linux-x64": "7.0.0-dev.20250831.1", "@typescript/native-preview-win32-arm64": "7.0.0-dev.20250831.1", "@typescript/native-preview-win32-x64": "7.0.0-dev.20250831.1" }, "bin": { "tsgo": "bin/tsgo.js" } }, "sha512-uUbPClIa6p0FBT7HIww0jg13zx3/4kSn0XolCrrUmE6yujhKuNoGrba1c1QUij9WhSOS6MLIJE65ox4Il0GWbw=="],
+
+    "@typescript/native-preview-darwin-arm64": ["@typescript/native-preview-darwin-arm64@7.0.0-dev.20250831.1", "", { "os": "darwin", "cpu": "arm64" }, "sha512-3omZrfj8pbZG9colL2X4bZ628U4GBGKUxtezKcQygSWq3cRPyBD1M/UAJvYT2gfTcC/pQTYzGhl7+unsILfunQ=="],
+
+    "@typescript/native-preview-darwin-x64": ["@typescript/native-preview-darwin-x64@7.0.0-dev.20250831.1", "", { "os": "darwin", "cpu": "x64" }, "sha512-mIN+W+Q0xuH//1hpp3b8Oe5ppWK01zUqREI356iBOmsiSxgc6+ZkN8ZZhlvBD01nMjRvtJ5v0rhKvEG5AnZ4Yw=="],
+
+    "@typescript/native-preview-linux-arm": ["@typescript/native-preview-linux-arm@7.0.0-dev.20250831.1", "", { "os": "linux", "cpu": "arm" }, "sha512-/0lFakwD7lP+I+aQOqt/3gDNbG6Y9Meg/0U3UhGZdC/QqIS7Sr+XgLeXIB+pDVSUH6gmDGCnW5k8kQJ9Ix7N1Q=="],
+
+    "@typescript/native-preview-linux-arm64": ["@typescript/native-preview-linux-arm64@7.0.0-dev.20250831.1", "", { "os": "linux", "cpu": "arm64" }, "sha512-ydJcEQZ7o+mg1xU0gX18QLIYTdagbI5UR2I19zPUFEp54VupiGXhLiOA/RwSHtM9qUeuNNjF83CxO9ztCJX+ZQ=="],
+
+    "@typescript/native-preview-linux-x64": ["@typescript/native-preview-linux-x64@7.0.0-dev.20250831.1", "", { "os": "linux", "cpu": "x64" }, "sha512-lKD4gGYsa7OeVKHg6SALGahiJVUirV0wPjb+G7IWN2xYqNs+SstxP/wAvtyOyPOXW6yFWOSvCY67zEsFtXOjaA=="],
+
+    "@typescript/native-preview-win32-arm64": ["@typescript/native-preview-win32-arm64@7.0.0-dev.20250831.1", "", { "os": "win32", "cpu": "arm64" }, "sha512-RNXWYlWhaEsaYszRg/jfZWX6kFowlk/CfIofn9me9292ALH9g15hMmK+3wrDl1qMt/GodfMyC+NZ/rVHGn6ZTA=="],
+
+    "@typescript/native-preview-win32-x64": ["@typescript/native-preview-win32-x64@7.0.0-dev.20250831.1", "", { "os": "win32", "cpu": "x64" }, "sha512-ZIPGeZbDsWe7/ZbPYccqU+SVSQRiA/sjs0qALdGmH/iXlW0/vLKumqkwyoLRcjp+NW+bAT44oLpXoh5fUa6OOg=="],
 
     "@vitejs/plugin-react": ["@vitejs/plugin-react@4.7.0", "", { "dependencies": { "@babel/core": "^7.28.0", "@babel/plugin-transform-react-jsx-self": "^7.27.1", "@babel/plugin-transform-react-jsx-source": "^7.27.1", "@rolldown/pluginutils": "1.0.0-beta.27", "@types/babel__core": "^7.20.5", "react-refresh": "^0.17.0" }, "peerDependencies": { "vite": "^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0" } }, "sha512-gUu9hwfWvvEDBBmgtAowQCojwZmJ5mcLn3aufeCsitijs3+f2NsrPtlAWIR6OPiqljl96GVCUbLe0HyqIpVaoA=="],
 
