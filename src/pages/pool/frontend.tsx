@@ -69,13 +69,6 @@ const PoolComponent = ({
           {`${poolWinner.firstName} ${poolWinner.lastName}`} has won this pool!
         </Heading>
         <button
-          onClick={() => navigate(`/`)}
-          className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-          type="button"
-        >
-          Back to pools
-        </button>
-        <button
           onClick={onReactivate}
           className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
           type="button"
