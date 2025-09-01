@@ -1,43 +1,38 @@
 import React from "react";
 
-import { Dropdown } from "../../components/dropdown";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
+import { WeekDropdown } from "../../components/week-dropdown";
 import { type RouterOutput, trpc } from "../../trpc";
 import { useUrlParams } from "../../utils/use-url-params";
 
 const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
   const {
-    urlParams: { week, season },
+    urlParams: { week: weekUrlParam, season: seasonUrlParam },
     setUrlParams,
   } = useUrlParams();
   const [data] = trpc.picksForPool.useSuspenseQuery({
     poolId,
-    ...(week ? { week: Number(week) } : {}),
-    ...(season ? { season: Number(season) } : {}),
+    ...(weekUrlParam ? { week: Number(weekUrlParam) } : {}),
+    ...(seasonUrlParam ? { season: Number(seasonUrlParam) } : {}),
   });
 
   const { eliminatedUsers, week: currentWeek } = data;
+  const week = Number(weekUrlParam ?? currentWeek);
 
   return (
     <>
-      <Heading>Week {week ?? currentWeek} Picks</Heading>
-      <PickTable
-        picksForPool={data}
-        username={username}
-        week={week ?? currentWeek}
-      />
-      <Dropdown
+      <Heading>Week {week} Picks</Heading>
+      <PickTable picksForPool={data} username={username} week={week} />
+      <WeekDropdown
         options={Array.from({ length: currentWeek }, (_, i) => i + 1)}
-        selected={Number(week)}
+        selected={week}
         onSelect={(option) => setUrlParams({ week: String(option) })}
       />
-      {Number(week) === currentWeek && (
-        <EliminatedUserTable
-          eliminatedUsers={eliminatedUsers}
-          username={username}
-        />
-      )}
+      <EliminatedUserTable
+        eliminatedUsers={eliminatedUsers}
+        username={username}
+      />
     </>
   );
 };
@@ -105,27 +100,37 @@ type EliminatedUserTableProps = {
 const EliminatedUserTable = ({
   eliminatedUsers,
   username,
-}: EliminatedUserTableProps) => (
-  <table className="m-8 table-auto">
-    <thead>
-      <tr>
-        <th className="px-4">Eliminated Users</th>
-      </tr>
-    </thead>
-    <tbody>
-      {eliminatedUsers.map((user, index) => {
-        const isUserRow = user.username === username;
-        const userClasses = isUserRow ? "font-semibold text-blue-800" : "";
-        const userFullName =
-          user.firstName && user.lastName
-            ? `${user.firstName} ${user.lastName}`
-            : undefined;
-        return (
-          <tr key={index} className={userClasses}>
-            <td>{userFullName ?? user.username}</td>
-          </tr>
-        );
-      })}
-    </tbody>
-  </table>
-);
+}: EliminatedUserTableProps) => {
+  if (!eliminatedUsers.length) {
+    return (
+      <p className="m-8 text-lg font-semibold">
+        No one has been eliminated yet!
+      </p>
+    );
+  }
+
+  return (
+    <table className="m-8 table-auto">
+      <thead>
+        <tr>
+          <th className="px-4">Eliminated Users</th>
+        </tr>
+      </thead>
+      <tbody>
+        {eliminatedUsers.map((user, index) => {
+          const isUserRow = user.username === username;
+          const userClasses = isUserRow ? "font-semibold text-blue-800" : "";
+          const userFullName =
+            user.firstName && user.lastName
+              ? `${user.firstName} ${user.lastName}`
+              : undefined;
+          return (
+            <tr key={index} className={userClasses}>
+              <td>{userFullName ?? user.username}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+};

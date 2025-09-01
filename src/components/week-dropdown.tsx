@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 
-export const Dropdown = ({
+export const WeekDropdown = ({
   selected,
   options,
   onSelect,
 }: {
-  selected: string | number;
-  options: (string | number)[];
-  onSelect: (option: string | number) => void;
+  selected: number;
+  options: number[];
+  onSelect: (option: number) => void;
 }) => {
   const [showOptions, setShowOptions] = useState(false);
 
-  const onClick = (option: string | number) => {
+  const onClick = (option: number) => {
     onSelect(option);
     setShowOptions(false);
   };
@@ -44,19 +44,20 @@ export const Dropdown = ({
       </div>
       {showOptions && (
         <div
-          className="ring-opacity-5 absolute z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black focus:outline-none"
+          className="ring-opacity-5 absolute z-10 mt-2 ml-4 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black focus:outline-none"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"
           tabIndex={-1}
         >
-          <div className="py-1">
+          <div className="bg-gray-100">
             {options.map((option, index) => (
               <button
                 key={index}
+                disabled={option === selected}
                 type="button"
                 onClick={() => onClick(option)}
-                className={`w-1/2 px-4 py-2 text-center text-sm hover:bg-gray-300 ${
+                className={`focus:outline-none" px-8 py-2 text-center text-sm hover:bg-gray-400 disabled:bg-gray-100 ${
                   option === selected
                     ? "bg-gray-200 text-gray-900"
                     : "text-gray-700"
@@ -64,7 +65,7 @@ export const Dropdown = ({
                 role="menuitem"
                 tabIndex={-1}
               >
-                {option}
+                {`Week ${option}`}
               </button>
             ))}
           </div>
