@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
 
-import { CopyInviteLinkButton } from "../../components/copy-invite-link-button";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { TeamButton } from "../../components/team-button";
@@ -19,7 +18,6 @@ const PoolComponent = ({
   utils.picksForPool.prefetch({ poolId });
 
   const { mutate } = trpc.reactivatePool.useMutation({
-    throwOnError: true,
     onSettled: () =>
       Promise.all([utils.pool.invalidate(), utils.picksForPool.invalidate()]),
   });
@@ -113,11 +111,7 @@ const PoolComponent = ({
       <h1 className="pt-8 pb-4 text-2xl font-bold text-red-700">
         {poolName} {currentSeason}
       </h1>
-      {isPoolCreator ? (
-        <CopyInviteLinkButton poolId={poolId} />
-      ) : (
-        <p className="text-md font-semibold">{`Creator: ${firstName} ${lastName}`}</p>
-      )}
+      <p className="text-md font-semibold">{`Creator: ${firstName} ${lastName}`}</p>
       <h2 className="pt-4 text-lg font-bold">Week {currentWeek}</h2>
       <h3 className="pt-4 text-lg">{pickHeader}</h3>
       <ul className="pb-8">

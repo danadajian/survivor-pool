@@ -10,13 +10,12 @@ export const DeletePoolButton = ({ poolId }: { poolId: string }) => {
 
   const utils = trpc.useUtils();
   const { mutate } = trpc.deletePool.useMutation({
-    throwOnError: true,
     onSettled: () => utils.poolsForUser.invalidate(),
   });
   const onDelete = () => mutate({ poolId });
 
   return (
-    <div className="ml-2 flex items-center">
+    <>
       <button
         onClick={toggleDialog}
         className={
@@ -52,6 +51,6 @@ export const DeletePoolButton = ({ poolId }: { poolId: string }) => {
           </div>
         </>
       </DialogWrapper>
-    </div>
+    </>
   );
 };

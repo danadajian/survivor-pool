@@ -1,4 +1,9 @@
-import { Dialog, Transition } from "@headlessui/react";
+import {
+  Dialog,
+  DialogPanel,
+  Transition,
+  TransitionChild,
+} from "@headlessui/react";
 import React from "react";
 import { Fragment, type PropsWithChildren } from "react";
 
@@ -14,7 +19,7 @@ export const DialogWrapper = ({
   return (
     <Transition appear show={dialogIsOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={toggleDialog}>
-        <Transition.Child
+        <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -24,11 +29,11 @@ export const DialogWrapper = ({
           leaveTo="opacity-0"
         >
           <div className="bg-opacity-25 fixed inset-0 bg-black" />
-        </Transition.Child>
+        </TransitionChild>
 
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child
+            <TransitionChild
               as={Fragment}
               enter="ease-out duration-300"
               enterFrom="opacity-0 scale-95"
@@ -37,10 +42,10 @@ export const DialogWrapper = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <DialogPanel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                 {children}
-              </Dialog.Panel>
-            </Transition.Child>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </div>
       </Dialog>

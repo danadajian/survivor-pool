@@ -20,6 +20,9 @@ export const ClientProvider = ({ children }: PropsWithChildren) => {
             throwOnError: true,
             retry: false,
           },
+          mutations: {
+            throwOnError: true,
+          },
         },
       }),
   );

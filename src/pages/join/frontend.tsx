@@ -6,9 +6,7 @@ import { type PageProps, withPage } from "../../components/page-wrapper";
 import { trpc } from "../../trpc";
 
 const JoinComponent = ({ user, poolId }: PageProps) => {
-  const { mutate, isSuccess } = trpc.joinPool.useMutation({
-    throwOnError: true,
-  });
+  const { mutate, isSuccess } = trpc.joinPool.useMutation();
   const navigate = useNavigate();
 
   const [pool] = trpc.getPool.useSuspenseQuery({ poolId });

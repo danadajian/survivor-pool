@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { CopyInviteLinkButton } from "../../components/copy-invite-link-button";
+import { ErrorMessage } from "../../components/error";
 import { Heading, Subheading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { trpc } from "../../trpc";
@@ -9,10 +10,16 @@ import { trpc } from "../../trpc";
 const CreateComponent = ({ user }: PageProps) => {
   const utils = trpc.useUtils();
   const { mutate, data, isSuccess } = trpc.createPool.useMutation({
-    throwOnError: true,
-    onSettled: () => utils.poolsForUser.invalidate(),
+    throwOnError: false,
+    onSettled: (_, error) => {
+      if (error) {
+        setError(error.message);
+      }
+      utils.poolsForUser.invalidate();
+    },
   });
   const [poolName, setPoolName] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const onSubmit = () => mutate({ ...user, poolName });
@@ -22,15 +29,18 @@ const CreateComponent = ({ user }: PageProps) => {
       <>
         <Heading>{`${poolName} created successfully!`}</Heading>
         <Subheading>You are now a member of this pool.</Subheading>
-        <div className="mt-4 flex">
-          <CopyInviteLinkButton poolId={data.poolId} />
+        <div className="flex-col">
           <button
             onClick={() => navigate(`/pool/${data.poolId}`)}
-            className="focus:shadow-outline mb-2 ml-8 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+            className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
             type="button"
           >
-            Make your first pick
+            Make your first pick!
           </button>
+          <div className="mt-4 flex items-center justify-center">
+            <p className="font-bold">Copy invite link:</p>
+            <CopyInviteLinkButton poolId={data.poolId} />
+          </div>
         </div>
       </>
     );
@@ -39,6 +49,7 @@ const CreateComponent = ({ user }: PageProps) => {
   return (
     <>
       <Heading>Create New Pool</Heading>
+      {error ? <ErrorMessage message={error} /> : null}
       <form className="mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md">
         <div className="pb-6">
           <label

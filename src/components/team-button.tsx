@@ -22,7 +22,6 @@ export const TeamButton = ({
   const utils = trpc.useUtils();
   const gamesAndPicks = utils.pool.getData({ username, poolId });
   const { mutate } = trpc.makePick.useMutation({
-    throwOnError: true,
     onMutate: ({ teamPicked }) => {
       utils.pool.setData({ username, poolId }, (data) => {
         if (data?.userPick) {
