@@ -6,10 +6,9 @@ import { createPool } from "../src/pages/create/backend";
 import { joinPool } from "../src/pages/join/backend";
 import {
   deletePool,
-  fetchForbiddenTeamsForUser,
-  fetchPickForUser,
+  fetchPicksDataForUser,
   fetchPoolMembers,
-  fetchPoolWinner,
+  findPoolWinner,
   makePick,
   reactivatePool,
 } from "../src/pages/pool/backend";
@@ -57,7 +56,7 @@ describe("feature tests", () => {
     if (!pool) throw new Error();
 
     const poolMembers = await fetchPoolMembers(pool.id);
-    const poolWinner = await fetchPoolWinner(poolMembers);
+    const poolWinner = await findPoolWinner(poolMembers);
     expect(poolWinner).toBeUndefined();
   });
 
@@ -80,21 +79,21 @@ describe("feature tests", () => {
       season,
       poolId,
     });
-    const pick = await fetchPickForUser({
+    const { userPick } = await fetchPicksDataForUser({
       username,
       week,
       season,
       poolId,
     });
-    expect(pick?.username).toEqual(username);
-    expect(pick?.week).toEqual(week);
-    expect(pick?.season).toEqual(season);
-    expect(pick?.poolId).toEqual(poolId);
-    expect(pick?.teamPicked).toEqual(teamPicked);
+    expect(userPick?.username).toEqual(username);
+    expect(userPick?.week).toEqual(week);
+    expect(userPick?.season).toEqual(season);
+    expect(userPick?.poolId).toEqual(poolId);
+    expect(userPick?.teamPicked).toEqual(teamPicked);
   });
 
   it("should have no forbidden picks this week", async () => {
-    const forbiddenTeams = await fetchForbiddenTeamsForUser({
+    const { forbiddenTeams } = await fetchPicksDataForUser({
       username,
       week,
       season,
@@ -104,7 +103,7 @@ describe("feature tests", () => {
   });
 
   it("should make team picked forbidden next week", async () => {
-    const forbiddenTeams = await fetchForbiddenTeamsForUser({
+    const { forbiddenTeams } = await fetchPicksDataForUser({
       username,
       week: 2,
       season,
@@ -119,7 +118,7 @@ describe("feature tests", () => {
     const poolId = results[0].poolId;
 
     const poolMembers = await fetchPoolMembers(poolId);
-    const poolWinner = await fetchPoolWinner(poolMembers);
+    const poolWinner = await findPoolWinner(poolMembers);
     expect(poolWinner).toBeUndefined();
   });
 
@@ -133,7 +132,7 @@ describe("feature tests", () => {
     const poolId = results[0].poolId;
 
     const poolMembers = await fetchPoolMembers(poolId);
-    const poolWinner = await fetchPoolWinner(poolMembers);
+    const poolWinner = await findPoolWinner(poolMembers);
     expect(poolWinner?.username).toEqual(username);
   });
 

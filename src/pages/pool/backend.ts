@@ -1,11 +1,10 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq, lt } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import * as v from "valibot";
 
 import { db } from "../../db";
 import { environmentVariables } from "../../env";
 import { members, picks, pools } from "../../schema";
-import { fetchPoolsForUser } from "../home/backend";
 import { poolInput } from "../join/backend";
 
 export const fetchPicksInput = v.object({
@@ -25,36 +24,30 @@ export async function fetchPoolInfo({
   username,
   poolId,
 }: v.InferInput<typeof fetchPicksInput>) {
-  const userPools = await fetchPoolsForUser({ username });
-  const pool = userPools.find((pool) => pool.poolId === poolId);
-  if (!pool) {
+  const poolMembers = await fetchPoolMembers(poolId);
+  const poolMember = poolMembers.find((member) => member.username === username);
+  if (!poolMember) {
     throw new TRPCError({
       message: "User is not a member of this pool.",
       code: "NOT_FOUND",
     });
   }
   const games = await fetchCurrentGames();
-  const userPick = await fetchPickForUser({
+  const { userPick, forbiddenTeams } = await fetchPicksDataForUser({
     username,
     poolId,
     week: games.week.number,
     season: games.season.year,
   });
-  const forbiddenTeams = await fetchForbiddenTeamsForUser({
-    username,
-    poolId,
-    week: games.week.number,
-    season: games.season.year,
-  });
-  const poolMembers = await fetchPoolMembers(poolId);
-  const poolWinner = await fetchPoolWinner(poolMembers);
+  const poolWinner = await findPoolWinner(poolMembers);
+
   return {
     games,
     userPick,
     forbiddenTeams,
-    poolName: pool.poolName,
-    eliminated: pool.eliminated,
-    poolCreator: pool.creator,
+    poolName: poolMember.poolName,
+    eliminated: poolMember.eliminated,
+    poolCreator: poolMember.creator,
     poolMembers,
     poolWinner,
   };
@@ -132,7 +125,7 @@ export async function fetchCurrentGames(): Promise<GamesResponse> {
   };
 }
 
-export async function fetchPickForUser({
+export async function fetchPicksDataForUser({
   username,
   poolId,
   week,
@@ -143,48 +136,42 @@ export async function fetchPickForUser({
   week: number;
   season: number;
 }) {
-  return db.query.picks.findFirst({
-    where: and(
-      eq(picks.username, username),
-      eq(picks.poolId, poolId),
-      eq(picks.week, week),
-      eq(picks.season, season),
-    ),
-  });
-}
-
-export async function fetchForbiddenTeamsForUser({
-  username,
-  poolId,
-  week,
-  season,
-}: {
-  username: string;
-  poolId: string;
-  week: number;
-  season: number;
-}) {
-  const result = await db.query.picks.findMany({
-    columns: { teamPicked: true },
+  const picksResult = await db.query.picks.findMany({
     where: and(
       eq(picks.username, username),
       eq(picks.poolId, poolId),
       eq(picks.season, season),
-      lt(picks.week, week),
     ),
   });
+  const userPick = picksResult.find((pick) => pick.week === week);
+  const previousPicks = picksResult.filter((pick) => pick.week < week);
+  const forbiddenTeams = previousPicks.length
+    ? previousPicks.map(({ teamPicked }) => teamPicked)
+    : undefined;
 
-  return result.length ? result.map(({ teamPicked }) => teamPicked) : undefined;
+  return {
+    userPick,
+    forbiddenTeams,
+  };
 }
 
 export async function fetchPoolMembers(poolId: string) {
-  return db.query.members.findMany({
-    where: and(eq(members.poolId, poolId)),
-  });
+  return db
+    .select({
+      username: members.username,
+      firstName: members.firstName,
+      lastName: members.lastName,
+      eliminated: members.eliminated,
+      poolName: pools.name,
+      creator: pools.creator,
+    })
+    .from(members)
+    .where(and(eq(members.poolId, poolId)))
+    .innerJoin(pools, eq(members.poolId, pools.id));
 }
 
-export async function fetchPoolWinner(
-  poolMembers: (typeof members.$inferSelect)[],
+export async function findPoolWinner(
+  poolMembers: Partial<typeof members.$inferSelect>[],
 ) {
   const membersStillAlive = poolMembers.filter((member) => !member.eliminated);
 
@@ -206,7 +193,7 @@ export async function makePick({
   season: number;
   poolId: string;
 }) {
-  const existingPick = await fetchPickForUser({
+  const { userPick: existingPick } = await fetchPicksDataForUser({
     username,
     poolId,
     week,
