@@ -1,6 +1,5 @@
 import { Description, DialogTitle } from "@headlessui/react";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { trpc } from "../trpc";
 import { DialogWrapper } from "./dialog-wrapper";
@@ -8,21 +7,16 @@ import { DialogWrapper } from "./dialog-wrapper";
 export const DeletePoolButton = ({ poolId }: { poolId: string }) => {
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const toggleDialog = () => setDialogIsOpen(!dialogIsOpen);
-  const navigate = useNavigate();
 
   const utils = trpc.useUtils();
   const { mutate } = trpc.deletePool.useMutation({
     throwOnError: true,
     onSettled: () => utils.poolsForUser.invalidate(),
   });
-  const onClick = async () => {
-    await mutate({
-      poolId,
-    });
-    navigate("/");
-  };
+  const onDelete = () => mutate({ poolId });
+
   return (
-    <div className="flex items-center">
+    <div className="ml-2 flex items-center">
       <button
         onClick={toggleDialog}
         className={
@@ -45,7 +39,7 @@ export const DeletePoolButton = ({ poolId }: { poolId: string }) => {
             <button
               className="rounded-md bg-red-500 px-3 py-2 font-medium text-white uppercase hover:bg-red-800"
               autoFocus
-              onClick={onClick}
+              onClick={onDelete}
             >
               Delete
             </button>

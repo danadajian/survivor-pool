@@ -15,19 +15,14 @@ const CreateComponent = ({ user }: PageProps) => {
   const [poolName, setPoolName] = useState("");
   const navigate = useNavigate();
 
-  const onSubmit = async () => {
-    await mutate({
-      ...user,
-      poolName,
-    });
-  };
+  const onSubmit = () => mutate({ ...user, poolName });
 
   if (isSuccess && data?.poolId) {
     return (
       <>
         <Heading>{`${poolName} created successfully!`}</Heading>
         <Subheading>You are now a member of this pool.</Subheading>
-        <div className="flex">
+        <div className="mt-4 flex">
           <CopyInviteLinkButton poolId={data.poolId} />
           <button
             onClick={() => navigate(`/pool/${data.poolId}`)}

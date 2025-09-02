@@ -20,6 +20,8 @@ const PoolComponent = ({
 
   const { mutate } = trpc.reactivatePool.useMutation({
     throwOnError: true,
+    onSettled: () =>
+      Promise.all([utils.pool.invalidate(), utils.picksForPool.invalidate()]),
   });
 
   const {
@@ -57,11 +59,7 @@ const PoolComponent = ({
     );
   }
 
-  async function onReactivate() {
-    await mutate({ poolId });
-    navigate(`/pool/${poolId}`);
-  }
-
+  const onReactivate = () => mutate({ poolId });
   const isPoolCreator = username === poolCreator;
 
   if (poolWinner) {
