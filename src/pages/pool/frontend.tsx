@@ -110,7 +110,7 @@ const PoolComponent = ({
       <h1 className="pt-8 pb-4 text-2xl font-bold text-red-700">
         {poolName} {currentSeason}
       </h1>
-      <p className="text-sm font-medium text-slate-800">{`Creator: ${firstName} ${lastName}`}</p>
+      <p className="text-sm font-medium text-slate-800">{`Pool Creator: ${firstName} ${lastName}`}</p>
       <h2 className="pt-4 text-xl font-bold">Week {currentWeek}</h2>
       <h3 className="pt-4 text-lg font-semibold text-blue-800">{pickHeader}</h3>
       <hr className="mt-4 w-1/3 border border-gray-500" />
