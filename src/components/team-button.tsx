@@ -24,13 +24,10 @@ export const TeamButton = ({
   const { mutate } = trpc.makePick.useMutation({
     onMutate: ({ teamPicked }) => {
       utils.pool.setData({ username, poolId }, (data) => {
-        if (data?.userPick) {
+        if (data?.teamUserPicked) {
           return {
             ...data,
-            userPick: {
-              ...data.userPick,
-              teamPicked,
-            },
+            teamUserPicked: teamPicked,
           };
         }
       });
@@ -54,14 +51,14 @@ export const TeamButton = ({
     mutate({
       username,
       teamPicked: team.name,
-      week: gamesAndPicks.games.week.number,
-      season: gamesAndPicks.games.season.year,
+      week: gamesAndPicks.currentWeek,
+      season: gamesAndPicks.currentSeason,
       poolId,
     });
   const { forbiddenTeams } = gamesAndPicks;
-  const teamCurrentlyPicked = team.name === gamesAndPicks.userPick?.teamPicked;
+  const teamCurrentlyPicked = team.name === gamesAndPicks.teamUserPicked;
   const teamPreviouslyPicked = Boolean(forbiddenTeams?.includes(team.name));
-  const userSurvived = gamesAndPicks.userPick?.result === "WON";
+  const userSurvived = gamesAndPicks.userPickResult === "WON";
   const pickIsLocked = gameStarted || userSurvived;
   const buttonClass = teamCurrentlyPicked
     ? "bg-blue-800 text-white"

@@ -22,12 +22,11 @@ const PoolComponent = ({
   });
 
   const {
-    userPick,
-    games: {
-      events,
-      season: { year: currentSeason },
-      week: { number: currentWeek },
-    },
+    teamUserPicked,
+    userPickResult,
+    events,
+    currentSeason,
+    currentWeek,
     poolName,
     eliminated,
     poolWinner,
@@ -85,24 +84,23 @@ const PoolComponent = ({
     );
   }
 
-  const teamPicked = userPick?.teamPicked;
   const teamPickedInEvent = events.find((event) =>
     event.competitions[0]?.competitors.some(
-      (competitor) => competitor.team.name === teamPicked,
+      (competitor) => competitor.team.name === teamUserPicked,
     ),
   );
   const gameTime = teamPickedInEvent?.date;
-  const userSurvived = userPick?.result === "WON";
+  const userSurvived = userPickResult === "WON";
   const pickIsLocked =
-    Boolean(teamPicked) && gameHasStartedOrFinished(gameTime);
+    Boolean(teamUserPicked) && gameHasStartedOrFinished(gameTime);
   const pickHeader = eliminated
     ? "Sorry, you have been eliminated from this pool."
     : userSurvived
-      ? `The ${teamPicked} won, and you're still alive!`
+      ? `The ${teamUserPicked} won, and you're still alive!`
       : pickIsLocked
-        ? `Your ${teamPicked} pick is locked. Good luck!`
-        : userPick
-          ? `You're riding with the ${userPick.teamPicked} this week!`
+        ? `Your ${teamUserPicked} pick is locked. Good luck!`
+        : teamUserPicked
+          ? `You're riding with the ${teamUserPicked} this week!`
           : `Make your pick, ${firstName}!`;
 
   return (
@@ -128,7 +126,7 @@ const PoolComponent = ({
   );
 };
 
-export type Event = RouterOutput["pool"]["games"]["events"][number];
+export type Event = RouterOutput["pool"]["events"][number];
 type TeamRowProps = {
   event: Event;
   username: string;

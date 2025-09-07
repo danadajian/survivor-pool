@@ -13,7 +13,7 @@
     "preprod": "tailwindcss -o ./public/globals.css",
     "prod": "ENVIRONMENT=production bun ./src/server.tsx",
     "test-backend": "POSTGRES_URL=postgresql://postgres:pwd@localhost:5433/survivor-pool-test bun test test/features.test.ts",
-    "test-frontend": "bun playwright test",
+    "test-frontend": "bunx playwright test",
     "typecheck": "tsc"
   },
   "dependencies": {

@@ -33,17 +33,25 @@ export async function fetchPoolInfo({
     });
   }
   const games = await fetchCurrentGames();
+  const {
+    events,
+    season: { year: currentSeason },
+    week: { number: currentWeek },
+  } = games;
   const { userPick, forbiddenTeams } = await fetchPicksDataForUser({
     username,
     poolId,
-    week: games.week.number,
-    season: games.season.year,
+    week: currentWeek,
+    season: currentSeason,
   });
   const poolWinner = await findPoolWinner(poolMembers);
 
   return {
-    games,
-    userPick,
+    events,
+    currentSeason,
+    currentWeek,
+    teamUserPicked: userPick?.teamPicked,
+    userPickResult: userPick?.result,
     forbiddenTeams,
     poolName: poolMember.poolName,
     eliminated: poolMember.eliminated,
