@@ -17,7 +17,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@clerk/clerk-react": "5.45.0",
+    "@clerk/clerk-react": "5.46.2",
     "@elysiajs/static": "1.3.0",
     "@headlessui/react": "2.2.7",
     "@tanstack/react-query": "5.85.6",
