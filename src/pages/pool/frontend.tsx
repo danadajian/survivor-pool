@@ -119,6 +119,7 @@ const PoolComponent = ({
             event={event}
             username={username}
             poolId={poolId}
+            pickIsLocked={pickIsLocked}
           />
         ))}
       </ul>
@@ -131,8 +132,9 @@ type TeamRowProps = {
   event: Event;
   username: string;
   poolId: string;
+  pickIsLocked: boolean;
 };
-const EventRow = ({ event, username, poolId }: TeamRowProps) => {
+const EventRow = ({ event, username, poolId, pickIsLocked }: TeamRowProps) => {
   const competition = event.competitions[0];
   const competitors = competition?.competitors ?? [];
   const homeTeam = competitors.find(
@@ -147,6 +149,7 @@ const EventRow = ({ event, username, poolId }: TeamRowProps) => {
     username,
     poolId,
     gameStarted,
+    pickIsLocked,
   };
   return (
     <div className="pt-2">

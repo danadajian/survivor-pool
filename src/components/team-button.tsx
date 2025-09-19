@@ -12,12 +12,14 @@ type TeamProps = {
   username: string;
   poolId: string;
   gameStarted: boolean;
+  pickIsLocked: boolean;
 };
 export const TeamButton = ({
   team,
   username,
   poolId,
   gameStarted,
+  pickIsLocked,
 }: TeamProps) => {
   const utils = trpc.useUtils();
   const gamesAndPicks = utils.pool.getData({ username, poolId });
@@ -58,8 +60,6 @@ export const TeamButton = ({
   const { forbiddenTeams } = gamesAndPicks;
   const teamCurrentlyPicked = team.name === gamesAndPicks.teamUserPicked;
   const teamPreviouslyPicked = Boolean(forbiddenTeams?.includes(team.name));
-  const userSurvived = gamesAndPicks.userPickResult === "WON";
-  const pickIsLocked = gameStarted || userSurvived;
   const buttonClass = teamCurrentlyPicked
     ? "bg-blue-800 text-white"
     : teamPreviouslyPicked
@@ -74,6 +74,7 @@ export const TeamButton = ({
         disabled={
           teamCurrentlyPicked ||
           teamPreviouslyPicked ||
+          gameStarted ||
           pickIsLocked ||
           gamesAndPicks.eliminated
         }

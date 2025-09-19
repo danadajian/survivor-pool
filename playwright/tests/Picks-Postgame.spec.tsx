@@ -43,6 +43,8 @@ test("prevents changing pick after picking a game that has started", async ({
   );
 
   await expect(component.getByRole("button", { name: /49ers/ })).toBeDisabled();
+  await expect(component.getByRole("button", { name: /Bills/ })).toBeDisabled();
+  await expect(component.getByRole("button", { name: /Jets/ })).toBeDisabled();
   await expect(
     component.getByRole("heading", {
       name: "Your 49ers pick is locked. Good luck!",
