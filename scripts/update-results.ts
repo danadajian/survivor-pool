@@ -29,6 +29,7 @@ function getResult(teamPicked: string) {
   return teamPickedFromApi.winner === true ? "WON" : "LOST";
 }
 
+const atLeastOneUserWon = userPicks.some((pick) => pick.result === "WON");
 for (const { username, teamPicked, poolId } of userPicks) {
   const result = getResult(teamPicked);
   console.log(`Updating ${username}'s pick ${teamPicked} to ${result}...`);
@@ -44,7 +45,7 @@ for (const { username, teamPicked, poolId } of userPicks) {
       ),
     );
 
-  if (result === "LOST") {
+  if (result === "LOST" && atLeastOneUserWon) {
     console.log(`Eliminating user ${username} from poolId ${poolId}...`);
     await db
       .update(members)
