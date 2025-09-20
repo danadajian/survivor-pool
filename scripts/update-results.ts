@@ -11,6 +11,11 @@ const userPicks = await db
   .from(picks)
   .where(and(eq(picks.week, week.number), eq(picks.season, season.year)));
 
+const membersStillAlive = await db
+  .select()
+  .from(members)
+  .where(eq(members.eliminated, false));
+
 function getResult(teamPicked: string) {
   const teamPickedInEvent = events.find((event) =>
     event.competitions[0]?.competitors.some(
@@ -29,10 +34,27 @@ function getResult(teamPicked: string) {
   return teamPickedFromApi.winner === true ? "WON" : "LOST";
 }
 
-const atLeastOneUserWon = userPicks.some((pick) => pick.result === "WON");
-for (const { username, teamPicked, poolId } of userPicks) {
-  const result = getResult(teamPicked);
-  console.log(`Updating ${username}'s pick ${teamPicked} to ${result}...`);
+async function eliminateUser(username: string, poolId: string) {
+  console.log(`Eliminating user ${username} from poolId ${poolId}...`);
+  await db
+    .update(members)
+    .set({ eliminated: true })
+    .where(and(eq(members.username, username), eq(members.poolId, poolId)));
+}
+
+for (const { username, poolId } of membersStillAlive) {
+  const userPicksForPoolId = userPicks.filter((pick) => pick.poolId === poolId);
+  const userPick = userPicksForPoolId.find(
+    (pick) => pick.username === username,
+  );
+  if (!userPick?.teamPicked) {
+    continue;
+  }
+
+  const result = getResult(userPick.teamPicked);
+  console.log(
+    `Updating ${username}'s pick ${userPick.teamPicked} to ${result}...`,
+  );
   await db
     .update(picks)
     .set({ result })
@@ -45,12 +67,11 @@ for (const { username, teamPicked, poolId } of userPicks) {
       ),
     );
 
+  const atLeastOneUserWon = userPicksForPoolId.some(
+    (pick) => pick.result === "WON",
+  );
   if (result === "LOST" && atLeastOneUserWon) {
-    console.log(`Eliminating user ${username} from poolId ${poolId}...`);
-    await db
-      .update(members)
-      .set({ eliminated: true })
-      .where(and(eq(members.username, username), eq(members.poolId, poolId)));
+    await eliminateUser(username, poolId);
   }
 }
 
