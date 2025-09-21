@@ -39,18 +39,28 @@ export async function updateResults(
     .select()
     .from(members)
     .where(eq(members.eliminated, false));
-  const userPicks = await db
+  const allUserPicks = await db
     .select()
     .from(picks)
-    .where(and(eq(picks.week, week), eq(picks.season, season)));
+    .where(eq(picks.season, season));
 
   for (const { username, poolId } of membersStillAlive) {
-    const userPicksForPoolId = userPicks.filter(
+    const userPicksForWeek = allUserPicks.filter((pick) => pick.week === week);
+    const userPicksForPoolId = userPicksForWeek.filter(
       (pick) => pick.poolId === poolId,
     );
     const userPick = userPicksForPoolId.find(
       (pick) => pick.username === username,
     );
+    const failedToPickLastWeek =
+      week > 1 &&
+      !allUserPicks.some(
+        (pick) => pick.username === username && pick.week < week,
+      );
+    if (failedToPickLastWeek) {
+      await eliminateUser(username, poolId);
+      continue;
+    }
     if (!userPick?.teamPicked) {
       continue;
     }
