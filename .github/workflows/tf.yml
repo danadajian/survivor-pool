@@ -42,7 +42,7 @@ jobs:
           BUCKET_NAME: survivor-pool-terraform-us-east-2
 
       - name: Setup
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
 
       - name: Init
         run: terraform init
