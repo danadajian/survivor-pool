@@ -40,7 +40,7 @@ const app = new Elysia()
       headers: { "Content-Type": "text/html" },
     });
   })
-  .use(rateLimit({ max: 5000 }))
+  .use(rateLimit({ max: 100 }))
   .use(trpcRouter(appRouter))
   .use(staticPlugin())
   .listen(environmentVariables.PORT ?? 8080);

@@ -6,6 +6,7 @@ import {
 } from "@trpc/server/adapters/fetch";
 import { type Elysia } from "elysia";
 
+import { createContext } from "./context";
 import { type AppRouter } from "./router";
 
 export const trpc = createTRPCReact<AppRouter>();
@@ -23,32 +24,30 @@ export const trpcRouter =
   ) =>
   (app: Elysia) => {
     return app
-      .onParse(({ request: { url } }) => {
-        if (getPath(url).startsWith(endpoint)) return true;
-      })
-      .get(`${endpoint}/*`, async ({ request }) => {
-        return fetchRequestHandler({
-          ...options,
-          req: request,
-          router,
-          endpoint,
-        });
-      })
-      .post(`${endpoint}/*`, async ({ request }) => {
-        return fetchRequestHandler({
-          ...options,
-          req: request,
-          router,
-          endpoint,
-        });
-      });
+      .get(
+        `${endpoint}/*`,
+        async ({ request }) => {
+          return fetchRequestHandler({
+            ...options,
+            req: request,
+            createContext,
+            router,
+            endpoint,
+          });
+        },
+        { parse: "none" },
+      )
+      .post(
+        `${endpoint}/*`,
+        async ({ request }) => {
+          return fetchRequestHandler({
+            ...options,
+            req: request,
+            createContext,
+            router,
+            endpoint,
+          });
+        },
+        { parse: "none" },
+      );
   };
-
-const getPath = (url: string) => {
-  const start = url.indexOf("/", 9);
-  const end = url.indexOf("?", start);
-
-  if (end === -1) return url.slice(start);
-
-  return url.slice(start, end);
-};

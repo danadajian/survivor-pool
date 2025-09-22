@@ -12,6 +12,7 @@ import { ClientProvider } from "./components/client-provider";
 import { ErrorPage } from "./components/error";
 import { Heading } from "./components/heading";
 import { withPage } from "./components/page-wrapper";
+import { CLERK_PUBLISHABLE_KEY } from "./constants";
 import { Create } from "./pages/create/frontend";
 import { Home } from "./pages/home/frontend";
 import { Join } from "./pages/join/frontend";
@@ -45,7 +46,7 @@ export const App = () => {
         <title>Survivor Pool</title>
       </head>
       <body>
-        <ClerkProvider publishableKey="pk_test_ZHJpdmVuLXNwYXJyb3ctNDguY2xlcmsuYWNjb3VudHMuZGV2JA">
+        <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
           <ErrorBoundary
             fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
           >

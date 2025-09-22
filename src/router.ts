@@ -1,6 +1,7 @@
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import * as v from "valibot";
 
+import { Context } from "./context";
 import { createPool, createPoolInput } from "./pages/create/backend";
 import {
   fetchPoolsForUser,
@@ -25,34 +26,41 @@ import {
   reactivatePool,
 } from "./pages/pool/backend";
 
-const t = initTRPC.create();
+const t = initTRPC.context<Context>().create();
+
+const authenticatedProcedure = t.procedure.use(async function isAuthed(opts) {
+  if (!opts.ctx.isAuthenticated) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return opts.next({ ctx: {} });
+});
 
 export const appRouter = t.router({
-  pool: t.procedure
+  pool: authenticatedProcedure
     .input(v.parser(fetchPicksInput))
     .query(({ input }) => fetchPoolInfo(input)),
-  makePick: t.procedure
+  makePick: authenticatedProcedure
     .input(v.parser(makePickInput))
     .mutation(({ input }) => makePick(input)),
-  poolsForUser: t.procedure
+  poolsForUser: authenticatedProcedure
     .input(v.parser(fetchPoolsForUserInput))
     .query(({ input }) => fetchPoolsForUser(input)),
-  picksForPool: t.procedure
+  picksForPool: authenticatedProcedure
     .input(v.parser(fetchPicksForPoolInput))
     .query(({ input }) => fetchPicksForPool(input)),
-  createPool: t.procedure
+  createPool: authenticatedProcedure
     .input(v.parser(createPoolInput))
     .mutation(({ input }) => createPool(input)),
-  deletePool: t.procedure
+  deletePool: authenticatedProcedure
     .input(v.parser(poolInput))
     .mutation(({ input }) => deletePool(input)),
-  joinPool: t.procedure
+  joinPool: authenticatedProcedure
     .input(v.parser(joinPoolInput))
     .mutation(({ input }) => joinPool(input)),
-  getPool: t.procedure
+  getPool: authenticatedProcedure
     .input(v.parser(poolInput))
     .query(({ input }) => getPool(input)),
-  reactivatePool: t.procedure
+  reactivatePool: authenticatedProcedure
     .input(v.parser(poolInput))
     .mutation(({ input }) => reactivatePool(input)),
 });
