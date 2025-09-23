@@ -11,18 +11,16 @@ type TeamProps = {
   team?: Team;
   username: string;
   poolId: string;
-  gameStarted: boolean;
   pickIsLocked: boolean;
 };
 export const TeamButton = ({
   team,
   username,
   poolId,
-  gameStarted,
   pickIsLocked,
 }: TeamProps) => {
   const utils = trpc.useUtils();
-  const gamesAndPicks = utils.pool.getData({ username, poolId });
+  const data = utils.pool.getData({ username, poolId });
   const { mutate } = trpc.makePick.useMutation({
     onMutate: ({ teamPicked }) => {
       utils.pool.setData({ username, poolId }, (data) => {
@@ -48,23 +46,32 @@ export const TeamButton = ({
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const toggleDialog = () => setDialogIsOpen(!dialogIsOpen);
 
-  if (!gamesAndPicks || !team) return <div>No team found.</div>;
+  if (!data || !team) {
+    return <div>No team found.</div>;
+  }
+
+  const {
+    currentWeek,
+    currentSeason,
+    teamUserPicked,
+    forbiddenTeams,
+    eliminated,
+  } = data;
   const handleUpdate = () =>
     mutate({
       username,
       teamPicked: team.name,
-      week: gamesAndPicks.currentWeek,
-      season: gamesAndPicks.currentSeason,
+      week: currentWeek,
+      season: currentSeason,
       poolId,
     });
-  const { forbiddenTeams } = gamesAndPicks;
-  const teamCurrentlyPicked = team.name === gamesAndPicks.teamUserPicked;
+  const teamCurrentlyPicked = team.name === teamUserPicked;
   const teamPreviouslyPicked = Boolean(forbiddenTeams?.includes(team.name));
   const buttonClass = teamCurrentlyPicked
     ? "bg-blue-800 text-white"
     : teamPreviouslyPicked
       ? "bg-blue-800 text-white opacity-30"
-      : pickIsLocked
+      : pickIsLocked || eliminated
         ? "bg-slate-300 opacity-30"
         : "bg-slate-300";
   const imageClass = teamPreviouslyPicked ? "opacity-80" : "";
@@ -74,9 +81,8 @@ export const TeamButton = ({
         disabled={
           teamCurrentlyPicked ||
           teamPreviouslyPicked ||
-          gameStarted ||
           pickIsLocked ||
-          gamesAndPicks.eliminated
+          eliminated
         }
         onClick={toggleDialog}
         className={`flex flex-col items-center rounded-lg border-2 border-slate-100 p-2 ${buttonClass}`}

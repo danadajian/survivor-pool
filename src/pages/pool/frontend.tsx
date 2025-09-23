@@ -145,11 +145,9 @@ const EventRow = ({ event, username, poolId, pickIsLocked }: TeamRowProps) => {
     (competitor) => competitor.homeAway === "away",
   )?.team;
   const gameTime = spacetime(competition?.date).goto(null);
-  const gameStarted = gameHasStartedOrFinished(gameTime);
   const commonProps = {
     username,
     poolId,
-    gameStarted,
     pickIsLocked,
   };
   return (
