@@ -33,6 +33,12 @@ export const NavBar = () => {
             >
               Home
             </button>
+            <button
+              onClick={onClick("/rules")}
+              className="ml-2 rounded-lg border-2 border-slate-100 p-2"
+            >
+              Rules
+            </button>
             {path && (
               <button
                 onClick={onClick(path)}

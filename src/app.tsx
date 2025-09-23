@@ -18,6 +18,7 @@ import { Home } from "./pages/home/frontend";
 import { Join } from "./pages/join/frontend";
 import { Picks } from "./pages/picks/frontend";
 import { Pool } from "./pages/pool/frontend";
+import { Rules } from "./pages/rules/frontend";
 import { useEndpoint } from "./utils/use-endpoint";
 
 export const App = () => {
@@ -54,6 +55,7 @@ export const App = () => {
               <SignedIn>
                 <Routes>
                   <Route path="/" element={<Home />} />
+                  <Route path="/rules" element={<Rules />} />
                   <Route path="/pool/:poolId" element={<Pool />} />
                   <Route path="/picks/:poolId" element={<Picks />} />
                   <Route path="/create" element={<Create />} />
