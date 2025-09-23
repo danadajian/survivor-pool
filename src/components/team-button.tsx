@@ -11,12 +11,14 @@ type TeamProps = {
   team?: Team;
   username: string;
   poolId: string;
+  gameStarted: boolean;
   pickIsLocked: boolean;
 };
 export const TeamButton = ({
   team,
   username,
   poolId,
+  gameStarted,
   pickIsLocked,
 }: TeamProps) => {
   const utils = trpc.useUtils();
@@ -67,11 +69,13 @@ export const TeamButton = ({
     });
   const teamCurrentlyPicked = team.name === teamUserPicked;
   const teamPreviouslyPicked = Boolean(forbiddenTeams?.includes(team.name));
+  const buttonDisabledForOtherReason =
+    gameStarted || pickIsLocked || eliminated;
   const buttonClass = teamCurrentlyPicked
     ? "bg-blue-800 text-white"
     : teamPreviouslyPicked
       ? "bg-blue-800 text-white opacity-30"
-      : pickIsLocked || eliminated
+      : buttonDisabledForOtherReason
         ? "bg-slate-300 opacity-30"
         : "bg-slate-300";
   const imageClass = teamPreviouslyPicked ? "opacity-80" : "";
@@ -81,8 +85,7 @@ export const TeamButton = ({
         disabled={
           teamCurrentlyPicked ||
           teamPreviouslyPicked ||
-          pickIsLocked ||
-          eliminated
+          buttonDisabledForOtherReason
         }
         onClick={toggleDialog}
         className={`flex flex-col items-center rounded-lg border-2 border-slate-100 p-2 ${buttonClass}`}
