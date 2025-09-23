@@ -90,18 +90,19 @@ const PoolComponent = ({
     ),
   );
   const gameTime = teamPickedInEvent?.date;
-  const userSurvived = userPickResult === "WON";
   const pickIsLocked =
     Boolean(teamUserPicked) && gameHasStartedOrFinished(gameTime);
   const pickHeader = eliminated
     ? "Sorry, you have been eliminated from this pool."
-    : userSurvived
+    : userPickResult === "WON"
       ? `The ${teamUserPicked} won, and you're still alive!`
-      : pickIsLocked
-        ? `Your ${teamUserPicked} pick is locked. Good luck!`
-        : teamUserPicked
-          ? `You're riding with the ${teamUserPicked} this week!`
-          : `Make your pick, ${firstName}!`;
+      : userPickResult === "LOST"
+        ? `The ${teamUserPicked} lost, but you're still alive!`
+        : pickIsLocked
+          ? `Your ${teamUserPicked} pick is locked. Good luck!`
+          : teamUserPicked
+            ? `You're riding with the ${teamUserPicked} this week!`
+            : `Make your pick, ${firstName}!`;
 
   return (
     <>
