@@ -9,26 +9,25 @@ export async function updateResults(
   week: number,
   season: number,
 ) {
-  const membersStillAlive = await db
-    .select()
-    .from(members)
-    .where(eq(members.eliminated, false));
-  const allUserPicks = await db
+  const membersStillAlive = await getMembersStillAlive();
+  await updatePickResults(events, membersStillAlive, week, season);
+  await eliminateUsers(membersStillAlive, week, season);
+}
+
+async function updatePickResults(
+  events: Events,
+  membersStillAlive: (typeof members.$inferSelect)[],
+  week: number,
+  season: number,
+) {
+  const allUserPicksThisWeek = await db
     .select()
     .from(picks)
-    .where(eq(picks.season, season));
+    .where(and(eq(picks.week, week), eq(picks.season, season)));
 
   for (const { username, poolId } of membersStillAlive) {
-    if (failedToPickLastWeek(allUserPicks, username, week)) {
-      await eliminateUser(username, poolId);
-      continue;
-    }
-
-    const userPicksForPoolId = allUserPicks.filter(
-      (pick) => pick.week === week && pick.poolId === poolId,
-    );
-    const userPick = userPicksForPoolId.find(
-      (pick) => pick.username === username,
+    const userPick = allUserPicksThisWeek.find(
+      (pick) => pick.poolId === poolId && pick.username === username,
     );
     if (!userPick?.teamPicked) {
       continue;
@@ -49,14 +48,42 @@ export async function updateResults(
           eq(picks.season, season),
         ),
       );
+  }
+}
 
+async function eliminateUsers(
+  membersStillAlive: (typeof members.$inferSelect)[],
+  week: number,
+  season: number,
+) {
+  const allUserPicks = await db
+    .select()
+    .from(picks)
+    .where(eq(picks.season, season));
+
+  for (const { username, poolId } of membersStillAlive) {
+    if (failedToPickLastWeek(allUserPicks, username, week)) {
+      await eliminateUser(username, poolId);
+      continue;
+    }
+
+    const userPicksForPoolId = allUserPicks.filter(
+      (pick) => pick.week === week && pick.poolId === poolId,
+    );
+    const userLost = userPicksForPoolId.find(
+      (pick) => pick.username === username && pick.result === "LOST",
+    );
     const atLeastOneUserWon = userPicksForPoolId.some(
       (pick) => pick.result === "WON",
     );
-    if (result === "LOST" && atLeastOneUserWon) {
+    if (userLost && atLeastOneUserWon) {
       await eliminateUser(username, poolId);
     }
   }
+}
+
+async function getMembersStillAlive() {
+  return db.select().from(members).where(eq(members.eliminated, false));
 }
 
 function getResult(teamPicked: string, events: Events) {
