@@ -65,13 +65,20 @@ function getResult(teamPicked: string, events: Events) {
       (competitor) => competitor.team.name === teamPicked,
     ),
   );
-  const teamPickedFromApi =
-    teamPickedInEvent?.competitions[0]?.competitors.find(
-      (competitor) => competitor.team.name === teamPicked,
-    );
+  const competitors = teamPickedInEvent?.competitions[0]?.competitors;
+  const teamPickedFromApi = competitors?.find(
+    (competitor) => competitor.team.name === teamPicked,
+  );
   const eventHasEnded = teamPickedFromApi && "winner" in teamPickedFromApi;
   if (!eventHasEnded) {
     return "PENDING";
+  }
+
+  const resultWasATie = competitors?.every(
+    (competitor) => competitor.winner === false,
+  );
+  if (resultWasATie) {
+    return "TIED";
   }
 
   return teamPickedFromApi.winner === true ? "WON" : "LOST";

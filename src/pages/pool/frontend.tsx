@@ -98,11 +98,13 @@ const PoolComponent = ({
       ? `The ${teamUserPicked} won, and you're still alive!`
       : userPickResult === "LOST"
         ? `The ${teamUserPicked} lost, but you're still alive!`
-        : pickIsLocked
-          ? `Your ${teamUserPicked} pick is locked. Good luck!`
-          : teamUserPicked
-            ? `You're riding with the ${teamUserPicked} this week!`
-            : `Make your pick, ${firstName}!`;
+        : userPickResult === "TIED"
+          ? `The ${teamUserPicked} tied their game! Pick any of the remaining underdogs.`
+          : pickIsLocked
+            ? `Your ${teamUserPicked} pick is locked. Good luck!`
+            : teamUserPicked
+              ? `You're riding with the ${teamUserPicked} this week!`
+              : `Make your pick, ${firstName}!`;
 
   return (
     <>
@@ -144,6 +146,8 @@ const EventRow = ({ event, username, poolId, pickIsLocked }: TeamRowProps) => {
   const awayTeam = competitors.find(
     (competitor) => competitor.homeAway === "away",
   )?.team;
+  const homeTeamOdds = competition.odds?.[0].homeTeamOdds;
+  const awayTeamOdds = competition.odds?.[0].awayTeamOdds;
   const gameTime = spacetime(competition?.date).goto(null);
   const gameStarted = gameHasStartedOrFinished(gameTime);
 
@@ -161,11 +165,19 @@ const EventRow = ({ event, username, poolId, pickIsLocked }: TeamRowProps) => {
       <h5 className="pt-1 text-sm">{competition?.odds?.[0]?.details ?? ""}</h5>
       <div className="flex flex-row justify-center gap-4 pt-2">
         <li>
-          <TeamButton team={awayTeam} {...commonProps} />
+          <TeamButton
+            team={awayTeam}
+            teamIsFavorite={awayTeamOdds?.favorite}
+            {...commonProps}
+          />
         </li>
         <li className="flex items-center font-bold">@</li>
         <li>
-          <TeamButton team={homeTeam} {...commonProps} />
+          <TeamButton
+            team={homeTeam}
+            teamIsFavorite={homeTeamOdds?.favorite}
+            {...commonProps}
+          />
         </li>
       </div>
     </div>

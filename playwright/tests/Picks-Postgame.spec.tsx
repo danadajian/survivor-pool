@@ -7,6 +7,7 @@ import {
   basicGamesAndPicksResponse,
   responseWithPick,
   responseWithPickAndResultsTeamLost,
+  responseWithPickAndResultsTeamTied,
   responseWithPickAndResultsTeamWon,
 } from "../mocks";
 import { mockResponse } from "../utils";
@@ -113,4 +114,30 @@ test("indicates when you have been eliminated", async ({ mount, page }) => {
       name: "Sorry, you have been eliminated from this pool.",
     }),
   ).toBeVisible();
+});
+
+test("indicates when your team tied and you need to pick an underdog", async ({
+  mount,
+  page,
+}) => {
+  await page.route("/trpc/pool*", (route) =>
+    route.fulfill({
+      body: JSON.stringify(responseWithPickAndResultsTeamTied),
+    }),
+  );
+  const component = await mount(
+    <MockProviders initialEntries={["/pick/123"]}>
+      <Pool />
+    </MockProviders>,
+  );
+
+  await expect(
+    component.getByRole("heading", {
+      name: "The 49ers tied their game! Pick any of the remaining underdogs.",
+    }),
+  ).toBeVisible();
+  await expect(component.getByRole("button", { name: /Rams/ })).toBeEnabled();
+  await expect(
+    component.getByRole("button", { name: /Bengals/ }),
+  ).toBeDisabled();
 });

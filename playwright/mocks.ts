@@ -19856,6 +19856,12 @@ export const mockEspnResponseWithResults = {
               },
               details: "CIN -2.0",
               overUnder: 43.5,
+              awayTeamOdds: {
+                favorite: false,
+              },
+              homeTeamOdds: {
+                favorite: true,
+              },
             },
           ],
         },
@@ -19968,6 +19974,21 @@ export const responseWithPickAndResultsTeamLost: TRPCResponse = {
       currentSeason: mockEspnResponseWithResults.season.year,
       poolName: "Test Pool",
       eliminated: true,
+      poolMembers: [],
+    },
+  },
+};
+
+export const responseWithPickAndResultsTeamTied: TRPCResponse = {
+  result: {
+    data: {
+      teamUserPicked: "49ers",
+      userPickResult: "TIED",
+      events: mockEspnResponseWithResults.events,
+      currentWeek: mockEspnResponseWithResults.week.number,
+      currentSeason: mockEspnResponseWithResults.season.year,
+      poolName: "Test Pool",
+      eliminated: false,
       poolMembers: [],
     },
   },

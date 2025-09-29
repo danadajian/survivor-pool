@@ -226,6 +226,69 @@ describe("feature tests", () => {
     expect(poolWinner).toBeUndefined();
   });
 
+  it("should not eliminate user when a tie is picked", async () => {
+    const poolId = await getPoolId();
+    const teamToTie = "Giants";
+    const otherTeamToTie = "Cowboys";
+    const teamToWin = "49ers";
+    const teamToLose = "Rams";
+    await makePick({
+      username: user1,
+      teamPicked: teamToTie,
+      week: 3,
+      season,
+      poolId,
+    });
+    await makePick({
+      username: user2,
+      teamPicked: teamToWin,
+      week: 3,
+      season,
+      poolId,
+    });
+
+    const eventsWithTie = [
+      {
+        competitions: [
+          {
+            competitors: [
+              {
+                team: { name: teamToTie },
+                winner: false,
+              },
+              {
+                team: { name: otherTeamToTie },
+                winner: false,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        competitions: [
+          {
+            competitors: [
+              {
+                team: { name: teamToWin },
+                winner: true,
+              },
+              {
+                team: { name: teamToLose },
+                winner: false,
+              },
+            ],
+          },
+        ],
+      },
+    ] as Events;
+    await updateResults(eventsWithTie, 3, season);
+    const user1Member = await db.query.members.findFirst({
+      where: eq(members.username, user1),
+    });
+    expect(user1Member?.username).toEqual(user1);
+    expect(user1Member?.eliminated).toBeFalse();
+  });
+
   it("should not eliminate anyone when everyone loses", async () => {
     const poolId = await getPoolId();
     const teamToWin = "Giants";

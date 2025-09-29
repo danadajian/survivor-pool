@@ -9,6 +9,7 @@ import { DialogWrapper } from "./dialog-wrapper";
 type Team = Event["competitions"][number]["competitors"][number]["team"];
 type TeamProps = {
   team?: Team;
+  teamIsFavorite?: boolean;
   username: string;
   poolId: string;
   gameStarted: boolean;
@@ -16,6 +17,7 @@ type TeamProps = {
 };
 export const TeamButton = ({
   team,
+  teamIsFavorite,
   username,
   poolId,
   gameStarted,
@@ -58,6 +60,7 @@ export const TeamButton = ({
     teamUserPicked,
     forbiddenTeams,
     eliminated,
+    userPickResult,
   } = data;
   const handleUpdate = () =>
     mutate({
@@ -69,8 +72,10 @@ export const TeamButton = ({
     });
   const teamCurrentlyPicked = team.name === teamUserPicked;
   const teamPreviouslyPicked = Boolean(forbiddenTeams?.includes(team.name));
+  const userPickedTieAndTeamIsFavorite =
+    userPickResult === "TIED" && teamIsFavorite;
   const buttonDisabledForOtherReason =
-    gameStarted || pickIsLocked || eliminated;
+    gameStarted || pickIsLocked || eliminated || userPickedTieAndTeamIsFavorite;
   const buttonClass = teamCurrentlyPicked
     ? "bg-blue-800 text-white"
     : teamPreviouslyPicked
