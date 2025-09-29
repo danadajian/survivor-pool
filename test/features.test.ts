@@ -370,14 +370,24 @@ describe("feature tests", () => {
 
   it("should eliminate user when team picked loses", async () => {
     const poolId = await getPoolId();
-    const teamToLose = "Eagles";
+    const losingTeam = "Eagles";
     await makePick({
       username: user2,
-      teamPicked: teamToLose,
+      teamPicked: losingTeam,
       week: 3,
       season,
       poolId,
     });
+
+    const user2Picks = await db.query.picks.findMany({
+      where: and(
+        eq(picks.poolId, poolId),
+        eq(picks.username, user2),
+        eq(picks.week, 3),
+        eq(picks.season, season),
+      ),
+    });
+    expect(user2Picks).toHaveLength(2);
 
     const eventsWithLosingResult = [
       {
@@ -421,7 +431,7 @@ describe("feature tests", () => {
                 winner: true,
               },
               {
-                team: { name: teamToLose },
+                team: { name: losingTeam },
                 winner: false,
               },
             ],
@@ -434,6 +444,7 @@ describe("feature tests", () => {
       where: and(
         eq(picks.username, user2),
         eq(picks.week, 3),
+        eq(picks.teamPicked, losingTeam),
         eq(picks.season, season),
       ),
     });

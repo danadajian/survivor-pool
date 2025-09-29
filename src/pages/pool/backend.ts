@@ -214,7 +214,7 @@ export async function makePick({
     week,
     season,
   });
-  if (existingPick) {
+  if (existingPick && existingPick.result !== "TIED") {
     return db
       .update(picks)
       .set({ teamPicked })

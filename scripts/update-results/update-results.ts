@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 
 import { db } from "../../src/db";
 import { type Events } from "../../src/pages/pool/backend";
@@ -23,7 +23,13 @@ async function updatePickResults(
   const allUserPicksThisWeek = await db
     .select()
     .from(picks)
-    .where(and(eq(picks.week, week), eq(picks.season, season)));
+    .where(
+      and(
+        eq(picks.week, week),
+        eq(picks.season, season),
+        ne(picks.result, "TIED"),
+      ),
+    );
 
   for (const { username, poolId } of membersStillAlive) {
     const userPick = allUserPicksThisWeek.find(
@@ -59,7 +65,7 @@ async function eliminateUsers(
   const allUserPicks = await db
     .select()
     .from(picks)
-    .where(eq(picks.season, season));
+    .where(and(eq(picks.season, season), ne(picks.result, "TIED")));
 
   for (const { username, poolId } of membersStillAlive) {
     if (failedToPickLastWeek(allUserPicks, username, week)) {
