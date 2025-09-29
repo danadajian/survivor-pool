@@ -91,7 +91,9 @@ const PoolComponent = ({
   );
   const gameTime = teamPickedInEvent?.date;
   const pickIsLocked =
-    Boolean(teamUserPicked) && gameHasStartedOrFinished(gameTime);
+    Boolean(teamUserPicked) &&
+    gameHasStartedOrFinished(gameTime) &&
+    userPickResult !== "TIED";
   const pickHeader = eliminated
     ? "Sorry, you have been eliminated from this pool."
     : userPickResult === "WON"

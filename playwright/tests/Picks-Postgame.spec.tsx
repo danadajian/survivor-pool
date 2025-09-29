@@ -125,6 +125,12 @@ test("indicates when your team tied and you need to pick an underdog", async ({
       body: JSON.stringify(responseWithPickAndResultsTeamTied),
     }),
   );
+  await page.evaluate(() => {
+    Date.now = () =>
+      new Date(
+        "Mon Sep 23 2023 17:50:04 GMT-0500 (Central Daylight Time)",
+      ).getTime();
+  });
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
       <Pool />
