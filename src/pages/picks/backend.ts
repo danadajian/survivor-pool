@@ -1,4 +1,4 @@
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import * as v from "valibot";
 
 import { db } from "../../db";
@@ -49,7 +49,7 @@ export async function fetchPicksForPool({
         eq(picks.poolId, poolId),
       ),
     )
-    .orderBy(asc(picks.teamPicked), asc(picks.timestamp));
+    .orderBy(desc(picks.result), asc(picks.teamPicked), asc(picks.timestamp));
 
   const eliminatedUsers = await db.query.members.findMany({
     where: and(eq(members.eliminated, true), eq(members.poolId, poolId)),
