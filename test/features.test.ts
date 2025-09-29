@@ -370,6 +370,16 @@ describe("feature tests", () => {
 
   it("should eliminate user when team picked loses", async () => {
     const poolId = await getPoolId();
+
+    await makePick({
+      username: user2,
+      teamPicked: "Bengals",
+      week: 3,
+      season,
+      poolId,
+    });
+
+    // scenario for changing pick with tied pick
     const losingTeam = "Eagles";
     await makePick({
       username: user2,

@@ -208,17 +208,20 @@ export async function makePick({
   season: number;
   poolId: string;
 }) {
-  const { userPick: existingPick } = await fetchPicksDataForUser({
-    username,
-    poolId,
-    week,
-    season,
+  const existingPendingPick = await db.query.picks.findFirst({
+    where: and(
+      eq(picks.username, username),
+      eq(picks.poolId, poolId),
+      eq(picks.week, week),
+      eq(picks.season, season),
+      eq(picks.result, "PENDING"),
+    ),
   });
-  if (existingPick && existingPick.result !== "TIED") {
+  if (existingPendingPick) {
     return db
       .update(picks)
       .set({ teamPicked })
-      .where(eq(picks.id, existingPick.id));
+      .where(eq(picks.id, existingPendingPick.id));
   }
   return db
     .insert(picks)
