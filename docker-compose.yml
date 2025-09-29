@@ -1,6 +1,6 @@
 services:
   survivor-pool-test-db:
-    image: postgres:17
+    image: postgres:18
     environment:
       POSTGRES_DB: survivor-pool-test
       POSTGRES_PASSWORD: pwd
