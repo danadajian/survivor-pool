@@ -17,7 +17,7 @@ export function buildPickHeader(
     case "LOST":
       return `The ${teamUserPicked} lost, but you're still alive!`;
     case "TIED":
-      return `The ${teamUserPicked} tied their game! Pick any of the remaining underdogs.`;
+      return `The ${teamUserPicked} tied their game! Pick one of the remaining underdogs if you can.`;
     default:
       if (pickIsLocked) {
         return `Your ${teamUserPicked} pick is locked. Good luck!`;

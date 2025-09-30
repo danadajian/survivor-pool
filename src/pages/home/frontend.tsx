@@ -49,7 +49,7 @@ const PoolSelect = ({
   if (!data.length) {
     return (
       <>
-        <p className="text-md block font-bold text-gray-700">
+        <p className="block text-lg font-bold text-gray-700">
           You have not joined any pools.
         </p>
       </>
@@ -58,7 +58,7 @@ const PoolSelect = ({
 
   return (
     <>
-      <p className="text-md block pb-8 font-bold text-gray-700">
+      <p className="block pb-8 text-lg font-bold text-gray-700">
         Select a pool:
       </p>
       <div className="flex flex-col justify-around">
