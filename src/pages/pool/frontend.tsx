@@ -6,6 +6,7 @@ import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { TeamButton } from "../../components/team-button";
 import { type RouterOutput, trpc } from "../../trpc";
+import { buildPickHeader } from "../../utils/build-pick-header";
 import { gameHasStartedOrFinished } from "../../utils/game-has-started-or-finished";
 
 const PoolComponent = ({
@@ -28,7 +29,6 @@ const PoolComponent = ({
     currentSeason,
     currentWeek,
     poolName,
-    eliminated,
     poolWinner,
     poolMembers,
     poolCreator,
@@ -94,19 +94,7 @@ const PoolComponent = ({
     Boolean(teamUserPicked) &&
     gameHasStartedOrFinished(gameTime) &&
     userPickResult !== "TIED";
-  const pickHeader = eliminated
-    ? "Sorry, you have been eliminated from this pool."
-    : userPickResult === "WON"
-      ? `The ${teamUserPicked} won, and you're still alive!`
-      : userPickResult === "LOST"
-        ? `The ${teamUserPicked} lost, but you're still alive!`
-        : userPickResult === "TIED"
-          ? `The ${teamUserPicked} tied their game! Pick any of the remaining underdogs.`
-          : pickIsLocked
-            ? `Your ${teamUserPicked} pick is locked. Good luck!`
-            : teamUserPicked
-              ? `You're riding with the ${teamUserPicked} this week!`
-              : `Make your pick, ${firstName}!`;
+  const pickHeader = buildPickHeader(data, pickIsLocked, firstName);
 
   return (
     <>
