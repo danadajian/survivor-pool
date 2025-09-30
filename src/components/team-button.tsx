@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import type { Event } from "../pages/pool/frontend";
 import { trpc } from "../trpc";
+import { checkIfPickIsLocked } from "../utils/check-if-pick-is-locked";
 import { DialogWrapper } from "./dialog-wrapper";
 
 type Team = Event["competitions"][number]["competitors"][number]["team"];
@@ -13,7 +14,6 @@ type TeamProps = {
   username: string;
   poolId: string;
   gameStarted: boolean;
-  pickIsLocked: boolean;
 };
 export const TeamButton = ({
   team,
@@ -21,7 +21,6 @@ export const TeamButton = ({
   username,
   poolId,
   gameStarted,
-  pickIsLocked,
 }: TeamProps) => {
   const utils = trpc.useUtils();
   const data = utils.pool.getData({ username, poolId });
@@ -70,6 +69,7 @@ export const TeamButton = ({
       season: currentSeason,
       poolId,
     });
+  const pickIsLocked = checkIfPickIsLocked(data);
   const teamCurrentlyPicked = team.name === teamUserPicked;
   const teamPreviouslyPicked = Boolean(forbiddenTeams?.includes(team.name));
   const userPickedTieAndTeamIsFavorite =

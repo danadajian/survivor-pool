@@ -1,11 +1,12 @@
 import type { RouterOutput } from "../trpc";
+import { checkIfPickIsLocked } from "./check-if-pick-is-locked";
 
 export function buildPickHeader(
   data: RouterOutput["pool"],
-  pickIsLocked: boolean,
   firstName?: string,
 ) {
   const { eliminated, teamUserPicked, userPickResult } = data;
+  const pickIsLocked = checkIfPickIsLocked(data);
 
   if (eliminated) {
     return "Sorry, you have been eliminated from this pool.";

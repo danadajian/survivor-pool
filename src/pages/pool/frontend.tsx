@@ -23,8 +23,6 @@ const PoolComponent = ({
   });
 
   const {
-    teamUserPicked,
-    userPickResult,
     events,
     currentSeason,
     currentWeek,
@@ -84,17 +82,7 @@ const PoolComponent = ({
     );
   }
 
-  const teamPickedInEvent = events.find((event) =>
-    event.competitions[0]?.competitors.some(
-      (competitor) => competitor.team.name === teamUserPicked,
-    ),
-  );
-  const gameTime = teamPickedInEvent?.date;
-  const pickIsLocked =
-    Boolean(teamUserPicked) &&
-    gameHasStartedOrFinished(gameTime) &&
-    userPickResult !== "TIED";
-  const pickHeader = buildPickHeader(data, pickIsLocked, firstName);
+  const pickHeader = buildPickHeader(data, firstName);
 
   return (
     <>
@@ -112,7 +100,6 @@ const PoolComponent = ({
             event={event}
             username={username}
             poolId={poolId}
-            pickIsLocked={pickIsLocked}
           />
         ))}
       </ul>
@@ -125,9 +112,8 @@ type TeamRowProps = {
   event: Event;
   username: string;
   poolId: string;
-  pickIsLocked: boolean;
 };
-const EventRow = ({ event, username, poolId, pickIsLocked }: TeamRowProps) => {
+const EventRow = ({ event, username, poolId }: TeamRowProps) => {
   const competition = event.competitions[0];
   const competitors = competition?.competitors ?? [];
   const homeTeam = competitors.find(
@@ -145,7 +131,6 @@ const EventRow = ({ event, username, poolId, pickIsLocked }: TeamRowProps) => {
     username,
     poolId,
     gameStarted,
-    pickIsLocked,
   };
   return (
     <div className="pt-2">
