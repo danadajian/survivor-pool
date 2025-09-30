@@ -1,4 +1,4 @@
-import { and, eq, ne } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { db } from "../../src/db";
 import { type Events } from "../../src/pages/pool/backend";
@@ -20,19 +20,19 @@ async function updatePickResults(
   week: number,
   season: number,
 ) {
-  const allUserPicksThisWeek = await db
+  const pendingUserPicksThisWeek = await db
     .select()
     .from(picks)
     .where(
       and(
         eq(picks.week, week),
         eq(picks.season, season),
-        ne(picks.result, "TIED"),
+        eq(picks.result, "PENDING"),
       ),
     );
 
   for (const { username, poolId } of membersStillAlive) {
-    const userPick = allUserPicksThisWeek.find(
+    const userPick = pendingUserPicksThisWeek.find(
       (pick) => pick.poolId === poolId && pick.username === username,
     );
     if (!userPick?.teamPicked) {
@@ -52,6 +52,7 @@ async function updatePickResults(
           eq(picks.poolId, poolId),
           eq(picks.week, week),
           eq(picks.season, season),
+          eq(picks.result, "PENDING"),
         ),
       );
   }
@@ -65,7 +66,7 @@ async function eliminateUsers(
   const allUserPicks = await db
     .select()
     .from(picks)
-    .where(and(eq(picks.season, season), ne(picks.result, "TIED")));
+    .where(and(eq(picks.season, season)));
 
   for (const { username, poolId } of membersStillAlive) {
     if (failedToPickLastWeek(allUserPicks, username, week)) {
