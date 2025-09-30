@@ -7,7 +7,6 @@ import { type PageProps, withPage } from "../../components/page-wrapper";
 import { TeamButton } from "../../components/team-button";
 import { type RouterOutput, trpc } from "../../trpc";
 import { buildPickHeader } from "../../utils/build-pick-header";
-import { gameHasStartedOrFinished } from "../../utils/game-has-started-or-finished";
 
 const PoolComponent = ({
   user: { username, firstName },
@@ -125,12 +124,11 @@ const EventRow = ({ event, username, poolId }: TeamRowProps) => {
   const homeTeamOdds = competition.odds?.[0].homeTeamOdds;
   const awayTeamOdds = competition.odds?.[0].awayTeamOdds;
   const gameTime = spacetime(competition?.date).goto(null);
-  const gameStarted = gameHasStartedOrFinished(gameTime);
 
   const commonProps = {
+    gameTime,
     username,
     poolId,
-    gameStarted,
   };
   return (
     <div className="pt-2">
@@ -142,7 +140,7 @@ const EventRow = ({ event, username, poolId }: TeamRowProps) => {
         <li>
           <TeamButton
             team={awayTeam}
-            teamIsFavorite={awayTeamOdds?.favorite}
+            teamOdds={awayTeamOdds}
             {...commonProps}
           />
         </li>
@@ -150,7 +148,7 @@ const EventRow = ({ event, username, poolId }: TeamRowProps) => {
         <li>
           <TeamButton
             team={homeTeam}
-            teamIsFavorite={homeTeamOdds?.favorite}
+            teamOdds={homeTeamOdds}
             {...commonProps}
           />
         </li>

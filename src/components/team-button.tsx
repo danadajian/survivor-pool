@@ -1,26 +1,34 @@
 import { Description, DialogTitle } from "@headlessui/react";
 import React from "react";
 import { useState } from "react";
+import { Spacetime } from "spacetime";
 
 import type { Event } from "../pages/pool/frontend";
 import { trpc } from "../trpc";
 import { checkIfPickIsLocked } from "../utils/check-if-pick-is-locked";
+import { gameHasStartedOrFinished } from "../utils/game-has-started-or-finished";
 import { DialogWrapper } from "./dialog-wrapper";
 
 type Team = Event["competitions"][number]["competitors"][number]["team"];
+type HomeTeamOdds = NonNullable<
+  Event["competitions"][number]["odds"]
+>[number]["homeTeamOdds"];
+type AwayTeamOdds = NonNullable<
+  Event["competitions"][number]["odds"]
+>[number]["awayTeamOdds"];
 type TeamProps = {
   team?: Team;
-  teamIsFavorite?: boolean;
+  teamOdds?: HomeTeamOdds | AwayTeamOdds;
+  gameTime: Spacetime;
   username: string;
   poolId: string;
-  gameStarted: boolean;
 };
 export const TeamButton = ({
   team,
-  teamIsFavorite,
+  teamOdds,
+  gameTime,
   username,
   poolId,
-  gameStarted,
 }: TeamProps) => {
   const utils = trpc.useUtils();
   const data = utils.pool.getData({ username, poolId });
@@ -69,11 +77,13 @@ export const TeamButton = ({
       season: currentSeason,
       poolId,
     });
+
+  const gameStarted = gameHasStartedOrFinished(gameTime);
   const pickIsLocked = checkIfPickIsLocked(data);
   const teamCurrentlyPicked = team.name === teamUserPicked;
   const teamPreviouslyPicked = Boolean(forbiddenTeams?.includes(team.name));
   const userPickedTieAndTeamIsFavorite =
-    userPickResult === "TIED" && teamIsFavorite;
+    userPickResult === "TIED" && teamOdds?.favorite;
   const buttonDisabledForOtherReason =
     gameStarted || pickIsLocked || eliminated || userPickedTieAndTeamIsFavorite;
   const buttonClass = teamCurrentlyPicked
