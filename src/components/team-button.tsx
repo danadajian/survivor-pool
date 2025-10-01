@@ -124,10 +124,10 @@ export const TeamButton = ({
           </Description>
 
           <div className="mt-5 flex justify-between">
-            <div className="container flex items-center">
+            <div className="flex items-center">
               <Toggle />
             </div>
-            <div className="container flex justify-end">
+            <div className="flex justify-end">
               <button
                 className="rounded-md bg-blue-800 px-3 py-2 font-medium text-white uppercase hover:bg-blue-500"
                 autoFocus

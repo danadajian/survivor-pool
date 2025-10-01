@@ -62,7 +62,6 @@ test("can make a pick", async ({ mount, page }) => {
     }),
   );
   await page.getByRole("button", { name: "Lock it in" }).click();
-  await expect(component.getByRole("button", { name: /49ers/ })).toBeDisabled();
   await expect(
     component.getByRole("heading", {
       name: "You're riding with the 49ers this week!",
@@ -70,7 +69,10 @@ test("can make a pick", async ({ mount, page }) => {
   ).toBeVisible();
 });
 
-test("prevents picking the same team twice", async ({ mount, page }) => {
+test("prevents picking a team previously picked but allows picking the currently picked team", async ({
+  mount,
+  page,
+}) => {
   await mockResponse(page, "/trpc/pool*", responseWithPickAndForbiddenTeams);
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
@@ -78,7 +80,7 @@ test("prevents picking the same team twice", async ({ mount, page }) => {
     </MockProviders>,
   );
 
-  await expect(component.getByRole("button", { name: /49ers/ })).toBeDisabled();
+  await expect(component.getByRole("button", { name: /49ers/ })).toBeEnabled();
   await expect(component.getByRole("button", { name: /Bills/ })).toBeDisabled();
   await expect(component.getByRole("button", { name: /Jets/ })).toBeDisabled();
   await expect(
@@ -87,6 +89,18 @@ test("prevents picking the same team twice", async ({ mount, page }) => {
     }),
   ).toBeVisible();
 });
+
+// test("sets secret toggle state for secret pick", async ({ mount, page }) => {
+//     await mockResponse(page, "/trpc/pool*", responseWithSecretPick);
+//     const component = await mount(
+//         <MockProviders initialEntries={["/pick/123"]}>
+//             <Pool />
+//         </MockProviders>,
+//     );
+//
+//     await component.getByRole("button", { name: /49ers/ }).click();
+//     await expect(component.getByRole("switch", { name: /Secret pick toggle/ })).toBeEnabled();
+// });
 
 test("shows no picks during preseason", async ({ mount, page }) => {
   await mockResponse(page, "/trpc/pool*", basicGamesAndPicksPreseasonResponse);

@@ -20009,6 +20009,22 @@ export const responseWithPickAndForbiddenTeams: TRPCResponse = {
   },
 };
 
+export const responseWithSecretPick: TRPCResponse = {
+  result: {
+    data: {
+      teamUserPicked: "49ers",
+      userPickIsSecret: true,
+      events: mockEspnResponse.events,
+      currentWeek: mockEspnResponse.week.number,
+      currentSeason: mockEspnResponse.season.year,
+      forbiddenTeams: ["Bills", "Jets"],
+      poolName: "Test Pool",
+      eliminated: false,
+      poolMembers: [],
+    },
+  },
+};
+
 export const picksForPoolResponse: TRPCResponse = {
   result: {
     data: {

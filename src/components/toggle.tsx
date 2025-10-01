@@ -7,8 +7,8 @@ export function Toggle() {
   const { pickIsSecret, setPickIsSecret } = useContext(SecretPickContext);
 
   return (
-    <Field className="flex items-center">
-      <Label className="mr-2 font-medium">Hide your pick</Label>
+    <Field className="flex flex-wrap items-center justify-center gap-2">
+      <Label className="mr-2 font-medium">Make pick secret</Label>
       <Switch checked={pickIsSecret} onChange={setPickIsSecret} as={Fragment}>
         {({ checked }) => (
           <button
@@ -16,7 +16,7 @@ export function Toggle() {
               checked ? "bg-blue-600" : "bg-gray-200"
             } relative inline-flex h-6 w-11 items-center rounded-full`}
           >
-            <span className="sr-only">Enable notifications</span>
+            <span className="sr-only">Secret pick toggle</span>
             <span
               className={`${
                 checked ? "translate-x-6" : "translate-x-1"

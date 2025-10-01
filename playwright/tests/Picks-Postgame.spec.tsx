@@ -139,7 +139,7 @@ test("indicates when your team tied and you need to pick an underdog", async ({
 
   await expect(
     component.getByRole("heading", {
-      name: "The 49ers tied their game! Pick any of the remaining underdogs.",
+      name: "The 49ers tied their game! Pick one of the remaining underdogs if you can.",
     }),
   ).toBeVisible();
   await expect(component.getByRole("button", { name: /Rams/ })).toBeEnabled();
