@@ -121,6 +121,7 @@ describe("feature tests", () => {
     });
     const secretPick = picks.find((pick) => pick.pickIsSecret);
     expect(secretPick?.username).toEqual(user2);
+    expect(secretPick?.result).toEqual("PENDING");
     expect(secretPick?.teamPicked).toEqual("SECRET");
   });
 
@@ -218,6 +219,19 @@ describe("feature tests", () => {
       where: eq(members.username, user2),
     });
     expect(membersResult2?.eliminated).toBeFalse();
+  });
+
+  it("should make picks not secret once result is no longer pending", async () => {
+    const poolId = await getPoolId();
+    const { picks } = await fetchPicksForPool({
+      poolId,
+      week: 1,
+      season,
+    });
+    const secretPick = picks.find((pick) => pick.pickIsSecret);
+    expect(secretPick?.username).toEqual(user2);
+    expect(secretPick?.result).toEqual("WON");
+    expect(secretPick?.teamPicked).toEqual("49ers");
   });
 
   it("should eliminate users who fail to make a pick the week before", async () => {

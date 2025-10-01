@@ -54,7 +54,10 @@ export async function fetchPicksForPool({
 
   const maskedPicks = picksResult.map((pick) => ({
     ...pick,
-    teamPicked: pick.pickIsSecret ? "SECRET" : pick.teamPicked,
+    teamPicked:
+      pick.result === "PENDING" && pick.pickIsSecret
+        ? "SECRET"
+        : pick.teamPicked,
   }));
 
   const eliminatedUsers = await db.query.members.findMany({
