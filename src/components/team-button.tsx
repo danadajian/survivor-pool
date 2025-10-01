@@ -8,7 +8,7 @@ import { trpc } from "../trpc";
 import { checkIfPickIsLocked } from "../utils/check-if-pick-is-locked";
 import { gameHasStartedOrFinished } from "../utils/game-has-started-or-finished";
 import { DialogWrapper } from "./dialog-wrapper";
-import { PickHiddenContext } from "./pick-hidden-provider";
+import { SecretPickContext } from "./secret-pick-provider";
 import { Toggle } from "./toggle";
 
 type Team = Event["competitions"][number]["competitors"][number]["team"];
@@ -57,7 +57,7 @@ export const TeamButton = ({
       Promise.all([utils.pool.invalidate(), utils.picksForPool.invalidate()]),
   });
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
-  const { pickHidden } = useContext(PickHiddenContext);
+  const { pickIsSecret } = useContext(SecretPickContext);
 
   const toggleDialog = () => setDialogIsOpen(!dialogIsOpen);
 
@@ -80,7 +80,7 @@ export const TeamButton = ({
       week: currentWeek,
       season: currentSeason,
       poolId,
-      pickHidden,
+      pickIsSecret,
     });
 
   const gameStarted = gameHasStartedOrFinished(gameTime);

@@ -18,7 +18,7 @@ export const makePickInput = v.object({
   week: v.number(),
   season: v.number(),
   poolId: v.string(),
-  pickHidden: v.optional(v.boolean()),
+  pickIsSecret: v.optional(v.boolean()),
 });
 
 export async function fetchPoolInfo({
@@ -52,7 +52,7 @@ export async function fetchPoolInfo({
     currentSeason,
     currentWeek,
     teamUserPicked: userPick?.teamPicked,
-    userPickHidden: userPick?.pickHidden,
+    userPickIsSecret: userPick?.pickIsSecret,
     userPickResult: userPick?.result,
     forbiddenTeams,
     poolName: poolMember.poolName,
@@ -203,14 +203,14 @@ export async function makePick({
   week,
   season,
   poolId,
-  pickHidden,
+  pickIsSecret,
 }: {
   username: string;
   teamPicked: string;
   week: number;
   season: number;
   poolId: string;
-  pickHidden?: boolean;
+  pickIsSecret?: boolean;
 }) {
   const existingPendingPick = await db.query.picks.findFirst({
     where: and(
@@ -224,12 +224,12 @@ export async function makePick({
   if (existingPendingPick) {
     return db
       .update(picks)
-      .set({ teamPicked, pickHidden })
+      .set({ teamPicked, pickIsSecret })
       .where(eq(picks.id, existingPendingPick.id));
   }
   return db
     .insert(picks)
-    .values({ username, teamPicked, week, season, poolId, pickHidden });
+    .values({ username, teamPicked, week, season, poolId, pickIsSecret });
 }
 
 export async function deletePool({ poolId }: v.InferInput<typeof poolInput>) {

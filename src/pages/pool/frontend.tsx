@@ -4,7 +4,7 @@ import spacetime from "spacetime";
 
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
-import { PickHiddenProvider } from "../../components/pick-hidden-provider";
+import { SecretPickProvider } from "../../components/secret-pick-provider";
 import { TeamButton } from "../../components/team-button";
 import { type RouterOutput, trpc } from "../../trpc";
 import { buildPickHeader } from "../../utils/build-pick-header";
@@ -30,7 +30,7 @@ const PoolComponent = ({
     poolWinner,
     poolMembers,
     poolCreator,
-    userPickHidden,
+    userPickIsSecret,
   } = data;
 
   if (!events.length) {
@@ -86,7 +86,7 @@ const PoolComponent = ({
   const pickHeader = buildPickHeader(data, firstName);
 
   return (
-    <PickHiddenProvider initialValue={userPickHidden ?? false}>
+    <SecretPickProvider initialValue={userPickIsSecret ?? false}>
       <h1 className="pt-8 pb-4 text-2xl font-bold text-red-700">
         {poolName} {currentSeason}
       </h1>
@@ -104,7 +104,7 @@ const PoolComponent = ({
           />
         ))}
       </ul>
-    </PickHiddenProvider>
+    </SecretPickProvider>
   );
 };
 

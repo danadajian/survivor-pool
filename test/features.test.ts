@@ -89,7 +89,7 @@ describe("feature tests", () => {
       week: 1,
       season,
       poolId,
-      pickHidden: true,
+      pickIsSecret: true,
     });
     const { userPick: user1Pick } = await fetchPicksDataForUser({
       username: user1,
@@ -119,7 +119,7 @@ describe("feature tests", () => {
       week: 1,
       season,
     });
-    const secretPick = picks.find((pick) => pick.pickHidden);
+    const secretPick = picks.find((pick) => pick.pickIsSecret);
     expect(secretPick?.username).toEqual(user2);
     expect(secretPick?.teamPicked).toEqual("SECRET");
   });

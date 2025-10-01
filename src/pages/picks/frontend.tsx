@@ -77,7 +77,7 @@ const PickTable = ({
             pick.firstName && pick.lastName
               ? `${pick.firstName} ${pick.lastName}`
               : undefined;
-          const teamPickedClass = pick.pickHidden
+          const teamPickedClass = pick.pickIsSecret
             ? "italic text-slate-600"
             : "";
           return (

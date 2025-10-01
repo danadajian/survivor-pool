@@ -18,7 +18,7 @@ export const picks = pgTable("picks", {
   season: integer("season").notNull(),
   poolId: uuid("pool_id").notNull(),
   timestamp: timestamp("timestamp").notNull().defaultNow(),
-  pickHidden: boolean().default(false),
+  pickIsSecret: boolean().default(false),
   result: resultEnum("result").notNull().default("PENDING"),
 });
 

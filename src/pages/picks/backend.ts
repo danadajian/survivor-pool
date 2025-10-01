@@ -31,7 +31,7 @@ export async function fetchPicksForPool({
       week: picks.week,
       season: picks.season,
       poolId: picks.poolId,
-      pickHidden: picks.pickHidden,
+      pickIsSecret: picks.pickIsSecret,
       result: picks.result,
       timestamp: picks.timestamp,
     })
@@ -54,7 +54,7 @@ export async function fetchPicksForPool({
 
   const maskedPicks = picksResult.map((pick) => ({
     ...pick,
-    teamPicked: pick.pickHidden ? "SECRET" : pick.teamPicked,
+    teamPicked: pick.pickIsSecret ? "SECRET" : pick.teamPicked,
   }));
 
   const eliminatedUsers = await db.query.members.findMany({
