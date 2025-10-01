@@ -31,6 +31,7 @@ export async function fetchPicksForPool({
       week: picks.week,
       season: picks.season,
       poolId: picks.poolId,
+      pickHidden: picks.pickHidden,
       result: picks.result,
       timestamp: picks.timestamp,
     })
@@ -51,12 +52,17 @@ export async function fetchPicksForPool({
     )
     .orderBy(desc(picks.result), asc(picks.teamPicked), asc(picks.timestamp));
 
+  const maskedPicks = picksResult.map((pick) => ({
+    ...pick,
+    teamPicked: pick.pickHidden ? "SECRET" : pick.teamPicked,
+  }));
+
   const eliminatedUsers = await db.query.members.findMany({
     where: and(eq(members.eliminated, true), eq(members.poolId, poolId)),
   });
 
   return {
-    picks: picksResult,
+    picks: maskedPicks,
     eliminatedUsers,
     week: currentWeek,
     season: currentSeason,

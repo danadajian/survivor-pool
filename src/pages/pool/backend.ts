@@ -52,6 +52,7 @@ export async function fetchPoolInfo({
     currentSeason,
     currentWeek,
     teamUserPicked: userPick?.teamPicked,
+    userPickHidden: userPick?.pickHidden,
     userPickResult: userPick?.result,
     forbiddenTeams,
     poolName: poolMember.poolName,

@@ -5,6 +5,7 @@ import { updateResults } from "../scripts/update-results/update-results";
 import { db } from "../src/db";
 import { createPool } from "../src/pages/create/backend";
 import { joinPool } from "../src/pages/join/backend";
+import { fetchPicksForPool } from "../src/pages/picks/backend";
 import {
   deletePool,
   Events,
@@ -88,6 +89,7 @@ describe("feature tests", () => {
       week: 1,
       season,
       poolId,
+      pickHidden: true,
     });
     const { userPick: user1Pick } = await fetchPicksDataForUser({
       username: user1,
@@ -111,6 +113,15 @@ describe("feature tests", () => {
     expect(user2Pick?.season).toEqual(season);
     expect(user2Pick?.poolId).toEqual(poolId);
     expect(user2Pick?.teamPicked).toEqual("49ers");
+
+    const { picks } = await fetchPicksForPool({
+      poolId,
+      week: 1,
+      season,
+    });
+    const secretPick = picks.find((pick) => pick.pickHidden);
+    expect(secretPick?.username).toEqual(user2);
+    expect(secretPick?.teamPicked).toEqual("SECRET");
   });
 
   it("should have no forbidden picks this week", async () => {

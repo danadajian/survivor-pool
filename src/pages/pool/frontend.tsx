@@ -30,6 +30,7 @@ const PoolComponent = ({
     poolWinner,
     poolMembers,
     poolCreator,
+    userPickHidden,
   } = data;
 
   if (!events.length) {
@@ -85,7 +86,7 @@ const PoolComponent = ({
   const pickHeader = buildPickHeader(data, firstName);
 
   return (
-    <PickHiddenProvider>
+    <PickHiddenProvider initialValue={userPickHidden ?? false}>
       <h1 className="pt-8 pb-4 text-2xl font-bold text-red-700">
         {poolName} {currentSeason}
       </h1>

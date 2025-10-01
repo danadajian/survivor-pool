@@ -6,8 +6,11 @@ type PickHiddenState = {
 };
 export const PickHiddenContext = createContext<PickHiddenState>({});
 
-export function PickHiddenProvider({ children }: PropsWithChildren) {
-  const [pickHidden, setPickHidden] = useState(false);
+export function PickHiddenProvider({
+  initialValue,
+  children,
+}: { initialValue: boolean } & PropsWithChildren) {
+  const [pickHidden, setPickHidden] = useState(initialValue);
 
   return (
     <PickHiddenContext.Provider value={{ pickHidden, setPickHidden }}>

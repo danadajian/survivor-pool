@@ -77,10 +77,13 @@ const PickTable = ({
             pick.firstName && pick.lastName
               ? `${pick.firstName} ${pick.lastName}`
               : undefined;
+          const teamPickedClass = pick.pickHidden
+            ? "italic text-slate-600"
+            : "";
           return (
             <tr key={index} className={userClasses}>
               <td>{userFullName ?? pick.username}</td>
-              <td>{pick.teamPicked}</td>
+              <td className={teamPickedClass}>{pick.teamPicked}</td>
               <td className={`font-semibold ${resultClasses}`}>
                 {pick.result}
               </td>
