@@ -8,6 +8,7 @@ import { trpc } from "../trpc";
 import { checkIfPickIsLocked } from "../utils/check-if-pick-is-locked";
 import { gameHasStartedOrFinished } from "../utils/game-has-started-or-finished";
 import { DialogWrapper } from "./dialog-wrapper";
+import { Toggle } from "./toggle";
 
 type Team = Event["competitions"][number]["competitors"][number]["team"];
 type HomeTeamOdds = NonNullable<
@@ -76,6 +77,7 @@ export const TeamButton = ({
       week: currentWeek,
       season: currentSeason,
       poolId,
+      pickHidden: false,
     });
 
   const gameStarted = gameHasStartedOrFinished(gameTime);
@@ -122,20 +124,25 @@ export const TeamButton = ({
             pick them again this season.
           </Description>
 
-          <div className="flex justify-end pt-5">
-            <button
-              className="rounded-md bg-blue-800 px-3 py-2 font-medium text-white uppercase hover:bg-blue-500"
-              autoFocus
-              onClick={handleUpdate}
-            >
-              Lock it in
-            </button>
-            <button
-              className="ml-3 rounded-md border border-blue-800 px-3 py-2 font-medium text-blue-800 uppercase hover:bg-blue-300"
-              onClick={toggleDialog}
-            >
-              Cancel
-            </button>
+          <div className="mt-5 flex justify-between">
+            <div className="container flex items-center">
+              <Toggle />
+            </div>
+            <div className="container flex justify-end">
+              <button
+                className="rounded-md bg-blue-800 px-3 py-2 font-medium text-white uppercase hover:bg-blue-500"
+                autoFocus
+                onClick={handleUpdate}
+              >
+                Lock it in
+              </button>
+              <button
+                className="ml-3 rounded-md border border-blue-800 px-3 py-2 font-medium text-blue-800 uppercase hover:bg-blue-300"
+                onClick={toggleDialog}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </>
       </DialogWrapper>
