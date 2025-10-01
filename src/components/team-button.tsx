@@ -1,5 +1,5 @@
 import { Description, DialogTitle } from "@headlessui/react";
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { Spacetime } from "spacetime";
 
@@ -8,6 +8,7 @@ import { trpc } from "../trpc";
 import { checkIfPickIsLocked } from "../utils/check-if-pick-is-locked";
 import { gameHasStartedOrFinished } from "../utils/game-has-started-or-finished";
 import { DialogWrapper } from "./dialog-wrapper";
+import { PickHiddenContext } from "./pick-hidden-provider";
 import { Toggle } from "./toggle";
 
 type Team = Event["competitions"][number]["competitors"][number]["team"];
@@ -56,6 +57,8 @@ export const TeamButton = ({
       Promise.all([utils.pool.invalidate(), utils.picksForPool.invalidate()]),
   });
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
+  const { pickHidden } = useContext(PickHiddenContext);
+
   const toggleDialog = () => setDialogIsOpen(!dialogIsOpen);
 
   if (!data || !team) {
@@ -77,7 +80,7 @@ export const TeamButton = ({
       week: currentWeek,
       season: currentSeason,
       poolId,
-      pickHidden: false,
+      pickHidden,
     });
 
   const gameStarted = gameHasStartedOrFinished(gameTime);
@@ -99,11 +102,7 @@ export const TeamButton = ({
   return (
     <>
       <button
-        disabled={
-          teamCurrentlyPicked ||
-          teamPreviouslyPicked ||
-          buttonDisabledForOtherReason
-        }
+        disabled={teamPreviouslyPicked || buttonDisabledForOtherReason}
         onClick={toggleDialog}
         className={`flex flex-col items-center rounded-lg border-2 border-slate-100 p-2 ${buttonClass}`}
       >

@@ -1,13 +1,15 @@
 import { Field, Label, Switch } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useContext } from "react";
+
+import { PickHiddenContext } from "./pick-hidden-provider";
 
 export function Toggle() {
-  const [enabled, setEnabled] = useState(false);
+  const { pickHidden, setPickHidden } = useContext(PickHiddenContext);
 
   return (
     <Field className="flex items-center">
       <Label className="mr-2 font-medium">Hide your pick</Label>
-      <Switch checked={enabled} onChange={setEnabled} as={Fragment}>
+      <Switch checked={pickHidden} onChange={setPickHidden} as={Fragment}>
         {({ checked }) => (
           <button
             className={`${
