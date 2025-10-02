@@ -20,7 +20,7 @@ import { trpcRouter } from "./trpc";
 await Bun.build({
   entrypoints: ["./src/client.tsx"],
   outdir: "./public",
-  target: "bun",
+  target: "browser",
   minify: true
 });
 
@@ -40,10 +40,7 @@ const app = new Elysia()
                 router={router}
                 context={staticContext}
             />
-        </App>,
-        {
-            onError: (err) => {}
-        }
+        </App>
     );
     return new Response(stream.pipeThrough(new TransformStream()), {
       headers: { "Content-Type": "text/html" },
