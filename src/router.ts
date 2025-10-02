@@ -27,6 +27,7 @@ import {
 } from "./pages/pool/backend";
 
 const t = initTRPC.context<Context>().create();
+export const createCallerFactory = t.createCallerFactory;
 
 const authenticatedProcedure = t.procedure.use(async function isAuthed(opts) {
   if (!opts.ctx.isAuthenticated) {

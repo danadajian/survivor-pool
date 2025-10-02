@@ -2,9 +2,9 @@ import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import * as v from "valibot";
 
-import { userFields } from "../../components/page-wrapper";
 import { db } from "../../db";
 import { members, pools } from "../../schema";
+import {userFields} from "../../user";
 
 export const joinPoolInput = v.object({
   ...userFields,

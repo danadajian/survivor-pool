@@ -7,6 +7,7 @@ import type { Event } from "../pages/pool/frontend";
 import { trpc } from "../trpc";
 import { checkIfPickIsLocked } from "../utils/check-if-pick-is-locked";
 import { gameHasStartedOrFinished } from "../utils/game-has-started-or-finished";
+import {trpcClient} from "./client-provider";
 import { DialogWrapper } from "./dialog-wrapper";
 import { SecretPickContext } from "./secret-pick-provider";
 import { Toggle } from "./toggle";
@@ -32,9 +33,9 @@ export const TeamButton = ({
   username,
   poolId,
 }: TeamProps) => {
-  const utils = trpc.useUtils();
+  const utils = trpcClient.useUtils();
   const data = utils.pool.getData({ username, poolId });
-  const { mutate } = trpc.makePick.useMutation({
+  const { mutate } = trpcClient.makePick.useMutation({
     onMutate: ({ teamPicked }) => {
       utils.pool.setData({ username, poolId }, (data) => {
         if (data?.teamUserPicked) {

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import {trpcClient} from "../../components/client-provider";
 import { CopyInviteLinkButton } from "../../components/copy-invite-link-button";
 import { ErrorMessage } from "../../components/error";
 import { Heading, Subheading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
-import { trpc } from "../../trpc";
 
 const CreateComponent = ({ user }: PageProps) => {
-  const utils = trpc.useUtils();
-  const { mutate, data, isSuccess } = trpc.createPool.useMutation({
+  const utils = trpcClient.useUtils();
+  const { mutate, data, isSuccess } = trpcClient.createPool.useMutation({
     throwOnError: false,
     onSettled: (_, error) => {
       if (error) {

@@ -3,8 +3,8 @@ import {
   RedirectToSignIn,
   SignedIn,
   SignedOut,
-} from "@clerk/clerk-react";
-import React from "react";
+} from "@clerk/react-router";
+import React, {PropsWithChildren} from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Route, Routes } from "react-router-dom";
 
@@ -21,8 +21,7 @@ import { Pool } from "./pages/pool/frontend";
 import { Rules } from "./pages/rules/frontend";
 import { useEndpoint } from "./utils/use-endpoint";
 
-export const App = () => {
-  const endpoint = useEndpoint();
+export const App = (props: PropsWithChildren) => {
   return (
     <html lang="en">
       <head>
@@ -30,9 +29,7 @@ export const App = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
           name="og:title"
-          content={
-            endpoint === "join" ? "Join My Survivor Pool!" : "Survivor Pool"
-          }
+          content={"Survivor Pool"}
         />
         <meta
           name="og:image"
@@ -47,31 +44,50 @@ export const App = () => {
         <title>Survivor Pool</title>
       </head>
       <body>
-        <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-          <ErrorBoundary
-            fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
-          >
-            <ClientProvider>
-              <SignedIn>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/rules" element={<Rules />} />
-                  <Route path="/pool/:poolId" element={<Pool />} />
-                  <Route path="/picks/:poolId" element={<Picks />} />
-                  <Route path="/create" element={<Create />} />
-                  <Route path="/join/:poolId" element={<Join />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </SignedIn>
-              <SignedOut>
-                <RedirectToSignIn />
-              </SignedOut>
-            </ClientProvider>
-          </ErrorBoundary>
-        </ClerkProvider>
+          <div id="root">{props.children}</div>
+          <script type="module" src="/public/client.js"></script>
+          <script src="https://cdn.tailwindcss.com" />
       </body>
+      {/*<body>*/}
+      {/*  <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>*/}
+        {/*  <ErrorBoundary*/}
+        {/*    fallbackRender={({ error }) => <ErrorPage error={error as Error} />}*/}
+        {/*  >*/}
+        {/*    <ClientProvider>*/}
+              {/*<SignedIn>*/}
+              {/*  <Routes>*/}
+              {/*    <Route path="/" element={<Home />} />*/}
+              {/*    <Route path="/rules" element={<Rules />} />*/}
+              {/*    <Route path="/pool/:poolId" element={<Pool />} />*/}
+              {/*    <Route path="/picks/:poolId" element={<Picks />} />*/}
+              {/*    <Route path="/create" element={<Create />} />*/}
+              {/*    <Route path="/join/:poolId" element={<Join />} />*/}
+              {/*    <Route path="*" element={<NotFound />} />*/}
+              {/*  </Routes>*/}
+              {/*</SignedIn>*/}
+              {/*<SignedOut>*/}
+              {/*  <RedirectToSignIn />*/}
+              {/*</SignedOut>*/}
+            {/*</ClientProvider>*/}
+          {/*</ErrorBoundary>*/}
+        {/*</ClerkProvider>*/}
+      {/*</body>*/}
     </html>
   );
 };
+
+export function Routing() {
+    return (
+        <Route>
+            <Route path="/" element={<Home />} />
+            <Route path="/rules" element={<Rules />} />
+            <Route path="/pool/:poolId" element={<Pool />} />
+            <Route path="/picks/:poolId" element={<Picks />} />
+            <Route path="/create" element={<Create />} />
+            <Route path="/join/:poolId" element={<Join />} />
+            <Route path="*" element={<NotFound />} />
+        </Route>
+    )
+}
 
 const NotFound = withPage(() => <Heading>Not Found</Heading>);

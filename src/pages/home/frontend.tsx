@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import spacetime from "spacetime";
 
 import { CopyInviteLinkButton } from "../../components/copy-invite-link-button";
 import { DeletePoolButton } from "../../components/delete-pool-button";
@@ -7,8 +8,8 @@ import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { type RouterOutput, trpc } from "../../trpc";
 
-const HomeComponent = ({ user: { username } }: PageProps) => {
-  const [data] = trpc.poolsForUser.useSuspenseQuery({ username });
+const HomeComponent = async ({ user: { username } }: PageProps) => {
+  const data = await trpc.poolsForUser({ username });
 
   return (
     <>
@@ -55,6 +56,8 @@ const PoolSelect = ({
       </>
     );
   }
+
+  console.log('rendering', spacetime.now().format(`{day} {hour}:{minute-pad}:{second-pad}:{millisecond-pad} {ampm}`))
 
   return (
     <>

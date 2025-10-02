@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
 
+import {trpcClient} from "../../components/client-provider";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { SecretPickProvider } from "../../components/secret-pick-provider";
@@ -9,15 +10,15 @@ import { TeamButton } from "../../components/team-button";
 import { type RouterOutput, trpc } from "../../trpc";
 import { buildPickHeader } from "../../utils/build-pick-header";
 
-const PoolComponent = ({
+const PoolComponent = async ({
   user: { username, firstName },
   poolId,
 }: PageProps) => {
-  const [data] = trpc.pool.useSuspenseQuery({ username, poolId });
+  const data = await trpc.pool({ username, poolId });
   const navigate = useNavigate();
-  const utils = trpc.useUtils();
+  const utils = trpcClient.useUtils();
 
-  const { mutate } = trpc.reactivatePool.useMutation({
+  const { mutate } = trpcClient.reactivatePool.useMutation({
     onSettled: () =>
       Promise.all([utils.pool.invalidate(), utils.picksForPool.invalidate()]),
   });

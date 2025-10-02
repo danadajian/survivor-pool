@@ -1,19 +1,18 @@
-import { useUser } from "@clerk/clerk-react";
+import {ClerkProvider, useUser} from "@clerk/react-router";
 import React, { Suspense, useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useMatch } from "react-router-dom";
 import * as v from "valibot";
 
+import {CLERK_PUBLISHABLE_KEY} from "../constants";
+import {HydrateClient} from "../trpc";
+import {userFields} from "../user";
 import { useEndpoint } from "../utils/use-endpoint";
+import {ClientProvider} from "./client-provider";
 import { ErrorPage } from "./error";
 import { Loader } from "./loader";
 import { NavBar } from "./nav-bar";
 
-export const userFields = {
-  username: v.string(),
-  firstName: v.optional(v.string()),
-  lastName: v.optional(v.string()),
-} as const;
 const userSchema = v.object(userFields);
 
 export type PageProps = {
@@ -27,17 +26,19 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
     const path = endpoint ? useMatch(`/${endpoint}/:poolId`) : null;
     const poolId = path?.params.poolId ?? "";
 
-    const userResult = useUser();
-    const { user: userResource } = useMemo(() => userResult, []);
+    // const userResult = useUser();
+    // const { user: userResource } = useMemo(() => userResult, []);
     const userInfo = {
-      username: userResource?.primaryEmailAddress?.emailAddress,
-      firstName: userResource?.firstName,
-      lastName: userResource?.lastName,
+      username: 'danadajian@gmail.com',
+      firstName: 'Dan',
+      // lastName: userResource?.lastName,
     };
     const user = v.parse(userSchema, userInfo);
 
     return (
       <>
+            <ClientProvider>
+          <HydrateClient>
         <ErrorBoundary
           fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
         >
@@ -48,9 +49,15 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
             </div>
           </Suspense>
         </ErrorBoundary>
+          </HydrateClient>
+            </ClientProvider>
       </>
     );
   };
 
-  return <PageComponent />;
+  return (
+      // <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+          <PageComponent />
+      // </ClerkProvider>
+  );
 };

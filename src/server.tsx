@@ -4,9 +4,15 @@ import { HotModuleReload, hotModuleReload } from "elysia-hot-module-reload";
 import { rateLimit } from "elysia-rate-limit";
 import React from "react";
 import { renderToReadableStream } from "react-dom/server";
-import { StaticRouter } from "react-router-dom";
+import {
+    createRoutesFromElements,
+    createStaticHandler, createStaticRouter,
+    StaticHandlerContext,
+    StaticRouter,
+    StaticRouterProvider
+} from "react-router-dom";
 
-import { App } from "./app";
+import {App, Routing} from "./app";
 import { environmentVariables } from "./env";
 import { appRouter } from "./router";
 import { trpcRouter } from "./trpc";
@@ -14,7 +20,8 @@ import { trpcRouter } from "./trpc";
 await Bun.build({
   entrypoints: ["./src/client.tsx"],
   outdir: "./public",
-  minify: true,
+  target: "bun",
+  minify: true
 });
 
 const isDev = environmentVariables.ENVIRONMENT === "development";
@@ -22,20 +29,21 @@ const isDev = environmentVariables.ENVIRONMENT === "development";
 const app = new Elysia()
   .get("/health", () => "all good")
   .get("*", async (context) => {
+      const routes = createRoutesFromElements(Routing());
+
+      const { query, dataRoutes } = createStaticHandler(routes);
+      const staticContext = await query(context.request) as StaticHandlerContext;
+      const router = createStaticRouter(dataRoutes, staticContext);
     const stream = await renderToReadableStream(
-      <StaticRouter location={context.path}>
-        <App />
-        {isDev && (
-          <>
-            <script src="https://cdn.tailwindcss.com" />
-            <HotModuleReload />
-          </>
-        )}
-      </StaticRouter>,
-      {
-        bootstrapScripts: ["/public/client.js"],
-        onError: () => {},
-      },
+        <App >
+            <StaticRouterProvider
+                router={router}
+                context={staticContext}
+            />
+        </App>,
+        {
+            onError: (err) => {}
+        }
     );
     return new Response(stream.pipeThrough(new TransformStream()), {
       headers: { "Content-Type": "text/html" },

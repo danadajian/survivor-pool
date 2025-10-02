@@ -1,15 +1,15 @@
 import { Description, DialogTitle } from "@headlessui/react";
 import React, { useState } from "react";
 
-import { trpc } from "../trpc";
+import {trpcClient} from "./client-provider";
 import { DialogWrapper } from "./dialog-wrapper";
 
 export const DeletePoolButton = ({ poolId }: { poolId: string }) => {
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const toggleDialog = () => setDialogIsOpen(!dialogIsOpen);
 
-  const utils = trpc.useUtils();
-  const { mutate } = trpc.deletePool.useMutation({
+  const utils = trpcClient.useUtils();
+  const { mutate } = trpcClient.deletePool.useMutation({
     onSettled: () => utils.poolsForUser.invalidate(),
   });
   const onDelete = () => mutate({ poolId });

@@ -6,12 +6,12 @@ import { WeekDropdown } from "../../components/week-dropdown";
 import { type RouterOutput, trpc } from "../../trpc";
 import { useUrlParams } from "../../utils/use-url-params";
 
-const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
+const PicksComponent = async ({ user: { username }, poolId }: PageProps) => {
   const {
     urlParams: { week: weekUrlParam, season: seasonUrlParam },
     setUrlParams,
   } = useUrlParams();
-  const [data] = trpc.picksForPool.useSuspenseQuery({
+  const data = await trpc.picksForPool({
     poolId,
     ...(weekUrlParam ? { week: Number(weekUrlParam) } : {}),
     ...(seasonUrlParam ? { season: Number(seasonUrlParam) } : {}),
@@ -23,7 +23,7 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
   return (
     <>
       <Heading>Week {week} Picks</Heading>
-      <PickTable picksForPool={data} username={username} week={week} />
+      <PickTable picksForPool={data as any} username={username} week={week} />
       <WeekDropdown
         options={Array.from({ length: currentWeek }, (_, i) => i + 1)}
         selected={week}

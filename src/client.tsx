@@ -2,13 +2,24 @@
 /// <reference lib="dom.iterable" />
 import React from "react";
 import { hydrateRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import {
+    createBrowserRouter,
+    createRoutesFromElements,
+    RouterProvider,
+} from "react-router-dom";
 
-import { App } from "./app";
+import { Routing} from "./app";
 
-hydrateRoot(
-  document,
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-);
+const root = document.getElementById('root');
+if (root) {
+    hydrateRoot(
+        root,
+        <RouterProvider router={
+            createBrowserRouter(
+                createRoutesFromElements(
+                    Routing()
+                )
+            )
+        } />,
+    );
+}

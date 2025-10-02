@@ -1,4 +1,4 @@
-import { UserButton } from "@clerk/clerk-react";
+import { UserButton } from "@clerk/react-router";
 import React from "react";
 import { useErrorBoundary } from "react-error-boundary";
 import { useMatch, useNavigate } from "react-router-dom";
@@ -24,7 +24,7 @@ export const NavBar = () => {
       <nav className="border-gray-200 bg-white px-4 py-2 lg:px-6 dark:bg-gray-800">
         <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between text-white">
           <div className="flex w-8">
-            <UserButton />
+            {/*<UserButton />*/}
           </div>
           <div>
             <button

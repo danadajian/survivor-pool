@@ -1,4 +1,4 @@
-import { ClerkProvider } from "@clerk/clerk-react";
+import { ClerkProvider } from "@clerk/react-router";
 import type { InitialState } from "@clerk/types";
 import React, { type ComponentProps, type PropsWithChildren } from "react";
 import { MemoryRouter } from "react-router-dom";
@@ -23,7 +23,7 @@ export const MockProviders = ({
 }) => (
   <ClientProvider>
     <ClerkProvider
-      initialState={mockClerkState}
+      // initialState={mockClerkState}
       publishableKey="pk_test_YW11c2luZy1tYW4tNjEuY2xlcmsuYWNjb3VudHMuZGV2JA"
     >
       <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>

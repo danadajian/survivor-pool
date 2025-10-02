@@ -1,43 +1,46 @@
 import {
-  keepPreviousData,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
+import {createTRPCReact} from "@trpc/react-query";
 import React from "react";
 import { type PropsWithChildren, useState } from "react";
 
-import { trpc } from "../trpc";
+import type {AppRouter} from "../router";
+import {makeQueryClient} from "../trpc";
+
+export const trpcClient = createTRPCReact<AppRouter>();
 
 export const ClientProvider = ({ children }: PropsWithChildren) => {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            placeholderData: keepPreviousData,
-            staleTime: 1000 * 60, // 1 minute
-            throwOnError: true,
-            retry: false,
-          },
-          mutations: {
-            throwOnError: true,
-          },
-        },
-      }),
-  );
-  const [trpcClient] = useState(() =>
-    trpc.createClient({
+  const queryClient = getQueryClient();
+  const [client] = useState(() =>
+    trpcClient.createClient({
       links: [
         httpBatchLink({
-          url: "/trpc",
+          url: getUrl(),
         }),
       ],
     }),
   );
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+    <trpcClient.Provider client={client} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </trpc.Provider>
+    </trpcClient.Provider>
   );
 };
+
+let clientQueryClientSingleton: QueryClient;
+function getQueryClient() {
+    if (typeof window === 'undefined') {
+        // Server: always make a new query client
+        return makeQueryClient();
+    }
+    // Browser: use singleton pattern to keep the same query client
+    return (clientQueryClientSingleton ??= makeQueryClient());
+}
+
+function getUrl() {
+    const base = typeof window === 'undefined' ? 'http://localhost:8080' : ''
+    return `${base}/trpc`;
+}
