@@ -8,6 +8,7 @@ import {
   basicGamesAndPicksResponse,
   responseWithPick,
   responseWithPickAndForbiddenTeams,
+  responseWithSecretPick,
 } from "../mocks";
 import { mockResponse } from "../utils";
 
@@ -56,6 +57,9 @@ test("can make a pick", async ({ mount, page }) => {
   await expect(
     page.getByText(/Are you sure you want to pick the 49ers?/),
   ).toBeVisible();
+  await expect(
+    page.getByRole("switch", { name: "Make pick secret" }),
+  ).not.toBeChecked();
   await page.route("/trpc/pool*", (route) =>
     route.fulfill({
       body: JSON.stringify(responseWithPick),
@@ -90,17 +94,22 @@ test("prevents picking a team previously picked but allows picking the currently
   ).toBeVisible();
 });
 
-// test("sets secret toggle state for secret pick", async ({ mount, page }) => {
-//     await mockResponse(page, "/trpc/pool*", responseWithSecretPick);
-//     const component = await mount(
-//         <MockProviders initialEntries={["/pick/123"]}>
-//             <Pool />
-//         </MockProviders>,
-//     );
-//
-//     await component.getByRole("button", { name: /49ers/ }).click();
-//     await expect(component.getByRole("switch", { name: /Secret pick toggle/ })).toBeEnabled();
-// });
+test("sets secret toggle state for secret pick", async ({ mount, page }) => {
+  await mockResponse(page, "/trpc/pool*", responseWithSecretPick);
+  const component = await mount(
+    <MockProviders initialEntries={["/pick/123"]}>
+      <Pool />
+    </MockProviders>,
+  );
+
+  await component.getByRole("button", { name: /49ers/ }).click();
+  await expect(
+    page.getByRole("heading", { name: "Confirm pick" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("switch", { name: "Make pick secret" }),
+  ).toBeChecked();
+});
 
 test("shows no picks during preseason", async ({ mount, page }) => {
   await mockResponse(page, "/trpc/pool*", basicGamesAndPicksPreseasonResponse);
