@@ -1,4 +1,4 @@
-import { UserButton } from "@clerk/clerk-react";
+import { UserButton } from "@clerk/react-router";
 import React from "react";
 import { useErrorBoundary } from "react-error-boundary";
 import { useMatch, useNavigate } from "react-router-dom";

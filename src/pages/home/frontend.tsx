@@ -62,8 +62,8 @@ const PoolSelect = ({
         Select a pool:
       </p>
       <div className="flex flex-col justify-around">
-        {data.map(({ poolId, poolName, creator }) => (
-          <div className="m-2 flex items-center justify-between">
+        {data.map(({ poolId, poolName, creator }, index) => (
+          <div key={index} className="m-2 flex items-center justify-between">
             <button
               key={poolId}
               id={poolId}

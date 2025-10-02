@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/react-router";
 import React, { Suspense, useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useMatch } from "react-router-dom";

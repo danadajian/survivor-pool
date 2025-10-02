@@ -34,9 +34,10 @@ const app = new Elysia()
       </StaticRouter>,
       {
         bootstrapScripts: ["/public/client.js"],
+        onError: () => {},
       },
     );
-    return new Response(stream, {
+    return new Response(stream.pipeThrough(new TransformStream()), {
       headers: { "Content-Type": "text/html" },
     });
   })

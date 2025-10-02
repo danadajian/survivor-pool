@@ -3,7 +3,7 @@ import {
   RedirectToSignIn,
   SignedIn,
   SignedOut,
-} from "@clerk/clerk-react";
+} from "@clerk/react-router";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Route, Routes } from "react-router-dom";
