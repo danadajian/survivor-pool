@@ -19,6 +19,8 @@ import {ClientProvider} from "./components/client-provider";
 import {ServerRoutes} from "./routes/server-routes";
 import {CLERK_PUBLISHABLE_KEY} from "./constants";
 import {ClerkProvider, RedirectToSignIn, SignedIn, SignedOut} from "@clerk/react-router";
+import {createClerkClient} from "@clerk/backend";
+import {rootAuthLoader} from "@clerk/react-router/server";
 
 await Bun.build({
   entrypoints: ["./src/client.tsx"],
@@ -32,10 +34,23 @@ const isDev = environmentVariables.ENVIRONMENT === "development";
 const app = new Elysia()
   .get("/health", () => "all good")
   .get("*", async (context) => {
+      const clerkClient = createClerkClient({
+          secretKey: process.env.CLERK_SECRET_KEY,
+          publishableKey: CLERK_PUBLISHABLE_KEY,
+      });
+      const { isAuthenticated } = await clerkClient.authenticateRequest(context.request);
+      console.log('isAuthenticated', isAuthenticated)
+      const { user } = await rootAuthLoader({ request: context.request, params: {}, context: context }, async ({ request }) => {
+          const { userId } = request.auth
+          if (!userId) throw new Error();
+          const user = await clerkClient.users.getUser(userId);
+            console.log('user', user)
+          return { user }
+      }, { publishableKey: CLERK_PUBLISHABLE_KEY });
     const stream = await renderToReadableStream(
         <App>
             <StaticRouter location={context.path}>
-                <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+                <ClerkProvider loaderData={{ user }}>
                 <ClientProvider>
                     <SignedIn>
                     <ServerRoutes />

@@ -41,7 +41,7 @@ export const trpcRouter = (router: AnyRouter) => (app: Elysia) => {
 
 export const getQueryClient = cache(makeQueryClient);
 const caller = createCallerFactory(appRouter)(createTRPCContext);
-export const { trpc: trpcServer } = createHydrationHelpers<typeof appRouter>(
+export const { trpc: trpcServer, HydrateClient } = createHydrationHelpers<typeof appRouter>(
     caller,
     getQueryClient,
 );

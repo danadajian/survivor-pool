@@ -24,11 +24,13 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
     const poolId = path?.params.poolId ?? "";
 
     const userResult = useUser();
+    console.log('userResult', userResult)
     const { user: userResource } = useMemo(() => userResult, []);
     const userInfo = {
-      username: userResource?.primaryEmailAddress?.emailAddress,
-      firstName: userResource?.firstName,
-      lastName: userResource?.lastName,
+      username: 'danadajian@gmail.com',
+      // username: userResource?.primaryEmailAddress?.emailAddress,
+      firstName: 'Dan',
+      // lastName: userResource?.lastName,
     };
     const user = v.parse(userSchema, userInfo);
 
