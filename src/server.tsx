@@ -7,7 +7,7 @@ import { renderToReadableStream } from "react-dom/server";
 import {
     createRoutesFromElements,
     createStaticHandler, createStaticRouter,
-    StaticHandlerContext,
+    StaticHandlerContext, StaticRouter,
     StaticRouterProvider
 } from "react-router-dom";
 
@@ -17,6 +17,8 @@ import { appRouter } from "./router";
 import { trpcRouter } from "./trpc";
 import {ClientProvider} from "./components/client-provider";
 import {ServerRoutes} from "./routes/server-routes";
+import {CLERK_PUBLISHABLE_KEY} from "./constants";
+import {ClerkProvider, RedirectToSignIn, SignedIn, SignedOut} from "@clerk/react-router";
 
 await Bun.build({
   entrypoints: ["./src/client.tsx"],
@@ -30,18 +32,20 @@ const isDev = environmentVariables.ENVIRONMENT === "development";
 const app = new Elysia()
   .get("/health", () => "all good")
   .get("*", async (context) => {
-      const routes = createRoutesFromElements(ServerRoutes());
-      const { query, dataRoutes } = createStaticHandler(routes);
-      const staticContext = await query(context.request) as StaticHandlerContext;
-      const router = createStaticRouter(dataRoutes, staticContext);
     const stream = await renderToReadableStream(
         <App>
-            <ClientProvider>
-            <StaticRouterProvider
-                router={router}
-                context={staticContext}
-            />
-            </ClientProvider>
+            <StaticRouter location={context.path}>
+                <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+                <ClientProvider>
+                    <SignedIn>
+                    <ServerRoutes />
+                    </SignedIn>
+                    <SignedOut>
+                        <RedirectToSignIn />
+                    </SignedOut>
+                </ClientProvider>
+                </ClerkProvider>
+            </StaticRouter>
         </App>
     );
     return new Response(stream.pipeThrough(new TransformStream()), {

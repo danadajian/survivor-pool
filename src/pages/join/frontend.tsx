@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {trpcClient} from "../../components/client-provider";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
-import {trpcServer} from "../../trpc-server";
+import {trpcServer} from "../../trpc";
 
 const JoinComponent = async ({ user, poolId }: PageProps) => {
   const { mutate, isSuccess } = trpcClient.joinPool.useMutation();

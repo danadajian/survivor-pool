@@ -9,7 +9,7 @@ import { SecretPickProvider } from "../../components/secret-pick-provider";
 import { TeamButton } from "../../components/team-button";
 import { type RouterOutput } from "../../trpc";
 import { buildPickHeader } from "../../utils/build-pick-header";
-import {trpcServer} from "../../trpc-server";
+import {trpcServer} from "../../trpc";
 
 const PoolComponent = async ({
   user: { username, firstName },

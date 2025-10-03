@@ -3,7 +3,10 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { type Elysia } from "elysia";
 
 import { createTRPCContext} from "./context";
-import {type AppRouter} from "./router";
+import {appRouter, type AppRouter, createCallerFactory} from "./router";
+import {cache} from "react";
+import {makeQueryClient} from "./trpc-client-factory";
+import {createHydrationHelpers} from "@trpc/react-query/rsc";
 
 export type RouterOutput = inferRouterOutputs<AppRouter>;
 
@@ -35,3 +38,10 @@ export const trpcRouter = (router: AnyRouter) => (app: Elysia) => {
       { parse: "none" },
     );
 };
+
+export const getQueryClient = cache(makeQueryClient);
+const caller = createCallerFactory(appRouter)(createTRPCContext);
+export const { trpc: trpcServer } = createHydrationHelpers<typeof appRouter>(
+    caller,
+    getQueryClient,
+);

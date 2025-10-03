@@ -4,7 +4,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import { useMatch } from "react-router-dom";
 import * as v from "valibot";
 
-import {CLERK_PUBLISHABLE_KEY} from "../constants";
 import {userFields} from "../user";
 import { useEndpoint } from "../utils/use-endpoint";
 import { ErrorPage } from "./error";
@@ -24,12 +23,12 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
     const path = endpoint ? useMatch(`/${endpoint}/:poolId`) : null;
     const poolId = path?.params.poolId ?? "";
 
-    // const userResult = useUser();
-    // const { user: userResource } = useMemo(() => userResult, []);
+    const userResult = useUser();
+    const { user: userResource } = useMemo(() => userResult, []);
     const userInfo = {
-      username: 'danadajian@gmail.com',
-      firstName: 'Dan',
-      // lastName: userResource?.lastName,
+      username: userResource?.primaryEmailAddress?.emailAddress,
+      firstName: userResource?.firstName,
+      lastName: userResource?.lastName,
     };
     const user = v.parse(userSchema, userInfo);
 
@@ -50,8 +49,6 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
   };
 
   return (
-      // <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-          <PageComponent />
-      // </ClerkProvider>
+    <PageComponent />
   );
 };

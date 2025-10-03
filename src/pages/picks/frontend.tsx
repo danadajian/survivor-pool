@@ -5,7 +5,7 @@ import { type PageProps, withPage } from "../../components/page-wrapper";
 import { WeekDropdown } from "../../components/week-dropdown";
 import { type RouterOutput } from "../../trpc";
 import { useUrlParams } from "../../utils/use-url-params";
-import {trpcServer} from "../../trpc-server";
+import {trpcServer} from "../../trpc";
 
 const PicksComponent = async ({ user: { username }, poolId }: PageProps) => {
   const {
