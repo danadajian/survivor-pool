@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Spacetime } from "spacetime";
 
 import type { Event } from "../pages/pool/frontend";
-import { trpc } from "../trpc";
 import { checkIfPickIsLocked } from "../utils/check-if-pick-is-locked";
 import { gameHasStartedOrFinished } from "../utils/game-has-started-or-finished";
 import {trpcClient} from "./client-provider";

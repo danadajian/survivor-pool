@@ -8,14 +8,15 @@ import {
     createRoutesFromElements,
     createStaticHandler, createStaticRouter,
     StaticHandlerContext,
-    StaticRouter,
     StaticRouterProvider
 } from "react-router-dom";
 
-import {App, Routing} from "./app";
+import {App} from "./app";
 import { environmentVariables } from "./env";
 import { appRouter } from "./router";
 import { trpcRouter } from "./trpc";
+import {ClientProvider} from "./components/client-provider";
+import {ServerRoutes} from "./routes/server-routes";
 
 await Bun.build({
   entrypoints: ["./src/client.tsx"],
@@ -29,17 +30,18 @@ const isDev = environmentVariables.ENVIRONMENT === "development";
 const app = new Elysia()
   .get("/health", () => "all good")
   .get("*", async (context) => {
-      const routes = createRoutesFromElements(Routing());
-
+      const routes = createRoutesFromElements(ServerRoutes());
       const { query, dataRoutes } = createStaticHandler(routes);
       const staticContext = await query(context.request) as StaticHandlerContext;
       const router = createStaticRouter(dataRoutes, staticContext);
     const stream = await renderToReadableStream(
-        <App >
+        <App>
+            <ClientProvider>
             <StaticRouterProvider
                 router={router}
                 context={staticContext}
             />
+            </ClientProvider>
         </App>
     );
     return new Response(stream.pipeThrough(new TransformStream()), {

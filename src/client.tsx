@@ -7,19 +7,21 @@ import {
     createRoutesFromElements,
     RouterProvider,
 } from "react-router-dom";
-
-import { Routing} from "./app";
+import {ClientProvider} from "./components/client-provider";
+import {ClientRoutes} from "./routes/client-routes";
 
 const root = document.getElementById('root');
 if (root) {
     hydrateRoot(
         root,
-        <RouterProvider router={
-            createBrowserRouter(
-                createRoutesFromElements(
-                    Routing()
+        <ClientProvider>
+            <RouterProvider router={
+                createBrowserRouter(
+                    createRoutesFromElements(
+                        ClientRoutes()
+                    )
                 )
-            )
-        } />,
+            } />
+        </ClientProvider>
     );
 }

@@ -7,14 +7,15 @@ import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { SecretPickProvider } from "../../components/secret-pick-provider";
 import { TeamButton } from "../../components/team-button";
-import { type RouterOutput, trpc } from "../../trpc";
+import { type RouterOutput } from "../../trpc";
 import { buildPickHeader } from "../../utils/build-pick-header";
+import {trpcServer} from "../../trpc-server";
 
 const PoolComponent = async ({
   user: { username, firstName },
   poolId,
 }: PageProps) => {
-  const data = await trpc.pool({ username, poolId });
+  const data = await trpcServer.pool({ username, poolId });
   const navigate = useNavigate();
   const utils = trpcClient.useUtils();
 

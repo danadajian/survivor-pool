@@ -5,10 +5,8 @@ import { useMatch } from "react-router-dom";
 import * as v from "valibot";
 
 import {CLERK_PUBLISHABLE_KEY} from "../constants";
-import {HydrateClient} from "../trpc";
 import {userFields} from "../user";
 import { useEndpoint } from "../utils/use-endpoint";
-import {ClientProvider} from "./client-provider";
 import { ErrorPage } from "./error";
 import { Loader } from "./loader";
 import { NavBar } from "./nav-bar";
@@ -37,8 +35,6 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
 
     return (
       <>
-            <ClientProvider>
-          <HydrateClient>
         <ErrorBoundary
           fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
         >
@@ -49,8 +45,6 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
             </div>
           </Suspense>
         </ErrorBoundary>
-          </HydrateClient>
-            </ClientProvider>
       </>
     );
   };

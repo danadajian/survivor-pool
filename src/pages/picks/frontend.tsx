@@ -3,15 +3,16 @@ import React from "react";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { WeekDropdown } from "../../components/week-dropdown";
-import { type RouterOutput, trpc } from "../../trpc";
+import { type RouterOutput } from "../../trpc";
 import { useUrlParams } from "../../utils/use-url-params";
+import {trpcServer} from "../../trpc-server";
 
 const PicksComponent = async ({ user: { username }, poolId }: PageProps) => {
   const {
     urlParams: { week: weekUrlParam, season: seasonUrlParam },
     setUrlParams,
   } = useUrlParams();
-  const data = await trpc.picksForPool({
+  const data = await trpcServer.picksForPool({
     poolId,
     ...(weekUrlParam ? { week: Number(weekUrlParam) } : {}),
     ...(seasonUrlParam ? { season: Number(seasonUrlParam) } : {}),

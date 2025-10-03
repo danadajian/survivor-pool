@@ -5,21 +5,6 @@ import {
   SignedOut,
 } from "@clerk/react-router";
 import React, {PropsWithChildren} from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import { Route, Routes } from "react-router-dom";
-
-import { ClientProvider } from "./components/client-provider";
-import { ErrorPage } from "./components/error";
-import { Heading } from "./components/heading";
-import { withPage } from "./components/page-wrapper";
-import { CLERK_PUBLISHABLE_KEY } from "./constants";
-import { Create } from "./pages/create/frontend";
-import { Home } from "./pages/home/frontend";
-import { Join } from "./pages/join/frontend";
-import { Picks } from "./pages/picks/frontend";
-import { Pool } from "./pages/pool/frontend";
-import { Rules } from "./pages/rules/frontend";
-import { useEndpoint } from "./utils/use-endpoint";
 
 export const App = (props: PropsWithChildren) => {
   return (
@@ -75,19 +60,3 @@ export const App = (props: PropsWithChildren) => {
     </html>
   );
 };
-
-export function Routing() {
-    return (
-        <Route>
-            <Route path="/" element={<Home />} />
-            <Route path="/rules" element={<Rules />} />
-            <Route path="/pool/:poolId" element={<Pool />} />
-            <Route path="/picks/:poolId" element={<Picks />} />
-            <Route path="/create" element={<Create />} />
-            <Route path="/join/:poolId" element={<Join />} />
-            <Route path="*" element={<NotFound />} />
-        </Route>
-    )
-}
-
-const NotFound = withPage(() => <Heading>Not Found</Heading>);

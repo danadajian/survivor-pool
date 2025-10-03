@@ -8,7 +8,7 @@ import React from "react";
 import { type PropsWithChildren, useState } from "react";
 
 import type {AppRouter} from "../router";
-import {makeQueryClient} from "../trpc";
+import {makeQueryClient} from "../trpc-client-factory";
 
 export const trpcClient = createTRPCReact<AppRouter>();
 
