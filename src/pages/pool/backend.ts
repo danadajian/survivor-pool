@@ -68,10 +68,14 @@ const eventsSchema = v.array(
     season: v.object({
       slug: v.string(),
     }),
-    date: v.string(),
     competitions: v.array(
       v.object({
         date: v.string(),
+        status: v.object({
+          type: v.object({
+            state: v.string(),
+          }),
+        }),
         odds: v.optional(
           v.array(
             v.object({

@@ -14,12 +14,6 @@ import { mockResponse } from "../utils";
 
 test.beforeEach(async ({ page }) => {
   await mockResponse(page, "/trpc/pool*", basicGamesAndPicksResponse);
-  await page.evaluate(() => {
-    Date.now = () =>
-      new Date(
-        "Mon Sep 6 2023 21:50:04 GMT-0500 (Central Daylight Time)",
-      ).getTime();
-  });
 });
 
 test("renders without picks", async ({ mount }) => {
@@ -50,12 +44,12 @@ test("can make a pick", async ({ mount, page }) => {
       <Pool />
     </MockProviders>,
   );
-  await component.getByRole("button", { name: /49ers/ }).click();
+  await component.getByRole("button", { name: /Bills/ }).click();
   await expect(
     page.getByRole("heading", { name: "Confirm pick" }),
   ).toBeVisible();
   await expect(
-    page.getByText(/Are you sure you want to pick the 49ers?/),
+    page.getByText(/Are you sure you want to pick the Bills?/),
   ).toBeVisible();
   await expect(
     page.getByRole("switch", { name: "Make pick secret" }),
@@ -68,7 +62,7 @@ test("can make a pick", async ({ mount, page }) => {
   await page.getByRole("button", { name: "Lock it in" }).click();
   await expect(
     component.getByRole("heading", {
-      name: "You're riding with the 49ers this week!",
+      name: "You're riding with the Bills this week!",
     }),
   ).toBeVisible();
 });
@@ -84,12 +78,11 @@ test("prevents picking a team previously picked but allows picking the currently
     </MockProviders>,
   );
 
-  await expect(component.getByRole("button", { name: /49ers/ })).toBeEnabled();
-  await expect(component.getByRole("button", { name: /Bills/ })).toBeDisabled();
+  await expect(component.getByRole("button", { name: /Bills/ })).toBeEnabled();
   await expect(component.getByRole("button", { name: /Jets/ })).toBeDisabled();
   await expect(
     component.getByRole("heading", {
-      name: "You're riding with the 49ers this week!",
+      name: "You're riding with the Bills this week!",
     }),
   ).toBeVisible();
 });
@@ -102,7 +95,7 @@ test("sets secret toggle state for secret pick", async ({ mount, page }) => {
     </MockProviders>,
   );
 
-  await component.getByRole("button", { name: /49ers/ }).click();
+  await component.getByRole("button", { name: /Bills/ }).click();
   await expect(
     page.getByRole("heading", { name: "Confirm pick" }),
   ).toBeVisible();

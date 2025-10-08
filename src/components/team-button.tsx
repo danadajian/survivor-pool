@@ -1,7 +1,6 @@
 import { Description, DialogTitle } from "@headlessui/react";
 import React, { useContext } from "react";
 import { useState } from "react";
-import { Spacetime } from "spacetime";
 
 import type { Event } from "../pages/pool/frontend";
 import { trpc } from "../trpc";
@@ -21,14 +20,14 @@ type AwayTeamOdds = NonNullable<
 type TeamProps = {
   team?: Team;
   teamOdds?: HomeTeamOdds | AwayTeamOdds;
-  gameTime: Spacetime;
+  gameState: string;
   username: string;
   poolId: string;
 };
 export const TeamButton = ({
   team,
   teamOdds,
-  gameTime,
+  gameState,
   username,
   poolId,
 }: TeamProps) => {
@@ -83,7 +82,7 @@ export const TeamButton = ({
       pickIsSecret,
     });
 
-  const gameStarted = gameHasStartedOrFinished(gameTime);
+  const gameStarted = gameHasStartedOrFinished(gameState);
   const pickIsLocked = checkIfPickIsLocked(data);
   const teamCurrentlyPicked = team.name === teamUserPicked;
   const teamPreviouslyPicked = Boolean(forbiddenTeams?.includes(team.name));

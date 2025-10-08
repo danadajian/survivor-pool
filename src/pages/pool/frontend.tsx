@@ -125,17 +125,18 @@ const EventRow = ({ event, username, poolId }: TeamRowProps) => {
   )?.team;
   const homeTeamOdds = competition.odds?.[0].homeTeamOdds;
   const awayTeamOdds = competition.odds?.[0].awayTeamOdds;
-  const gameTime = spacetime(competition?.date).goto(null);
+  const gameTimeInClientTimezone = spacetime(competition?.date).goto(null);
+  const gameState = competition.status.type.state;
 
   const commonProps = {
-    gameTime,
+    gameState,
     username,
     poolId,
   };
   return (
     <div className="pt-2">
       <h4 className="pt-4 font-semibold">
-        {gameTime.format("{day} {hour}:{minute-pad} {ampm}")}
+        {gameTimeInClientTimezone.format("{day} {hour}:{minute-pad} {ampm}")}
       </h4>
       <h5 className="pt-1 text-sm">{competition?.odds?.[0]?.details ?? ""}</h5>
       <div className="flex flex-row justify-center gap-4 pt-2">

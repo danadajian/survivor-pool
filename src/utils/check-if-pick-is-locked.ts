@@ -8,10 +8,10 @@ export function checkIfPickIsLocked(data: RouterOutput["pool"]) {
       (competitor) => competitor.team.name === teamUserPicked,
     ),
   );
-  const gameTime = teamPickedInEvent?.date;
+  const gameState = teamPickedInEvent?.competitions[0].status.type.state;
   return (
     Boolean(teamUserPicked) &&
-    gameHasStartedOrFinished(gameTime) &&
+    gameHasStartedOrFinished(gameState) &&
     userPickResult !== "TIED"
   );
 }

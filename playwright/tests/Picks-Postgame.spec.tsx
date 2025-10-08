@@ -5,21 +5,15 @@ import { Pool } from "../../src/pages/pool/frontend";
 import { MockProviders } from "../mock-providers";
 import {
   basicGamesAndPicksResponse,
-  responseWithPick,
   responseWithPickAndResultsTeamLost,
   responseWithPickAndResultsTeamTied,
   responseWithPickAndResultsTeamWon,
+  responseWithPickGameStarted,
 } from "../mocks";
 import { mockResponse } from "../utils";
 
 test.beforeEach(async ({ page }) => {
   await mockResponse(page, "/trpc/pool*", basicGamesAndPicksResponse);
-  await page.evaluate(() => {
-    Date.now = () =>
-      new Date(
-        "Mon Sep 6 2023 21:50:04 GMT-0500 (Central Daylight Time)",
-      ).getTime();
-  });
 });
 
 test("prevents changing pick after picking a game that has started", async ({
@@ -28,15 +22,9 @@ test("prevents changing pick after picking a game that has started", async ({
 }) => {
   await page.route("/trpc/pool*", (route) =>
     route.fulfill({
-      body: JSON.stringify(responseWithPick),
+      body: JSON.stringify(responseWithPickGameStarted),
     }),
   );
-  await page.evaluate(() => {
-    Date.now = () =>
-      new Date(
-        "Mon Sep 10 2023 17:50:04 GMT-0500 (Central Daylight Time)",
-      ).getTime();
-  });
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
       <Pool />
@@ -59,12 +47,6 @@ test("prevents picking a game that has started", async ({ mount, page }) => {
       body: JSON.stringify(basicGamesAndPicksResponse),
     }),
   );
-  await page.evaluate(() => {
-    Date.now = () =>
-      new Date(
-        "Mon Sep 10 2023 17:50:04 GMT-0500 (Central Daylight Time)",
-      ).getTime();
-  });
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
       <Pool />
@@ -125,12 +107,6 @@ test("indicates when your team tied and you need to pick an underdog", async ({
       body: JSON.stringify(responseWithPickAndResultsTeamTied),
     }),
   );
-  await page.evaluate(() => {
-    Date.now = () =>
-      new Date(
-        "Mon Sep 23 2023 17:50:04 GMT-0500 (Central Daylight Time)",
-      ).getTime();
-  });
   const component = await mount(
     <MockProviders initialEntries={["/pick/123"]}>
       <Pool />

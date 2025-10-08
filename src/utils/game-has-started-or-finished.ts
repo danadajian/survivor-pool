@@ -1,9 +1,3 @@
-import spacetime, { type ParsableDate } from "spacetime";
-
-export function gameHasStartedOrFinished(gameTime?: ParsableDate) {
-  return (
-    Boolean(gameTime) &&
-    spacetime(Date.now()).toNativeDate() >
-      spacetime(gameTime).goto(null).toNativeDate()
-  );
+export function gameHasStartedOrFinished(gameState?: string) {
+  return gameState !== "pre";
 }

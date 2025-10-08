@@ -19934,7 +19934,21 @@ export const basicGamesAndPicksPreseasonResponse: TRPCResponse = {
     },
   },
 };
-export const responseWithPick: TRPCResponse = {
+export const responseWithPick = {
+  result: {
+    data: {
+      teamUserPicked: "Bills",
+      events: mockEspnResponse.events,
+      currentWeek: mockEspnResponse.week.number,
+      currentSeason: mockEspnResponse.season.year,
+      poolName: "Test Pool",
+      poolCreator: "Test",
+      eliminated: false,
+      poolMembers: [],
+    },
+  },
+};
+export const responseWithPickGameStarted = {
   result: {
     data: {
       teamUserPicked: "49ers",
@@ -19997,11 +20011,11 @@ export const responseWithPickAndResultsTeamTied: TRPCResponse = {
 export const responseWithPickAndForbiddenTeams: TRPCResponse = {
   result: {
     data: {
-      teamUserPicked: "49ers",
+      teamUserPicked: "Bills",
       events: mockEspnResponse.events,
       currentWeek: mockEspnResponse.week.number,
       currentSeason: mockEspnResponse.season.year,
-      forbiddenTeams: ["Bills", "Jets"],
+      forbiddenTeams: ["Jets"],
       poolName: "Test Pool",
       eliminated: false,
       poolMembers: [],
@@ -20012,12 +20026,11 @@ export const responseWithPickAndForbiddenTeams: TRPCResponse = {
 export const responseWithSecretPick: TRPCResponse = {
   result: {
     data: {
-      teamUserPicked: "49ers",
+      teamUserPicked: "Bills",
       userPickIsSecret: true,
       events: mockEspnResponse.events,
       currentWeek: mockEspnResponse.week.number,
       currentSeason: mockEspnResponse.season.year,
-      forbiddenTeams: ["Bills", "Jets"],
       poolName: "Test Pool",
       eliminated: false,
       poolMembers: [],
