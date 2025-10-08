@@ -114,7 +114,7 @@ const gamesSchema = v.object({
   events: eventsSchema,
 });
 export type Events = v.InferInput<typeof eventsSchema>;
-type GamesResponse = {
+export type GamesResponse = {
   events: Events;
   week: {
     number: number;

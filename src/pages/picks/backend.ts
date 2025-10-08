@@ -3,7 +3,8 @@ import * as v from "valibot";
 
 import { db } from "../../db";
 import { members, picks } from "../../schema";
-import { fetchCurrentGames } from "../pool/backend";
+import { gameHasStartedOrFinished } from "../../utils/game-has-started-or-finished";
+import { fetchCurrentGames, GamesResponse } from "../pool/backend";
 
 export const fetchPicksForPoolInput = v.object({
   poolId: v.string(),
@@ -11,15 +12,26 @@ export const fetchPicksForPoolInput = v.object({
   season: v.optional(v.number()),
 });
 
-export async function fetchPicksForPool({
+export async function fetchPicksForPool(
+  input: v.InferInput<typeof fetchPicksForPoolInput>,
+) {
+  const gamesResponse = await fetchCurrentGames();
+  return fetchPicksForPoolWithGamesResponse({ ...input, gamesResponse });
+}
+
+export async function fetchPicksForPoolWithGamesResponse({
   poolId,
   week,
   season,
-}: v.InferInput<typeof fetchPicksForPoolInput>) {
+  gamesResponse,
+}: v.InferInput<typeof fetchPicksForPoolInput> & {
+  gamesResponse: GamesResponse;
+}) {
   const {
     week: { number: currentWeek },
     season: { year: currentSeason },
-  } = await fetchCurrentGames();
+    events,
+  } = gamesResponse;
   const weekToUse = week ?? currentWeek;
   const seasonToUse = season ?? currentSeason;
   const picksResult = await db
@@ -52,20 +64,28 @@ export async function fetchPicksForPool({
     )
     .orderBy(desc(picks.result), asc(picks.teamPicked), asc(picks.timestamp));
 
-  const maskedPicks = picksResult.map((pick) => ({
-    ...pick,
-    teamPicked:
-      pick.result === "PENDING" && pick.pickIsSecret
-        ? "SECRET"
-        : pick.teamPicked,
-  }));
+  const picksWithSecrets = picksResult.map((pick) => {
+    const competitionWithTeamPicked = events.find((event) =>
+      event.competitions[0]?.competitors.some(
+        (competitor) => competitor.team.name === pick.teamPicked,
+      ),
+    )?.competitions[0];
+    const pickShouldBeSecret =
+      pick.pickIsSecret &&
+      !gameHasStartedOrFinished(competitionWithTeamPicked?.status.type.state);
+    const teamPicked = pickShouldBeSecret ? "SECRET" : pick.teamPicked;
+    return {
+      ...pick,
+      teamPicked,
+    };
+  });
 
   const eliminatedUsers = await db.query.members.findMany({
     where: and(eq(members.eliminated, true), eq(members.poolId, poolId)),
   });
 
   return {
-    picks: maskedPicks,
+    picks: picksWithSecrets,
     eliminatedUsers,
     week: currentWeek,
     season: currentSeason,

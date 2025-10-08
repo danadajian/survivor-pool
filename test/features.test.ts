@@ -1,11 +1,19 @@
-import { afterAll, beforeAll, describe, expect, it } from "bun:test";
+import {
+  afterAll,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  Mock,
+  mock,
+} from "bun:test";
 import { and, eq, or } from "drizzle-orm";
 
 import { updateResults } from "../scripts/update-results/update-results";
 import { db } from "../src/db";
 import { createPool } from "../src/pages/create/backend";
 import { joinPool } from "../src/pages/join/backend";
-import { fetchPicksForPool } from "../src/pages/picks/backend";
+import { fetchPicksForPoolWithGamesResponse } from "../src/pages/picks/backend";
 import {
   deletePool,
   Events,
@@ -25,6 +33,10 @@ async function clearAllTables() {
 
 describe("feature tests", () => {
   beforeAll(async () => {
+    global.fetch = mock() as Mock<typeof fetch> & {
+      preconnect: typeof fetch.preconnect;
+    }; // prevent any network calls during tests
+
     Bun.spawnSync(["bun", "drizzle"]);
     await clearAllTables();
   });
@@ -113,11 +125,37 @@ describe("feature tests", () => {
     expect(user2Pick?.season).toEqual(season);
     expect(user2Pick?.poolId).toEqual(poolId);
     expect(user2Pick?.teamPicked).toEqual("49ers");
+  });
 
-    const { picks } = await fetchPicksForPool({
+  it("should return secret picks before the game starts", async () => {
+    const poolId = await getPoolId();
+    const mockEvents = [
+      {
+        competitions: [
+          {
+            competitors: [
+              {
+                team: { name: "49ers" },
+              },
+            ],
+            status: {
+              type: {
+                state: "pre",
+              },
+            },
+          },
+        ],
+      },
+    ] as Events;
+    const { picks } = await fetchPicksForPoolWithGamesResponse({
       poolId,
       week: 1,
       season,
+      gamesResponse: {
+        week: { number: 1 },
+        season: { year: season },
+        events: mockEvents,
+      },
     });
     const secretPick = picks.find((pick) => pick.pickIsSecret);
     expect(secretPick?.username).toEqual(user2);
@@ -221,12 +259,35 @@ describe("feature tests", () => {
     expect(membersResult2?.eliminated).toBeFalse();
   });
 
-  it("should make picks not secret once result is no longer pending", async () => {
+  it("should make picks not secret once game started", async () => {
     const poolId = await getPoolId();
-    const { picks } = await fetchPicksForPool({
+    const mockEvents = [
+      {
+        competitions: [
+          {
+            competitors: [
+              {
+                team: { name: "49ers" },
+              },
+            ],
+            status: {
+              type: {
+                state: "in",
+              },
+            },
+          },
+        ],
+      },
+    ] as Events;
+    const { picks } = await fetchPicksForPoolWithGamesResponse({
       poolId,
       week: 1,
       season,
+      gamesResponse: {
+        week: { number: 1 },
+        season: { year: season },
+        events: mockEvents,
+      },
     });
     const secretPick = picks.find((pick) => pick.pickIsSecret);
     expect(secretPick?.username).toEqual(user2);
