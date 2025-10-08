@@ -3,7 +3,6 @@ import * as v from "valibot";
 
 import { db } from "../../db";
 import { members, picks } from "../../schema";
-import { gameHasStartedOrFinished } from "../../utils/game-has-started-or-finished";
 import { fetchCurrentGames, GamesResponse } from "../pool/backend";
 
 export const fetchPicksForPoolInput = v.object({
@@ -72,7 +71,7 @@ export async function fetchPicksForPoolWithGamesResponse({
     )?.competitions[0];
     const pickShouldBeSecret =
       pick.pickIsSecret &&
-      !gameHasStartedOrFinished(competitionWithTeamPicked?.status.type.state);
+      competitionWithTeamPicked?.status.type.name === "STATUS_SCHEDULED";
     const teamPicked = pickShouldBeSecret ? "SECRET" : pick.teamPicked;
     return {
       ...pick,

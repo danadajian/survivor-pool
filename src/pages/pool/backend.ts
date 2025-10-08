@@ -73,7 +73,11 @@ const eventsSchema = v.array(
         date: v.string(),
         status: v.object({
           type: v.object({
-            state: v.string(),
+            name: v.union([
+              v.literal("STATUS_SCHEDULED"),
+              v.literal("STATUS_IN_PROGRESS"),
+              v.literal("STATUS_FINAL"),
+            ]),
           }),
         }),
         odds: v.optional(

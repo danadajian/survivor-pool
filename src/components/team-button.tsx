@@ -5,7 +5,6 @@ import { useState } from "react";
 import type { Event } from "../pages/pool/frontend";
 import { trpc } from "../trpc";
 import { checkIfPickIsLocked } from "../utils/check-if-pick-is-locked";
-import { gameHasStartedOrFinished } from "../utils/game-has-started-or-finished";
 import { DialogWrapper } from "./dialog-wrapper";
 import { SecretPickContext } from "./secret-pick-provider";
 import { Toggle } from "./toggle";
@@ -20,14 +19,14 @@ type AwayTeamOdds = NonNullable<
 type TeamProps = {
   team?: Team;
   teamOdds?: HomeTeamOdds | AwayTeamOdds;
-  gameState: string;
+  competition: Event["competitions"][number];
   username: string;
   poolId: string;
 };
 export const TeamButton = ({
   team,
   teamOdds,
-  gameState,
+  competition,
   username,
   poolId,
 }: TeamProps) => {
@@ -82,14 +81,18 @@ export const TeamButton = ({
       pickIsSecret,
     });
 
-  const gameStarted = gameHasStartedOrFinished(gameState);
+  const gameStartedOrFinished =
+    competition.status.type.name !== "STATUS_SCHEDULED";
   const pickIsLocked = checkIfPickIsLocked(data);
   const teamCurrentlyPicked = team.name === teamUserPicked;
   const teamPreviouslyPicked = Boolean(forbiddenTeams?.includes(team.name));
   const userPickedTieAndTeamIsFavorite =
     userPickResult === "TIED" && teamOdds?.favorite;
   const buttonDisabledForOtherReason =
-    gameStarted || pickIsLocked || eliminated || userPickedTieAndTeamIsFavorite;
+    gameStartedOrFinished ||
+    pickIsLocked ||
+    eliminated ||
+    userPickedTieAndTeamIsFavorite;
   const buttonClass = teamCurrentlyPicked
     ? "bg-blue-800 text-white"
     : teamPreviouslyPicked

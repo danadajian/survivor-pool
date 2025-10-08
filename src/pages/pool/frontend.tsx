@@ -126,12 +126,11 @@ const EventRow = ({ event, username, poolId }: TeamRowProps) => {
   const homeTeamOdds = competition.odds?.[0].homeTeamOdds;
   const awayTeamOdds = competition.odds?.[0].awayTeamOdds;
   const gameTimeInClientTimezone = spacetime(competition?.date).goto(null);
-  const gameState = competition.status.type.state;
 
   const commonProps = {
-    gameState,
     username,
     poolId,
+    competition,
   };
   return (
     <div className="pt-2">

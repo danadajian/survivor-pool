@@ -140,7 +140,7 @@ describe("feature tests", () => {
             ],
             status: {
               type: {
-                state: "pre",
+                name: "STATUS_SCHEDULED",
               },
             },
           },
@@ -272,7 +272,7 @@ describe("feature tests", () => {
             ],
             status: {
               type: {
-                state: "in",
+                name: "STATUS_IN_PROGRESS",
               },
             },
           },
