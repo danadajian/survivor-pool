@@ -244,11 +244,20 @@ export async function deletePool({ poolId }: v.InferInput<typeof poolInput>) {
   return db.delete(pools).where(eq(pools.id, poolId));
 }
 
+export const reactivatePoolInput = v.object({
+  poolId: v.string(),
+  season: v.number(),
+});
+
 export async function reactivatePool({
   poolId,
-}: v.InferInput<typeof poolInput>) {
+  season,
+}: v.InferInput<typeof reactivatePoolInput>) {
   await db
     .update(members)
     .set({ eliminated: false })
     .where(eq(members.poolId, poolId));
+  await db
+    .delete(picks)
+    .where(and(eq(picks.poolId, poolId), eq(picks.season, season)));
 }

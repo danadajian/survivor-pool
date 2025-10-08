@@ -24,6 +24,7 @@ import {
   makePick,
   makePickInput,
   reactivatePool,
+  reactivatePoolInput,
 } from "./pages/pool/backend";
 
 const t = initTRPC.context<Context>().create();
@@ -61,7 +62,7 @@ export const appRouter = t.router({
     .input(v.parser(poolInput))
     .query(({ input }) => getPool(input)),
   reactivatePool: authenticatedProcedure
-    .input(v.parser(poolInput))
+    .input(v.parser(reactivatePoolInput))
     .mutation(({ input }) => reactivatePool(input)),
 });
 

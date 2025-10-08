@@ -558,7 +558,7 @@ describe("feature tests", () => {
     expect(poolWinner?.username).toEqual(user1);
   });
 
-  it("should reactivate the pool", async () => {
+  it("should reactivate the pool, removing all elimination status and deleting all picks for current season", async () => {
     const pool = await db.query.pools.findFirst();
     if (!pool) throw new Error();
     const eliminatedMembersBefore = await db.query.members.findMany({
@@ -566,11 +566,16 @@ describe("feature tests", () => {
     });
     expect(eliminatedMembersBefore.length).toBeGreaterThan(0);
 
-    await reactivatePool({ poolId: pool.id });
+    await reactivatePool({ poolId: pool.id, season });
     const eliminatedMembersAfter = await db.query.members.findMany({
       where: and(eq(members.poolId, pool.id), eq(members.eliminated, true)),
     });
     expect(eliminatedMembersAfter.length).toEqual(0);
+
+    const userPicks = await db.query.picks.findMany({
+      where: and(eq(picks.poolId, pool.id), eq(picks.season, season)),
+    });
+    expect(userPicks).toBeEmpty();
   });
 
   it("should delete the pool", async () => {
