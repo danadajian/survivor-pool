@@ -6,6 +6,7 @@ import { db } from "../../db";
 import { environmentVariables } from "../../env";
 import { members, picks, pools } from "../../schema";
 import { buildPickHeader } from "../../utils/build-pick-header";
+import { ButtonStyle } from "../../utils/button-style";
 import { checkIfPickIsLocked } from "../../utils/check-if-pick-is-locked";
 import { poolInput } from "../join/backend";
 
@@ -58,19 +59,22 @@ export async function fetchPoolInfo({
     userPickResult,
     eliminated,
   });
-  const pickIsLocked = checkIfPickIsLocked({
+  const eventButtons = getEventButtons(
     events,
     teamUserPicked,
     userPickResult,
-  });
+    forbiddenTeams,
+    eliminated,
+  );
 
   return {
     events,
+    eventButtons,
     currentSeason,
     currentWeek,
-    teamUserPicked: userPick?.teamPicked,
+    teamUserPicked,
     userPickIsSecret: userPick?.pickIsSecret,
-    userPickResult: userPick?.result,
+    userPickResult,
     forbiddenTeams,
     poolName,
     eliminated,
@@ -78,9 +82,113 @@ export async function fetchPoolInfo({
     poolMembers,
     poolWinner,
     pickHeader,
-    pickIsLocked,
   };
 }
+
+export function getEventButtons(
+  events: Events,
+  teamUserPicked: typeof picks.teamPicked.default,
+  userPickResult: typeof picks.result.default,
+  forbiddenTeams: string[] | undefined,
+  eliminated: boolean,
+): EventButton[] {
+  return events.map((event) => {
+    const competition = event.competitions[0];
+    return {
+      awayTeamButton: buildTeamButtonProps({
+        teamType: "away",
+        events,
+        competition,
+        teamUserPicked,
+        userPickResult,
+        forbiddenTeams,
+        eliminated,
+      }),
+      homeTeamButton: buildTeamButtonProps({
+        teamType: "home",
+        events,
+        competition,
+        teamUserPicked,
+        userPickResult,
+        forbiddenTeams,
+        eliminated,
+      }),
+      competition,
+    };
+  });
+}
+
+function buildTeamButtonProps({
+  teamType,
+  events,
+  competition,
+  teamUserPicked,
+  userPickResult,
+  forbiddenTeams,
+  eliminated,
+}: {
+  teamType: "home" | "away";
+  events: Events;
+  competition: Competition;
+  teamUserPicked: typeof picks.teamPicked.default;
+  userPickResult: typeof picks.result.default;
+  forbiddenTeams: string[] | undefined;
+  eliminated: boolean;
+}): TeamButtonProps {
+  const competitors = competition?.competitors ?? [];
+  const team = competitors.find(
+    (competitor) => competitor.homeAway === teamType,
+  )?.team;
+  const teamOdds =
+    teamType === "home"
+      ? competition.odds?.[0].homeTeamOdds
+      : competition.odds?.[0].awayTeamOdds;
+  const gameStartedOrFinished =
+    competition.status.type.name !== "STATUS_SCHEDULED";
+  const teamCurrentlyPicked = team?.name === teamUserPicked;
+  const teamPreviouslyPicked = Boolean(
+    forbiddenTeams?.includes(team?.name ?? ""),
+  );
+  const pickIsLocked = checkIfPickIsLocked({
+    events,
+    teamUserPicked,
+    userPickResult,
+  });
+  const userPickedTieAndTeamIsFavorite = Boolean(
+    userPickResult === "TIED" && teamOdds?.favorite,
+  );
+  const buttonDisabledForOtherReason =
+    gameStartedOrFinished ||
+    pickIsLocked ||
+    eliminated ||
+    userPickedTieAndTeamIsFavorite;
+  const buttonDisabled = teamPreviouslyPicked || buttonDisabledForOtherReason;
+  const buttonStyle = teamCurrentlyPicked
+    ? ButtonStyle.CURRENTLY_PICKED
+    : teamPreviouslyPicked
+      ? ButtonStyle.PREVIOUSLY_PICKED
+      : buttonDisabledForOtherReason
+        ? ButtonStyle.PICK_FORBIDDEN
+        : ButtonStyle.DEFAULT;
+  return {
+    team,
+    buttonDisabled,
+    buttonStyle,
+  };
+}
+
+export type Competition = Events[number]["competitions"][number];
+type Team = Competition["competitors"][number]["team"];
+export type EventButton = {
+  awayTeamButton: TeamButtonProps;
+  homeTeamButton: TeamButtonProps;
+  competition: Competition;
+};
+export type TeamButtonProps = {
+  team?: Team;
+  buttonDisabled: boolean;
+  buttonStyle: ButtonStyle;
+};
 
 const eventsSchema = v.array(
   v.object({
