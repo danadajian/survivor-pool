@@ -74,8 +74,6 @@ export async function fetchPoolInfo({
     currentWeek,
     teamUserPicked,
     userPickIsSecret: userPick?.pickIsSecret,
-    userPickResult,
-    forbiddenTeams,
     poolName,
     eliminated,
     poolCreator,
