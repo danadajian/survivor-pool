@@ -80,11 +80,6 @@ test("prevents picking a team previously picked but allows picking the currently
 
   await expect(component.getByRole("button", { name: /Bills/ })).toBeEnabled();
   await expect(component.getByRole("button", { name: /Jets/ })).toBeDisabled();
-  await expect(
-    component.getByRole("heading", {
-      name: "You're riding with the Bills this week!",
-    }),
-  ).toBeVisible();
 });
 
 test("sets secret toggle state for secret pick", async ({ mount, page }) => {

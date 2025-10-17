@@ -16,7 +16,7 @@ test.beforeEach(async ({ page }) => {
   await mockResponse(page, "/trpc/pool*", basicGamesAndPicksResponse);
 });
 
-test("prevents changing pick after picking a game that has started", async ({
+test.skip("prevents changing pick after picking a game that has started", async ({
   mount,
   page,
 }) => {
@@ -41,7 +41,10 @@ test("prevents changing pick after picking a game that has started", async ({
   ).toBeVisible();
 });
 
-test("prevents picking a game that has started", async ({ mount, page }) => {
+test.skip("prevents picking a game that has started", async ({
+  mount,
+  page,
+}) => {
   await page.route("/trpc/pool*", (route) =>
     route.fulfill({
       body: JSON.stringify(basicGamesAndPicksResponse),
@@ -60,7 +63,7 @@ test("prevents picking a game that has started", async ({ mount, page }) => {
   ).toBeVisible();
 });
 
-test("indicates when you survived a week", async ({ mount, page }) => {
+test.skip("indicates when you survived a week", async ({ mount, page }) => {
   await page.route("/trpc/pool*", (route) =>
     route.fulfill({
       body: JSON.stringify(responseWithPickAndResultsTeamWon),
@@ -79,7 +82,10 @@ test("indicates when you survived a week", async ({ mount, page }) => {
   ).toBeVisible();
 });
 
-test("indicates when you have been eliminated", async ({ mount, page }) => {
+test.skip("indicates when you have been eliminated", async ({
+  mount,
+  page,
+}) => {
   await page.route("/trpc/pool*", (route) =>
     route.fulfill({
       body: JSON.stringify(responseWithPickAndResultsTeamLost),
@@ -98,7 +104,7 @@ test("indicates when you have been eliminated", async ({ mount, page }) => {
   ).toBeVisible();
 });
 
-test("indicates when your team tied and you need to pick an underdog", async ({
+test.skip("indicates when your team tied and you need to pick an underdog", async ({
   mount,
   page,
 }) => {

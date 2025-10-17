@@ -1,30 +1,31 @@
-import type { RouterOutput } from "../trpc";
+import { Events, fetchPoolMembers } from "../pages/pool/backend";
+import { picks } from "../schema";
 import { checkIfPickIsLocked } from "./check-if-pick-is-locked";
 
 export function buildPickHeader(
-  data: RouterOutput["pool"],
-  firstName?: string,
+  events: Events,
+  userPick: typeof picks.$inferSelect | undefined,
+  poolMember: Awaited<ReturnType<typeof fetchPoolMembers>>[number],
 ) {
-  const { eliminated, teamUserPicked, userPickResult } = data;
-  const pickIsLocked = checkIfPickIsLocked(data);
+  const pickIsLocked = checkIfPickIsLocked(events, userPick);
 
-  if (eliminated) {
+  if (poolMember?.eliminated) {
     return "Sorry, you have been eliminated from this pool.";
   }
-  switch (userPickResult) {
+  switch (userPick?.result) {
     case "WON":
-      return `The ${teamUserPicked} won, and you're still alive!`;
+      return `The ${userPick.teamPicked} won, and you're still alive!`;
     case "LOST":
-      return `The ${teamUserPicked} lost, but you're still alive!`;
+      return `The ${userPick.teamPicked} lost, but you're still alive!`;
     case "TIED":
-      return `The ${teamUserPicked} tied their game! Pick one of the remaining underdogs if you can.`;
+      return `The ${userPick.teamPicked} tied their game! Pick one of the remaining underdogs if you can.`;
     default:
       if (pickIsLocked) {
-        return `Your ${teamUserPicked} pick is locked. Good luck!`;
-      } else if (teamUserPicked) {
-        return `You're riding with the ${teamUserPicked} this week!`;
+        return `Your ${userPick?.teamPicked} pick is locked. Good luck!`;
+      } else if (userPick?.teamPicked) {
+        return `You're riding with the ${userPick.teamPicked} this week!`;
       } else {
-        return `Make your pick, ${firstName}!`;
+        return undefined;
       }
   }
 }

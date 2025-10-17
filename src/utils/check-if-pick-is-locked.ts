@@ -1,17 +1,18 @@
-import type { RouterOutput } from "../trpc";
+import { Events } from "../pages/pool/backend";
+import { picks } from "../schema";
 
-export function checkIfPickIsLocked(data: RouterOutput["pool"]) {
-  const { events, teamUserPicked, userPickResult } = data;
+export function checkIfPickIsLocked(
+  events: Events,
+  userPick: typeof picks.$inferSelect | undefined,
+) {
   const teamPickedInEvent = events.find((event) =>
     event.competitions[0]?.competitors.some(
-      (competitor) => competitor.team.name === teamUserPicked,
+      (competitor) => competitor.team.name === userPick?.teamPicked,
     ),
   );
   const gameState = teamPickedInEvent?.competitions[0].status.type.name;
   const gameStartedOrFinished = gameState !== "STATUS_SCHEDULED";
-  return (
-    Boolean(teamUserPicked) &&
-    gameStartedOrFinished &&
-    userPickResult !== "TIED"
+  return Boolean(
+    userPick?.teamPicked && gameStartedOrFinished && userPick.result !== "TIED",
   );
 }

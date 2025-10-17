@@ -7,7 +7,6 @@ import { type PageProps, withPage } from "../../components/page-wrapper";
 import { SecretPickProvider } from "../../components/secret-pick-provider";
 import { TeamButton } from "../../components/team-button";
 import { type RouterOutput, trpc } from "../../trpc";
-import { buildPickHeader } from "../../utils/build-pick-header";
 
 const PoolComponent = ({
   user: { username, firstName },
@@ -31,6 +30,7 @@ const PoolComponent = ({
     poolMembers,
     poolCreator,
     userPickIsSecret,
+    pickHeader,
   } = data;
 
   if (!events.length) {
@@ -82,8 +82,7 @@ const PoolComponent = ({
       </>
     );
   }
-
-  const pickHeader = buildPickHeader(data, firstName);
+  const defaultPickHeader = `Make your pick, ${firstName}!`;
 
   return (
     <SecretPickProvider initialValue={userPickIsSecret ?? false}>
@@ -92,7 +91,9 @@ const PoolComponent = ({
       </h1>
       <p className="text-sm font-medium text-slate-800">{`Pool Creator: ${poolCreator}`}</p>
       <h2 className="pt-4 text-xl font-bold">Week {currentWeek}</h2>
-      <h3 className="pt-4 text-lg font-semibold text-blue-800">{pickHeader}</h3>
+      <h3 className="pt-4 text-lg font-semibold text-blue-800">
+        {pickHeader ?? defaultPickHeader}
+      </h3>
       <hr className="mt-4 w-1/3 border border-gray-500" />
       <ul className="pb-8">
         {events.map((event, index) => (

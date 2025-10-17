@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import type { Event } from "../pages/pool/frontend";
 import { trpc } from "../trpc";
-import { checkIfPickIsLocked } from "../utils/check-if-pick-is-locked";
 import { DialogWrapper } from "./dialog-wrapper";
 import { SecretPickContext } from "./secret-pick-provider";
 import { Toggle } from "./toggle";
@@ -70,6 +69,7 @@ export const TeamButton = ({
     forbiddenTeams,
     eliminated,
     userPickResult,
+    pickIsLocked,
   } = data;
   const handleUpdate = () =>
     mutate({
@@ -83,7 +83,6 @@ export const TeamButton = ({
 
   const gameStartedOrFinished =
     competition.status.type.name !== "STATUS_SCHEDULED";
-  const pickIsLocked = checkIfPickIsLocked(data);
   const teamCurrentlyPicked = team.name === teamUserPicked;
   const teamPreviouslyPicked = Boolean(forbiddenTeams?.includes(team.name));
   const userPickedTieAndTeamIsFavorite =

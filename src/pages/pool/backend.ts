@@ -5,6 +5,8 @@ import * as v from "valibot";
 import { db } from "../../db";
 import { environmentVariables } from "../../env";
 import { members, picks, pools } from "../../schema";
+import { buildPickHeader } from "../../utils/build-pick-header";
+import { checkIfPickIsLocked } from "../../utils/check-if-pick-is-locked";
 import { poolInput } from "../join/backend";
 
 export const fetchPicksInput = v.object({
@@ -46,6 +48,8 @@ export async function fetchPoolInfo({
     season: currentSeason,
   });
   const poolWinner = await findPoolWinner(poolMembers);
+  const pickHeader = buildPickHeader(events, userPick, poolMember);
+  const pickIsLocked = checkIfPickIsLocked(events, userPick);
 
   return {
     events,
@@ -60,6 +64,8 @@ export async function fetchPoolInfo({
     poolCreator: poolMember.creator,
     poolMembers,
     poolWinner,
+    pickHeader,
+    pickIsLocked,
   };
 }
 

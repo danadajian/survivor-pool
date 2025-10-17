@@ -19919,6 +19919,7 @@ export const basicGamesAndPicksResponse = {
       poolName: "Test Pool",
       eliminated: false,
       poolMembers: [],
+      pickHeader: "Make your pick, Test!",
     },
   },
 };
@@ -19945,6 +19946,7 @@ export const responseWithPick = {
       poolCreator: "Test",
       eliminated: false,
       poolMembers: [],
+      pickHeader: "You're riding with the Bills this week!",
     },
   },
 };
