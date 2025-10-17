@@ -19961,6 +19961,7 @@ export const responseWithPickGameStarted = {
       poolCreator: "Test",
       eliminated: false,
       poolMembers: [],
+      pickIsLocked: true,
     },
   },
 };

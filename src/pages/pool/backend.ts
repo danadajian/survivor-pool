@@ -48,8 +48,21 @@ export async function fetchPoolInfo({
     season: currentSeason,
   });
   const poolWinner = await findPoolWinner(poolMembers);
-  const pickHeader = buildPickHeader(events, userPick, poolMember);
-  const pickIsLocked = checkIfPickIsLocked(events, userPick);
+
+  const teamUserPicked = userPick?.teamPicked;
+  const userPickResult = userPick?.result;
+  const { poolName, creator: poolCreator, eliminated } = poolMember;
+  const pickHeader = buildPickHeader({
+    events,
+    teamUserPicked,
+    userPickResult,
+    eliminated,
+  });
+  const pickIsLocked = checkIfPickIsLocked({
+    events,
+    teamUserPicked,
+    userPickResult,
+  });
 
   return {
     events,
@@ -59,9 +72,9 @@ export async function fetchPoolInfo({
     userPickIsSecret: userPick?.pickIsSecret,
     userPickResult: userPick?.result,
     forbiddenTeams,
-    poolName: poolMember.poolName,
-    eliminated: poolMember.eliminated,
-    poolCreator: poolMember.creator,
+    poolName,
+    eliminated,
+    poolCreator,
     poolMembers,
     poolWinner,
     pickHeader,
