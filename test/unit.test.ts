@@ -5,14 +5,17 @@ import {
   mockEspnResponseWithResults,
 } from "../playwright/mocks";
 import { Events, getEventButtons } from "../src/pages/pool/backend";
+import { picks } from "../src/schema";
 import { buildPickHeader } from "../src/utils/build-pick-header";
 
 describe("pick header", () => {
   test("pick has been made", () => {
     const result = buildPickHeader({
       events: mockEspnResponse.events as Events,
-      userPickResult: "PENDING",
-      teamUserPicked: "Bills",
+      userPick: {
+        teamPicked: "Bills",
+        result: "PENDING",
+      } as typeof picks.$inferSelect,
       eliminated: false,
     });
     expect(result).toEqual("You're riding with the Bills this week!");
@@ -21,8 +24,10 @@ describe("pick header", () => {
   test("pick is locked", () => {
     const result = buildPickHeader({
       events: mockEspnResponse.events as Events,
-      userPickResult: "PENDING",
-      teamUserPicked: "49ers",
+      userPick: {
+        teamPicked: "49ers",
+        result: "PENDING",
+      } as typeof picks.$inferSelect,
       eliminated: false,
     });
     expect(result).toEqual("Your 49ers pick is locked. Good luck!");
@@ -31,8 +36,10 @@ describe("pick header", () => {
   test("you survived a week by winning", () => {
     const result = buildPickHeader({
       events: mockEspnResponse.events as Events,
-      userPickResult: "WON",
-      teamUserPicked: "49ers",
+      userPick: {
+        teamPicked: "49ers",
+        result: "WON",
+      } as typeof picks.$inferSelect,
       eliminated: false,
     });
     expect(result).toEqual("The 49ers won, and you're still alive!");
@@ -41,8 +48,10 @@ describe("pick header", () => {
   test("you survived a week by everyone losing with you", () => {
     const result = buildPickHeader({
       events: mockEspnResponse.events as Events,
-      userPickResult: "LOST",
-      teamUserPicked: "49ers",
+      userPick: {
+        teamPicked: "49ers",
+        result: "LOST",
+      } as typeof picks.$inferSelect,
       eliminated: false,
     });
     expect(result).toEqual("The 49ers lost, but you're still alive!");
@@ -51,8 +60,10 @@ describe("pick header", () => {
   test("you were eliminated from the pool", () => {
     const result = buildPickHeader({
       events: mockEspnResponse.events as Events,
-      userPickResult: "LOST",
-      teamUserPicked: "49ers",
+      userPick: {
+        teamPicked: "49ers",
+        result: "LOST",
+      } as typeof picks.$inferSelect,
       eliminated: true,
     });
     expect(result).toEqual("Sorry, you have been eliminated from this pool.");
@@ -61,8 +72,10 @@ describe("pick header", () => {
   test("your team tied and you need to pick an underdog", () => {
     const result = buildPickHeader({
       events: mockEspnResponse.events as Events,
-      userPickResult: "TIED",
-      teamUserPicked: "49ers",
+      userPick: {
+        teamPicked: "49ers",
+        result: "TIED",
+      } as typeof picks.$inferSelect,
       eliminated: false,
     });
     expect(result).toEqual(
@@ -76,9 +89,6 @@ describe("team buttons", () => {
     const events = mockEspnResponse.events as Events;
     const buttons = getEventButtons({
       events,
-      userPickResult: undefined,
-      teamUserPicked: undefined,
-      forbiddenTeams: undefined,
       eliminated: false,
     });
     expect(
@@ -99,9 +109,10 @@ describe("team buttons", () => {
     const events = mockEspnResponse.events as Events;
     const buttons = getEventButtons({
       events,
-      userPickResult: "PENDING",
-      teamUserPicked: "49ers",
-      forbiddenTeams: [],
+      userPick: {
+        teamPicked: "49ers",
+        result: "PENDING",
+      } as typeof picks.$inferSelect,
       eliminated: false,
     });
     expect(
@@ -122,8 +133,10 @@ describe("team buttons", () => {
     const events = mockEspnResponse.events as Events;
     const buttons = getEventButtons({
       events,
-      userPickResult: "PENDING",
-      teamUserPicked: "Bills",
+      userPick: {
+        result: "PENDING",
+        teamPicked: "Bills",
+      } as typeof picks.$inferSelect,
       forbiddenTeams: ["Jets"],
       eliminated: false,
     });
@@ -141,9 +154,10 @@ describe("team buttons", () => {
     const events = mockEspnResponseWithResults.events as Events;
     const buttons = getEventButtons({
       events,
-      userPickResult: "TIED",
-      teamUserPicked: "49ers",
-      forbiddenTeams: [],
+      userPick: {
+        teamPicked: "49ers",
+        result: "TIED",
+      } as typeof picks.$inferSelect,
       eliminated: false,
     });
     expect(

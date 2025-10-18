@@ -50,49 +50,41 @@ export async function fetchPoolInfo({
   });
   const poolWinner = await findPoolWinner(poolMembers);
 
-  const teamUserPicked = userPick?.teamPicked;
-  const userPickResult = userPick?.result;
   const { poolName, creator: poolCreator, eliminated } = poolMember;
   const pickHeader = buildPickHeader({
     events,
-    teamUserPicked,
-    userPickResult,
+    userPick,
     eliminated,
   });
   const eventButtons = getEventButtons({
     events,
-    teamUserPicked,
-    userPickResult,
+    userPick,
     forbiddenTeams,
     eliminated,
   });
 
   return {
+    pickHeader,
     eventButtons,
     currentSeason,
     currentWeek,
-    teamUserPicked,
     userPickIsSecret: userPick?.pickIsSecret,
     poolName,
-    eliminated,
     poolCreator,
     poolMembers,
     poolWinner,
-    pickHeader,
   };
 }
 
 export function getEventButtons({
   events,
-  teamUserPicked,
-  userPickResult,
+  userPick,
   forbiddenTeams,
   eliminated,
 }: {
   events: Events;
-  teamUserPicked: typeof picks.teamPicked.default;
-  userPickResult: typeof picks.result.default;
-  forbiddenTeams: string[] | undefined;
+  userPick?: typeof picks.$inferSelect;
+  forbiddenTeams?: string[] | undefined;
   eliminated: boolean;
 }): EventButton[] {
   return events.map((event) => {
@@ -102,8 +94,7 @@ export function getEventButtons({
         teamType: "away",
         events,
         competition,
-        teamUserPicked,
-        userPickResult,
+        userPick,
         forbiddenTeams,
         eliminated,
       }),
@@ -111,8 +102,7 @@ export function getEventButtons({
         teamType: "home",
         events,
         competition,
-        teamUserPicked,
-        userPickResult,
+        userPick,
         forbiddenTeams,
         eliminated,
       }),
@@ -125,17 +115,15 @@ export function buildTeamButtonProps({
   teamType,
   events,
   competition,
-  teamUserPicked,
-  userPickResult,
+  userPick,
   forbiddenTeams,
   eliminated,
 }: {
   teamType: "home" | "away";
   events: Events;
   competition: Competition;
-  teamUserPicked: typeof picks.teamPicked.default;
-  userPickResult: typeof picks.result.default;
-  forbiddenTeams: string[] | undefined;
+  userPick?: typeof picks.$inferSelect;
+  forbiddenTeams?: string[] | undefined;
   eliminated: boolean;
 }): TeamButtonProps {
   const competitors = competition?.competitors ?? [];
@@ -148,17 +136,16 @@ export function buildTeamButtonProps({
       : competition.odds?.[0].awayTeamOdds;
   const gameStartedOrFinished =
     competition.status.type.name !== "STATUS_SCHEDULED";
-  const teamCurrentlyPicked = team?.name === teamUserPicked;
+  const teamCurrentlyPicked = team?.name === userPick?.teamPicked;
   const teamPreviouslyPicked = Boolean(
     forbiddenTeams?.includes(team?.name ?? ""),
   );
   const pickIsLocked = checkIfPickIsLocked({
     events,
-    teamUserPicked,
-    userPickResult,
+    userPick,
   });
   const userPickedTieAndTeamIsFavorite = Boolean(
-    userPickResult === "TIED" && teamOdds?.favorite,
+    userPick?.result === "TIED" && teamOdds?.favorite,
   );
   const buttonDisabledForOtherReason =
     gameStartedOrFinished ||

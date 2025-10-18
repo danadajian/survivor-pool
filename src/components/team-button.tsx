@@ -18,15 +18,7 @@ export const TeamButton = ({ teamButton, username, poolId }: TeamProps) => {
   const utils = trpc.useUtils();
   const data = utils.pool.getData({ username, poolId });
   const { mutate } = trpc.makePick.useMutation({
-    onMutate: ({ teamPicked }) => {
-      utils.pool.setData({ username, poolId }, (data) => {
-        if (data?.teamUserPicked) {
-          return {
-            ...data,
-            teamUserPicked: teamPicked,
-          };
-        }
-      });
+    onMutate: () => {
       toggleDialog();
       setTimeout(() => {
         window.scrollTo({
