@@ -4,36 +4,33 @@ import { checkIfPickIsLocked } from "./check-if-pick-is-locked";
 
 export function buildPickHeader({
   events,
-  teamUserPicked,
-  userPickResult,
+  userPick,
   eliminated,
 }: {
   events: Events;
-  teamUserPicked: typeof picks.teamPicked.default;
-  userPickResult: typeof picks.result.default;
+  userPick?: typeof picks.$inferSelect;
   eliminated: typeof members.eliminated.default;
 }) {
   const pickIsLocked = checkIfPickIsLocked({
     events,
-    teamUserPicked,
-    userPickResult,
+    userPick,
   });
 
   if (eliminated) {
     return "Sorry, you have been eliminated from this pool.";
   }
-  switch (userPickResult) {
+  switch (userPick?.result) {
     case "WON":
-      return `The ${teamUserPicked} won, and you're still alive!`;
+      return `The ${userPick.teamPicked} won, and you're still alive!`;
     case "LOST":
-      return `The ${teamUserPicked} lost, but you're still alive!`;
+      return `The ${userPick.teamPicked} lost, but you're still alive!`;
     case "TIED":
-      return `The ${teamUserPicked} tied their game! Pick one of the remaining underdogs if you can.`;
+      return `The ${userPick.teamPicked} tied their game! Pick one of the remaining underdogs if you can.`;
     default:
       if (pickIsLocked) {
-        return `Your ${teamUserPicked} pick is locked. Good luck!`;
-      } else if (teamUserPicked) {
-        return `You're riding with the ${teamUserPicked} this week!`;
+        return `Your ${userPick?.teamPicked} pick is locked. Good luck!`;
+      } else if (userPick?.teamPicked) {
+        return `You're riding with the ${userPick.teamPicked} this week${userPick.pickIsSecret ? " (secretly)" : ""}!`;
       } else {
         return undefined;
       }

@@ -7,7 +7,6 @@ import {
   basicGamesAndPicksPreseasonResponse,
   basicGamesAndPicksResponse,
   responseWithPick,
-  responseWithPickAndForbiddenTeams,
   responseWithSecretPick,
 } from "../mocks";
 import { mockResponse } from "../utils";
@@ -60,26 +59,6 @@ test("can make a pick", async ({ mount, page }) => {
     }),
   );
   await page.getByRole("button", { name: "Lock it in" }).click();
-  await expect(
-    component.getByRole("heading", {
-      name: "You're riding with the Bills this week!",
-    }),
-  ).toBeVisible();
-});
-
-test("prevents picking a team previously picked but allows picking the currently picked team", async ({
-  mount,
-  page,
-}) => {
-  await mockResponse(page, "/trpc/pool*", responseWithPickAndForbiddenTeams);
-  const component = await mount(
-    <MockProviders initialEntries={["/pick/123"]}>
-      <Pool />
-    </MockProviders>,
-  );
-
-  await expect(component.getByRole("button", { name: /Bills/ })).toBeEnabled();
-  await expect(component.getByRole("button", { name: /Jets/ })).toBeDisabled();
 });
 
 test("sets secret toggle state for secret pick", async ({ mount, page }) => {

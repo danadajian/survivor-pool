@@ -4845,13 +4845,13 @@ export const mockEspnResponse = {
             displayClock: "0:00",
             period: 4,
             type: {
-              id: "3",
-              name: "STATUS_FINAL",
-              state: "post",
-              completed: true,
-              description: "Final",
-              detail: "Final",
-              shortDetail: "Final",
+              id: "2",
+              name: "STATUS_IN_PROGRESS",
+              state: "in",
+              completed: false,
+              description: "In Progress",
+              detail: "3:59 - 4th Quarter",
+              shortDetail: "3:59 - 4th",
             },
           },
           broadcasts: [
@@ -19910,10 +19910,21 @@ export const mockEspnResponseWithResults = {
   ],
 };
 
+const basicEventButtons = [
+  {
+    awayTeamButton: {
+      team: { name: "Bills" },
+    },
+    homeTeamButton: {
+      team: { name: "Jets" },
+    },
+    competition: { odds: [{ details: "BUF -2.0" }] },
+  },
+];
 export const basicGamesAndPicksResponse = {
   result: {
     data: {
-      events: mockEspnResponse.events,
+      eventButtons: basicEventButtons,
       currentWeek: mockEspnResponse.week.number,
       currentSeason: mockEspnResponse.season.year,
       poolName: "Test Pool",
@@ -19926,7 +19937,7 @@ export const basicGamesAndPicksResponse = {
 export const basicGamesAndPicksPreseasonResponse: TRPCResponse = {
   result: {
     data: {
-      events: mockEspnPreseasonResponse.events,
+      eventButtons: [],
       currentWeek: mockEspnPreseasonResponse.week.number,
       currentSeason: mockEspnPreseasonResponse.season.year,
       poolName: "Test Pool",
@@ -19939,7 +19950,7 @@ export const responseWithPick = {
   result: {
     data: {
       teamUserPicked: "Bills",
-      events: mockEspnResponse.events,
+      eventButtons: basicEventButtons,
       currentWeek: mockEspnResponse.week.number,
       currentSeason: mockEspnResponse.season.year,
       poolName: "Test Pool",
@@ -19950,88 +19961,13 @@ export const responseWithPick = {
     },
   },
 };
-export const responseWithPickGameStarted = {
-  result: {
-    data: {
-      teamUserPicked: "49ers",
-      events: mockEspnResponse.events,
-      currentWeek: mockEspnResponse.week.number,
-      currentSeason: mockEspnResponse.season.year,
-      poolName: "Test Pool",
-      poolCreator: "Test",
-      eliminated: false,
-      poolMembers: [],
-      pickIsLocked: true,
-    },
-  },
-};
-
-export const responseWithPickAndResultsTeamWon: TRPCResponse = {
-  result: {
-    data: {
-      teamUserPicked: "49ers",
-      userPickResult: "WON",
-      events: mockEspnResponseWithResults.events,
-      currentWeek: mockEspnResponseWithResults.week.number,
-      currentSeason: mockEspnResponseWithResults.season.year,
-      poolName: "Test Pool",
-      eliminated: false,
-      poolMembers: [],
-    },
-  },
-};
-
-export const responseWithPickAndResultsTeamLost: TRPCResponse = {
-  result: {
-    data: {
-      teamUserPicked: "49ers",
-      userPickResult: "LOST",
-      events: mockEspnResponseWithResults.events,
-      currentWeek: mockEspnResponseWithResults.week.number,
-      currentSeason: mockEspnResponseWithResults.season.year,
-      poolName: "Test Pool",
-      eliminated: true,
-      poolMembers: [],
-    },
-  },
-};
-
-export const responseWithPickAndResultsTeamTied: TRPCResponse = {
-  result: {
-    data: {
-      teamUserPicked: "49ers",
-      userPickResult: "TIED",
-      events: mockEspnResponseWithResults.events,
-      currentWeek: mockEspnResponseWithResults.week.number,
-      currentSeason: mockEspnResponseWithResults.season.year,
-      poolName: "Test Pool",
-      eliminated: false,
-      poolMembers: [],
-    },
-  },
-};
-
-export const responseWithPickAndForbiddenTeams: TRPCResponse = {
-  result: {
-    data: {
-      teamUserPicked: "Bills",
-      events: mockEspnResponse.events,
-      currentWeek: mockEspnResponse.week.number,
-      currentSeason: mockEspnResponse.season.year,
-      forbiddenTeams: ["Jets"],
-      poolName: "Test Pool",
-      eliminated: false,
-      poolMembers: [],
-    },
-  },
-};
 
 export const responseWithSecretPick: TRPCResponse = {
   result: {
     data: {
       teamUserPicked: "Bills",
       userPickIsSecret: true,
-      events: mockEspnResponse.events,
+      eventButtons: basicEventButtons,
       currentWeek: mockEspnResponse.week.number,
       currentSeason: mockEspnResponse.season.year,
       poolName: "Test Pool",

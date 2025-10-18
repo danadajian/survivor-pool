@@ -6,7 +6,8 @@ import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { SecretPickProvider } from "../../components/secret-pick-provider";
 import { TeamButton } from "../../components/team-button";
-import { type RouterOutput, trpc } from "../../trpc";
+import { trpc } from "../../trpc";
+import { type EventButton } from "./backend";
 
 const PoolComponent = ({
   user: { username, firstName },
@@ -22,7 +23,7 @@ const PoolComponent = ({
   });
 
   const {
-    events,
+    eventButtons,
     currentSeason,
     currentWeek,
     poolName,
@@ -33,7 +34,7 @@ const PoolComponent = ({
     pickHeader,
   } = data;
 
-  if (!events.length) {
+  if (!eventButtons.length) {
     return (
       <>
         <h1 className="pt-8 text-2xl font-bold text-red-700">
@@ -96,10 +97,10 @@ const PoolComponent = ({
       </h3>
       <hr className="mt-4 w-1/3 border border-gray-500" />
       <ul className="pb-8">
-        {events.map((event, index) => (
+        {eventButtons.map((eventButton, index) => (
           <EventRow
             key={index}
-            event={event}
+            eventButton={eventButton}
             username={username}
             poolId={poolId}
           />
@@ -109,49 +110,39 @@ const PoolComponent = ({
   );
 };
 
-export type Event = RouterOutput["pool"]["events"][number];
 type TeamRowProps = {
-  event: Event;
+  eventButton: EventButton;
   username: string;
   poolId: string;
 };
-const EventRow = ({ event, username, poolId }: TeamRowProps) => {
-  const competition = event.competitions[0];
-  const competitors = competition?.competitors ?? [];
-  const homeTeam = competitors.find(
-    (competitor) => competitor.homeAway === "home",
-  )?.team;
-  const awayTeam = competitors.find(
-    (competitor) => competitor.homeAway === "away",
-  )?.team;
-  const homeTeamOdds = competition.odds?.[0].homeTeamOdds;
-  const awayTeamOdds = competition.odds?.[0].awayTeamOdds;
-  const gameTimeInClientTimezone = spacetime(competition?.date).goto(null);
+const EventRow = ({ eventButton, username, poolId }: TeamRowProps) => {
+  const gameTimeInClientTimezone = spacetime(
+    eventButton.competition?.date,
+  ).goto(null);
 
   const commonProps = {
     username,
     poolId,
-    competition,
   };
   return (
     <div className="pt-2">
       <h4 className="pt-4 font-semibold">
         {gameTimeInClientTimezone.format("{day} {hour}:{minute-pad} {ampm}")}
       </h4>
-      <h5 className="pt-1 text-sm">{competition?.odds?.[0]?.details ?? ""}</h5>
+      <h5 className="pt-1 text-sm">
+        {eventButton.competition?.odds?.[0]?.details ?? ""}
+      </h5>
       <div className="flex flex-row justify-center gap-4 pt-2">
         <li>
           <TeamButton
-            team={awayTeam}
-            teamOdds={awayTeamOdds}
+            teamButton={eventButton.awayTeamButton}
             {...commonProps}
           />
         </li>
         <li className="flex items-center font-bold">@</li>
         <li>
           <TeamButton
-            team={homeTeam}
-            teamOdds={homeTeamOdds}
+            teamButton={eventButton.homeTeamButton}
             {...commonProps}
           />
         </li>

@@ -2,45 +2,23 @@ import { Description, DialogTitle } from "@headlessui/react";
 import React, { useContext } from "react";
 import { useState } from "react";
 
-import type { Event } from "../pages/pool/frontend";
+import { type TeamButtonProps } from "../pages/pool/backend";
 import { trpc } from "../trpc";
+import { ButtonStyle } from "../utils/button-style";
 import { DialogWrapper } from "./dialog-wrapper";
 import { SecretPickContext } from "./secret-pick-provider";
 import { Toggle } from "./toggle";
 
-type Team = Event["competitions"][number]["competitors"][number]["team"];
-type HomeTeamOdds = NonNullable<
-  Event["competitions"][number]["odds"]
->[number]["homeTeamOdds"];
-type AwayTeamOdds = NonNullable<
-  Event["competitions"][number]["odds"]
->[number]["awayTeamOdds"];
 type TeamProps = {
-  team?: Team;
-  teamOdds?: HomeTeamOdds | AwayTeamOdds;
-  competition: Event["competitions"][number];
+  teamButton: TeamButtonProps;
   username: string;
   poolId: string;
 };
-export const TeamButton = ({
-  team,
-  teamOdds,
-  competition,
-  username,
-  poolId,
-}: TeamProps) => {
+export const TeamButton = ({ teamButton, username, poolId }: TeamProps) => {
   const utils = trpc.useUtils();
   const data = utils.pool.getData({ username, poolId });
   const { mutate } = trpc.makePick.useMutation({
-    onMutate: ({ teamPicked }) => {
-      utils.pool.setData({ username, poolId }, (data) => {
-        if (data?.teamUserPicked) {
-          return {
-            ...data,
-            teamUserPicked: teamPicked,
-          };
-        }
-      });
+    onMutate: () => {
       toggleDialog();
       setTimeout(() => {
         window.scrollTo({
@@ -58,19 +36,12 @@ export const TeamButton = ({
 
   const toggleDialog = () => setDialogIsOpen(!dialogIsOpen);
 
+  const { team, buttonDisabled, buttonStyle } = teamButton;
   if (!data || !team) {
     return <div>No team found.</div>;
   }
 
-  const {
-    currentWeek,
-    currentSeason,
-    teamUserPicked,
-    forbiddenTeams,
-    eliminated,
-    userPickResult,
-    pickIsLocked,
-  } = data;
+  const { currentWeek, currentSeason } = data;
   const handleUpdate = () =>
     mutate({
       username,
@@ -81,29 +52,19 @@ export const TeamButton = ({
       pickIsSecret,
     });
 
-  const gameStartedOrFinished =
-    competition.status.type.name !== "STATUS_SCHEDULED";
-  const teamCurrentlyPicked = team.name === teamUserPicked;
-  const teamPreviouslyPicked = Boolean(forbiddenTeams?.includes(team.name));
-  const userPickedTieAndTeamIsFavorite =
-    userPickResult === "TIED" && teamOdds?.favorite;
-  const buttonDisabledForOtherReason =
-    gameStartedOrFinished ||
-    pickIsLocked ||
-    eliminated ||
-    userPickedTieAndTeamIsFavorite;
-  const buttonClass = teamCurrentlyPicked
-    ? "bg-blue-800 text-white"
-    : teamPreviouslyPicked
-      ? "bg-blue-800 text-white opacity-30"
-      : buttonDisabledForOtherReason
-        ? "bg-slate-300 opacity-30"
-        : "bg-slate-300";
-  const imageClass = teamPreviouslyPicked ? "opacity-80" : "";
+  const buttonStyleMap = {
+    [ButtonStyle.CURRENTLY_PICKED]: "bg-blue-800 text-white",
+    [ButtonStyle.PREVIOUSLY_PICKED]: "bg-blue-800 text-white opacity-30",
+    [ButtonStyle.PICK_FORBIDDEN]: "bg-slate-300 opacity-30",
+    [ButtonStyle.DEFAULT]: "bg-slate-300",
+  };
+  const buttonClass = buttonStyleMap[buttonStyle];
+  const imageClass =
+    buttonStyle === ButtonStyle.PREVIOUSLY_PICKED ? "opacity-80" : "";
   return (
     <>
       <button
-        disabled={teamPreviouslyPicked || buttonDisabledForOtherReason}
+        disabled={buttonDisabled}
         onClick={toggleDialog}
         className={`flex flex-col items-center rounded-lg border-2 border-slate-100 p-2 ${buttonClass}`}
       >
