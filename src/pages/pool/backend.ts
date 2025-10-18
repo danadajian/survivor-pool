@@ -59,16 +59,15 @@ export async function fetchPoolInfo({
     userPickResult,
     eliminated,
   });
-  const eventButtons = getEventButtons(
+  const eventButtons = getEventButtons({
     events,
     teamUserPicked,
     userPickResult,
     forbiddenTeams,
     eliminated,
-  );
+  });
 
   return {
-    events,
     eventButtons,
     currentSeason,
     currentWeek,
@@ -83,13 +82,19 @@ export async function fetchPoolInfo({
   };
 }
 
-export function getEventButtons(
-  events: Events,
-  teamUserPicked: typeof picks.teamPicked.default,
-  userPickResult: typeof picks.result.default,
-  forbiddenTeams: string[] | undefined,
-  eliminated: boolean,
-): EventButton[] {
+export function getEventButtons({
+  events,
+  teamUserPicked,
+  userPickResult,
+  forbiddenTeams,
+  eliminated,
+}: {
+  events: Events;
+  teamUserPicked: typeof picks.teamPicked.default;
+  userPickResult: typeof picks.result.default;
+  forbiddenTeams: string[] | undefined;
+  eliminated: boolean;
+}): EventButton[] {
   return events.map((event) => {
     const competition = event.competitions[0];
     return {
@@ -116,7 +121,7 @@ export function getEventButtons(
   });
 }
 
-function buildTeamButtonProps({
+export function buildTeamButtonProps({
   teamType,
   events,
   competition,

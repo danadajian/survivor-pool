@@ -23,7 +23,6 @@ const PoolComponent = ({
   });
 
   const {
-    events,
     eventButtons,
     currentSeason,
     currentWeek,
@@ -35,7 +34,7 @@ const PoolComponent = ({
     pickHeader,
   } = data;
 
-  if (!events.length) {
+  if (!eventButtons.length) {
     return (
       <>
         <h1 className="pt-8 text-2xl font-bold text-red-700">

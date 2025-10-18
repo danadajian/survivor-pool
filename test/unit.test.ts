@@ -1,10 +1,23 @@
 import { describe, expect, test } from "bun:test";
 
-import { mockEspnResponse } from "../playwright/mocks";
-import { Events } from "../src/pages/pool/backend";
+import {
+  mockEspnResponse,
+  mockEspnResponseWithResults,
+} from "../playwright/mocks";
+import { Events, getEventButtons } from "../src/pages/pool/backend";
 import { buildPickHeader } from "../src/utils/build-pick-header";
 
-describe("unit tests", () => {
+describe("pick header", () => {
+  test("pick has been made", () => {
+    const result = buildPickHeader({
+      events: mockEspnResponse.events as Events,
+      userPickResult: "PENDING",
+      teamUserPicked: "Bills",
+      eliminated: false,
+    });
+    expect(result).toEqual("You're riding with the Bills this week!");
+  });
+
   test("pick is locked", () => {
     const result = buildPickHeader({
       events: mockEspnResponse.events as Events,
@@ -15,7 +28,7 @@ describe("unit tests", () => {
     expect(result).toEqual("Your 49ers pick is locked. Good luck!");
   });
 
-  test("you survived a week", () => {
+  test("you survived a week by winning", () => {
     const result = buildPickHeader({
       events: mockEspnResponse.events as Events,
       userPickResult: "WON",
@@ -23,6 +36,16 @@ describe("unit tests", () => {
       eliminated: false,
     });
     expect(result).toEqual("The 49ers won, and you're still alive!");
+  });
+
+  test("you survived a week by everyone losing with you", () => {
+    const result = buildPickHeader({
+      events: mockEspnResponse.events as Events,
+      userPickResult: "LOST",
+      teamUserPicked: "49ers",
+      eliminated: false,
+    });
+    expect(result).toEqual("The 49ers lost, but you're still alive!");
   });
 
   test("you were eliminated from the pool", () => {
@@ -45,5 +68,91 @@ describe("unit tests", () => {
     expect(result).toEqual(
       "The 49ers tied their game! Pick one of the remaining underdogs if you can.",
     );
+  });
+});
+
+describe("team buttons", () => {
+  test("can only pick games not yet started", () => {
+    const events = mockEspnResponse.events as Events;
+    const buttons = getEventButtons({
+      events,
+      userPickResult: undefined,
+      teamUserPicked: undefined,
+      forbiddenTeams: undefined,
+      eliminated: false,
+    });
+    expect(
+      buttons.find((button) => button.awayTeamButton.team?.name === "Bills")
+        ?.awayTeamButton.buttonDisabled,
+    ).toBeFalse();
+    expect(
+      buttons.find((button) => button.homeTeamButton.team?.name === "Jets")
+        ?.homeTeamButton.buttonDisabled,
+    ).toBeFalse();
+    expect(
+      buttons.find((button) => button.awayTeamButton.team?.name === "49ers")
+        ?.awayTeamButton.buttonDisabled,
+    ).toBeTrue();
+  });
+
+  test("prevents changing pick after picking a game that has started", () => {
+    const events = mockEspnResponse.events as Events;
+    const buttons = getEventButtons({
+      events,
+      userPickResult: "PENDING",
+      teamUserPicked: "49ers",
+      forbiddenTeams: [],
+      eliminated: false,
+    });
+    expect(
+      buttons.find((button) => button.awayTeamButton.team?.name === "49ers")
+        ?.awayTeamButton.buttonDisabled,
+    ).toBeTrue();
+    expect(
+      buttons.find((button) => button.awayTeamButton.team?.name === "Bills")
+        ?.awayTeamButton.buttonDisabled,
+    ).toBeTrue();
+    expect(
+      buttons.find((button) => button.homeTeamButton.team?.name === "Jets")
+        ?.homeTeamButton.buttonDisabled,
+    ).toBeTrue();
+  });
+
+  test("prevents picking a team previously picked but allows picking the currently picked team", () => {
+    const events = mockEspnResponse.events as Events;
+    const buttons = getEventButtons({
+      events,
+      userPickResult: "PENDING",
+      teamUserPicked: "Bills",
+      forbiddenTeams: ["Jets"],
+      eliminated: false,
+    });
+    expect(
+      buttons.find((button) => button.awayTeamButton.team?.name === "Bills")
+        ?.awayTeamButton.buttonDisabled,
+    ).toBeFalse();
+    expect(
+      buttons.find((button) => button.homeTeamButton.team?.name === "Jets")
+        ?.homeTeamButton.buttonDisabled,
+    ).toBeTrue();
+  });
+
+  test("your team tied and you need to pick an underdog", () => {
+    const events = mockEspnResponseWithResults.events as Events;
+    const buttons = getEventButtons({
+      events,
+      userPickResult: "TIED",
+      teamUserPicked: "49ers",
+      forbiddenTeams: [],
+      eliminated: false,
+    });
+    expect(
+      buttons.find((button) => button.awayTeamButton.team?.name === "Rams")
+        ?.awayTeamButton.buttonDisabled,
+    ).toBeFalse();
+    expect(
+      buttons.find((button) => button.homeTeamButton.team?.name === "Bengals")
+        ?.homeTeamButton.buttonDisabled,
+    ).toBeTrue();
   });
 });
