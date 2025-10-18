@@ -21,6 +21,21 @@ describe("pick header", () => {
     expect(result).toEqual("You're riding with the Bills this week!");
   });
 
+  test("pick has been made secretly", () => {
+    const result = buildPickHeader({
+      events: mockEspnResponse.events as Events,
+      userPick: {
+        teamPicked: "Bills",
+        result: "PENDING",
+        pickIsSecret: true,
+      } as typeof picks.$inferSelect,
+      eliminated: false,
+    });
+    expect(result).toEqual(
+      "You're riding with the Bills this week (secretly)!",
+    );
+  });
+
   test("pick is locked", () => {
     const result = buildPickHeader({
       events: mockEspnResponse.events as Events,
