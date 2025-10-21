@@ -84,7 +84,7 @@ export function getEventButtons({
 }: {
   events: Events;
   userPick?: typeof picks.$inferSelect;
-  forbiddenTeams?: string[] | undefined;
+  forbiddenTeams: string[];
   eliminated: boolean;
 }): EventButton[] {
   return events.map((event) => {
@@ -123,7 +123,7 @@ export function buildTeamButtonProps({
   events: Events;
   competition: Competition;
   userPick?: typeof picks.$inferSelect;
-  forbiddenTeams?: string[] | undefined;
+  forbiddenTeams: string[];
   eliminated: boolean;
 }): TeamButtonProps {
   const competitors = competition?.competitors ?? [];
@@ -137,9 +137,7 @@ export function buildTeamButtonProps({
   const gameStartedOrFinished =
     competition.status.type.name !== "STATUS_SCHEDULED";
   const teamCurrentlyPicked = team?.name === userPick?.teamPicked;
-  const teamPreviouslyPicked = Boolean(
-    forbiddenTeams?.includes(team?.name ?? ""),
-  );
+  const teamPreviouslyPicked = forbiddenTeams.includes(team?.name ?? "");
   const pickIsLocked = checkIfPickIsLocked({
     events,
     userPick,
@@ -287,9 +285,7 @@ export async function fetchPicksDataForUser({
   });
   const userPick = picksResult.find((pick) => pick.week === week);
   const previousPicks = picksResult.filter((pick) => pick.week < week);
-  const forbiddenTeams = previousPicks.length
-    ? previousPicks.map(({ teamPicked }) => teamPicked)
-    : undefined;
+  const forbiddenTeams = previousPicks.map(({ teamPicked }) => teamPicked);
 
   return {
     userPick,

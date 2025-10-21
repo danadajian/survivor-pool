@@ -102,6 +102,7 @@ describe("team buttons", () => {
     const buttons = getEventButtons({
       events,
       eliminated: false,
+      forbiddenTeams: [],
     });
     expect(
       buttons.find((button) => button.awayTeamButton.team?.name === "Bills")
@@ -126,6 +127,7 @@ describe("team buttons", () => {
         result: "PENDING",
       } as typeof picks.$inferSelect,
       eliminated: false,
+      forbiddenTeams: [],
     });
     expect(
       buttons.find((button) => button.awayTeamButton.team?.name === "49ers")
@@ -171,6 +173,7 @@ describe("team buttons", () => {
         result: "TIED",
       } as typeof picks.$inferSelect,
       eliminated: false,
+      forbiddenTeams: [],
     });
     expect(
       buttons.find((button) => button.awayTeamButton.team?.name === "Rams")
