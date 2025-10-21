@@ -3,7 +3,8 @@ import type { InitialState } from "@clerk/types";
 import React, { type ComponentProps, type PropsWithChildren } from "react";
 import { MemoryRouter } from "react-router-dom";
 
-import { ClientProvider } from "../src/components/client-provider";
+import { ClientProvider } from "../../src/components/client-provider";
+import { CLERK_PUBLISHABLE_KEY } from "../../src/constants";
 
 const mockClerkState = {
   user: {
@@ -24,7 +25,7 @@ export const MockProviders = ({
   <ClientProvider>
     <ClerkProvider
       initialState={mockClerkState}
-      publishableKey="pk_test_YW11c2luZy1tYW4tNjEuY2xlcmsuYWNjb3VudHMuZGV2JA"
+      publishableKey={CLERK_PUBLISHABLE_KEY}
     >
       <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
     </ClerkProvider>

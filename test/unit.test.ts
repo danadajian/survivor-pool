@@ -1,12 +1,9 @@
 import { describe, expect, test } from "bun:test";
 
-import {
-  mockEspnResponse,
-  mockEspnResponseWithResults,
-} from "../playwright/mocks";
 import { Events, getEventButtons } from "../src/pages/pool/backend";
 import { picks } from "../src/schema";
 import { buildPickHeader } from "../src/utils/build-pick-header";
+import { mockEspnResponse, mockEspnResponseWithResults } from "./mocks";
 
 describe("pick header", () => {
   test("pick has been made", () => {

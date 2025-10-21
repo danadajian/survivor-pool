@@ -17,6 +17,6 @@
     "sourceMap": true,
     "strict": true,
     "target": "esnext",
-    "types": ["bun-types"]
+    "types": ["bun-types", "@testing-library/cypress"]
   }
 }

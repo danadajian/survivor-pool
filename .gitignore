@@ -28,6 +28,4 @@ yarn-error.log*
 
 tsconfig.tsbuildinfo
 
-# playwright
-/playwright/test-results/
-/playwright/.cache/
+/cypress/screenshots/

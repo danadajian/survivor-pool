@@ -1,6 +1,6 @@
 {
   "name": "survivor-pool",
-  "packageManager": "bun@1.2.21",
+  "packageManager": "bun@1.3.0",
   "type": "module",
   "scripts": {
     "db": "docker compose up -d",
@@ -13,7 +13,7 @@
     "preprod": "tailwindcss -o ./public/globals.css",
     "prod": "ENVIRONMENT=production bun ./src/server.tsx",
     "test-backend": "POSTGRES_URL=postgresql://postgres:pwd@localhost:5433/survivor-pool-test bun test test/**",
-    "test-frontend": "bunx playwright test",
+    "test-frontend": "bunx cypress run --component",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -37,11 +37,12 @@
     "spacetime": "7.11.0"
   },
   "devDependencies": {
-    "@playwright/experimental-ct-react": "1.56.1",
     "@tailwindcss/cli": "4.1.14",
+    "@testing-library/cypress": "10.1.0",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "bun-types": "1.3.0",
+    "cypress": "15.5.0",
     "drizzle-kit": "0.31.5",
     "eslint": "9.38.0",
     "eslint-plugin-no-only-tests": "3.3.0",

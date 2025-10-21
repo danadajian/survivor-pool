@@ -61,13 +61,10 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version-file: package.json
-      - run: bun install
-
-      - name: Install Browsers
-        run: bunx playwright install --with-deps chromium webkit
-
-      - name: Run Component Tests
-        run: bun test-frontend
+      - name: Run component tests
+        uses: cypress-io/github-action@v6
+        with:
+          component: true
 
   db:
     name: Database Update
