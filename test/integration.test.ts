@@ -43,7 +43,6 @@ describe("feature tests", () => {
 
   afterAll(async () => {
     await clearAllTables();
-    process.exit(0);
   });
 
   const user1 = "user1@test.com";
@@ -173,7 +172,7 @@ describe("feature tests", () => {
         poolId,
       },
     );
-    expect(user1ForbiddenTeams).toBeUndefined();
+    expect(user1ForbiddenTeams).toBeEmpty();
     const { forbiddenTeams: user2ForbiddenTeams } = await fetchPicksDataForUser(
       {
         username: user2,
@@ -182,7 +181,7 @@ describe("feature tests", () => {
         poolId,
       },
     );
-    expect(user2ForbiddenTeams).toBeUndefined();
+    expect(user2ForbiddenTeams).toBeEmpty();
   });
 
   it("should update results to pending when no results yet", async () => {
