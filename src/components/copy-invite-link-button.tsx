@@ -20,7 +20,7 @@ export const CopyInviteLinkButton = ({ poolId }: { poolId: string }) => {
         className={`focus:shadow-outline m-2 rounded-md px-1 py-1 focus:outline-none ${copyButtonClasses}`}
         type="button"
       >
-        <img className="max-w-6" src="/copy-link.png" alt="copy link" />
+        <img className="max-w-6" src="/public/copy-link.png" alt="copy link" />
       </PopoverButton>
       <PopoverPanel className="absolute z-10">Invite link copied!</PopoverPanel>
     </Popover>
