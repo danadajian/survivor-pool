@@ -354,17 +354,19 @@ export function userIsEliminated({
   ) {
     return true;
   }
-  const allPicksThisWeek = picksForPoolAndSeason.filter(
-    (pick) => pick.week === currentWeek,
-  );
-  const userLost = allPicksThisWeek.some(
-    (pick) => pick.username === username && pick.result === "LOST",
-  );
-  const atLeastOneUserWon = allPicksThisWeek.some(
-    (pick) => pick.result === "WON",
-  );
 
-  return userLost && atLeastOneUserWon;
+  const allUserPicks = picksForPoolAndSeason.filter(
+    (pick) => pick.username === username,
+  );
+  const newestUserPick = allUserPicks
+    .toSorted((a, b) => b.week - a.week)
+    .find(Boolean);
+  const mostRecentUserPickWasLoss = newestUserPick?.result === "LOST";
+  const atLeastOneUserWonThatWeek = picksForPoolAndSeason
+    .filter((pick) => pick.week === newestUserPick?.week)
+    .some((pick) => pick.result === "WON");
+
+  return mostRecentUserPickWasLoss && atLeastOneUserWonThatWeek;
 }
 
 function failedToPickInAPreviousWeek(

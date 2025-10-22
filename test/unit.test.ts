@@ -164,6 +164,12 @@ describe("user elimination", () => {
         teamPicked: "49ers",
         result: "WON",
       },
+      {
+        username: "user2",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
     ] as (typeof picks.$inferSelect)[];
     const result = userIsEliminated({
       username: "user1",
@@ -182,9 +188,27 @@ describe("user elimination", () => {
         result: "WON",
       },
       {
+        username: "user2",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 2,
+        teamPicked: "Eagles",
+        result: "WON",
+      },
+      {
         username: "user1",
         week: 3,
         teamPicked: "Giants",
+        result: "PENDING",
+      },
+      {
+        username: "user3",
+        week: 3,
+        teamPicked: "Bengals",
         result: "PENDING",
       },
     ] as (typeof picks.$inferSelect)[];
@@ -194,5 +218,87 @@ describe("user elimination", () => {
       picksForPoolAndSeason,
     });
     expect(result).toBeTrue();
+  });
+
+  test("picking a winning team does not eliminate user", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 2,
+        teamPicked: "Giants",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 2,
+        teamPicked: "Eagles",
+        result: "WON",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    const result = userIsEliminated({
+      username: "user1",
+      currentWeek: 3,
+      picksForPoolAndSeason,
+    });
+    expect(result).toBeFalse();
+    const resultNextWeek = userIsEliminated({
+      username: "user1",
+      currentWeek: 3,
+      picksForPoolAndSeason,
+    });
+    expect(resultNextWeek).toBeFalse();
+  });
+
+  test("picking a losing team eliminates user", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 2,
+        teamPicked: "Giants",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 2,
+        teamPicked: "Eagles",
+        result: "LOST",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    const result = userIsEliminated({
+      username: "user2",
+      currentWeek: 2,
+      picksForPoolAndSeason,
+    });
+    expect(result).toBeTrue();
+    const resultNextWeek = userIsEliminated({
+      username: "user2",
+      currentWeek: 3,
+      picksForPoolAndSeason,
+    });
+    expect(resultNextWeek).toBeTrue();
   });
 });
