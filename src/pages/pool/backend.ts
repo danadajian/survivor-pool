@@ -133,7 +133,7 @@ export function buildTeamButtonProps({
 }: {
   teamType: "home" | "away";
   events: Events;
-  competition: Competition;
+  competition?: Competition;
   userPick?: typeof picks.$inferSelect;
   forbiddenTeams: string[];
   eliminated: boolean;
@@ -143,7 +143,7 @@ export function buildTeamButtonProps({
     (competitor) => competitor.homeAway === teamType,
   )?.team;
   const gameStartedOrFinished =
-    competition.status.type.name !== "STATUS_SCHEDULED";
+    competition?.status.type.name !== "STATUS_SCHEDULED";
   const teamCurrentlyPicked = team?.name === userPick?.teamPicked;
   const teamPreviouslyPicked = forbiddenTeams.includes(team?.name ?? "");
   const pickIsLocked = checkIfPickIsLocked({
@@ -172,7 +172,7 @@ type Team = Competition["competitors"][number]["team"];
 export type EventButton = {
   awayTeamButton: TeamButtonProps;
   homeTeamButton: TeamButtonProps;
-  competition: Competition;
+  competition?: Competition;
 };
 export type TeamButtonProps = {
   team?: Team;
