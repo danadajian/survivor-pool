@@ -18,7 +18,6 @@ import {
   deletePool,
   Events,
   fetchPicksDataForUser,
-  fetchPoolMembers,
   findPoolWinner,
   makePick,
   reactivatePool,
@@ -65,11 +64,8 @@ describe("feature tests", () => {
   });
 
   it("should not return poolWinner when only one person is in the pool", async () => {
-    const pool = await db.query.pools.findFirst();
-    if (!pool) throw new Error();
-
-    const poolMembers = await fetchPoolMembers(pool.id);
-    const poolWinner = await findPoolWinner(poolMembers);
+    const poolId = await getPoolId();
+    const poolWinner = await findPoolWinner(poolId, 1, season);
     expect(poolWinner).toBeUndefined();
   });
 
@@ -334,12 +330,8 @@ describe("feature tests", () => {
   });
 
   it("should not return poolWinner when no one has won the pool yet", async () => {
-    const results = await db.query.members.findMany();
-    if (!results[0]) throw new Error();
-    const poolId = results[0].poolId;
-
-    const poolMembers = await fetchPoolMembers(poolId);
-    const poolWinner = await findPoolWinner(poolMembers);
+    const poolId = await getPoolId();
+    const poolWinner = await findPoolWinner(poolId, 1, season);
     expect(poolWinner).toBeUndefined();
   });
 
@@ -390,7 +382,7 @@ describe("feature tests", () => {
     expect(membersLeft[1].eliminated).toBeFalse();
   });
 
-  it("should not eliminate user when a tie is picked", async () => {
+  it("should eliminate user when team picked loses or ties", async () => {
     const poolId = await getPoolId();
     const tyingTeam1 = "Giants";
     const tyingTeam2 = "Cowboys";
@@ -450,111 +442,13 @@ describe("feature tests", () => {
       where: eq(members.username, user2),
     });
     expect(user2Member?.username).toEqual(user2);
-    expect(user2Member?.eliminated).toBeFalse();
-  });
-
-  it("should eliminate user when team picked loses", async () => {
-    const poolId = await getPoolId();
-
-    await makePick({
-      username: user2,
-      teamPicked: "Bengals",
-      week: 3,
-      season,
-      poolId,
-    });
-
-    // scenario for changing pick with tied pick
-    const losingTeam = "Eagles";
-    await makePick({
-      username: user2,
-      teamPicked: losingTeam,
-      week: 3,
-      season,
-      poolId,
-    });
-
-    const user2Picks = await db.query.picks.findMany({
-      where: and(
-        eq(picks.poolId, poolId),
-        eq(picks.username, user2),
-        eq(picks.week, 3),
-        eq(picks.season, season),
-      ),
-    });
-    expect(user2Picks).toHaveLength(2);
-
-    const eventsWithLosingResult = [
-      {
-        competitions: [
-          {
-            competitors: [
-              {
-                team: { name: "Giants" },
-                winner: false,
-              },
-              {
-                team: { name: "Cowboys" },
-                winner: false,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        competitions: [
-          {
-            competitors: [
-              {
-                team: { name: "49ers" },
-                winner: true,
-              },
-              {
-                team: { name: "Rams" },
-                winner: false,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        competitions: [
-          {
-            competitors: [
-              {
-                team: { name: "Chiefs" },
-                winner: true,
-              },
-              {
-                team: { name: losingTeam },
-                winner: false,
-              },
-            ],
-          },
-        ],
-      },
-    ] as Events;
-    await updateResults(eventsWithLosingResult, 3, season);
-    const userPick = await db.query.picks.findFirst({
-      where: and(
-        eq(picks.username, user2),
-        eq(picks.week, 3),
-        eq(picks.teamPicked, losingTeam),
-        eq(picks.season, season),
-      ),
-    });
-    expect(userPick?.result).toEqual("LOST");
-    const membersResult = await db.query.members.findFirst({
-      where: eq(members.username, user2),
-    });
-    expect(membersResult?.eliminated).toBeTrue();
+    expect(user2Member?.eliminated).toBeTrue();
   });
 
   it("should return poolWinner when someone has won the pool", async () => {
     const poolId = await getPoolId();
-    const poolMembers = await fetchPoolMembers(poolId);
-    const poolWinner = await findPoolWinner(poolMembers);
-    expect(poolWinner?.username).toEqual(user1);
+    const poolWinner = await findPoolWinner(poolId, 3, season);
+    expect(poolWinner?.members.username).toEqual(user1);
   });
 
   it("should reactivate the pool, removing all elimination status and deleting all picks for current season", async () => {

@@ -62,7 +62,8 @@ const PoolComponent = ({
     return (
       <>
         <Heading>
-          {`${poolWinner.firstName} ${poolWinner.lastName}`} has won this pool!
+          {`${poolWinner.members.firstName} ${poolWinner.members.lastName}`} has
+          won this pool!
         </Heading>
         {isPoolCreator ? (
           <button

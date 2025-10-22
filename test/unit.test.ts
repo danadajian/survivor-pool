@@ -3,7 +3,7 @@ import { describe, expect, test } from "bun:test";
 import { Events, getEventButtons } from "../src/pages/pool/backend";
 import { picks } from "../src/schema";
 import { buildPickHeader } from "../src/utils/build-pick-header";
-import { mockEspnResponse, mockEspnResponseWithResults } from "./mocks";
+import { mockEspnResponse } from "./mocks";
 
 describe("pick header", () => {
   test("pick has been made", () => {
@@ -80,20 +80,6 @@ describe("pick header", () => {
     });
     expect(result).toEqual("Sorry, you have been eliminated from this pool.");
   });
-
-  test("your team tied and you need to pick an underdog", () => {
-    const result = buildPickHeader({
-      events: mockEspnResponse.events as Events,
-      userPick: {
-        teamPicked: "49ers",
-        result: "TIED",
-      } as typeof picks.$inferSelect,
-      eliminated: false,
-    });
-    expect(result).toEqual(
-      "The 49ers tied their game! Pick one of the remaining underdogs if you can.",
-    );
-  });
 });
 
 describe("team buttons", () => {
@@ -160,27 +146,6 @@ describe("team buttons", () => {
     ).toBeFalse();
     expect(
       buttons.find((button) => button.homeTeamButton.team?.name === "Jets")
-        ?.homeTeamButton.buttonDisabled,
-    ).toBeTrue();
-  });
-
-  test("your team tied and you need to pick an underdog", () => {
-    const events = mockEspnResponseWithResults.events as Events;
-    const buttons = getEventButtons({
-      events,
-      userPick: {
-        teamPicked: "49ers",
-        result: "TIED",
-      } as typeof picks.$inferSelect,
-      eliminated: false,
-      forbiddenTeams: [],
-    });
-    expect(
-      buttons.find((button) => button.awayTeamButton.team?.name === "Rams")
-        ?.awayTeamButton.buttonDisabled,
-    ).toBeFalse();
-    expect(
-      buttons.find((button) => button.homeTeamButton.team?.name === "Bengals")
         ?.homeTeamButton.buttonDisabled,
     ).toBeTrue();
   });

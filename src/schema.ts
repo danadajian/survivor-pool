@@ -8,7 +8,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-export const resultEnum = pgEnum("result", ["WON", "LOST", "TIED", "PENDING"]);
+export const resultEnum = pgEnum("result", ["WON", "LOST", "PENDING"]);
 
 export const picks = pgTable("picks", {
   id: uuid("id").primaryKey().defaultRandom(),

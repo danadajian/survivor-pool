@@ -108,13 +108,6 @@ function getResult(teamPicked: string, events: Events) {
     return "PENDING";
   }
 
-  const resultWasATie = competitors?.every(
-    (competitor) => competitor.winner === false,
-  );
-  if (resultWasATie) {
-    return "TIED";
-  }
-
   return teamPickedFromApi.winner === true ? "WON" : "LOST";
 }
 

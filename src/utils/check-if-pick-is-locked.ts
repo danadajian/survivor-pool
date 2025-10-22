@@ -15,7 +15,5 @@ export function checkIfPickIsLocked({
   );
   const gameState = teamPickedInEvent?.competitions[0].status.type.name;
   const gameStartedOrFinished = gameState !== "STATUS_SCHEDULED";
-  return Boolean(
-    userPick?.teamPicked && gameStartedOrFinished && userPick.result !== "TIED",
-  );
+  return Boolean(userPick?.teamPicked) && gameStartedOrFinished;
 }

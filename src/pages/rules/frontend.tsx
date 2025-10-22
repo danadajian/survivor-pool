@@ -14,8 +14,8 @@ const RulesComponent = () => {
           </h2>
           <p className="m-2 leading-relaxed text-gray-600">
             Each week, you will pick one NFL team to win their game. If your
-            chosen team wins, you survive and advance to the next week. If your
-            team loses, you are eliminated from the pool. The goal is to be the
+            chosen team wins, you survive and advance to the next week.
+            Otherwise, you are eliminated from the pool. The goal is to be the
             last person standing.
           </p>
         </section>
@@ -45,16 +45,9 @@ const RulesComponent = () => {
           </h2>
           <ul className="m-2 space-y-4 text-gray-600">
             <li>
-              You are eliminated from the pool if your selected team loses their
-              game. You are also eliminated if you fail to pick a team by the
-              time the final game of a week starts.
-            </li>
-            <li>
-              If you pick a team that ties their game, you may re-pick any
-              underdog team (according to ESPN's odds) that has yet to play that
-              week. If no underdogs are left to pick that week, you are
-              eliminated. Both picks will count toward teams you can no longer
-              pick if you survive.
+              You are eliminated from the pool if your selected team loses or
+              ties their game. You are also eliminated if you fail to pick a
+              team by the time the final game of a week starts.
             </li>
             <li>
               If all remaining survivors fail to pick a winning team, everyone

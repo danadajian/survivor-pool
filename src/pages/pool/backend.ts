@@ -48,7 +48,7 @@ export async function fetchPoolInfo({
     week: currentWeek,
     season: currentSeason,
   });
-  const poolWinner = await findPoolWinner(poolMembers);
+  const poolWinner = await findPoolWinner(poolId, currentWeek, currentSeason);
 
   const { poolName, creator: poolCreator, eliminated } = poolMember;
   const pickHeader = buildPickHeader({
@@ -130,10 +130,6 @@ export function buildTeamButtonProps({
   const team = competitors.find(
     (competitor) => competitor.homeAway === teamType,
   )?.team;
-  const teamOdds =
-    teamType === "home"
-      ? competition.odds?.[0].homeTeamOdds
-      : competition.odds?.[0].awayTeamOdds;
   const gameStartedOrFinished =
     competition.status.type.name !== "STATUS_SCHEDULED";
   const teamCurrentlyPicked = team?.name === userPick?.teamPicked;
@@ -142,14 +138,8 @@ export function buildTeamButtonProps({
     events,
     userPick,
   });
-  const userPickedTieAndTeamIsFavorite = Boolean(
-    userPick?.result === "TIED" && teamOdds?.favorite,
-  );
   const buttonDisabledForOtherReason =
-    gameStartedOrFinished ||
-    pickIsLocked ||
-    eliminated ||
-    userPickedTieAndTeamIsFavorite;
+    gameStartedOrFinished || pickIsLocked || eliminated;
   const buttonDisabled = teamPreviouslyPicked || buttonDisabledForOtherReason;
   const buttonStyle = teamCurrentlyPicked
     ? ButtonStyle.CURRENTLY_PICKED
@@ -309,13 +299,40 @@ export async function fetchPoolMembers(poolId: string) {
 }
 
 export async function findPoolWinner(
-  poolMembers: Partial<typeof members.$inferSelect>[],
+  poolId: string,
+  currentWeek: number,
+  season: number,
 ) {
-  const membersStillAlive = poolMembers.filter((member) => !member.eliminated);
-
-  return poolMembers.length > 1 && membersStillAlive.length === 1
-    ? membersStillAlive[0]
-    : undefined;
+  const picksResults = await db
+    .select()
+    .from(picks)
+    .innerJoin(
+      members,
+      and(
+        eq(picks.username, members.username),
+        eq(picks.poolId, members.poolId),
+      ),
+    )
+    .where(
+      and(
+        eq(picks.poolId, poolId),
+        eq(picks.week, currentWeek),
+        eq(picks.season, season),
+      ),
+    );
+  if (picksResults.length === 1) {
+    return undefined;
+  }
+  const numberOfPendingPicks = picksResults.filter(
+    ({ picks }) => picks.result === "PENDING",
+  ).length;
+  const numberOfWinningPicks = picksResults.filter(
+    ({ picks }) => picks.result === "WON",
+  ).length;
+  if (numberOfPendingPicks === 0 && numberOfWinningPicks === 1) {
+    return picksResults.find(({ picks }) => picks.result === "WON");
+  }
+  return undefined;
 }
 
 export async function makePick({
