@@ -19,10 +19,11 @@ const CreateComponent = ({ user }: PageProps) => {
     },
   });
   const [poolName, setPoolName] = useState("");
+  const [lives, setLives] = useState(1);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const onSubmit = () => mutate({ ...user, poolName });
+  const onSubmit = () => mutate({ ...user, poolName, lives });
 
   if (isSuccess && data?.poolId) {
     return (
@@ -64,6 +65,30 @@ const CreateComponent = ({ user }: PageProps) => {
             id="poolName"
             type="text"
           />
+        </div>
+        <div className="pb-6">
+          <label className="text-md mb-2 block font-bold text-gray-700">
+            Number of Lives
+          </label>
+          <div className="flex items-center justify-center">
+            <button
+              type="button"
+              onClick={() => setLives(lives - 1)}
+              disabled={lives <= 1}
+              className="focus:shadow-outline mr-4 rounded-full border px-3 py-1 text-gray-700 shadow focus:outline-none"
+            >
+              -
+            </button>
+            <p>{lives}</p>
+            <button
+              type="button"
+              onClick={() => setLives(lives + 1)}
+              disabled={lives >= 9}
+              className="focus:shadow-outline ml-4 rounded-full border px-3 py-1 text-gray-700 shadow focus:outline-none"
+            >
+              +
+            </button>
+          </div>
         </div>
         <button
           onClick={onSubmit}

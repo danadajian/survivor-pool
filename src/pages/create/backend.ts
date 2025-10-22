@@ -9,11 +9,13 @@ import { joinPool } from "../join/backend";
 
 export const createPoolInput = v.object({
   ...userFields,
-  poolName: v.string(),
+  poolName: v.pipe(v.string(), v.nonEmpty("Please enter a pool name.")),
+  lives: v.optional(v.number()),
 });
 
 export async function createPool({
   poolName,
+  lives,
   username,
   firstName,
   lastName,
@@ -30,7 +32,7 @@ export async function createPool({
   }
   const insertResult = await db
     .insert(pools)
-    .values({ name: poolName, creator: username })
+    .values({ name: poolName, lives, creator: username })
     .returning({ id: pools.id });
   const poolId = insertResult.find(Boolean)?.id;
   if (!poolId) {
