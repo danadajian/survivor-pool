@@ -50,11 +50,13 @@ export async function fetchPoolInfo({
   });
   const poolWinner = await findPoolWinner(poolId, currentWeek, currentSeason);
 
+  const picksForPoolAndSeason = await db.query.picks.findMany({
+    where: and(eq(picks.poolId, poolId), eq(picks.season, currentSeason)),
+  });
   const eliminated = await userIsEliminated({
     username,
-    poolId,
     currentWeek,
-    currentSeason,
+    picksForPoolAndSeason,
   });
   const pickHeader = buildPickHeader({
     events,
@@ -341,21 +343,18 @@ export async function findPoolWinner(
 export async function userIsEliminated({
   username,
   currentWeek,
-  currentSeason,
-  poolId,
+  picksForPoolAndSeason,
 }: {
   username: string;
   currentWeek: number;
-  currentSeason: number;
-  poolId: string;
+  picksForPoolAndSeason: (typeof picks.$inferSelect)[];
 }) {
-  const picksResult = await db.query.picks.findMany({
-    where: and(eq(picks.poolId, poolId), eq(picks.season, currentSeason)),
-  });
-  if (failedToPickInAPreviousWeek(picksResult, username, currentWeek)) {
+  if (
+    failedToPickInAPreviousWeek(picksForPoolAndSeason, username, currentWeek)
+  ) {
     return true;
   }
-  const allPicksThisWeek = picksResult.filter(
+  const allPicksThisWeek = picksForPoolAndSeason.filter(
     (pick) => pick.week === currentWeek,
   );
   const userLost = allPicksThisWeek.some(

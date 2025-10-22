@@ -204,20 +204,21 @@ describe("feature tests", () => {
       where: and(eq(picks.week, 1), eq(picks.season, season)),
     });
     expect(userPicks.every((pick) => pick.result === "PENDING")).toBeTrue();
+    const picksForPoolAndSeason = await db.query.picks.findMany({
+      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
+    });
     expect(
       await userIsEliminated({
         username: user1,
-        poolId,
         currentWeek: 1,
-        currentSeason: season,
+        picksForPoolAndSeason,
       }),
     ).toBeFalse();
     expect(
       await userIsEliminated({
         username: user2,
-        poolId,
         currentWeek: 1,
-        currentSeason: season,
+        picksForPoolAndSeason,
       }),
     ).toBeFalse();
   });
@@ -251,12 +252,15 @@ describe("feature tests", () => {
       ),
     });
     expect(userPick1?.result).toEqual("WON");
+
+    const picksForPoolAndSeason = await db.query.picks.findMany({
+      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
+    });
     expect(
       await userIsEliminated({
         username: user1,
-        poolId,
         currentWeek: 1,
-        currentSeason: season,
+        picksForPoolAndSeason,
       }),
     ).toBeFalse();
 
@@ -271,9 +275,8 @@ describe("feature tests", () => {
     expect(
       await userIsEliminated({
         username: user2,
-        poolId,
         currentWeek: 1,
-        currentSeason: season,
+        picksForPoolAndSeason,
       }),
     ).toBeFalse();
   });
@@ -326,12 +329,15 @@ describe("feature tests", () => {
       },
     ] as Events;
     await updateResults(events, 2, season);
+
+    const picksForPoolAndSeason = await db.query.picks.findMany({
+      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
+    });
     expect(
       await userIsEliminated({
         username: user3,
-        poolId,
         currentWeek: 2,
-        currentSeason: season,
+        picksForPoolAndSeason,
       }),
     ).toBeTrue();
   });
@@ -402,20 +408,21 @@ describe("feature tests", () => {
       },
     ] as Events;
     await updateResults(events, 2, season);
+    const picksForPoolAndSeason = await db.query.picks.findMany({
+      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
+    });
     expect(
       await userIsEliminated({
         username: user1,
-        poolId,
         currentWeek: 2,
-        currentSeason: season,
+        picksForPoolAndSeason,
       }),
     ).toBeFalse();
     expect(
       await userIsEliminated({
         username: user2,
-        poolId,
         currentWeek: 2,
-        currentSeason: season,
+        picksForPoolAndSeason,
       }),
     ).toBeFalse();
   });
@@ -476,12 +483,15 @@ describe("feature tests", () => {
       },
     ] as Events;
     await updateResults(eventsWithTie, 3, season);
+
+    const picksForPoolAndSeason = await db.query.picks.findMany({
+      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
+    });
     expect(
       await userIsEliminated({
         username: user2,
-        poolId,
         currentWeek: 3,
-        currentSeason: season,
+        picksForPoolAndSeason,
       }),
     ).toBeTrue();
   });
