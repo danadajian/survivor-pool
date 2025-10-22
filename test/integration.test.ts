@@ -63,7 +63,7 @@ describe("feature tests", () => {
     expect(newMembers[0]?.username).toEqual(user1);
   });
 
-  it("should not return poolWinner when only one person is in the pool", async () => {
+  it("should not return poolWinner when no picks have been made yet", async () => {
     const poolId = await getPoolId();
     const poolWinner = await findPoolWinner(poolId, 1, season);
     expect(poolWinner).toBeUndefined();

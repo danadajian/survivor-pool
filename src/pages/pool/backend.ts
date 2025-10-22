@@ -320,9 +320,7 @@ export async function findPoolWinner(
         eq(picks.season, season),
       ),
     );
-  if (picksResults.length === 1) {
-    return undefined;
-  }
+
   const numberOfPendingPicks = picksResults.filter(
     ({ picks }) => picks.result === "PENDING",
   ).length;
