@@ -499,7 +499,9 @@ describe("feature tests", () => {
   it("should return poolWinner when someone has won the pool", async () => {
     const poolId = await getPoolId();
     const poolWinner = await findPoolWinner(poolId, 3, season);
-    expect(poolWinner?.members.username).toEqual(user1);
+    expect(poolWinner?.username).toEqual(user1);
+    const poolWinnerNextWeek = await findPoolWinner(poolId, 4, season);
+    expect(poolWinnerNextWeek?.username).toEqual(user1);
   });
 
   it("should reactivate the pool and delete all picks for current season", async () => {

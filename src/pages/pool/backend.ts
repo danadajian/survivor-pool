@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq } from "drizzle-orm";
+import { and, eq, max } from "drizzle-orm";
 import * as v from "valibot";
 
 import { db } from "../../db";
@@ -310,8 +310,15 @@ export async function findPoolWinner(
   currentWeek: number,
   season: number,
 ) {
+  const maxWeek = db.select({ maxWeek: max(picks.week) }).from(picks);
   const picksResults = await db
-    .select()
+    .select({
+      username: picks.username,
+      firstName: members.firstName,
+      lastName: members.lastName,
+      week: picks.week,
+      result: picks.result,
+    })
     .from(picks)
     .innerJoin(
       members,
@@ -323,19 +330,19 @@ export async function findPoolWinner(
     .where(
       and(
         eq(picks.poolId, poolId),
-        eq(picks.week, currentWeek),
         eq(picks.season, season),
+        eq(picks.week, maxWeek),
       ),
     );
 
   const numberOfPendingPicks = picksResults.filter(
-    ({ picks }) => picks.result === "PENDING",
+    (pick) => pick.result === "PENDING",
   ).length;
   const numberOfWinningPicks = picksResults.filter(
-    ({ picks }) => picks.result === "WON",
+    (pick) => pick.result === "WON",
   ).length;
   if (numberOfPendingPicks === 0 && numberOfWinningPicks === 1) {
-    return picksResults.find(({ picks }) => picks.result === "WON");
+    return picksResults.find((pick) => pick.result === "WON");
   }
   return undefined;
 }

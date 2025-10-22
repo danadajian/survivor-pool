@@ -3,7 +3,11 @@ import * as v from "valibot";
 
 import { db } from "../../db";
 import { members, picks } from "../../schema";
-import { fetchCurrentGames, GamesResponse } from "../pool/backend";
+import {
+  fetchCurrentGames,
+  GamesResponse,
+  userIsEliminated,
+} from "../pool/backend";
 
 export const fetchPicksForPoolInput = v.object({
   poolId: v.string(),
@@ -79,9 +83,19 @@ export async function fetchPicksForPoolWithGamesResponse({
     };
   });
 
-  const eliminatedUsers = await db.query.members.findMany({
+  const poolMembers = await db.query.members.findMany({
     where: eq(members.poolId, poolId),
-  }); // TODO: infer eliminated users
+  });
+  const picksForPoolAndSeason = await db.query.picks.findMany({
+    where: and(eq(picks.poolId, poolId), eq(picks.season, currentSeason)),
+  });
+  const eliminatedUsers = poolMembers.filter(({ username }) =>
+    userIsEliminated({
+      username,
+      currentWeek: weekToUse,
+      picksForPoolAndSeason,
+    }),
+  );
 
   return {
     picks: picksWithSecrets,
