@@ -1,6 +1,10 @@
 import { describe, expect, test } from "bun:test";
 
-import { Events, getEventButtons } from "../src/pages/pool/backend";
+import {
+  Events,
+  getEventButtons,
+  userIsEliminated,
+} from "../src/pages/pool/backend";
 import { picks } from "../src/schema";
 import { buildPickHeader } from "../src/utils/build-pick-header";
 import { mockEspnResponse } from "./mocks";
@@ -148,5 +152,47 @@ describe("team buttons", () => {
       buttons.find((button) => button.homeTeamButton.team?.name === "Jets")
         ?.homeTeamButton.buttonDisabled,
     ).toBeTrue();
+  });
+});
+
+describe("user elimination", () => {
+  test("failure to pick in week 1 does not eliminate user", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    const result = userIsEliminated({
+      username: "user1",
+      currentWeek: 1,
+      picksForPoolAndSeason,
+    });
+    expect(result).toBeFalse();
+  });
+
+  test("failure to pick in a previous week eliminates user", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 3,
+        teamPicked: "Giants",
+        result: "PENDING",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    const result = userIsEliminated({
+      username: "user1",
+      currentWeek: 3,
+      picksForPoolAndSeason,
+    });
+    expect(result).toBeTrue();
   });
 });

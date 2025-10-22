@@ -208,14 +208,14 @@ describe("feature tests", () => {
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(
-      await userIsEliminated({
+      userIsEliminated({
         username: user1,
         currentWeek: 1,
         picksForPoolAndSeason,
       }),
     ).toBeFalse();
     expect(
-      await userIsEliminated({
+      userIsEliminated({
         username: user2,
         currentWeek: 1,
         picksForPoolAndSeason,
@@ -257,7 +257,7 @@ describe("feature tests", () => {
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(
-      await userIsEliminated({
+      userIsEliminated({
         username: user1,
         currentWeek: 1,
         picksForPoolAndSeason,
@@ -273,7 +273,7 @@ describe("feature tests", () => {
     });
     expect(userPick2?.result).toEqual("WON");
     expect(
-      await userIsEliminated({
+      userIsEliminated({
         username: user2,
         currentWeek: 1,
         picksForPoolAndSeason,
@@ -334,7 +334,7 @@ describe("feature tests", () => {
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(
-      await userIsEliminated({
+      userIsEliminated({
         username: user3,
         currentWeek: 2,
         picksForPoolAndSeason,
@@ -412,14 +412,14 @@ describe("feature tests", () => {
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(
-      await userIsEliminated({
+      userIsEliminated({
         username: user1,
         currentWeek: 2,
         picksForPoolAndSeason,
       }),
     ).toBeFalse();
     expect(
-      await userIsEliminated({
+      userIsEliminated({
         username: user2,
         currentWeek: 2,
         picksForPoolAndSeason,
@@ -488,7 +488,7 @@ describe("feature tests", () => {
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(
-      await userIsEliminated({
+      userIsEliminated({
         username: user2,
         currentWeek: 3,
         picksForPoolAndSeason,

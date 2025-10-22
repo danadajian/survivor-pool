@@ -53,7 +53,7 @@ export async function fetchPoolInfo({
   const picksForPoolAndSeason = await db.query.picks.findMany({
     where: and(eq(picks.poolId, poolId), eq(picks.season, currentSeason)),
   });
-  const eliminated = await userIsEliminated({
+  const eliminated = userIsEliminated({
     username,
     currentWeek,
     picksForPoolAndSeason,
@@ -340,7 +340,7 @@ export async function findPoolWinner(
   return undefined;
 }
 
-export async function userIsEliminated({
+export function userIsEliminated({
   username,
   currentWeek,
   picksForPoolAndSeason,
@@ -367,16 +367,23 @@ export async function userIsEliminated({
   return userLost && atLeastOneUserWon;
 }
 
-// TODO: handle case where week 1 pick week 2 no pick week 3 pick
 function failedToPickInAPreviousWeek(
-  allUserPicks: (typeof picks.$inferSelect)[],
+  picksForPoolAndSeason: (typeof picks.$inferSelect)[],
   username: string,
   week: number,
 ) {
-  return (
-    week > 1 &&
-    !allUserPicks.some((pick) => pick.username === username && pick.week < week)
+  const userPicks = picksForPoolAndSeason.filter(
+    (pick) => pick.username === username,
   );
+  const weeksUserPicked = userPicks.map((pick) => pick.week);
+  const allWeeksUntilCurrentWeek = Array.from(
+    { length: week - 1 },
+    (_, i) => i + 1,
+  );
+  const userPickedInEachPreviousWeek = allWeeksUntilCurrentWeek.every((week) =>
+    weeksUserPicked.includes(week),
+  );
+  return !userPickedInEachPreviousWeek;
 }
 
 export async function makePick({
