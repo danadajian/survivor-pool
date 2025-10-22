@@ -15,7 +15,6 @@ export async function fetchPoolsForUser({
     .select({
       poolId: pools.id,
       poolName: pools.name,
-      eliminated: members.eliminated,
       creator: pools.creator,
     })
     .from(members)

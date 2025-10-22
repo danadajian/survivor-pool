@@ -1,5 +1,5 @@
 import { Events } from "../pages/pool/backend";
-import { members, picks } from "../schema";
+import { picks } from "../schema";
 import { checkIfPickIsLocked } from "./check-if-pick-is-locked";
 
 export function buildPickHeader({
@@ -9,7 +9,7 @@ export function buildPickHeader({
 }: {
   events: Events;
   userPick?: typeof picks.$inferSelect;
-  eliminated: typeof members.eliminated.default;
+  eliminated: boolean;
 }) {
   const pickIsLocked = checkIfPickIsLocked({
     events,

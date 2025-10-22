@@ -352,7 +352,7 @@ export async function userIsEliminated({
   const picksResult = await db.query.picks.findMany({
     where: and(eq(picks.poolId, poolId), eq(picks.season, currentSeason)),
   });
-  if (failedToPickLastWeek(picksResult, username, currentWeek)) {
+  if (failedToPickInAPreviousWeek(picksResult, username, currentWeek)) {
     return true;
   }
   const allPicksThisWeek = picksResult.filter(
@@ -368,7 +368,8 @@ export async function userIsEliminated({
   return userLost && atLeastOneUserWon;
 }
 
-function failedToPickLastWeek(
+// TODO: handle case where week 1 pick week 2 no pick week 3 pick
+function failedToPickInAPreviousWeek(
   allUserPicks: (typeof picks.$inferSelect)[],
   username: string,
   week: number,
@@ -427,10 +428,6 @@ export async function reactivatePool({
   poolId,
   season,
 }: v.InferInput<typeof reactivatePoolInput>) {
-  await db
-    .update(members)
-    .set({ eliminated: false })
-    .where(eq(members.poolId, poolId));
   await db
     .delete(picks)
     .where(and(eq(picks.poolId, poolId), eq(picks.season, season)));

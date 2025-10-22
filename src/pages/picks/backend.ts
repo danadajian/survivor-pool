@@ -80,8 +80,8 @@ export async function fetchPicksForPoolWithGamesResponse({
   });
 
   const eliminatedUsers = await db.query.members.findMany({
-    where: and(eq(members.eliminated, true), eq(members.poolId, poolId)),
-  });
+    where: eq(members.poolId, poolId),
+  }); // TODO: infer eliminated users
 
   return {
     picks: picksWithSecrets,

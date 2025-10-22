@@ -35,5 +35,4 @@ export const members = pgTable("members", {
   username: varchar("username", { length: 256 }).notNull(),
   firstName: varchar("first_name", { length: 256 }),
   lastName: varchar("last_name", { length: 256 }),
-  eliminated: boolean("eliminated").notNull().default(false),
 });
