@@ -2,36 +2,23 @@ import { and, eq } from "drizzle-orm";
 
 import { db } from "../../src/db";
 import { type Events } from "../../src/pages/pool/backend";
-import { members, picks } from "../../src/schema";
+import { picks } from "../../src/schema";
 
 export async function updateResults(
   events: Events,
   week: number,
   season: number,
 ) {
-  const membersStillAlive = await getMembersStillAlive();
-  await updatePickResults(events, membersStillAlive, week, season);
-  await eliminateUsers(membersStillAlive, week, season);
-}
+  const pendingUserPicksThisWeek = await db.query.picks.findMany({
+    where: and(
+      eq(picks.week, week),
+      eq(picks.season, season),
+      eq(picks.result, "PENDING"),
+    ),
+  });
+  const allPoolMembers = await db.query.members.findMany();
 
-async function updatePickResults(
-  events: Events,
-  membersStillAlive: (typeof members.$inferSelect)[],
-  week: number,
-  season: number,
-) {
-  const pendingUserPicksThisWeek = await db
-    .select()
-    .from(picks)
-    .where(
-      and(
-        eq(picks.week, week),
-        eq(picks.season, season),
-        eq(picks.result, "PENDING"),
-      ),
-    );
-
-  for (const { username, poolId } of membersStillAlive) {
+  for (const { username, poolId } of allPoolMembers) {
     const userPick = pendingUserPicksThisWeek.find(
       (pick) => pick.poolId === poolId && pick.username === username,
     );
@@ -58,41 +45,6 @@ async function updatePickResults(
   }
 }
 
-async function eliminateUsers(
-  membersStillAlive: (typeof members.$inferSelect)[],
-  week: number,
-  season: number,
-) {
-  const allUserPicks = await db
-    .select()
-    .from(picks)
-    .where(and(eq(picks.season, season)));
-
-  for (const { username, poolId } of membersStillAlive) {
-    if (failedToPickLastWeek(allUserPicks, username, week)) {
-      await eliminateUser(username, poolId);
-      continue;
-    }
-
-    const userPicksForPoolId = allUserPicks.filter(
-      (pick) => pick.week === week && pick.poolId === poolId,
-    );
-    const userLost = userPicksForPoolId.find(
-      (pick) => pick.username === username && pick.result === "LOST",
-    );
-    const atLeastOneUserWon = userPicksForPoolId.some(
-      (pick) => pick.result === "WON",
-    );
-    if (userLost && atLeastOneUserWon) {
-      await eliminateUser(username, poolId);
-    }
-  }
-}
-
-async function getMembersStillAlive() {
-  return db.select().from(members).where(eq(members.eliminated, false));
-}
-
 function getResult(teamPicked: string, events: Events) {
   const teamPickedInEvent = events.find((event) =>
     event.competitions[0]?.competitors.some(
@@ -109,23 +61,4 @@ function getResult(teamPicked: string, events: Events) {
   }
 
   return teamPickedFromApi.winner === true ? "WON" : "LOST";
-}
-
-async function eliminateUser(username: string, poolId: string) {
-  console.log(`Eliminating user ${username} from poolId ${poolId}...`);
-  await db
-    .update(members)
-    .set({ eliminated: true })
-    .where(and(eq(members.username, username), eq(members.poolId, poolId)));
-}
-
-function failedToPickLastWeek(
-  allUserPicks: (typeof picks.$inferSelect)[],
-  username: string,
-  week: number,
-) {
-  return (
-    week > 1 &&
-    !allUserPicks.some((pick) => pick.username === username && pick.week < week)
-  );
 }

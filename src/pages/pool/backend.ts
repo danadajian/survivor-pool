@@ -289,13 +289,12 @@ export async function fetchPicksDataForUser({
   };
 }
 
-export async function fetchPoolMembers(poolId: string) {
+async function fetchPoolMembers(poolId: string) {
   return db
     .select({
       username: members.username,
       firstName: members.firstName,
       lastName: members.lastName,
-      eliminated: members.eliminated,
       poolName: pools.name,
       creator: pools.creator,
     })
