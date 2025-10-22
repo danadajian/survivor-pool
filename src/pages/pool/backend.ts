@@ -48,11 +48,15 @@ export async function fetchPoolInfo({
     week: currentWeek,
     season: currentSeason,
   });
-  const poolWinner = await findPoolWinner(poolId, currentWeek, currentSeason);
 
   const picksForPoolAndSeason = await db.query.picks.findMany({
     where: and(eq(picks.poolId, poolId), eq(picks.season, currentSeason)),
   });
+  const poolWinner = await findPoolWinner(
+    poolId,
+    currentWeek,
+    picksForPoolAndSeason,
+  );
   const eliminated = userIsEliminated({
     username,
     currentWeek,
@@ -308,13 +312,10 @@ async function fetchPoolMembers(poolId: string) {
 export async function findPoolWinner(
   poolId: string,
   currentWeek: number,
-  season: number,
+  picksForPoolAndSeason: (typeof picks.$inferSelect)[],
 ) {
   const poolMembers = await db.query.members.findMany({
     where: eq(members.poolId, poolId),
-  });
-  const picksForPoolAndSeason = await db.query.picks.findMany({
-    where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
   });
   const winners = poolMembers.filter(
     ({ username }) =>
