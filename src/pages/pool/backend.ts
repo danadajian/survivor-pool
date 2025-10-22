@@ -50,7 +50,12 @@ export async function fetchPoolInfo({
   });
   const poolWinner = await findPoolWinner(poolId, currentWeek, currentSeason);
 
-  const { poolName, creator: poolCreator, eliminated } = poolMember;
+  const eliminated = await userIsEliminated({
+    username,
+    poolId,
+    currentWeek,
+    currentSeason,
+  });
   const pickHeader = buildPickHeader({
     events,
     userPick,
@@ -62,6 +67,7 @@ export async function fetchPoolInfo({
     forbiddenTeams,
     eliminated,
   });
+  const { poolName, creator: poolCreator } = poolMember;
 
   return {
     pickHeader,
@@ -331,6 +337,47 @@ export async function findPoolWinner(
     return picksResults.find(({ picks }) => picks.result === "WON");
   }
   return undefined;
+}
+
+export async function userIsEliminated({
+  username,
+  currentWeek,
+  currentSeason,
+  poolId,
+}: {
+  username: string;
+  currentWeek: number;
+  currentSeason: number;
+  poolId: string;
+}) {
+  const picksResult = await db.query.picks.findMany({
+    where: and(eq(picks.poolId, poolId), eq(picks.season, currentSeason)),
+  });
+  if (failedToPickLastWeek(picksResult, username, currentWeek)) {
+    return true;
+  }
+  const allPicksThisWeek = picksResult.filter(
+    (pick) => pick.week === currentWeek,
+  );
+  const userLost = allPicksThisWeek.some(
+    (pick) => pick.username === username && pick.result === "LOST",
+  );
+  const atLeastOneUserWon = allPicksThisWeek.some(
+    (pick) => pick.result === "WON",
+  );
+
+  return userLost && atLeastOneUserWon;
+}
+
+function failedToPickLastWeek(
+  allUserPicks: (typeof picks.$inferSelect)[],
+  username: string,
+  week: number,
+) {
+  return (
+    week > 1 &&
+    !allUserPicks.some((pick) => pick.username === username && pick.week < week)
+  );
 }
 
 export async function makePick({
