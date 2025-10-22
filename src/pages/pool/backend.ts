@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq, max } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import * as v from "valibot";
 
 import { db } from "../../db";
@@ -310,39 +310,18 @@ export async function findPoolWinner(
   currentWeek: number,
   season: number,
 ) {
-  const maxWeek = db.select({ maxWeek: max(picks.week) }).from(picks);
-  const picksResults = await db
-    .select({
-      username: picks.username,
-      firstName: members.firstName,
-      lastName: members.lastName,
-      week: picks.week,
-      result: picks.result,
-    })
-    .from(picks)
-    .innerJoin(
-      members,
-      and(
-        eq(picks.username, members.username),
-        eq(picks.poolId, members.poolId),
-      ),
-    )
-    .where(
-      and(
-        eq(picks.poolId, poolId),
-        eq(picks.season, season),
-        eq(picks.week, maxWeek),
-      ),
-    );
-
-  const numberOfPendingPicks = picksResults.filter(
-    (pick) => pick.result === "PENDING",
-  ).length;
-  const numberOfWinningPicks = picksResults.filter(
-    (pick) => pick.result === "WON",
-  ).length;
-  if (numberOfPendingPicks === 0 && numberOfWinningPicks === 1) {
-    return picksResults.find((pick) => pick.result === "WON");
+  const poolMembers = await db.query.members.findMany({
+    where: eq(members.poolId, poolId),
+  });
+  const picksForPoolAndSeason = await db.query.picks.findMany({
+    where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
+  });
+  const winners = poolMembers.filter(
+    ({ username }) =>
+      !userIsEliminated({ username, currentWeek, picksForPoolAndSeason }),
+  );
+  if (picksForPoolAndSeason.length > 0 && winners.length === 1) {
+    return winners[0];
   }
   return undefined;
 }
@@ -385,12 +364,16 @@ function failedToPickInAPreviousWeek(
     (pick) => pick.username === username,
   );
   const weeksUserPicked = userPicks.map((pick) => pick.week);
+  const weeksEveryoneElsePicked = picksForPoolAndSeason
+    .filter((pick) => pick.username !== username)
+    .map((pick) => pick.week);
   const allWeeksUntilCurrentWeek = Array.from(
     { length: week - 1 },
     (_, i) => i + 1,
   );
-  const userPickedInEachPreviousWeek = allWeeksUntilCurrentWeek.every((week) =>
-    weeksUserPicked.includes(week),
+  const userPickedInEachPreviousWeek = allWeeksUntilCurrentWeek.every(
+    (week) =>
+      weeksUserPicked.includes(week) || !weeksEveryoneElsePicked.includes(week),
   );
   return !userPickedInEachPreviousWeek;
 }

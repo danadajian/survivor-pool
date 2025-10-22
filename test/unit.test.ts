@@ -301,4 +301,45 @@ describe("user elimination", () => {
     });
     expect(resultNextWeek).toBeTrue();
   });
+
+  test("failing to pick in a previous week when no one else picked does not eliminate user", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 3,
+        teamPicked: "Giants",
+        result: "PENDING",
+      },
+      {
+        username: "user2",
+        week: 3,
+        teamPicked: "Eagles",
+        result: "PENDING",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    const resultUser1 = userIsEliminated({
+      username: "user1",
+      currentWeek: 3,
+      picksForPoolAndSeason,
+    });
+    expect(resultUser1).toBeFalse();
+    const resultUser2 = userIsEliminated({
+      username: "user2",
+      currentWeek: 3,
+      picksForPoolAndSeason,
+    });
+    expect(resultUser2).toBeFalse();
+  });
 });
