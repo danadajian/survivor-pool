@@ -8,8 +8,6 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { DEFAULT_LIVES } from "./constants";
-
 export const resultEnum = pgEnum("result", ["WON", "LOST", "PENDING"]);
 
 export const picks = pgTable("picks", {
@@ -28,7 +26,7 @@ export const pools = pgTable("pools", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 256 }).notNull(),
   creator: varchar("creator", { length: 256 }).notNull(),
-  lives: integer("lives").notNull().default(DEFAULT_LIVES),
+  lives: integer("lives").notNull().default(1),
   weekStarted: integer("week_started").notNull().default(1),
   weekEnded: integer("week_ended"),
   season: integer("season").notNull(),

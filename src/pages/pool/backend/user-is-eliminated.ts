@@ -1,23 +1,18 @@
-import { DEFAULT_LIVES } from "../../../constants";
 import { picks } from "../../../schema";
 
 export function userIsEliminated({
   username,
   currentWeek,
   picksForPoolAndSeason,
-  lives = DEFAULT_LIVES,
+  weekStarted,
+  lives,
 }: {
   username: string;
   currentWeek: number;
   picksForPoolAndSeason: (typeof picks.$inferSelect)[];
-  lives?: number;
+  weekStarted: number;
+  lives: number;
 }) {
-  if (
-    failedToPickInAPreviousWeek(picksForPoolAndSeason, username, currentWeek)
-  ) {
-    return true;
-  }
-
   const allUserPicks = picksForPoolAndSeason.filter(
     (pick) => pick.username === username,
   );
@@ -33,13 +28,23 @@ export function userIsEliminated({
         .some((pick) => pick.result === "WON"),
   );
 
-  return lostPicksWhereSomeoneElseWonThatWeek.length === lives;
+  return (
+    lostPicksWhereSomeoneElseWonThatWeek.length +
+      numberOfWeeksFailedToPick(
+        picksForPoolAndSeason,
+        username,
+        currentWeek,
+        weekStarted,
+      ) >=
+    lives
+  );
 }
 
-function failedToPickInAPreviousWeek(
+function numberOfWeeksFailedToPick(
   picksForPoolAndSeason: (typeof picks.$inferSelect)[],
   username: string,
-  week: number,
+  currentWeek: number,
+  weekStarted: number,
 ) {
   const userPicks = picksForPoolAndSeason.filter(
     (pick) => pick.username === username,
@@ -48,13 +53,12 @@ function failedToPickInAPreviousWeek(
   const weeksEveryoneElsePicked = picksForPoolAndSeason
     .filter((pick) => pick.username !== username)
     .map((pick) => pick.week);
-  const allWeeksUntilCurrentWeek = Array.from(
-    { length: week - 1 },
-    (_, i) => i + 1,
+  const allWeeksFromWeekStartedToCurrentWeek = Array.from(
+    { length: currentWeek - weekStarted + 1 },
+    (_, i) => i + weekStarted,
   );
-  const userPickedInEachPreviousWeek = allWeeksUntilCurrentWeek.every(
+  return allWeeksFromWeekStartedToCurrentWeek.filter(
     (week) =>
-      weeksUserPicked.includes(week) || !weeksEveryoneElsePicked.includes(week),
-  );
-  return !userPickedInEachPreviousWeek;
+      !weeksUserPicked.includes(week) && weeksEveryoneElsePicked.includes(week),
+  ).length;
 }

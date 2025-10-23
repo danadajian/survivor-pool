@@ -73,7 +73,13 @@ describe("feature tests", () => {
     const picksForPoolAndSeason = await db.query.picks.findMany({
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
-    const poolWinner = await findPoolWinner(poolId, 1, picksForPoolAndSeason);
+    const poolWinner = await findPoolWinner({
+      poolId,
+      currentWeek: 1,
+      picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
+    });
     expect(poolWinner).toBeUndefined();
   });
 
@@ -218,6 +224,8 @@ describe("feature tests", () => {
         username: user1,
         currentWeek: 1,
         picksForPoolAndSeason,
+        weekStarted: 1,
+        lives: 1,
       }),
     ).toBeFalse();
     expect(
@@ -225,6 +233,8 @@ describe("feature tests", () => {
         username: user2,
         currentWeek: 1,
         picksForPoolAndSeason,
+        weekStarted: 1,
+        lives: 1,
       }),
     ).toBeFalse();
   });
@@ -283,6 +293,8 @@ describe("feature tests", () => {
         username: user1,
         currentWeek: 1,
         picksForPoolAndSeason,
+        weekStarted: 1,
+        lives: 1,
       }),
     ).toBeFalse();
 
@@ -299,6 +311,8 @@ describe("feature tests", () => {
         username: user2,
         currentWeek: 1,
         picksForPoolAndSeason,
+        weekStarted: 1,
+        lives: 1,
       }),
     ).toBeFalse();
   });
@@ -360,6 +374,8 @@ describe("feature tests", () => {
         username: user3,
         currentWeek: 2,
         picksForPoolAndSeason,
+        weekStarted: 1,
+        lives: 1,
       }),
     ).toBeTrue();
   });
@@ -391,7 +407,13 @@ describe("feature tests", () => {
     const picksForPoolAndSeason = await db.query.picks.findMany({
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
-    const poolWinner = await findPoolWinner(poolId, 1, picksForPoolAndSeason);
+    const poolWinner = await findPoolWinner({
+      poolId,
+      currentWeek: 1,
+      picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
+    });
     expect(poolWinner).toBeUndefined();
   });
 
@@ -441,6 +463,8 @@ describe("feature tests", () => {
         username: user1,
         currentWeek: 2,
         picksForPoolAndSeason,
+        weekStarted: 1,
+        lives: 1,
       }),
     ).toBeFalse();
     expect(
@@ -448,6 +472,8 @@ describe("feature tests", () => {
         username: user2,
         currentWeek: 2,
         picksForPoolAndSeason,
+        weekStarted: 1,
+        lives: 1,
       }),
     ).toBeFalse();
   });
@@ -517,6 +543,8 @@ describe("feature tests", () => {
         username: user2,
         currentWeek: 3,
         picksForPoolAndSeason,
+        weekStarted: 1,
+        lives: 1,
       }),
     ).toBeTrue();
   });
@@ -526,13 +554,21 @@ describe("feature tests", () => {
     const picksForPoolAndSeason = await db.query.picks.findMany({
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
-    const poolWinner = await findPoolWinner(poolId, 3, picksForPoolAndSeason);
-    expect(poolWinner?.username).toEqual(user1);
-    const poolWinnerNextWeek = await findPoolWinner(
+    const poolWinner = await findPoolWinner({
       poolId,
-      4,
+      currentWeek: 3,
       picksForPoolAndSeason,
-    );
+      weekStarted: 1,
+      lives: 1,
+    });
+    expect(poolWinner?.username).toEqual(user1);
+    const poolWinnerNextWeek = await findPoolWinner({
+      poolId,
+      currentWeek: 4,
+      picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
+    });
     expect(poolWinnerNextWeek?.username).toEqual(user1);
   });
 
@@ -611,15 +647,17 @@ describe("feature tests", () => {
         username: user1,
         currentWeek,
         picksForPoolAndSeason,
+        weekStarted: 4,
         lives: 2,
       }),
     ).toBeFalse();
-    const poolWinner = await findPoolWinner(
+    const poolWinner = await findPoolWinner({
       poolId,
       currentWeek,
       picksForPoolAndSeason,
-      2,
-    );
+      weekStarted: 4,
+      lives: 2,
+    });
     expect(poolWinner).toBeUndefined();
   });
 
@@ -666,16 +704,18 @@ describe("feature tests", () => {
       userIsEliminated({
         username: user1,
         currentWeek,
+        weekStarted: 4,
         picksForPoolAndSeason,
         lives: 2,
       }),
     ).toBeTrue();
-    const poolWinner = await findPoolWinner(
+    const poolWinner = await findPoolWinner({
       poolId,
       currentWeek,
       picksForPoolAndSeason,
-      2,
-    );
+      weekStarted: 4,
+      lives: 2,
+    });
     expect(poolWinner?.username).toEqual(user2);
   });
 

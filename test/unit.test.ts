@@ -173,6 +173,8 @@ describe("user elimination", () => {
       username: "user1",
       currentWeek: 1,
       picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
     });
     expect(result).toBeFalse();
   });
@@ -204,7 +206,7 @@ describe("user elimination", () => {
         result: "PENDING",
       },
       {
-        username: "user3",
+        username: "user2",
         week: 3,
         teamPicked: "Bengals",
         result: "PENDING",
@@ -214,6 +216,8 @@ describe("user elimination", () => {
       username: "user1",
       currentWeek: 3,
       picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
     });
     expect(result).toBeTrue();
   });
@@ -249,12 +253,16 @@ describe("user elimination", () => {
       username: "user1",
       currentWeek: 3,
       picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
     });
     expect(result).toBeFalse();
     const resultNextWeek = userIsEliminated({
       username: "user1",
       currentWeek: 3,
       picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
     });
     expect(resultNextWeek).toBeFalse();
   });
@@ -290,12 +298,16 @@ describe("user elimination", () => {
       username: "user2",
       currentWeek: 2,
       picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
     });
     expect(result).toBeTrue();
     const resultNextWeek = userIsEliminated({
       username: "user2",
       currentWeek: 3,
       picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
     });
     expect(resultNextWeek).toBeTrue();
   });
@@ -331,13 +343,103 @@ describe("user elimination", () => {
       username: "user1",
       currentWeek: 3,
       picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
     });
     expect(resultUser1).toBeFalse();
     const resultUser2 = userIsEliminated({
       username: "user2",
       currentWeek: 3,
       picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
     });
     expect(resultUser2).toBeFalse();
+  });
+
+  test("failing to pick in a previous week in a pool with 2 lives does not eliminate user", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 2,
+        teamPicked: "Eagles",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 3,
+        teamPicked: "Giants",
+        result: "PENDING",
+      },
+      {
+        username: "user2",
+        week: 3,
+        teamPicked: "Bengals",
+        result: "PENDING",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    const resultUser1 = userIsEliminated({
+      username: "user1",
+      currentWeek: 3,
+      picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 2,
+    });
+    expect(resultUser1).toBeFalse();
+  });
+
+  test("failing to pick in a previous week in a pool with 2 lives and then losing eliminates user", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 1,
+        teamPicked: "49ers",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 2,
+        teamPicked: "Eagles",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 3,
+        teamPicked: "Giants",
+        result: "LOST",
+      },
+      {
+        username: "user2",
+        week: 3,
+        teamPicked: "Bengals",
+        result: "WON",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    const resultUser1 = userIsEliminated({
+      username: "user1",
+      currentWeek: 3,
+      picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 2,
+    });
+    expect(resultUser1).toBeTrue();
   });
 });

@@ -1,8 +1,9 @@
+import { TRPCError } from "@trpc/server";
 import { and, asc, desc, eq } from "drizzle-orm";
 import * as v from "valibot";
 
 import { db } from "../../db";
-import { members, picks } from "../../schema";
+import { members, picks, pools } from "../../schema";
 import { fetchCurrentGames } from "../../utils/fetch-current-games";
 import { userIsEliminated } from "../pool/backend/user-is-eliminated";
 
@@ -78,11 +79,22 @@ export async function fetchPicksForPool({
   const picksForPoolAndSeason = await db.query.picks.findMany({
     where: and(eq(picks.poolId, poolId), eq(picks.season, currentSeason)),
   });
+  const poolsResult = await db.query.pools.findFirst({
+    where: eq(pools.id, poolId),
+  });
+  if (!poolsResult)
+    throw new TRPCError({
+      message: "Pool could not be found.",
+      code: "INTERNAL_SERVER_ERROR",
+    });
+  const { weekStarted, lives } = poolsResult;
   const eliminatedUsers = poolMembers.filter(({ username }) =>
     userIsEliminated({
       username,
       currentWeek: weekToUse,
       picksForPoolAndSeason,
+      weekStarted,
+      lives,
     }),
   );
 

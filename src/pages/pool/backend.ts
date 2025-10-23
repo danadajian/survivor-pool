@@ -47,17 +47,25 @@ export async function fetchPoolInfo({
   const poolsResult = await db.query.pools.findFirst({
     where: eq(pools.id, poolId),
   });
-  const poolWinner = await findPoolWinner(
+  if (!poolsResult)
+    throw new TRPCError({
+      message: "Pool could not be found.",
+      code: "INTERNAL_SERVER_ERROR",
+    });
+  const { weekStarted, lives } = poolsResult;
+  const poolWinner = await findPoolWinner({
     poolId,
     currentWeek,
     picksForPoolAndSeason,
-    poolsResult?.lives,
-  );
+    weekStarted,
+    lives,
+  });
   const eliminated = userIsEliminated({
     username,
     currentWeek,
     picksForPoolAndSeason,
-    lives: poolsResult?.lives,
+    weekStarted,
+    lives,
   });
   const pickHeader = buildPickHeader({
     events,
