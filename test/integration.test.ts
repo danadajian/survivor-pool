@@ -19,7 +19,7 @@ import { fetchPicksDataForUser } from "../src/pages/pool/backend/fetch-picks-dat
 import { findPoolWinner } from "../src/pages/pool/backend/find-pool-winner";
 import { makePick } from "../src/pages/pool/backend/make-pick";
 import { reactivatePool } from "../src/pages/pool/backend/reactivate-pool";
-import { userIsEliminated } from "../src/pages/pool/backend/user-is-eliminated";
+import { userEliminationStatus } from "../src/pages/pool/backend/user-elimination-status";
 import { members, picks, pools } from "../src/schema";
 import { Events, GamesResponse } from "../src/utils/fetch-current-games";
 
@@ -220,22 +220,22 @@ describe("feature tests", () => {
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(
-      userIsEliminated({
+      userEliminationStatus({
         username: user1,
         currentWeek: 1,
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
-      }),
+      }).eliminated,
     ).toBeFalse();
     expect(
-      userIsEliminated({
+      userEliminationStatus({
         username: user2,
         currentWeek: 1,
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
-      }),
+      }).eliminated,
     ).toBeFalse();
   });
 
@@ -289,13 +289,13 @@ describe("feature tests", () => {
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(
-      userIsEliminated({
+      userEliminationStatus({
         username: user1,
         currentWeek: 1,
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
-      }),
+      }).eliminated,
     ).toBeFalse();
 
     const userPick2 = await db.query.picks.findFirst({
@@ -307,13 +307,13 @@ describe("feature tests", () => {
     });
     expect(userPick2?.result).toEqual("WON");
     expect(
-      userIsEliminated({
+      userEliminationStatus({
         username: user2,
         currentWeek: 1,
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
-      }),
+      }).eliminated,
     ).toBeFalse();
   });
 
@@ -370,13 +370,13 @@ describe("feature tests", () => {
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(
-      userIsEliminated({
+      userEliminationStatus({
         username: user3,
         currentWeek: 2,
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
-      }),
+      }).eliminated,
     ).toBeTrue();
   });
 
@@ -459,22 +459,22 @@ describe("feature tests", () => {
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(
-      userIsEliminated({
+      userEliminationStatus({
         username: user1,
         currentWeek: 2,
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
-      }),
+      }).eliminated,
     ).toBeFalse();
     expect(
-      userIsEliminated({
+      userEliminationStatus({
         username: user2,
         currentWeek: 2,
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
-      }),
+      }).eliminated,
     ).toBeFalse();
   });
 
@@ -539,13 +539,13 @@ describe("feature tests", () => {
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(
-      userIsEliminated({
+      userEliminationStatus({
         username: user2,
         currentWeek: 3,
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
-      }),
+      }).eliminated,
     ).toBeTrue();
   });
 
@@ -643,13 +643,13 @@ describe("feature tests", () => {
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(
-      userIsEliminated({
+      userEliminationStatus({
         username: user1,
         currentWeek,
         picksForPoolAndSeason,
         weekStarted: 4,
         lives: 2,
-      }),
+      }).eliminated,
     ).toBeFalse();
     const poolWinner = await findPoolWinner({
       poolId,
@@ -701,13 +701,13 @@ describe("feature tests", () => {
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(
-      userIsEliminated({
+      userEliminationStatus({
         username: user1,
         currentWeek,
         weekStarted: 4,
         picksForPoolAndSeason,
         lives: 2,
-      }),
+      }).eliminated,
     ).toBeTrue();
     const poolWinner = await findPoolWinner({
       poolId,

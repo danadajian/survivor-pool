@@ -9,7 +9,7 @@ import { fetchCurrentGames } from "../../utils/fetch-current-games";
 import { fetchPicksDataForUser } from "./backend/fetch-picks-data-for-user";
 import { findPoolWinner } from "./backend/find-pool-winner";
 import { getEventButtons } from "./backend/get-event-buttons";
-import { userIsEliminated } from "./backend/user-is-eliminated";
+import { userEliminationStatus } from "./backend/user-elimination-status";
 
 export const fetchPoolInfoInput = v.object({
   username: v.string(),
@@ -60,7 +60,7 @@ export async function fetchPoolInfo({
     weekStarted,
     lives,
   });
-  const eliminated = userIsEliminated({
+  const { eliminated, livesRemaining } = userEliminationStatus({
     username,
     currentWeek,
     picksForPoolAndSeason,
@@ -82,6 +82,7 @@ export async function fetchPoolInfo({
 
   return {
     pickHeader,
+    livesRemaining,
     eventButtons,
     currentSeason,
     currentWeek,

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import { getEventButtons } from "../src/pages/pool/backend/get-event-buttons";
-import { userIsEliminated } from "../src/pages/pool/backend/user-is-eliminated";
+import { userEliminationStatus } from "../src/pages/pool/backend/user-elimination-status";
 import { picks } from "../src/schema";
 import { buildPickHeader } from "../src/utils/build-pick-header";
 import { Events } from "../src/utils/fetch-current-games";
@@ -169,14 +169,15 @@ describe("user elimination", () => {
         result: "WON",
       },
     ] as (typeof picks.$inferSelect)[];
-    const result = userIsEliminated({
+    const { eliminated, livesRemaining } = userEliminationStatus({
       username: "user1",
       currentWeek: 1,
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
     });
-    expect(result).toBeFalse();
+    expect(eliminated).toBeFalse();
+    expect(livesRemaining).toEqual(1);
   });
 
   test("failure to pick in a previous week eliminates user", () => {
@@ -212,14 +213,15 @@ describe("user elimination", () => {
         result: "PENDING",
       },
     ] as (typeof picks.$inferSelect)[];
-    const result = userIsEliminated({
+    const { eliminated, livesRemaining } = userEliminationStatus({
       username: "user1",
       currentWeek: 3,
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
     });
-    expect(result).toBeTrue();
+    expect(eliminated).toBeTrue();
+    expect(livesRemaining).toEqual(0);
   });
 
   test("picking a winning team does not eliminate user", () => {
@@ -249,22 +251,22 @@ describe("user elimination", () => {
         result: "WON",
       },
     ] as (typeof picks.$inferSelect)[];
-    const result = userIsEliminated({
+    const { eliminated } = userEliminationStatus({
       username: "user1",
       currentWeek: 3,
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
     });
-    expect(result).toBeFalse();
-    const resultNextWeek = userIsEliminated({
+    expect(eliminated).toBeFalse();
+    const { eliminated: eliminatedNextWeek } = userEliminationStatus({
       username: "user1",
       currentWeek: 3,
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
     });
-    expect(resultNextWeek).toBeFalse();
+    expect(eliminatedNextWeek).toBeFalse();
   });
 
   test("picking a losing team eliminates user", () => {
@@ -294,22 +296,22 @@ describe("user elimination", () => {
         result: "LOST",
       },
     ] as (typeof picks.$inferSelect)[];
-    const result = userIsEliminated({
+    const { eliminated } = userEliminationStatus({
       username: "user2",
       currentWeek: 2,
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
     });
-    expect(result).toBeTrue();
-    const resultNextWeek = userIsEliminated({
+    expect(eliminated).toBeTrue();
+    const { eliminated: eliminatedNextWeek } = userEliminationStatus({
       username: "user2",
       currentWeek: 3,
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
     });
-    expect(resultNextWeek).toBeTrue();
+    expect(eliminatedNextWeek).toBeTrue();
   });
 
   test("failing to pick in a previous week when no one else picked does not eliminate user", () => {
@@ -339,22 +341,22 @@ describe("user elimination", () => {
         result: "PENDING",
       },
     ] as (typeof picks.$inferSelect)[];
-    const resultUser1 = userIsEliminated({
+    const { eliminated: user1Eliminated } = userEliminationStatus({
       username: "user1",
       currentWeek: 3,
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
     });
-    expect(resultUser1).toBeFalse();
-    const resultUser2 = userIsEliminated({
+    expect(user1Eliminated).toBeFalse();
+    const { eliminated: user2Eliminated } = userEliminationStatus({
       username: "user2",
       currentWeek: 3,
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
     });
-    expect(resultUser2).toBeFalse();
+    expect(user2Eliminated).toBeFalse();
   });
 
   test("failing to pick in a previous week in a pool with 2 lives does not eliminate user", () => {
@@ -390,14 +392,14 @@ describe("user elimination", () => {
         result: "PENDING",
       },
     ] as (typeof picks.$inferSelect)[];
-    const resultUser1 = userIsEliminated({
+    const { eliminated: user1Eliminated } = userEliminationStatus({
       username: "user1",
       currentWeek: 3,
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 2,
     });
-    expect(resultUser1).toBeFalse();
+    expect(user1Eliminated).toBeFalse();
   });
 
   test("failing to pick in a previous week in a pool with 2 lives and then losing eliminates user", () => {
@@ -433,13 +435,13 @@ describe("user elimination", () => {
         result: "WON",
       },
     ] as (typeof picks.$inferSelect)[];
-    const resultUser1 = userIsEliminated({
+    const { eliminated: user1Eliminated } = userEliminationStatus({
       username: "user1",
       currentWeek: 3,
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 2,
     });
-    expect(resultUser1).toBeTrue();
+    expect(user1Eliminated).toBeTrue();
   });
 });

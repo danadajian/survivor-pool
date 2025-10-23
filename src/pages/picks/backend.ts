@@ -5,7 +5,7 @@ import * as v from "valibot";
 import { db } from "../../db";
 import { members, picks, pools } from "../../schema";
 import { fetchCurrentGames } from "../../utils/fetch-current-games";
-import { userIsEliminated } from "../pool/backend/user-is-eliminated";
+import { userEliminationStatus } from "../pool/backend/user-elimination-status";
 
 export const fetchPicksForPoolInput = v.object({
   poolId: v.string(),
@@ -88,14 +88,15 @@ export async function fetchPicksForPool({
       code: "INTERNAL_SERVER_ERROR",
     });
   const { weekStarted, lives } = poolsResult;
-  const eliminatedUsers = poolMembers.filter(({ username }) =>
-    userIsEliminated({
-      username,
-      currentWeek: weekToUse,
-      picksForPoolAndSeason,
-      weekStarted,
-      lives,
-    }),
+  const eliminatedUsers = poolMembers.filter(
+    ({ username }) =>
+      userEliminationStatus({
+        username,
+        currentWeek: weekToUse,
+        picksForPoolAndSeason,
+        weekStarted,
+        lives,
+      }).eliminated,
   );
 
   return {

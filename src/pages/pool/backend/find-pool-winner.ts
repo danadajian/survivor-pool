@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 
 import { db } from "../../../db";
 import { members, picks } from "../../../schema";
-import { userIsEliminated } from "./user-is-eliminated";
+import { userEliminationStatus } from "./user-elimination-status";
 
 export async function findPoolWinner({
   poolId,
@@ -22,13 +22,13 @@ export async function findPoolWinner({
   });
   const winners = poolMembers.filter(
     ({ username }) =>
-      !userIsEliminated({
+      !userEliminationStatus({
         username,
         currentWeek,
         weekStarted,
         picksForPoolAndSeason,
         lives,
-      }),
+      }).eliminated,
   );
   if (picksForPoolAndSeason.length > 0 && winners.length === 1) {
     return winners[0];

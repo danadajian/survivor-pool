@@ -1,6 +1,6 @@
 import { picks } from "../../../schema";
 
-export function userIsEliminated({
+export function userEliminationStatus({
   username,
   currentWeek,
   picksForPoolAndSeason,
@@ -27,20 +27,22 @@ export function userIsEliminated({
         )
         .some((pick) => pick.result === "WON"),
   );
-
-  return (
-    lostPicksWhereSomeoneElseWonThatWeek.length +
-      numberOfWeeksFailedToPick(
-        picksForPoolAndSeason,
-        username,
-        currentWeek,
-        weekStarted,
-      ) >=
-    lives
+  const numberOfWeeksFailedToPick = getNumberOfWeeksFailedToPick(
+    picksForPoolAndSeason,
+    username,
+    currentWeek,
+    weekStarted,
   );
+  const livesLost =
+    lostPicksWhereSomeoneElseWonThatWeek.length + numberOfWeeksFailedToPick;
+
+  return {
+    eliminated: livesLost >= lives,
+    livesRemaining: lives - livesLost,
+  };
 }
 
-function numberOfWeeksFailedToPick(
+function getNumberOfWeeksFailedToPick(
   picksForPoolAndSeason: (typeof picks.$inferSelect)[],
   username: string,
   currentWeek: number,
