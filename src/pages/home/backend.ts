@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import * as v from "valibot";
 
 import { db } from "../../db";
@@ -19,7 +19,7 @@ export async function fetchPoolsForUser({
       creator: pools.creator,
     })
     .from(members)
-    .where(eq(members.username, username))
+    .where(and(eq(members.username, username), isNull(pools.weekEnded)))
     .innerJoin(pools, eq(members.poolId, pools.id));
 }
 

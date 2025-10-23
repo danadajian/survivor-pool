@@ -22,6 +22,12 @@ export default [
       "simple-import-sort/imports": "error",
       "no-only-tests/no-only-tests": "error",
       "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          ignoreRestSiblings: true,
+        },
+      ],
     },
   },
   {

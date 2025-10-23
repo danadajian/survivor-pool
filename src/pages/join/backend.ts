@@ -43,11 +43,11 @@ export async function joinPool({
       code: "CONFLICT",
     });
   }
-  const rows = await db
+  const [rows] = await db
     .insert(members)
     .values({ username, firstName, lastName, poolId })
     .returning({ poolId: members.poolId });
-  return rows.find(Boolean);
+  return rows;
 }
 
 export const poolInput = v.object({

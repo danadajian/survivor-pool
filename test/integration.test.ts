@@ -7,13 +7,13 @@ import {
   Mock,
   mock,
 } from "bun:test";
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 import { updateResults } from "../scripts/update-results/update-results";
 import { db } from "../src/db";
 import { createPool } from "../src/pages/create/backend";
 import { deletePool, editPool } from "../src/pages/home/backend";
-import { joinPool } from "../src/pages/join/backend";
+import { getPool, joinPool } from "../src/pages/join/backend";
 import { fetchPicksForPool } from "../src/pages/picks/backend";
 import { fetchPicksDataForUser } from "../src/pages/pool/backend/fetch-picks-data-for-user";
 import { findPoolWinner } from "../src/pages/pool/backend/find-pool-winner";
@@ -536,13 +536,27 @@ describe("feature tests", () => {
     expect(poolWinnerNextWeek?.username).toEqual(user1);
   });
 
-  it("should reactivate the pool by deleting all picks for current season", async () => {
-    const poolId = await getPoolId();
-    await reactivatePool({ poolId, season });
-    const userPicks = await db.query.picks.findMany({
-      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
+  it("should reactivate the pool by creating a new pool and adding all members", async () => {
+    const weekStarted = 4;
+    mockGamesResponse({
+      week: { number: weekStarted },
+      season: { year: season },
+      events: [],
     });
-    expect(userPicks).toBeEmpty();
+    const oldPoolId = await getPoolId();
+    const newPool = await reactivatePool({ poolId: oldPoolId });
+    if (!newPool) throw new Error();
+    const oldPool = await getPool({ poolId: oldPoolId });
+    expect(oldPool?.weekStarted).toEqual(1);
+    expect(oldPool?.weekEnded).toEqual(weekStarted);
+    expect(newPool?.weekStarted).toEqual(weekStarted);
+    const oldPoolMembers = await db.query.members.findMany({
+      where: eq(members.poolId, oldPoolId),
+    });
+    const newPoolMembers = await db.query.members.findMany({
+      where: eq(members.poolId, newPool.id),
+    });
+    expect(oldPoolMembers.length).toEqual(newPoolMembers.length);
   });
 
   it("should edit the pool to add multiple lives", async () => {
@@ -650,7 +664,7 @@ describe("feature tests", () => {
     expect(
       userIsEliminated({
         username: user1,
-        currentWeek: currentWeek,
+        currentWeek,
         picksForPoolAndSeason,
         lives: 2,
       }),
@@ -664,16 +678,20 @@ describe("feature tests", () => {
     expect(poolWinner?.username).toEqual(user2);
   });
 
-  it("should delete the pool", async () => {
+  it("should delete a pool", async () => {
     const poolId = await getPoolId();
     await deletePool({ poolId });
-    const pools = await db.query.pools.findMany();
-    expect(pools.length).toEqual(0);
+    const poolsResult = await db.query.pools.findMany({
+      where: eq(pools.id, poolId),
+    });
+    expect(poolsResult.length).toEqual(0);
   });
 });
 
 async function getPoolId() {
-  const pool = await db.query.pools.findFirst();
+  const pool = await db.query.pools.findFirst({
+    orderBy: desc(pools.createdAt),
+  });
   if (!pool) throw new Error();
   return pool.id;
 }

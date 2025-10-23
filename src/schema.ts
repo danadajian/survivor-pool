@@ -31,6 +31,7 @@ export const pools = pgTable("pools", {
   lives: integer("lives").notNull().default(DEFAULT_LIVES),
   weekStarted: integer("week_started").notNull().default(1),
   weekEnded: integer("week_ended"),
+  season: integer("season").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

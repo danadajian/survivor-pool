@@ -55,7 +55,7 @@ const PoolComponent = ({
     );
   }
 
-  const onReactivate = () => mutate({ poolId, season: currentSeason });
+  const onReactivate = () => mutate({ poolId });
   const isPoolCreator = username === poolCreator;
 
   if (poolWinner) {

@@ -34,17 +34,19 @@ export async function createPool({
 
   const {
     week: { number: currentWeek },
+    season: { year: currentSeason },
   } = await fetchCurrentGames();
-  const insertResult = await db
+  const [insertResult] = await db
     .insert(pools)
     .values({
       name: poolName,
       lives,
       creator: username,
       weekStarted: currentWeek,
+      season: currentSeason,
     })
     .returning({ id: pools.id });
-  const poolId = insertResult.find(Boolean)?.id;
+  const poolId = insertResult?.id;
   if (!poolId) {
     throw new TRPCError({
       message: "Pool was not created.",
