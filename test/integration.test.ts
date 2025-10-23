@@ -235,6 +235,22 @@ describe("feature tests", () => {
                 winner: true,
               },
               {
+                team: { name: "Eagles" },
+                winner: false,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        competitions: [
+          {
+            competitors: [
+              {
+                team: { name: "Cardinals" },
+                winner: false,
+              },
+              {
                 team: { name: "49ers" },
                 winner: true,
               },
@@ -514,7 +530,7 @@ describe("feature tests", () => {
     expect(poolWinnerNextWeek?.username).toEqual(user1);
   });
 
-  it("should reactivate the pool and delete all picks for current season", async () => {
+  it("should reactivate the pool by deleting all picks for current season", async () => {
     const poolId = await getPoolId();
     await reactivatePool({ poolId, season });
     const userPicks = await db.query.picks.findMany({
@@ -528,6 +544,54 @@ describe("feature tests", () => {
     await editPool({ poolId, name: "Test Pool", lives: 2 });
     const result = await db.select().from(pools).where(eq(pools.id, poolId));
     expect(result[0]?.lives).toEqual(2);
+  });
+
+  it("should not eliminate user with 2 lives after one loss", async () => {
+    const poolId = await getPoolId();
+    await makePick({
+      username: user1,
+      teamPicked: "49ers",
+      week: 4,
+      season,
+      poolId,
+    });
+    await makePick({
+      username: user2,
+      teamPicked: "Giants",
+      week: 4,
+      season,
+      poolId,
+    });
+    const events = [
+      {
+        competitions: [
+          {
+            competitors: [
+              {
+                team: { name: "Giants" },
+                winner: true,
+              },
+              {
+                team: { name: "49ers" },
+                winner: false,
+              },
+            ],
+          },
+        ],
+      },
+    ] as Events;
+    await updateResults(events, 4, season);
+    const picksForPoolAndSeason = await db.query.picks.findMany({
+      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
+    });
+    expect(
+      userIsEliminated({
+        username: user1,
+        currentWeek: 4,
+        picksForPoolAndSeason,
+        lives: 2,
+      }),
+    ).toBeFalse();
   });
 
   it("should delete the pool", async () => {

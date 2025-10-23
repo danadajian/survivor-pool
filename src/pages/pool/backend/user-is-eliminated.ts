@@ -1,13 +1,16 @@
+import { DEFAULT_LIVES } from "../../../constants";
 import { picks } from "../../../schema";
 
 export function userIsEliminated({
   username,
   currentWeek,
   picksForPoolAndSeason,
+  lives = DEFAULT_LIVES,
 }: {
   username: string;
   currentWeek: number;
   picksForPoolAndSeason: (typeof picks.$inferSelect)[];
+  lives?: number;
 }) {
   if (
     failedToPickInAPreviousWeek(picksForPoolAndSeason, username, currentWeek)
@@ -18,15 +21,19 @@ export function userIsEliminated({
   const allUserPicks = picksForPoolAndSeason.filter(
     (pick) => pick.username === username,
   );
-  const newestUserPick = allUserPicks
-    .toSorted((a, b) => b.week - a.week)
-    .find(Boolean);
-  const mostRecentUserPickWasLoss = newestUserPick?.result === "LOST";
-  const atLeastOneUserWonThatWeek = picksForPoolAndSeason
-    .filter((pick) => pick.week === newestUserPick?.week)
-    .some((pick) => pick.result === "WON");
+  const userPicksThatLost = allUserPicks.filter(
+    (pick) => pick.result === "LOST",
+  );
+  const lostPicksWhereSomeoneElseWonThatWeek = userPicksThatLost.filter(
+    (userPick) =>
+      picksForPoolAndSeason
+        .filter(
+          (pick) => pick.week === userPick.week && pick.username !== username,
+        )
+        .some((pick) => pick.result === "WON"),
+  );
 
-  return mostRecentUserPickWasLoss && atLeastOneUserWonThatWeek;
+  return lostPicksWhereSomeoneElseWonThatWeek.length === lives;
 }
 
 function failedToPickInAPreviousWeek(
