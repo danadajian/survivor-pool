@@ -661,7 +661,7 @@ describe("feature tests", () => {
     expect(poolWinner).toBeUndefined();
   });
 
-  it("should eliminate user with 2 lives after 2 losses and declare pool winner", async () => {
+  it("should eliminate user with 2 lives after 2 losses and declare pool winner next week", async () => {
     const poolId = await getPoolId();
     const currentWeek = 5;
     await makePick({
@@ -716,7 +716,15 @@ describe("feature tests", () => {
       weekStarted: 4,
       lives: 2,
     });
-    expect(poolWinner?.username).toEqual(user2);
+    expect(poolWinner).toBeUndefined();
+    const poolWinnerNextWeek = await findPoolWinner({
+      poolId,
+      currentWeek: 6,
+      picksForPoolAndSeason,
+      weekStarted: 4,
+      lives: 2,
+    });
+    expect(poolWinnerNextWeek?.username).toEqual(user2);
   });
 
   it("should delete a pool", async () => {

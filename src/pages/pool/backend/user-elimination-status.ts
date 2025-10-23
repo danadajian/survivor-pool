@@ -56,11 +56,14 @@ function getNumberOfWeeksFailedToPick(
     .filter((pick) => pick.username !== username)
     .map((pick) => pick.week);
   const allWeeksFromWeekStartedToCurrentWeek = Array.from(
-    { length: currentWeek - weekStarted + 1 },
+    { length: currentWeek - weekStarted },
     (_, i) => i + weekStarted,
   );
-  return allWeeksFromWeekStartedToCurrentWeek.filter(
-    (week) =>
-      !weeksUserPicked.includes(week) && weeksEveryoneElsePicked.includes(week),
-  ).length;
+  const weeksUserFailedToPickWhenSomeoneElsePicked =
+    allWeeksFromWeekStartedToCurrentWeek.filter(
+      (week) =>
+        !weeksUserPicked.includes(week) &&
+        weeksEveryoneElsePicked.includes(week),
+    );
+  return weeksUserFailedToPickWhenSomeoneElsePicked.length;
 }
