@@ -32,6 +32,7 @@ const PoolComponent = ({
     poolCreator,
     userPickIsSecret,
     pickHeader,
+    livesRemaining,
   } = data;
 
   if (!eventButtons.length) {
@@ -92,9 +93,13 @@ const PoolComponent = ({
       </h1>
       <p className="text-sm font-medium text-slate-800">{`Pool Creator: ${poolCreator}`}</p>
       <h2 className="pt-4 text-xl font-bold">Week {currentWeek}</h2>
-      <h3 className="pt-4 text-lg font-semibold text-blue-800">
+      <h3 className="mb-2 pt-4 text-lg font-semibold text-blue-800">
         {pickHeader ?? defaultPickHeader}
       </h3>
+      <p className="font-medium">
+        You have {livesRemaining} {livesRemaining === 1 ? "life" : "lives"}{" "}
+        remaining.
+      </p>
       <hr className="mt-4 w-1/3 border border-gray-500" />
       <ul className="pb-8">
         {eventButtons.map((eventButton, index) => (
