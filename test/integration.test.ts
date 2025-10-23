@@ -546,19 +546,20 @@ describe("feature tests", () => {
     expect(result[0]?.lives).toEqual(2);
   });
 
-  it("should not eliminate user with 2 lives after one loss", async () => {
+  it("should not eliminate user with 2 lives after 1 loss", async () => {
     const poolId = await getPoolId();
+    const currentWeek = 4;
     await makePick({
       username: user1,
       teamPicked: "49ers",
-      week: 4,
+      week: currentWeek,
       season,
       poolId,
     });
     await makePick({
       username: user2,
       teamPicked: "Giants",
-      week: 4,
+      week: currentWeek,
       season,
       poolId,
     });
@@ -580,18 +581,81 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    await updateResults(events, 4, season);
+    await updateResults(events, currentWeek, season);
     const picksForPoolAndSeason = await db.query.picks.findMany({
       where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(
       userIsEliminated({
         username: user1,
-        currentWeek: 4,
+        currentWeek,
         picksForPoolAndSeason,
         lives: 2,
       }),
     ).toBeFalse();
+    const poolWinner = await findPoolWinner(
+      poolId,
+      currentWeek,
+      picksForPoolAndSeason,
+      2,
+    );
+    expect(poolWinner).toBeUndefined();
+  });
+
+  it("should eliminate user with 2 lives after 2 losses and declare pool winner", async () => {
+    const poolId = await getPoolId();
+    const currentWeek = 5;
+    await makePick({
+      username: user1,
+      teamPicked: "Patriots",
+      week: currentWeek,
+      season,
+      poolId,
+    });
+    await makePick({
+      username: user2,
+      teamPicked: "Dolphins",
+      week: currentWeek,
+      season,
+      poolId,
+    });
+    const events = [
+      {
+        competitions: [
+          {
+            competitors: [
+              {
+                team: { name: "Dolphins" },
+                winner: true,
+              },
+              {
+                team: { name: "Patriots" },
+                winner: false,
+              },
+            ],
+          },
+        ],
+      },
+    ] as Events;
+    await updateResults(events, currentWeek, season);
+    const picksForPoolAndSeason = await db.query.picks.findMany({
+      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
+    });
+    expect(
+      userIsEliminated({
+        username: user1,
+        currentWeek: currentWeek,
+        picksForPoolAndSeason,
+        lives: 2,
+      }),
+    ).toBeTrue();
+    const poolWinner = await findPoolWinner(
+      poolId,
+      currentWeek,
+      picksForPoolAndSeason,
+      2,
+    );
+    expect(poolWinner?.username).toEqual(user2);
   });
 
   it("should delete the pool", async () => {

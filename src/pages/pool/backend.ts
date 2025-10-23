@@ -44,15 +44,20 @@ export async function fetchPoolInfo({
   const picksForPoolAndSeason = await db.query.picks.findMany({
     where: and(eq(picks.poolId, poolId), eq(picks.season, currentSeason)),
   });
+  const poolsResult = await db.query.pools.findFirst({
+    where: eq(pools.id, poolId),
+  });
   const poolWinner = await findPoolWinner(
     poolId,
     currentWeek,
     picksForPoolAndSeason,
+    poolsResult?.lives,
   );
   const eliminated = userIsEliminated({
     username,
     currentWeek,
     picksForPoolAndSeason,
+    lives: poolsResult?.lives,
   });
   const pickHeader = buildPickHeader({
     events,
