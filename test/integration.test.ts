@@ -12,7 +12,7 @@ import { and, eq } from "drizzle-orm";
 import { updateResults } from "../scripts/update-results/update-results";
 import { db } from "../src/db";
 import { createPool } from "../src/pages/create/backend";
-import { deletePool } from "../src/pages/home/backend";
+import { deletePool, editPool } from "../src/pages/home/backend";
 import { joinPool } from "../src/pages/join/backend";
 import { fetchPicksForPoolWithGamesResponse } from "../src/pages/picks/backend";
 import { fetchPicksDataForUser } from "../src/pages/pool/backend/fetch-picks-data-for-user";
@@ -72,10 +72,9 @@ describe("feature tests", () => {
   });
 
   it("should allow other users to join the pool", async () => {
-    const pool = await db.query.pools.findFirst();
-    if (!pool) throw new Error();
-    await joinPool({ username: user2, poolId: pool.id });
-    await joinPool({ username: user3, poolId: pool.id });
+    const poolId = await getPoolId();
+    await joinPool({ username: user2, poolId });
+    await joinPool({ username: user3, poolId });
     const newMembers = await db.select().from(members);
     expect(newMembers).toHaveLength(3);
     expect(newMembers[0]?.username).toEqual(user1);
@@ -516,22 +515,24 @@ describe("feature tests", () => {
   });
 
   it("should reactivate the pool and delete all picks for current season", async () => {
-    const pool = await db.query.pools.findFirst();
-    if (!pool) throw new Error();
-
-    await reactivatePool({ poolId: pool.id, season });
-
+    const poolId = await getPoolId();
+    await reactivatePool({ poolId, season });
     const userPicks = await db.query.picks.findMany({
-      where: and(eq(picks.poolId, pool.id), eq(picks.season, season)),
+      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
     });
     expect(userPicks).toBeEmpty();
   });
 
-  it("should delete the pool", async () => {
-    const pool = await db.query.pools.findFirst();
-    if (!pool) throw new Error();
+  it("should edit the pool to add multiple lives", async () => {
+    const poolId = await getPoolId();
+    await editPool({ poolId, name: "Test Pool", lives: 2 });
+    const result = await db.select().from(pools).where(eq(pools.id, poolId));
+    expect(result[0]?.lives).toEqual(2);
+  });
 
-    await deletePool({ poolId: pool.id });
+  it("should delete the pool", async () => {
+    const poolId = await getPoolId();
+    await deletePool({ poolId });
     const pools = await db.query.pools.findMany();
     expect(pools.length).toEqual(0);
   });

@@ -23,6 +23,20 @@ export async function fetchPoolsForUser({
     .innerJoin(pools, eq(members.poolId, pools.id));
 }
 
+export const editPoolInput = v.object({
+  poolId: v.string(),
+  name: v.string(),
+  lives: v.number(),
+});
+
+export async function editPool({
+  poolId,
+  name,
+  lives,
+}: v.InferInput<typeof editPoolInput>) {
+  return db.update(pools).set({ name, lives }).where(eq(pools.id, poolId));
+}
+
 export async function deletePool({ poolId }: v.InferInput<typeof poolInput>) {
   return db.delete(pools).where(eq(pools.id, poolId));
 }
