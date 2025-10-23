@@ -17,7 +17,7 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
     ...(seasonUrlParam ? { season: Number(seasonUrlParam) } : {}),
   });
 
-  const { eliminatedUsers, week: currentWeek } = data;
+  const { membersWithEliminationStatus, week: currentWeek } = data;
   const week = Number(weekUrlParam ?? currentWeek);
 
   return (
@@ -29,9 +29,10 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
         selected={week}
         onSelect={(option) => setUrlParams({ week: String(option) })}
       />
-      <EliminatedUserTable
-        eliminatedUsers={eliminatedUsers}
+      <MemberTable
+        membersWithEliminationStatus={membersWithEliminationStatus}
         username={username}
+        lives={data.lives}
       />
     </>
   );
@@ -95,45 +96,46 @@ const PickTable = ({
   );
 };
 
-type EliminatedUserTableProps = {
-  eliminatedUsers: RouterOutput["picksForPool"]["eliminatedUsers"];
+type MemberTableProps = {
+  membersWithEliminationStatus: RouterOutput["picksForPool"]["membersWithEliminationStatus"];
   username: string;
+  lives: number;
 };
 
-const EliminatedUserTable = ({
-  eliminatedUsers,
+const MemberTable = ({
+  membersWithEliminationStatus,
   username,
-}: EliminatedUserTableProps) => {
-  if (!eliminatedUsers.length) {
-    return (
-      <p className="m-8 text-lg font-semibold">
-        No one has been eliminated yet!
-      </p>
-    );
-  }
-
+  lives,
+}: MemberTableProps) => {
   return (
-    <table className="m-8 table-auto">
-      <thead>
-        <tr>
-          <th className="px-4">Eliminated Users</th>
-        </tr>
-      </thead>
-      <tbody>
-        {eliminatedUsers.map((user, index) => {
-          const isUserRow = user.username === username;
-          const userClasses = isUserRow ? "font-semibold text-blue-800" : "";
-          const userFullName =
-            user.firstName && user.lastName
-              ? `${user.firstName} ${user.lastName}`
-              : undefined;
-          return (
-            <tr key={index} className={userClasses}>
-              <td>{userFullName ?? user.username}</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <>
+      <h2 className="mt-8 mb-4 text-lg font-bold">Pool Members</h2>
+      <table className="table-auto">
+        <thead>
+          <tr>
+            <th className="px-4">Name</th>
+            <th className="px-4">Lives Remaining</th>
+          </tr>
+        </thead>
+        <tbody>
+          {membersWithEliminationStatus.map((user, index) => {
+            const isUserRow = user.username === username;
+            const userClasses = isUserRow ? "font-semibold text-blue-800" : "";
+            const userFullName =
+              user.firstName && user.lastName
+                ? `${user.firstName} ${user.lastName}`
+                : undefined;
+            return (
+              <tr key={index} className={userClasses}>
+                <td>{userFullName ?? user.username}</td>
+                <td>
+                  {user.livesRemaining} / {lives}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </>
   );
 };

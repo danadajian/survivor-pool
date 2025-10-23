@@ -88,20 +88,23 @@ export async function fetchPicksForPool({
       code: "INTERNAL_SERVER_ERROR",
     });
   const { weekStarted, lives } = poolsResult;
-  const eliminatedUsers = poolMembers.filter(
-    ({ username }) =>
-      userEliminationStatus({
-        username,
+  const membersWithEliminationStatus = poolMembers
+    .map((member) => ({
+      ...member,
+      ...userEliminationStatus({
+        username: member.username,
         currentWeek: weekToUse,
         picksForPoolAndSeason,
         weekStarted,
         lives,
-      }).eliminated,
-  );
+      }),
+    }))
+    .toSorted((a, b) => b.livesRemaining - a.livesRemaining);
 
   return {
     picks: picksWithSecrets,
-    eliminatedUsers,
+    membersWithEliminationStatus,
+    lives,
     week: currentWeek,
     season: currentSeason,
   };
