@@ -550,6 +550,7 @@ describe("feature tests", () => {
     expect(oldPool?.weekStarted).toEqual(1);
     expect(oldPool?.weekEnded).toEqual(weekStarted);
     expect(newPool?.weekStarted).toEqual(weekStarted);
+    expect(newPool?.weekEnded).toEqual(null);
     const oldPoolMembers = await db.query.members.findMany({
       where: eq(members.poolId, oldPoolId),
     });

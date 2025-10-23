@@ -28,7 +28,7 @@ export async function reactivatePool({
       code: "INTERNAL_SERVER_ERROR",
     });
 
-  const { id, createdAt, ...poolFieldsToRetain } = poolResult;
+  const { id, createdAt, weekEnded, ...poolFieldsToRetain } = poolResult;
   const [newPool] = await db
     .insert(pools)
     .values({
