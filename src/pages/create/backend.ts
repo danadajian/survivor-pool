@@ -5,6 +5,7 @@ import * as v from "valibot";
 import { userFields } from "../../components/page-wrapper";
 import { db } from "../../db";
 import { pools } from "../../schema";
+import { fetchCurrentGames } from "../../utils/fetch-current-games";
 import { joinPool } from "../join/backend";
 
 export const createPoolInput = v.object({
@@ -30,9 +31,18 @@ export async function createPool({
       code: "CONFLICT",
     });
   }
+
+  const {
+    week: { number: currentWeek },
+  } = await fetchCurrentGames();
   const insertResult = await db
     .insert(pools)
-    .values({ name: poolName, lives, creator: username })
+    .values({
+      name: poolName,
+      lives,
+      creator: username,
+      weekStarted: currentWeek,
+    })
     .returning({ id: pools.id });
   const poolId = insertResult.find(Boolean)?.id;
   if (!poolId) {

@@ -14,14 +14,14 @@ import { db } from "../src/db";
 import { createPool } from "../src/pages/create/backend";
 import { deletePool, editPool } from "../src/pages/home/backend";
 import { joinPool } from "../src/pages/join/backend";
-import { fetchPicksForPoolWithGamesResponse } from "../src/pages/picks/backend";
+import { fetchPicksForPool } from "../src/pages/picks/backend";
 import { fetchPicksDataForUser } from "../src/pages/pool/backend/fetch-picks-data-for-user";
 import { findPoolWinner } from "../src/pages/pool/backend/find-pool-winner";
 import { makePick } from "../src/pages/pool/backend/make-pick";
 import { reactivatePool } from "../src/pages/pool/backend/reactivate-pool";
 import { userIsEliminated } from "../src/pages/pool/backend/user-is-eliminated";
 import { members, picks, pools } from "../src/schema";
-import { Events } from "../src/utils/fetch-current-games";
+import { Events, GamesResponse } from "../src/utils/fetch-current-games";
 
 async function clearAllTables() {
   await db.delete(picks);
@@ -49,11 +49,17 @@ describe("feature tests", () => {
   const season = 2023;
 
   it("should create a new pool", async () => {
+    mockGamesResponse({
+      week: { number: 1 },
+      season: { year: season },
+      events: [],
+    });
     await createPool({ poolName: "Test Pool", username: user1 });
     const result = await db.select().from(pools);
     expect(result).toHaveLength(1);
     expect(result[0]?.name).toEqual("Test Pool");
     expect(result[0]?.creator).toEqual(user1);
+    expect(result[0]?.weekStarted).toEqual(1);
   });
 
   it("should have added the creator as a member", async () => {
@@ -143,15 +149,15 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    const { picks } = await fetchPicksForPoolWithGamesResponse({
+    mockGamesResponse({
+      week: { number: 1 },
+      season: { year: season },
+      events: mockEvents,
+    });
+    const { picks } = await fetchPicksForPool({
       poolId,
       week: 1,
       season,
-      gamesResponse: {
-        week: { number: 1 },
-        season: { year: season },
-        events: mockEvents,
-      },
     });
     const secretPick = picks.find((pick) => pick.pickIsSecret);
     expect(secretPick?.username).toEqual(user2);
@@ -317,15 +323,15 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    const { picks } = await fetchPicksForPoolWithGamesResponse({
+    mockGamesResponse({
+      week: { number: 1 },
+      season: { year: season },
+      events: mockEvents,
+    });
+    const { picks } = await fetchPicksForPool({
       poolId,
       week: 1,
       season,
-      gamesResponse: {
-        week: { number: 1 },
-        season: { year: season },
-        events: mockEvents,
-      },
     });
     const secretPick = picks.find((pick) => pick.pickIsSecret);
     expect(secretPick?.username).toEqual(user2);
@@ -670,4 +676,10 @@ async function getPoolId() {
   const pool = await db.query.pools.findFirst();
   if (!pool) throw new Error();
   return pool.id;
+}
+
+function mockGamesResponse(response: GamesResponse) {
+  mock.module("../src/utils/fetch-current-games", () => ({
+    fetchCurrentGames: mock(async () => response),
+  }));
 }

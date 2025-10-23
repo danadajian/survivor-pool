@@ -3,10 +3,7 @@ import * as v from "valibot";
 
 import { db } from "../../db";
 import { members, picks } from "../../schema";
-import {
-  fetchCurrentGames,
-  GamesResponse,
-} from "../../utils/fetch-current-games";
+import { fetchCurrentGames } from "../../utils/fetch-current-games";
 import { userIsEliminated } from "../pool/backend/user-is-eliminated";
 
 export const fetchPicksForPoolInput = v.object({
@@ -15,21 +12,13 @@ export const fetchPicksForPoolInput = v.object({
   season: v.optional(v.number()),
 });
 
-export async function fetchPicksForPool(
-  input: v.InferInput<typeof fetchPicksForPoolInput>,
-) {
-  const gamesResponse = await fetchCurrentGames();
-  return fetchPicksForPoolWithGamesResponse({ ...input, gamesResponse });
-}
-
-export async function fetchPicksForPoolWithGamesResponse({
+export async function fetchPicksForPool({
   poolId,
   week,
   season,
-  gamesResponse,
-}: v.InferInput<typeof fetchPicksForPoolInput> & {
-  gamesResponse: GamesResponse;
-}) {
+}: v.InferInput<typeof fetchPicksForPoolInput>) {
+  const gamesResponse = await fetchCurrentGames();
+
   const {
     week: { number: currentWeek },
     season: { year: currentSeason },

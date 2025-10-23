@@ -29,6 +29,8 @@ export const pools = pgTable("pools", {
   name: varchar("name", { length: 256 }).notNull(),
   creator: varchar("creator", { length: 256 }).notNull(),
   lives: integer("lives").notNull().default(DEFAULT_LIVES),
+  weekStarted: integer("week_started").notNull().default(1),
+  weekEnded: integer("week_ended"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
