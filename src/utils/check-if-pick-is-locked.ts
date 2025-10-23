@@ -1,5 +1,5 @@
-import { Events } from "../pages/pool/backend";
 import { picks } from "../schema";
+import { Events } from "./fetch-current-games";
 
 export function checkIfPickIsLocked({
   events,

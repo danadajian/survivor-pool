@@ -7,7 +7,7 @@ import { type PageProps, withPage } from "../../components/page-wrapper";
 import { SecretPickProvider } from "../../components/secret-pick-provider";
 import { TeamButton } from "../../components/team-button";
 import { trpc } from "../../trpc";
-import { type EventButton } from "./backend";
+import { EventButton } from "./backend/get-event-buttons";
 
 const PoolComponent = ({
   user: { username, firstName },

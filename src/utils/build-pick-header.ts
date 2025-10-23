@@ -1,6 +1,6 @@
-import { Events } from "../pages/pool/backend";
 import { picks } from "../schema";
 import { checkIfPickIsLocked } from "./check-if-pick-is-locked";
+import { Events } from "./fetch-current-games";
 
 export function buildPickHeader({
   events,

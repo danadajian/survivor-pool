@@ -2,7 +2,7 @@ import { Description, DialogTitle } from "@headlessui/react";
 import React, { useContext } from "react";
 import { useState } from "react";
 
-import { type TeamButtonProps } from "../pages/pool/backend";
+import { type TeamButtonProps } from "../pages/pool/backend/get-event-buttons";
 import { trpc } from "../trpc";
 import { ButtonStyle } from "../utils/button-style";
 import { DialogWrapper } from "./dialog-wrapper";

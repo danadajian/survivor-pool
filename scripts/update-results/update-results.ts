@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 
 import { db } from "../../src/db";
-import { type Events } from "../../src/pages/pool/backend";
+import { type Events } from "../../src/utils/fetch-current-games";
 import { picks } from "../../src/schema";
 
 export async function updateResults(

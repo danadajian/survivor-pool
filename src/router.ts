@@ -4,6 +4,7 @@ import * as v from "valibot";
 import { Context } from "./context";
 import { createPool, createPoolInput } from "./pages/create/backend";
 import {
+  deletePool,
   fetchPoolsForUser,
   fetchPoolsForUserInput,
 } from "./pages/home/backend";
@@ -17,15 +18,12 @@ import {
   fetchPicksForPool,
   fetchPicksForPoolInput,
 } from "./pages/picks/backend";
+import { fetchPoolInfo, fetchPoolInfoInput } from "./pages/pool/backend";
+import { makePick, makePickInput } from "./pages/pool/backend/make-pick";
 import {
-  deletePool,
-  fetchPicksInput,
-  fetchPoolInfo,
-  makePick,
-  makePickInput,
   reactivatePool,
   reactivatePoolInput,
-} from "./pages/pool/backend";
+} from "./pages/pool/backend/reactivate-pool";
 
 const t = initTRPC.context<Context>().create();
 
@@ -38,7 +36,7 @@ const authenticatedProcedure = t.procedure.use(async function isAuthed(opts) {
 
 export const appRouter = t.router({
   pool: authenticatedProcedure
-    .input(v.parser(fetchPicksInput))
+    .input(v.parser(fetchPoolInfoInput))
     .query(({ input }) => fetchPoolInfo(input)),
   makePick: authenticatedProcedure
     .input(v.parser(makePickInput))

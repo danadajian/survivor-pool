@@ -1,12 +1,10 @@
 import { describe, expect, test } from "bun:test";
 
-import {
-  Events,
-  getEventButtons,
-  userIsEliminated,
-} from "../src/pages/pool/backend";
+import { getEventButtons } from "../src/pages/pool/backend/get-event-buttons";
+import { userIsEliminated } from "../src/pages/pool/backend/user-is-eliminated";
 import { picks } from "../src/schema";
 import { buildPickHeader } from "../src/utils/build-pick-header";
+import { Events } from "../src/utils/fetch-current-games";
 import { mockEspnResponse } from "./mocks";
 
 describe("pick header", () => {

@@ -12,18 +12,16 @@ import { and, eq } from "drizzle-orm";
 import { updateResults } from "../scripts/update-results/update-results";
 import { db } from "../src/db";
 import { createPool } from "../src/pages/create/backend";
+import { deletePool } from "../src/pages/home/backend";
 import { joinPool } from "../src/pages/join/backend";
 import { fetchPicksForPoolWithGamesResponse } from "../src/pages/picks/backend";
-import {
-  deletePool,
-  Events,
-  fetchPicksDataForUser,
-  findPoolWinner,
-  makePick,
-  reactivatePool,
-  userIsEliminated,
-} from "../src/pages/pool/backend";
+import { fetchPicksDataForUser } from "../src/pages/pool/backend/fetch-picks-data-for-user";
+import { findPoolWinner } from "../src/pages/pool/backend/find-pool-winner";
+import { makePick } from "../src/pages/pool/backend/make-pick";
+import { reactivatePool } from "../src/pages/pool/backend/reactivate-pool";
+import { userIsEliminated } from "../src/pages/pool/backend/user-is-eliminated";
 import { members, picks, pools } from "../src/schema";
+import { Events } from "../src/utils/fetch-current-games";
 
 async function clearAllTables() {
   await db.delete(picks);

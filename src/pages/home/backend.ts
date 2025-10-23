@@ -3,6 +3,7 @@ import * as v from "valibot";
 
 import { db } from "../../db";
 import { members, pools } from "../../schema";
+import { poolInput } from "../join/backend";
 
 export const fetchPoolsForUserInput = v.object({
   username: v.string(),
@@ -20,4 +21,8 @@ export async function fetchPoolsForUser({
     .from(members)
     .where(eq(members.username, username))
     .innerJoin(pools, eq(members.poolId, pools.id));
+}
+
+export async function deletePool({ poolId }: v.InferInput<typeof poolInput>) {
+  return db.delete(pools).where(eq(pools.id, poolId));
 }

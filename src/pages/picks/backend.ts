@@ -6,8 +6,8 @@ import { members, picks } from "../../schema";
 import {
   fetchCurrentGames,
   GamesResponse,
-  userIsEliminated,
-} from "../pool/backend";
+} from "../../utils/fetch-current-games";
+import { userIsEliminated } from "../pool/backend/user-is-eliminated";
 
 export const fetchPicksForPoolInput = v.object({
   poolId: v.string(),
