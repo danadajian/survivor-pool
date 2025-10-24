@@ -1,8 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { CopyInviteLinkButton } from "../../components/copy-invite-link-button";
-import { DeletePoolButton } from "../../components/delete-pool-button";
+import { EditPoolDropdown } from "../../components/edit-pool-dropdown";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { type RouterOutput, trpc } from "../../trpc";
@@ -61,7 +60,7 @@ const PoolSelect = ({
       <p className="block pb-8 text-lg font-bold text-gray-700">
         Select a pool:
       </p>
-      <div className="flex flex-col justify-around">
+      <div className="flex flex-col">
         {data.map(({ poolId, poolName, creator }, index) => (
           <div key={index} className="m-2 flex items-center justify-between">
             <button
@@ -73,12 +72,7 @@ const PoolSelect = ({
             >
               <p className="px-4 py-2">{poolName}</p>
             </button>
-            {username === creator ? (
-              <div className="flex items-center">
-                <CopyInviteLinkButton poolId={poolId} />
-                <DeletePoolButton key={poolId} poolId={poolId} />
-              </div>
-            ) : null}
+            {username === creator ? <EditPoolDropdown poolId={poolId} /> : null}
           </div>
         ))}
       </div>

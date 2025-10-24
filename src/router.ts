@@ -3,6 +3,7 @@ import * as v from "valibot";
 
 import { Context } from "./context";
 import { createPool, createPoolInput } from "./pages/create/backend";
+import { editPool, editPoolInput } from "./pages/edit/backend";
 import {
   deletePool,
   fetchPoolsForUser,
@@ -50,6 +51,9 @@ export const appRouter = t.router({
   createPool: authenticatedProcedure
     .input(v.parser(createPoolInput))
     .mutation(({ input }) => createPool(input)),
+  editPool: authenticatedProcedure
+    .input(v.parser(editPoolInput))
+    .mutation(({ input }) => editPool(input)),
   deletePool: authenticatedProcedure
     .input(v.parser(poolInput))
     .mutation(({ input }) => deletePool(input)),

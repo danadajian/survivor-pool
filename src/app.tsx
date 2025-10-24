@@ -14,6 +14,7 @@ import { Heading } from "./components/heading";
 import { withPage } from "./components/page-wrapper";
 import { CLERK_PUBLISHABLE_KEY } from "./constants";
 import { Create } from "./pages/create/frontend";
+import { Edit } from "./pages/edit/frontend";
 import { Home } from "./pages/home/frontend";
 import { Join } from "./pages/join/frontend";
 import { Picks } from "./pages/picks/frontend";
@@ -59,6 +60,7 @@ export const App = () => {
                   <Route path="/pool/:poolId" element={<Pool />} />
                   <Route path="/picks/:poolId" element={<Picks />} />
                   <Route path="/create" element={<Create />} />
+                  <Route path="/edit/:poolId" element={<Edit />} />
                   <Route path="/join/:poolId" element={<Join />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>

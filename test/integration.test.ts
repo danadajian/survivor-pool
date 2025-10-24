@@ -12,7 +12,8 @@ import { and, desc, eq } from "drizzle-orm";
 import { updateResults } from "../scripts/update-results/update-results";
 import { db } from "../src/db";
 import { createPool } from "../src/pages/create/backend";
-import { deletePool, editPool } from "../src/pages/home/backend";
+import { editPool } from "../src/pages/edit/backend";
+import { deletePool } from "../src/pages/home/backend";
 import { getPool, joinPool } from "../src/pages/join/backend";
 import { fetchPicksForPool } from "../src/pages/picks/backend";
 import { fetchPicksDataForUser } from "../src/pages/pool/backend/fetch-picks-data-for-user";
@@ -598,9 +599,12 @@ describe("feature tests", () => {
 
   it("should edit the pool to add multiple lives", async () => {
     const poolId = await getPoolId();
-    await editPool({ poolId, name: "Test Pool", lives: 2 });
-    const result = await db.select().from(pools).where(eq(pools.id, poolId));
-    expect(result[0]?.lives).toEqual(2);
+    const [updatedPoolResult] = await editPool({
+      poolId,
+      poolName: "Test Pool",
+      lives: 2,
+    });
+    expect(updatedPoolResult?.lives).toEqual(2);
   });
 
   it("should not eliminate user with 2 lives after 1 loss", async () => {

@@ -3,43 +3,43 @@ import { useNavigate } from "react-router-dom";
 
 import { CopyInviteLinkButton } from "../../components/copy-invite-link-button";
 import { ErrorMessage } from "../../components/error";
-import { Heading, Subheading } from "../../components/heading";
+import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { trpc } from "../../trpc";
 
-const CreateComponent = ({ user }: PageProps) => {
+const EditComponent = ({ poolId }: PageProps) => {
   const utils = trpc.useUtils();
-  const { mutate, data, isSuccess } = trpc.createPool.useMutation({
+  const [data] = trpc.getPool.useSuspenseQuery({ poolId });
+  const { mutate, isSuccess } = trpc.editPool.useMutation({
     throwOnError: false,
     onSettled: (_, error) => {
       if (error) {
         setError(error.message);
       }
-      utils.poolsForUser.invalidate();
+      utils.getPool.invalidate();
     },
   });
-  const [poolName, setPoolName] = useState("");
-  const [lives, setLives] = useState(1);
+  const [poolName, setPoolName] = useState(data.name);
+  const [lives, setLives] = useState(data.lives);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const onSubmit = () => mutate({ ...user, poolName, lives });
+  const onSubmit = () => mutate({ poolId, poolName, lives });
 
-  if (isSuccess && data?.poolId) {
+  if (isSuccess) {
     return (
       <>
-        <Heading>{`${poolName} created successfully!`}</Heading>
-        <Subheading>You are now a member of this pool.</Subheading>
+        <Heading>{`${poolName} updated successfully!`}</Heading>
         <div className="flex-col">
           <button
-            onClick={() => navigate(`/pool/${data.poolId}`)}
+            onClick={() => navigate(`/pool/${data.id}`)}
             className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
             type="button"
           >
-            Make your first pick!
+            Go to pool
           </button>
           <div className="mt-4 flex justify-center rounded bg-green-700/60 font-semibold">
-            <CopyInviteLinkButton poolId={data.poolId} />
+            <CopyInviteLinkButton poolId={data.id} />
           </div>
         </div>
       </>
@@ -48,7 +48,7 @@ const CreateComponent = ({ user }: PageProps) => {
 
   return (
     <>
-      <Heading>Create New Pool</Heading>
+      <Heading>Edit Pool</Heading>
       {error ? <ErrorMessage message={error} /> : null}
       <form className="mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md">
         <div className="pb-6">
@@ -59,6 +59,7 @@ const CreateComponent = ({ user }: PageProps) => {
             Pool Name
           </label>
           <input
+            placeholder={poolName}
             onChange={(event) => setPoolName(event.target.value)}
             className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
             id="poolName"
@@ -94,11 +95,11 @@ const CreateComponent = ({ user }: PageProps) => {
           className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
           type="button"
         >
-          Create
+          Update
         </button>
       </form>
     </>
   );
 };
 
-export const Create = withPage(CreateComponent);
+export const Edit = withPage(EditComponent);

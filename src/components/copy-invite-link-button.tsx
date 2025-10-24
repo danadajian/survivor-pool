@@ -1,28 +1,22 @@
-import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
+import { Square2StackIcon } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
 
 export const CopyInviteLinkButton = ({ poolId }: { poolId: string }) => {
   const [copied, setCopied] = useState(false);
-  const copyButtonClasses = copied
-    ? "bg-green-500 opacity-30"
-    : "bg-slate-500 hover:bg-green-400";
 
   return (
-    <Popover>
-      <PopoverButton
-        onClick={() => {
-          setCopied(true);
-          void navigator.clipboard.writeText(
-            `${window.location.origin}/join/${poolId}`,
-          );
-        }}
-        disabled={copied}
-        className={`focus:shadow-outline m-2 rounded-md px-1 py-1 focus:outline-none ${copyButtonClasses}`}
-        type="button"
-      >
-        <img className="max-w-6" src="/public/copy-link.png" alt="copy link" />
-      </PopoverButton>
-      <PopoverPanel className="absolute z-10">Invite link copied!</PopoverPanel>
-    </Popover>
+    <button
+      onClick={(event) => {
+        event.preventDefault();
+        setCopied(true);
+        void navigator.clipboard.writeText(
+          `${window.location.origin}/join/${poolId}`,
+        );
+      }}
+      className="group flex w-full items-center gap-2 rounded-lg px-3 py-2 data-focus:bg-gray-100"
+    >
+      <Square2StackIcon className="size-5 fill-gray-900/50" />
+      {copied ? "Invite link copied!" : "Copy invite link"}
+    </button>
   );
 };
