@@ -113,7 +113,7 @@ const MemberTable = ({
       <table className="table-auto">
         <thead>
           <tr>
-            <th className="px-4">Name</th>
+            <th className="px-4">User</th>
             <th className="px-4">Lives Remaining</th>
           </tr>
         </thead>

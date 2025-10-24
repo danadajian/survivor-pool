@@ -14,8 +14,10 @@ describe("picks page", () => {
       </MockProviders>,
     );
     cy.findByRole("heading", { name: "Week 1 Picks" }).should("be.visible");
-    cy.findByRole("table").should("be.visible");
-    cy.findByText("Test User1").should("be.visible");
-    cy.findByText("Test User2").should("be.visible");
+    cy.findByRole("heading", { name: "Pool Members" }).should("be.visible");
+    cy.findByText("Team Picked").should("be.visible");
+    cy.findByText("Lives Remaining").should("be.visible");
+    cy.findAllByText("Test User1").should("be.visible");
+    cy.findAllByText("Test User2").should("be.visible");
   });
 });
