@@ -1,8 +1,4 @@
-import {
-  keepPreviousData,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import React from "react";
 import { type PropsWithChildren, useState } from "react";
@@ -15,10 +11,9 @@ export const ClientProvider = ({ children }: PropsWithChildren) => {
       new QueryClient({
         defaultOptions: {
           queries: {
-            placeholderData: keepPreviousData,
             staleTime: 1000 * 60, // 1 minute
             throwOnError: true,
-            retry: false,
+            retry: 2,
           },
           mutations: {
             throwOnError: true,

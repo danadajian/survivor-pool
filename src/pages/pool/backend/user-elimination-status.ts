@@ -38,7 +38,7 @@ export function userEliminationStatus({
 
   return {
     eliminated: livesLost >= lives,
-    livesRemaining: lives - livesLost,
+    livesRemaining: Math.max(lives - livesLost, 0),
   };
 }
 
