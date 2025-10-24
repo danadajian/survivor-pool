@@ -82,10 +82,17 @@ const PickTable = ({
             ? "italic text-slate-600"
             : "";
           return (
-            <tr key={index} className={userClasses}>
-              <td>{userFullName ?? pick.username}</td>
-              <td className={teamPickedClass}>{pick.teamPicked}</td>
-              <td className={`font-semibold ${resultClasses}`}>
+            <tr key={`pick-row-${index}`} className={userClasses}>
+              <td key={`user-cell-${index}`}>
+                {userFullName ?? pick.username}
+              </td>
+              <td key={`team-picked-cell-${index}`} className={teamPickedClass}>
+                {pick.teamPicked}
+              </td>
+              <td
+                key={`result-cell-${index}`}
+                className={`font-semibold ${resultClasses}`}
+              >
                 {pick.result}
               </td>
             </tr>
@@ -126,10 +133,26 @@ const MemberTable = ({
                 ? `${user.firstName} ${user.lastName}`
                 : undefined;
             return (
-              <tr key={index} className={userClasses}>
-                <td>{userFullName ?? user.username}</td>
-                <td>
-                  {user.livesRemaining} / {lives}
+              <tr key={`member-row-${index}`} className={userClasses}>
+                <td key={user.id} className="pt-2">
+                  {userFullName ?? user.username}
+                </td>
+                <td
+                  key={`lives-cell-${index}`}
+                  className="flex justify-center pt-2"
+                >
+                  {Array.from(
+                    { length: user.livesRemaining },
+                    (_, i) => i + 1,
+                  ).map((heartIndex) => (
+                    <FilledHeart key={`filled-heart-${heartIndex}`} />
+                  ))}
+                  {Array.from(
+                    { length: lives - user.livesRemaining },
+                    (_, i) => i + 1,
+                  ).map((heartIndex) => (
+                    <EmptyHeart key={`empty-heart-${heartIndex}`} />
+                  ))}
                 </td>
               </tr>
             );
@@ -139,3 +162,10 @@ const MemberTable = ({
     </>
   );
 };
+
+const FilledHeart = () => (
+  <img className="max-w-6" src="/public/filled-heart.png" alt="filled heart" />
+);
+const EmptyHeart = () => (
+  <img className="max-w-6" src="/public/empty-heart.png" alt="empty heart" />
+);

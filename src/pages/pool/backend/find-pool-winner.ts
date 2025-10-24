@@ -30,7 +30,11 @@ export async function findPoolWinner({
         lives,
       }).eliminated,
   );
-  if (picksForPoolAndSeason.length > 0 && winners.length === 1) {
+  if (
+    poolMembers.length > 1 &&
+    picksForPoolAndSeason.length > 0 &&
+    winners.length === 1
+  ) {
     return winners[0];
   }
   return undefined;
