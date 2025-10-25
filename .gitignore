@@ -8,8 +8,8 @@
 .pnp.js
 
 # production
-/public/client.js
-/public/globals*
+/public/*.js
+/public/*.css
 
 # misc
 .DS_Store

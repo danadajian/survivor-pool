@@ -2,6 +2,7 @@ import { staticPlugin } from "@elysiajs/static";
 import Elysia from "elysia";
 import { HotModuleReload, hotModuleReload } from "elysia-hot-module-reload";
 import { rateLimit } from "elysia-rate-limit";
+import path from "path";
 import React from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
@@ -11,11 +12,13 @@ import { environmentVariables } from "./env";
 import { appRouter } from "./router";
 import { trpcRouter } from "./trpc";
 
-await Bun.build({
+const { outputs } = await Bun.build({
   entrypoints: ["./src/client.tsx"],
   outdir: "./public",
   minify: true,
+  naming: "[dir]/[name]-[hash].[ext]",
 });
+const bundleFilePath = path.basename(outputs[0]?.path ?? "");
 
 const isDev = environmentVariables.ENVIRONMENT === "development";
 
@@ -33,7 +36,7 @@ const app = new Elysia()
         )}
       </StaticRouter>,
       {
-        bootstrapScripts: ["/public/client.js"],
+        bootstrapScripts: [`/public/${bundleFilePath}`],
         onError: () => {},
       },
     );
