@@ -31,7 +31,7 @@ export function EditPoolDropdown({ poolId }: { poolId: string }) {
   return (
     <div className="ml-4">
       <Menu>
-        <MenuButton className="inline-flex items-center gap-2 rounded-md bg-gray-800 px-3 py-2 text-sm/6 font-semibold text-white shadow-inner shadow-black/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-gray-900 data-hover:bg-gray-100 data-open:bg-gray-100">
+        <MenuButton className="inline-flex items-center gap-2 rounded-md bg-gray-800 px-3 py-2 text-sm/6 font-semibold text-white shadow-inner shadow-black/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-gray-900 data-hover:bg-gray-400 data-open:bg-gray-400">
           Options
           <ChevronDownIcon className="size-4 fill-white/60" />
         </MenuButton>
@@ -42,13 +42,15 @@ export function EditPoolDropdown({ poolId }: { poolId: string }) {
           className="w-42 origin-top-right rounded-xl border border-gray-900/5 bg-white p-1 text-sm/6 text-gray-900 transition duration-100 ease-out [--anchor-gap:--spacing(1)] focus:outline-none data-closed:scale-95 data-closed:opacity-0"
         >
           <MenuItem>
-            <CopyInviteLinkButton poolId={poolId} />
+            <div className="data-focus:bg-gray-400">
+              <CopyInviteLinkButton poolId={poolId} />
+            </div>
           </MenuItem>
           <div className="my-1 h-px bg-gray-200" />
           <MenuItem>
             <button
               onClick={() => navigate(`/edit/${poolId}`)}
-              className="group flex w-full items-center gap-2 rounded-lg px-3 py-2 data-focus:bg-gray-100"
+              className="group flex w-full items-center gap-2 rounded-lg px-3 py-2 data-focus:bg-gray-400"
             >
               <PencilIcon className="size-5 fill-yellow-600/70" />
               Edit pool
@@ -57,7 +59,7 @@ export function EditPoolDropdown({ poolId }: { poolId: string }) {
           <MenuItem>
             <button
               onClick={toggleDialog}
-              className="group flex w-full items-center gap-2 rounded-lg px-3 py-2 data-focus:bg-gray-100"
+              className="group flex w-full items-center gap-2 rounded-lg px-3 py-2 data-focus:bg-gray-400"
             >
               <TrashIcon className="size-5 fill-red-700/70" />
               Delete pool
