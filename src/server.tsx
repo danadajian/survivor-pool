@@ -18,7 +18,9 @@ const { outputs } = await Bun.build({
   minify: true,
   naming: "[dir]/[name]-[hash].[ext]",
 });
-const bundleFilePath = path.basename(outputs[0]?.path ?? "");
+const pathToBundleFile = outputs[0]?.path;
+if (!pathToBundleFile) throw new Error("Path to bundle file is missing.");
+const bundleFilePath = path.basename(pathToBundleFile);
 
 const isDev = environmentVariables.ENVIRONMENT === "development";
 
