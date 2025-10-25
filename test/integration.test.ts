@@ -16,6 +16,7 @@ import { editPool } from "../src/pages/edit/backend";
 import { deletePool } from "../src/pages/home/backend";
 import { getPool, joinPool } from "../src/pages/join/backend";
 import { fetchPicksForPool } from "../src/pages/picks/backend";
+import { fetchPicks, fetchPoolMembers } from "../src/pages/pool/backend";
 import { fetchPicksDataForUser } from "../src/pages/pool/backend/fetch-picks-data-for-user";
 import { findPoolWinner } from "../src/pages/pool/backend/find-pool-winner";
 import { makePick } from "../src/pages/pool/backend/make-pick";
@@ -71,13 +72,12 @@ describe("feature tests", () => {
 
   it("should not return poolWinner when no picks have been made yet", async () => {
     const poolId = await getPoolId();
-    const picksForPoolAndSeason = await db.query.picks.findMany({
-      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
-    });
+    const picksForPoolAndSeason = await fetchPicks(poolId, season);
+    const poolMembers = await fetchPoolMembers(poolId);
     const poolWinner = await findPoolWinner({
-      poolId,
       currentWeek: 1,
       picksForPoolAndSeason,
+      poolMembers,
       weekStarted: 1,
       lives: 1,
     });
@@ -217,9 +217,7 @@ describe("feature tests", () => {
       where: and(eq(picks.week, 1), eq(picks.season, season)),
     });
     expect(userPicks.every((pick) => pick.result === "PENDING")).toBeTrue();
-    const picksForPoolAndSeason = await db.query.picks.findMany({
-      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
-    });
+    const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
       userEliminationStatus({
         username: user1,
@@ -286,9 +284,7 @@ describe("feature tests", () => {
     });
     expect(userPick1?.result).toEqual("WON");
 
-    const picksForPoolAndSeason = await db.query.picks.findMany({
-      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
-    });
+    const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
       userEliminationStatus({
         username: user1,
@@ -367,9 +363,7 @@ describe("feature tests", () => {
     ] as Events;
     await updateResults(events, 2, season);
 
-    const picksForPoolAndSeason = await db.query.picks.findMany({
-      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
-    });
+    const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
       userEliminationStatus({
         username: user3,
@@ -405,13 +399,12 @@ describe("feature tests", () => {
 
   it("should not return poolWinner when no one has won the pool yet", async () => {
     const poolId = await getPoolId();
-    const picksForPoolAndSeason = await db.query.picks.findMany({
-      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
-    });
+    const picksForPoolAndSeason = await fetchPicks(poolId, season);
+    const poolMembers = await fetchPoolMembers(poolId);
     const poolWinner = await findPoolWinner({
-      poolId,
       currentWeek: 1,
       picksForPoolAndSeason,
+      poolMembers,
       weekStarted: 1,
       lives: 1,
     });
@@ -456,9 +449,7 @@ describe("feature tests", () => {
       },
     ] as Events;
     await updateResults(events, 2, season);
-    const picksForPoolAndSeason = await db.query.picks.findMany({
-      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
-    });
+    const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
       userEliminationStatus({
         username: user1,
@@ -536,9 +527,7 @@ describe("feature tests", () => {
     ] as Events;
     await updateResults(eventsWithTie, 3, season);
 
-    const picksForPoolAndSeason = await db.query.picks.findMany({
-      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
-    });
+    const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
       userEliminationStatus({
         username: user2,
@@ -552,21 +541,20 @@ describe("feature tests", () => {
 
   it("should return poolWinner when someone has won the pool", async () => {
     const poolId = await getPoolId();
-    const picksForPoolAndSeason = await db.query.picks.findMany({
-      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
-    });
+    const picksForPoolAndSeason = await fetchPicks(poolId, season);
+    const poolMembers = await fetchPoolMembers(poolId);
     const poolWinner = await findPoolWinner({
-      poolId,
       currentWeek: 3,
       picksForPoolAndSeason,
+      poolMembers,
       weekStarted: 1,
       lives: 1,
     });
     expect(poolWinner?.username).toEqual(user1);
     const poolWinnerNextWeek = await findPoolWinner({
-      poolId,
       currentWeek: 4,
       picksForPoolAndSeason,
+      poolMembers,
       weekStarted: 1,
       lives: 1,
     });
@@ -643,9 +631,7 @@ describe("feature tests", () => {
       },
     ] as Events;
     await updateResults(events, currentWeek, season);
-    const picksForPoolAndSeason = await db.query.picks.findMany({
-      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
-    });
+    const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
       userEliminationStatus({
         username: user1,
@@ -655,10 +641,11 @@ describe("feature tests", () => {
         lives: 2,
       }).eliminated,
     ).toBeFalse();
+    const poolMembers = await fetchPoolMembers(poolId);
     const poolWinner = await findPoolWinner({
-      poolId,
       currentWeek,
       picksForPoolAndSeason,
+      poolMembers,
       weekStarted: 4,
       lives: 2,
     });
@@ -701,9 +688,7 @@ describe("feature tests", () => {
       },
     ] as Events;
     await updateResults(events, currentWeek, season);
-    const picksForPoolAndSeason = await db.query.picks.findMany({
-      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
-    });
+    const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
       userEliminationStatus({
         username: user1,
@@ -713,18 +698,19 @@ describe("feature tests", () => {
         lives: 2,
       }).eliminated,
     ).toBeTrue();
+    const poolMembers = await fetchPoolMembers(poolId);
     const poolWinner = await findPoolWinner({
-      poolId,
       currentWeek,
       picksForPoolAndSeason,
+      poolMembers,
       weekStarted: 4,
       lives: 2,
     });
     expect(poolWinner).toBeUndefined();
     const poolWinnerNextWeek = await findPoolWinner({
-      poolId,
       currentWeek: 6,
       picksForPoolAndSeason,
+      poolMembers,
       weekStarted: 4,
       lives: 2,
     });

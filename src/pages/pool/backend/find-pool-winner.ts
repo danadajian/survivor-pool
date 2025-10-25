@@ -1,25 +1,19 @@
-import { eq } from "drizzle-orm";
-
-import { db } from "../../../db";
 import { members, picks } from "../../../schema";
 import { userEliminationStatus } from "./user-elimination-status";
 
 export async function findPoolWinner({
-  poolId,
   currentWeek,
   picksForPoolAndSeason,
+  poolMembers,
   weekStarted,
   lives,
 }: {
-  poolId: string;
   currentWeek: number;
   picksForPoolAndSeason: (typeof picks.$inferSelect)[];
+  poolMembers: (typeof members.$inferSelect)[];
   weekStarted: number;
   lives: number;
 }) {
-  const poolMembers = await db.query.members.findMany({
-    where: eq(members.poolId, poolId),
-  });
   const winners = poolMembers.filter(
     ({ username }) =>
       !userEliminationStatus({

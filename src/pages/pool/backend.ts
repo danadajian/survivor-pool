@@ -20,6 +20,15 @@ export async function fetchPoolInfo({
   username,
   poolId,
 }: v.InferInput<typeof fetchPoolInfoInput>) {
+  const poolResult = await db.query.pools.findFirst({
+    where: eq(pools.id, poolId),
+  });
+  if (!poolResult) {
+    throw new TRPCError({
+      message: "Pool not found.",
+      code: "NOT_FOUND",
+    });
+  }
   const poolMembers = await fetchPoolMembers(poolId);
   const poolMember = poolMembers.find((member) => member.username === username);
   if (!poolMember) {
@@ -41,9 +50,7 @@ export async function fetchPoolInfo({
     season: currentSeason,
   });
 
-  const picksForPoolAndSeason = await db.query.picks.findMany({
-    where: and(eq(picks.poolId, poolId), eq(picks.season, currentSeason)),
-  });
+  const picksForPoolAndSeason = await fetchPicks(poolId, currentSeason);
   const poolsResult = await db.query.pools.findFirst({
     where: eq(pools.id, poolId),
   });
@@ -54,9 +61,9 @@ export async function fetchPoolInfo({
     });
   const { weekStarted, lives } = poolsResult;
   const poolWinner = await findPoolWinner({
-    poolId,
     currentWeek,
     picksForPoolAndSeason,
+    poolMembers,
     weekStarted,
     lives,
   });
@@ -78,7 +85,6 @@ export async function fetchPoolInfo({
     forbiddenTeams,
     eliminated,
   });
-  const { poolName, creator: poolCreator } = poolMember;
 
   return {
     pickHeader,
@@ -87,23 +93,19 @@ export async function fetchPoolInfo({
     currentSeason,
     currentWeek,
     userPickIsSecret: userPick?.pickIsSecret,
-    poolName,
-    poolCreator,
+    poolName: poolResult.name,
+    poolCreator: poolResult.creator,
     poolMembers,
     poolWinner,
   };
 }
 
-async function fetchPoolMembers(poolId: string) {
-  return db
-    .select({
-      username: members.username,
-      firstName: members.firstName,
-      lastName: members.lastName,
-      poolName: pools.name,
-      creator: pools.creator,
-    })
-    .from(members)
-    .where(and(eq(members.poolId, poolId)))
-    .innerJoin(pools, eq(members.poolId, pools.id));
+export async function fetchPoolMembers(poolId: string) {
+  return db.query.members.findMany({ where: and(eq(members.poolId, poolId)) });
+}
+
+export async function fetchPicks(poolId: string, season: number) {
+  return db.query.picks.findMany({
+    where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
+  });
 }
