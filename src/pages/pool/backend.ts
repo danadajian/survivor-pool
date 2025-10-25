@@ -20,15 +20,6 @@ export async function fetchPoolInfo({
   username,
   poolId,
 }: v.InferInput<typeof fetchPoolInfoInput>) {
-  const poolResult = await db.query.pools.findFirst({
-    where: eq(pools.id, poolId),
-  });
-  if (!poolResult) {
-    throw new TRPCError({
-      message: "Pool not found.",
-      code: "NOT_FOUND",
-    });
-  }
   const poolMembers = await fetchPoolMembers(poolId);
   const poolMember = poolMembers.find((member) => member.username === username);
   if (!poolMember) {
@@ -59,7 +50,12 @@ export async function fetchPoolInfo({
       message: "Pool could not be found.",
       code: "INTERNAL_SERVER_ERROR",
     });
-  const { weekStarted, lives } = poolsResult;
+  const {
+    weekStarted,
+    lives,
+    name: poolName,
+    creator: poolCreator,
+  } = poolsResult;
   const poolWinner = await findPoolWinner({
     currentWeek,
     picksForPoolAndSeason,
@@ -93,8 +89,8 @@ export async function fetchPoolInfo({
     currentSeason,
     currentWeek,
     userPickIsSecret: userPick?.pickIsSecret,
-    poolName: poolResult.name,
-    poolCreator: poolResult.creator,
+    poolName,
+    poolCreator,
     poolMembers,
     poolWinner,
   };
