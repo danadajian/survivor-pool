@@ -10,11 +10,14 @@ export async function fetchCurrentGames(): Promise<GamesResponse> {
   const response = await fetch(environmentVariables.GAMES_API_URL);
   const games = await response.json();
   const parseResult = v.safeParse(gamesSchema, games);
-  if (!parseResult.success)
+  if (!parseResult.success) {
+    // eslint-disable-next-line no-console
+    console.error(JSON.stringify(parseResult.issues));
     throw new TRPCError({
       message: "ESPN has changed their API recently, an update is needed.",
       code: "INTERNAL_SERVER_ERROR",
     });
+  }
   const parsedGames = parseResult.output;
   const filteredEvents = parsedGames.events.filter(
     (event) => event.season.slug !== "preseason",
@@ -47,11 +50,7 @@ const eventsSchema = v.array(
         date: v.string(),
         status: v.object({
           type: v.object({
-            name: v.union([
-              v.literal("STATUS_SCHEDULED"),
-              v.literal("STATUS_IN_PROGRESS"),
-              v.literal("STATUS_FINAL"),
-            ]),
+            name: v.string(),
           }),
         }),
         odds: v.optional(
