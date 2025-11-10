@@ -12,6 +12,11 @@ import { ClientProvider } from "./components/client-provider";
 import { ErrorPage } from "./components/error";
 import { Heading } from "./components/heading";
 import { withPage } from "./components/page-wrapper";
+import {
+  ServerClerkProvider,
+  ServerSignedIn,
+  ServerSignedOut,
+} from "./components/server-clerk-provider";
 import { CLERK_PUBLISHABLE_KEY } from "./constants";
 import { Create } from "./pages/create/frontend";
 import { Edit } from "./pages/edit/frontend";
@@ -22,8 +27,66 @@ import { Pool } from "./pages/pool/frontend";
 import { Rules } from "./pages/rules/frontend";
 import { useEndpoint } from "./utils/use-endpoint";
 
-export const App = () => {
+type AuthState = {
+  userId: string | null;
+  sessionId: string | null;
+  isAuthenticated: boolean;
+};
+
+type AppProps = {
+  authState?: AuthState;
+};
+
+export const App = ({ authState }: AppProps = {}) => {
   const endpoint = useEndpoint();
+  
+  // Always use ClerkProvider structure for consistent hydration
+  // On the server, authState is used to render the correct content
+  // On the client, ClerkProvider will hydrate and take over
+  const routes = (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/rules" element={<Rules />} />
+      <Route path="/pool/:poolId" element={<Pool />} />
+      <Route path="/picks/:poolId" element={<Picks />} />
+      <Route path="/create" element={<Create />} />
+      <Route path="/edit/:poolId" element={<Edit />} />
+      <Route path="/join/:poolId" element={<Join />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+
+  const content = authState ? (
+    // Server-side: Render based on authState without ClerkProvider
+    // This allows SSR to work without waiting for client-side auth
+    <ServerClerkProvider authState={authState}>
+      <ErrorBoundary
+        fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
+      >
+        <ClientProvider>
+          <ServerSignedIn authState={authState}>{routes}</ServerSignedIn>
+          <ServerSignedOut authState={authState}>
+            <RedirectToSignIn />
+          </ServerSignedOut>
+        </ClientProvider>
+      </ErrorBoundary>
+    </ServerClerkProvider>
+  ) : (
+    // Client-side: Use ClerkProvider for hydration
+    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+      <ErrorBoundary
+        fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
+      >
+        <ClientProvider>
+          <SignedIn>{routes}</SignedIn>
+          <SignedOut>
+            <RedirectToSignIn />
+          </SignedOut>
+        </ClientProvider>
+      </ErrorBoundary>
+    </ClerkProvider>
+  );
+
   return (
     <html lang="en">
       <head>
@@ -48,29 +111,7 @@ export const App = () => {
         <title>Survivor Pool</title>
       </head>
       <body>
-        <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-          <ErrorBoundary
-            fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
-          >
-            <ClientProvider>
-              <SignedIn>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/rules" element={<Rules />} />
-                  <Route path="/pool/:poolId" element={<Pool />} />
-                  <Route path="/picks/:poolId" element={<Picks />} />
-                  <Route path="/create" element={<Create />} />
-                  <Route path="/edit/:poolId" element={<Edit />} />
-                  <Route path="/join/:poolId" element={<Join />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </SignedIn>
-              <SignedOut>
-                <RedirectToSignIn />
-              </SignedOut>
-            </ClientProvider>
-          </ErrorBoundary>
-        </ClerkProvider>
+        {content}
       </body>
     </html>
   );
