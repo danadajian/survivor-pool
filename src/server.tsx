@@ -10,6 +10,7 @@ import { renderToReadableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 
 import { App } from "./app";
+import { UserData } from "./components/user-context";
 import { CLERK_PUBLISHABLE_KEY } from "./constants";
 import { createContext } from "./context";
 import { environmentVariables } from "./env";
@@ -34,12 +35,6 @@ const clerkClient = createClerkClient({
   publishableKey: CLERK_PUBLISHABLE_KEY,
 });
 
-type UserData = {
-  username: string;
-  firstName?: string;
-  lastName?: string;
-};
-
 /**
  * Prefetches tRPC queries based on the current route
  * Uses the same route parsing logic as page-wrapper.tsx
@@ -51,7 +46,6 @@ async function prefetchQueriesForRoute(
   queryClient: QueryClient,
 ) {
   const { endpoint, poolId } = parseRoute(pathname);
-  if (!poolId) return;
 
   // Home page - fetch pools for user
   if (!endpoint) {
@@ -64,6 +58,8 @@ async function prefetchQueriesForRoute(
     });
     return;
   }
+
+  if (!poolId) return;
 
   if (endpoint === "pool") {
     await queryClient.prefetchQuery({
@@ -84,14 +80,10 @@ async function prefetchQueriesForRoute(
 const app = new Elysia()
   .get("/health", () => "all good")
   .get("*", async (context) => {
-    // Authenticate the request on the server
     const authResult = await clerkClient.authenticateRequest(context.request);
-
-    // Extract auth state for SSR using toAuth() method
     const auth = authResult.toAuth();
 
-    // Get user data if authenticated
-    let userData = null;
+    let userData;
     if (authResult.isAuthenticated && auth?.userId) {
       const user = await clerkClient.users.getUser(auth.userId);
       userData = {
@@ -101,13 +93,9 @@ const app = new Elysia()
       };
     }
 
-    const authState = {
-      userId: auth?.userId ?? null,
-      sessionId: auth?.sessionId ?? null,
-      isAuthenticated: authResult.isAuthenticated,
-      signInUrl: authResult.signInUrl,
-      userData,
-    };
+    // Create tRPC caller for server-side queries
+    const trpcContext = await createContext({ req: context.request });
+    const caller = appRouter.createCaller(trpcContext);
 
     // Create server-side QueryClient and tRPC caller for prefetching
     const queryClient = new QueryClient({
@@ -117,10 +105,6 @@ const app = new Elysia()
         },
       },
     });
-
-    // Create tRPC caller for server-side queries
-    const trpcContext = await createContext({ req: context.request });
-    const caller = appRouter.createCaller(trpcContext);
 
     // Prefetch queries based on the route
     if (authResult.isAuthenticated && userData) {
@@ -133,7 +117,7 @@ const app = new Elysia()
 
     const stream = await renderToReadableStream(
       <StaticRouter location={context.path}>
-        <App authState={authState} dehydratedState={dehydratedState} />
+        <App userData={userData} dehydratedState={dehydratedState} />
         {isDev && (
           <>
             <script src="https://cdn.tailwindcss.com" />
@@ -143,7 +127,6 @@ const app = new Elysia()
       </StaticRouter>,
       {
         bootstrapScripts: [`/public/${bundleFilePath}`],
-        onError: () => {},
       },
     );
     return new Response(stream.pipeThrough(new TransformStream()), {

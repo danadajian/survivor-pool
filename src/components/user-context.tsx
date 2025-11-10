@@ -7,14 +7,14 @@ import * as v from "valibot";
 
 import { userSchema } from "./page-wrapper";
 
-type UserData = v.InferInput<typeof userSchema> | null;
+export type UserData = v.InferInput<typeof userSchema>;
 
-const UserContext = createContext<UserData>(null);
+const UserContext = createContext<UserData | null>(null);
 
 export const UserProvider = ({
   children,
   userData,
-}: PropsWithChildren<{ userData: UserData }>) => {
+}: PropsWithChildren<{ userData: UserData | null }>) => {
   return (
     <UserContext.Provider value={userData}>{children}</UserContext.Provider>
   );

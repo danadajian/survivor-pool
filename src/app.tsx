@@ -12,7 +12,7 @@ import { ClientProvider } from "./components/client-provider";
 import { ErrorPage } from "./components/error";
 import { Heading } from "./components/heading";
 import { withPage } from "./components/page-wrapper";
-import { UserProvider } from "./components/user-context";
+import { UserData, UserProvider } from "./components/user-context";
 import { CLERK_PUBLISHABLE_KEY } from "./constants";
 import { Create } from "./pages/create/frontend";
 import { Edit } from "./pages/edit/frontend";
@@ -23,24 +23,12 @@ import { Pool } from "./pages/pool/frontend";
 import { Rules } from "./pages/rules/frontend";
 import { parseRoute } from "./utils/parse-route";
 
-type AuthState = {
-  userId: string | null;
-  sessionId: string | null;
-  isAuthenticated: boolean;
-  signInUrl?: string;
-  userData?: {
-    username: string;
-    firstName?: string;
-    lastName?: string;
-  } | null;
-};
-
 type AppProps = {
-  authState?: AuthState;
+  userData?: UserData;
   dehydratedState?: unknown;
 };
 
-export const App = ({ authState, dehydratedState }: AppProps = {}) => {
+export const App = ({ userData, dehydratedState }: AppProps) => {
   // Get endpoint from pathname for meta tags
   // useLocation works in both StaticRouter (server) and BrowserRouter (client)
   const { pathname } = useLocation();
@@ -68,7 +56,7 @@ export const App = ({ authState, dehydratedState }: AppProps = {}) => {
   // Use client components for navigation - server components only for initial SSR
   const content = (
     <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-      <UserProvider userData={authState?.userData ?? null}>
+      <UserProvider userData={userData ?? null}>
         <ErrorBoundary
           fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
         >
