@@ -1,4 +1,5 @@
 import { createClerkClient } from "@clerk/backend";
+import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { staticPlugin } from "@elysiajs/static";
 import Elysia from "elysia";
 import { HotModuleReload, hotModuleReload } from "elysia-hot-module-reload";
@@ -10,6 +11,7 @@ import { StaticRouter } from "react-router-dom";
 
 import { App } from "./app";
 import { CLERK_PUBLISHABLE_KEY } from "./constants";
+import { createContext } from "./context";
 import { environmentVariables } from "./env";
 import { appRouter } from "./router";
 import { trpcRouter } from "./trpc";
@@ -39,15 +41,102 @@ const app = new Elysia()
 
     // Extract auth state for SSR using toAuth() method
     const auth = authResult.toAuth();
+    
+    // Get user data if authenticated
+    let userData = null;
+    if (authResult.isAuthenticated && auth?.userId) {
+      try {
+        const user = await clerkClient.users.getUser(auth.userId);
+        userData = {
+          username: user.primaryEmailAddress?.emailAddress ?? "",
+          firstName: user.firstName ?? undefined,
+          lastName: user.lastName ?? undefined,
+        };
+      } catch (error) {
+        // If we can't fetch user, continue without user data
+        console.error("Failed to fetch user data:", error);
+      }
+    }
+    
     const authState = {
       userId: auth?.userId ?? null,
       sessionId: auth?.sessionId ?? null,
       isAuthenticated: authResult.isAuthenticated,
+      signInUrl: authResult.signInUrl,
+      userData,
     };
+
+    // Create server-side QueryClient and tRPC caller for prefetching
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 1000 * 60, // 1 minute
+        },
+      },
+    });
+
+    // Create tRPC caller for server-side queries
+    const trpcContext = await createContext({ req: context.request });
+    const caller = appRouter.createCaller(trpcContext);
+
+    // Prefetch queries based on the route
+    if (authResult.isAuthenticated && userData) {
+      const pathname = new URL(context.request.url).pathname;
+      
+      try {
+        // Prefetch based on route
+        if (pathname === "/" || pathname === "") {
+          // Home page - fetch pools for user
+          await queryClient.prefetchQuery({
+            queryKey: [
+              ["poolsForUser"],
+              { input: { username: userData.username }, type: "query" },
+            ],
+            queryFn: async () => {
+              return await caller.poolsForUser({ username: userData.username });
+            },
+          });
+        } else if (pathname.startsWith("/pool/")) {
+          // Pool page - extract poolId and fetch pool info
+          const poolId = pathname.split("/pool/")[1]?.split("/")[0];
+          if (poolId) {
+            await queryClient.prefetchQuery({
+              queryKey: [
+                ["pool"],
+                { input: { username: userData.username, poolId }, type: "query" },
+              ],
+              queryFn: async () => {
+                return await caller.pool({ username: userData.username, poolId });
+              },
+            });
+          }
+        } else if (pathname.startsWith("/picks/")) {
+          // Picks page - extract poolId and fetch picks
+          const poolId = pathname.split("/picks/")[1]?.split("/")[0];
+          if (poolId) {
+            await queryClient.prefetchQuery({
+              queryKey: [
+                ["picksForPool"],
+                { input: { poolId }, type: "query" },
+              ],
+              queryFn: async () => {
+                return await caller.picksForPool({ poolId });
+              },
+            });
+          }
+        }
+      } catch (error) {
+        // If prefetching fails, continue without prefetched data
+        console.error("Failed to prefetch queries:", error);
+      }
+    }
+
+    // Dehydrate the query client state using React Query's dehydrate function
+    const dehydratedState = dehydrate(queryClient);
 
     const stream = await renderToReadableStream(
       <StaticRouter location={context.path}>
-        <App authState={authState} />
+        <App authState={authState} dehydratedState={dehydratedState} />
         {isDev && (
           <>
             <script src="https://cdn.tailwindcss.com" />

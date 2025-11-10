@@ -13,10 +13,11 @@ import { ErrorPage } from "./components/error";
 import { Heading } from "./components/heading";
 import { withPage } from "./components/page-wrapper";
 import {
-  ServerClerkProvider,
+  ServerRedirectToSignIn,
   ServerSignedIn,
   ServerSignedOut,
 } from "./components/server-clerk-provider";
+import { UserProvider } from "./components/user-context";
 import { CLERK_PUBLISHABLE_KEY } from "./constants";
 import { Create } from "./pages/create/frontend";
 import { Edit } from "./pages/edit/frontend";
@@ -31,13 +32,20 @@ type AuthState = {
   userId: string | null;
   sessionId: string | null;
   isAuthenticated: boolean;
+  signInUrl?: string;
+  userData?: {
+    username: string;
+    firstName?: string;
+    lastName?: string;
+  } | null;
 };
 
 type AppProps = {
   authState?: AuthState;
+  dehydratedState?: unknown;
 };
 
-export const App = ({ authState }: AppProps = {}) => {
+export const App = ({ authState, dehydratedState }: AppProps = {}) => {
   const endpoint = useEndpoint();
   
   // Always use ClerkProvider structure for consistent hydration
@@ -56,34 +64,25 @@ export const App = ({ authState }: AppProps = {}) => {
     </Routes>
   );
 
-  const content = authState ? (
-    // Server-side: Render based on authState without ClerkProvider
-    // This allows SSR to work without waiting for client-side auth
-    <ServerClerkProvider authState={authState}>
-      <ErrorBoundary
-        fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
-      >
-        <ClientProvider>
-          <ServerSignedIn authState={authState}>{routes}</ServerSignedIn>
-          <ServerSignedOut authState={authState}>
-            <RedirectToSignIn />
-          </ServerSignedOut>
-        </ClientProvider>
-      </ErrorBoundary>
-    </ServerClerkProvider>
-  ) : (
-    // Client-side: Use ClerkProvider for hydration
+  // Always wrap with ClerkProvider for consistent structure
+  // On server: Pass userData via UserProvider for SSR
+  // On client: ClerkProvider will hydrate and provide full functionality
+  // Use client components for navigation - server components only for initial SSR
+  const content = (
     <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-      <ErrorBoundary
-        fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
-      >
-        <ClientProvider>
-          <SignedIn>{routes}</SignedIn>
-          <SignedOut>
-            <RedirectToSignIn />
-          </SignedOut>
-        </ClientProvider>
-      </ErrorBoundary>
+      <UserProvider userData={authState?.userData ?? null}>
+        <ErrorBoundary
+          fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
+        >
+          <ClientProvider dehydratedState={dehydratedState}>
+            {/* Always use client-side SignedIn/SignedOut for navigation to work */}
+            <SignedIn>{routes}</SignedIn>
+            <SignedOut>
+              <RedirectToSignIn />
+            </SignedOut>
+          </ClientProvider>
+        </ErrorBoundary>
+      </UserProvider>
     </ClerkProvider>
   );
 
@@ -109,6 +108,13 @@ export const App = ({ authState }: AppProps = {}) => {
         />
         <link rel="stylesheet" href="/public/globals.css" />
         <title>Survivor Pool</title>
+        {dehydratedState ? (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.__DEHYDRATED_STATE__ = ${JSON.stringify(dehydratedState)};`,
+            }}
+          />
+        ) : null}
       </head>
       <body>
         {content}

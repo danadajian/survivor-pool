@@ -4,6 +4,7 @@ type AuthState = {
   userId: string | null;
   sessionId: string | null;
   isAuthenticated: boolean;
+  signInUrl?: string;
 };
 
 type ServerClerkProviderProps = PropsWithChildren<{
@@ -47,6 +48,20 @@ export const ServerSignedOut = ({
   if (!authState.isAuthenticated) {
     return <>{children}</>;
   }
+  return null;
+};
+
+/**
+ * Server-side redirect to sign-in page
+ * Renders a placeholder that will be replaced by ClerkProvider's RedirectToSignIn
+ * component when the client hydrates. This ensures the redirect uses Clerk's
+ * proper frontend configuration and sign-in URL.
+ */
+export const ServerRedirectToSignIn = () => {
+  // On the server, we render nothing (or a minimal placeholder).
+  // When the client hydrates with ClerkProvider, the RedirectToSignIn component
+  // will be rendered and will handle the redirect properly using Clerk's frontend SDK.
+  // This ensures we use Clerk's correct sign-in URL configuration.
   return null;
 };
 
