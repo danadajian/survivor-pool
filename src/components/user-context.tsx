@@ -1,7 +1,11 @@
-import React, { createContext, useContext, type PropsWithChildren } from "react";
+import React, {
+  createContext,
+  type PropsWithChildren,
+  useContext,
+} from "react";
 import * as v from "valibot";
 
-import { userFields, userSchema } from "./page-wrapper";
+import { userSchema } from "./page-wrapper";
 
 type UserData = v.InferInput<typeof userSchema> | null;
 
@@ -11,8 +15,9 @@ export const UserProvider = ({
   children,
   userData,
 }: PropsWithChildren<{ userData: UserData }>) => {
-  return <UserContext.Provider value={userData}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={userData}>{children}</UserContext.Provider>
+  );
 };
 
 export const useUserData = () => useContext(UserContext);
-

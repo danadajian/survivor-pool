@@ -6,17 +6,12 @@ import {
 } from "@clerk/clerk-react";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 import { ClientProvider } from "./components/client-provider";
 import { ErrorPage } from "./components/error";
 import { Heading } from "./components/heading";
 import { withPage } from "./components/page-wrapper";
-import {
-  ServerRedirectToSignIn,
-  ServerSignedIn,
-  ServerSignedOut,
-} from "./components/server-clerk-provider";
 import { UserProvider } from "./components/user-context";
 import { CLERK_PUBLISHABLE_KEY } from "./constants";
 import { Create } from "./pages/create/frontend";
@@ -26,7 +21,7 @@ import { Join } from "./pages/join/frontend";
 import { Picks } from "./pages/picks/frontend";
 import { Pool } from "./pages/pool/frontend";
 import { Rules } from "./pages/rules/frontend";
-import { useEndpoint } from "./utils/use-endpoint";
+import { parseRoute } from "./utils/parse-route";
 
 type AuthState = {
   userId: string | null;
@@ -46,8 +41,11 @@ type AppProps = {
 };
 
 export const App = ({ authState, dehydratedState }: AppProps = {}) => {
-  const endpoint = useEndpoint();
-  
+  // Get endpoint from pathname for meta tags
+  // useLocation works in both StaticRouter (server) and BrowserRouter (client)
+  const { pathname } = useLocation();
+  const { endpoint } = parseRoute(pathname);
+
   // Always use ClerkProvider structure for consistent hydration
   // On the server, authState is used to render the correct content
   // On the client, ClerkProvider will hydrate and take over
@@ -116,9 +114,7 @@ export const App = ({ authState, dehydratedState }: AppProps = {}) => {
           />
         ) : null}
       </head>
-      <body>
-        {content}
-      </body>
+      <body>{content}</body>
     </html>
   );
 };

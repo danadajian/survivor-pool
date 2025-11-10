@@ -1,6 +1,6 @@
 import { createClerkClient } from "@clerk/backend";
-import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { staticPlugin } from "@elysiajs/static";
+import { dehydrate, QueryClient } from "@tanstack/react-query";
 import Elysia from "elysia";
 import { HotModuleReload, hotModuleReload } from "elysia-hot-module-reload";
 import { rateLimit } from "elysia-rate-limit";
@@ -15,6 +15,7 @@ import { createContext } from "./context";
 import { environmentVariables } from "./env";
 import { appRouter } from "./router";
 import { trpcRouter } from "./trpc";
+import { parseRoute } from "./utils/parse-route";
 
 const { outputs } = await Bun.build({
   entrypoints: ["./src/client.tsx"],
@@ -33,6 +34,53 @@ const clerkClient = createClerkClient({
   publishableKey: CLERK_PUBLISHABLE_KEY,
 });
 
+type UserData = {
+  username: string;
+  firstName?: string;
+  lastName?: string;
+};
+
+/**
+ * Prefetches tRPC queries based on the current route
+ * Uses the same route parsing logic as page-wrapper.tsx
+ */
+async function prefetchQueriesForRoute(
+  pathname: string,
+  userData: UserData,
+  caller: ReturnType<typeof appRouter.createCaller>,
+  queryClient: QueryClient,
+) {
+  const { endpoint, poolId } = parseRoute(pathname);
+  if (!poolId) return;
+
+  // Home page - fetch pools for user
+  if (!endpoint) {
+    await queryClient.prefetchQuery({
+      queryKey: [
+        ["poolsForUser"],
+        { input: { username: userData.username }, type: "query" },
+      ],
+      queryFn: () => caller.poolsForUser({ username: userData.username }),
+    });
+    return;
+  }
+
+  if (endpoint === "pool") {
+    await queryClient.prefetchQuery({
+      queryKey: [
+        ["pool"],
+        { input: { username: userData.username, poolId }, type: "query" },
+      ],
+      queryFn: () => caller.pool({ username: userData.username, poolId }),
+    });
+  } else if (endpoint === "picks") {
+    await queryClient.prefetchQuery({
+      queryKey: [["picksForPool"], { input: { poolId }, type: "query" }],
+      queryFn: () => caller.picksForPool({ poolId }),
+    });
+  }
+}
+
 const app = new Elysia()
   .get("/health", () => "all good")
   .get("*", async (context) => {
@@ -41,23 +89,18 @@ const app = new Elysia()
 
     // Extract auth state for SSR using toAuth() method
     const auth = authResult.toAuth();
-    
+
     // Get user data if authenticated
     let userData = null;
     if (authResult.isAuthenticated && auth?.userId) {
-      try {
-        const user = await clerkClient.users.getUser(auth.userId);
-        userData = {
-          username: user.primaryEmailAddress?.emailAddress ?? "",
-          firstName: user.firstName ?? undefined,
-          lastName: user.lastName ?? undefined,
-        };
-      } catch (error) {
-        // If we can't fetch user, continue without user data
-        console.error("Failed to fetch user data:", error);
-      }
+      const user = await clerkClient.users.getUser(auth.userId);
+      userData = {
+        username: user.primaryEmailAddress?.emailAddress ?? "",
+        firstName: user.firstName ?? undefined,
+        lastName: user.lastName ?? undefined,
+      };
     }
-    
+
     const authState = {
       userId: auth?.userId ?? null,
       sessionId: auth?.sessionId ?? null,
@@ -82,53 +125,7 @@ const app = new Elysia()
     // Prefetch queries based on the route
     if (authResult.isAuthenticated && userData) {
       const pathname = new URL(context.request.url).pathname;
-      
-      try {
-        // Prefetch based on route
-        if (pathname === "/" || pathname === "") {
-          // Home page - fetch pools for user
-          await queryClient.prefetchQuery({
-            queryKey: [
-              ["poolsForUser"],
-              { input: { username: userData.username }, type: "query" },
-            ],
-            queryFn: async () => {
-              return await caller.poolsForUser({ username: userData.username });
-            },
-          });
-        } else if (pathname.startsWith("/pool/")) {
-          // Pool page - extract poolId and fetch pool info
-          const poolId = pathname.split("/pool/")[1]?.split("/")[0];
-          if (poolId) {
-            await queryClient.prefetchQuery({
-              queryKey: [
-                ["pool"],
-                { input: { username: userData.username, poolId }, type: "query" },
-              ],
-              queryFn: async () => {
-                return await caller.pool({ username: userData.username, poolId });
-              },
-            });
-          }
-        } else if (pathname.startsWith("/picks/")) {
-          // Picks page - extract poolId and fetch picks
-          const poolId = pathname.split("/picks/")[1]?.split("/")[0];
-          if (poolId) {
-            await queryClient.prefetchQuery({
-              queryKey: [
-                ["picksForPool"],
-                { input: { poolId }, type: "query" },
-              ],
-              queryFn: async () => {
-                return await caller.picksForPool({ poolId });
-              },
-            });
-          }
-        }
-      } catch (error) {
-        // If prefetching fails, continue without prefetched data
-        console.error("Failed to prefetch queries:", error);
-      }
+      await prefetchQueriesForRoute(pathname, userData, caller, queryClient);
     }
 
     // Dehydrate the query client state using React Query's dehydrate function

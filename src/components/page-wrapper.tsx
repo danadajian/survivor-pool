@@ -1,10 +1,10 @@
 import { useUser } from "@clerk/clerk-react";
 import React, { Suspense, useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useMatch } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import * as v from "valibot";
 
-import { useEndpoint } from "../utils/use-endpoint";
+import { parseRoute } from "../utils/parse-route";
 import { ErrorPage } from "./error";
 import { Loader } from "./loader";
 import { NavBar } from "./nav-bar";
@@ -24,19 +24,22 @@ export type PageProps = {
 
 export const withPage = (Component: React.FC<PageProps>) => () => {
   const PageComponent = () => {
-    const endpoint = useEndpoint();
-    const path = endpoint ? useMatch(`/${endpoint}/:poolId`) : null;
-    const poolId = path?.params.poolId ?? "";
+    const { pathname } = useLocation();
+    const { poolId } = parseRoute(pathname);
+    const poolIdString = poolId ?? "";
 
     // Try to get user data from server-provided context first
     const serverUserData = useUserData();
-    
+
     // Fall back to Clerk's useUser hook if no server data
     const userResult = useUser();
-    const { user: userResource, isLoaded } = useMemo(() => userResult, [userResult]);
-    
+    const { user: userResource, isLoaded } = useMemo(
+      () => userResult,
+      [userResult],
+    );
+
     let user: v.InferInput<typeof userSchema>;
-    
+
     if (serverUserData) {
       // Use server-provided user data (SSR)
       user = serverUserData;
@@ -46,13 +49,13 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
       if (!isLoaded || !userResource) {
         return <Loader />;
       }
-      
+
       const userInfo = {
         username: userResource.primaryEmailAddress?.emailAddress ?? "",
         firstName: userResource.firstName,
         lastName: userResource.lastName,
       };
-      
+
       // Use safeParse to handle validation errors gracefully
       const result = v.safeParse(userSchema, userInfo);
       if (!result.success) {
@@ -70,7 +73,7 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
           <NavBar />
           <Suspense fallback={<Loader />}>
             <div className="flex flex-col items-center pt-16 text-center">
-              <Component user={user} poolId={poolId} />
+              <Component user={user} poolId={poolIdString} />
             </div>
           </Suspense>
         </ErrorBoundary>
