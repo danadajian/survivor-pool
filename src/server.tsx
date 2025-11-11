@@ -10,13 +10,11 @@ import { renderToReadableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 
 import { App } from "./app";
-import { UserData } from "./components/user-context";
 import { CLERK_PUBLISHABLE_KEY } from "./constants";
-import { createContext } from "./context";
 import { environmentVariables } from "./env";
 import { appRouter } from "./router";
 import { trpcRouter } from "./trpc";
-import { parseRoute } from "./utils/parse-route";
+import { prefetchQueriesForRoute } from "./utils/prefetch-queries-for-route";
 
 const { outputs } = await Bun.build({
   entrypoints: ["./src/client.tsx"],
@@ -35,48 +33,6 @@ const clerkClient = createClerkClient({
   publishableKey: CLERK_PUBLISHABLE_KEY,
 });
 
-/**
- * Prefetches tRPC queries based on the current route
- * Uses the same route parsing logic as page-wrapper.tsx
- */
-async function prefetchQueriesForRoute(
-  pathname: string,
-  userData: UserData,
-  caller: ReturnType<typeof appRouter.createCaller>,
-  queryClient: QueryClient,
-) {
-  const { endpoint, poolId } = parseRoute(pathname);
-
-  // Home page - fetch pools for user
-  if (!endpoint) {
-    await queryClient.prefetchQuery({
-      queryKey: [
-        ["poolsForUser"],
-        { input: { username: userData.username }, type: "query" },
-      ],
-      queryFn: () => caller.poolsForUser({ username: userData.username }),
-    });
-    return;
-  }
-
-  if (!poolId) return;
-
-  if (endpoint === "pool") {
-    await queryClient.prefetchQuery({
-      queryKey: [
-        ["pool"],
-        { input: { username: userData.username, poolId }, type: "query" },
-      ],
-      queryFn: () => caller.pool({ username: userData.username, poolId }),
-    });
-  } else if (endpoint === "picks") {
-    await queryClient.prefetchQuery({
-      queryKey: [["picksForPool"], { input: { poolId }, type: "query" }],
-      queryFn: () => caller.picksForPool({ poolId }),
-    });
-  }
-}
-
 const app = new Elysia()
   .get("/health", () => "all good")
   .get("*", async (context) => {
@@ -93,11 +49,6 @@ const app = new Elysia()
       };
     }
 
-    // Create tRPC caller for server-side queries
-    const trpcContext = await createContext({ req: context.request });
-    const caller = appRouter.createCaller(trpcContext);
-
-    // Create server-side QueryClient and tRPC caller for prefetching
     const queryClient = new QueryClient({
       defaultOptions: {
         queries: {
@@ -106,13 +57,10 @@ const app = new Elysia()
       },
     });
 
-    // Prefetch queries based on the route
     if (authResult.isAuthenticated && userData) {
-      const pathname = new URL(context.request.url).pathname;
-      await prefetchQueriesForRoute(pathname, userData, caller, queryClient);
+      await prefetchQueriesForRoute(context, userData, queryClient);
     }
 
-    // Dehydrate the query client state using React Query's dehydrate function
     const dehydratedState = dehydrate(queryClient);
 
     const stream = await renderToReadableStream(

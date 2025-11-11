@@ -25,7 +25,7 @@ export type PageProps = {
 export const withPage = (Component: React.FC<PageProps>) => () => {
   const PageComponent = () => {
     const { pathname } = useLocation();
-    const { poolId = "" } = parseRoute(pathname);
+    const { poolId } = parseRoute(pathname);
 
     // Try to get user data from server-provided context first
     const serverUserData = useUserData();
@@ -72,7 +72,7 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
           <NavBar />
           <Suspense fallback={<Loader />}>
             <div className="flex flex-col items-center pt-16 text-center">
-              <Component user={user} poolId={poolId} />
+              <Component user={user} poolId={poolId ?? ""} />
             </div>
           </Suspense>
         </ErrorBoundary>
