@@ -1,20 +1,21 @@
 import { useUser } from "@clerk/clerk-react";
 import React, { Suspense, useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useMatch } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import * as v from "valibot";
 
-import { useEndpoint } from "../utils/use-endpoint";
+import { parseRoute } from "../utils/parse-route";
 import { ErrorPage } from "./error";
 import { Loader } from "./loader";
 import { NavBar } from "./nav-bar";
+import { useUserData } from "./user-context";
 
 export const userFields = {
   username: v.string(),
   firstName: v.optional(v.string()),
   lastName: v.optional(v.string()),
 } as const;
-const userSchema = v.object(userFields);
+export const userSchema = v.object(userFields);
 
 export type PageProps = {
   user: v.InferInput<typeof userSchema>;
@@ -23,18 +24,36 @@ export type PageProps = {
 
 export const withPage = (Component: React.FC<PageProps>) => () => {
   const PageComponent = () => {
-    const endpoint = useEndpoint();
-    const path = endpoint ? useMatch(`/${endpoint}/:poolId`) : null;
-    const poolId = path?.params.poolId ?? "";
+    const { pathname } = useLocation();
+    const { poolId = "" } = parseRoute(pathname);
 
-    const userResult = useUser();
-    const { user: userResource } = useMemo(() => userResult, []);
-    const userInfo = {
-      username: userResource?.primaryEmailAddress?.emailAddress,
-      firstName: userResource?.firstName,
-      lastName: userResource?.lastName,
-    };
-    const user = v.parse(userSchema, userInfo);
+    const clientUser = useUser();
+    const { user: userResource, isLoaded } = useMemo(
+      () => clientUser,
+      [clientUser],
+    );
+
+    let user: v.InferInput<typeof userSchema>;
+    const serverUser = useUserData();
+    if (serverUser) {
+      user = serverUser;
+    } else {
+      if (!isLoaded || !userResource) {
+        return <Loader />;
+      }
+
+      const userInfo = {
+        username: userResource.primaryEmailAddress?.emailAddress ?? "",
+        firstName: userResource.firstName,
+        lastName: userResource.lastName,
+      };
+
+      const result = v.safeParse(userSchema, userInfo);
+      if (!result.success) {
+        return <ErrorPage error={new Error("Invalid user data")} />;
+      }
+      user = result.output;
+    }
 
     return (
       <>

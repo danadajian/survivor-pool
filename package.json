@@ -3,8 +3,8 @@
   "packageManager": "bun@1.3.1",
   "type": "module",
   "scripts": {
-    "db": "docker compose up -d",
-    "dev": "bun db && bun drizzle && ENVIRONMENT=development bun --hot ./src/server.tsx",
+    "db": "docker compose up -d && bun drizzle",
+    "dev": "ENVIRONMENT=development bun --hot ./src/server.tsx",
     "drizzle": "drizzle-kit push",
     "docker": "docker build . --tag survivor-pool",
     "format": "prettier --write .",
