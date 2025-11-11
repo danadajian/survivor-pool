@@ -126,7 +126,11 @@ const EditComponent = ({ poolId }: PageProps) => {
               Survivor Pool rules.
             </p>
           </div>
-          <Button type="submit" disabled={!poolName.trim()} className="w-full sm:w-auto">
+          <Button
+            type="submit"
+            disabled={!poolName.trim()}
+            className="w-full sm:w-auto"
+          >
             Update Pool
           </Button>
         </form>

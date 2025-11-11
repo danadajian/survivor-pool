@@ -49,7 +49,7 @@ export const NavBar = () => {
               to={to}
               onClick={() => resetBoundary()}
               className={classNameForLink}
-              >
+            >
               {label}
             </NavLink>
           ))}

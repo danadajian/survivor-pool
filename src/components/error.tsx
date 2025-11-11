@@ -13,7 +13,7 @@ export const ErrorPage = ({
     <NavBar />
     <div className="relative min-h-screen w-full">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.12),_transparent_62%)]" />
-      <div className="relative mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-4 px-4 pb-12 pt-24 sm:px-6 sm:pb-16 sm:pt-28">
+      <div className="relative mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-4 px-4 pt-24 pb-12 sm:px-6 sm:pt-28 sm:pb-16">
         {"data" in error && error.data?.code && (
           <ErrorMessage message={error.data?.code} />
         )}

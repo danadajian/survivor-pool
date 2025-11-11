@@ -95,9 +95,7 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
           />
         ) : null}
       </head>
-      <body className="bg-slate-100 text-slate-900 antialiased">
-        {content}
-      </body>
+      <body className="bg-slate-100 text-slate-900 antialiased">{content}</body>
     </html>
   );
 };

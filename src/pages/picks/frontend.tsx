@@ -80,7 +80,7 @@ const PickTable = ({
   return (
     <div className="overflow-x-auto rounded-xl border border-slate-200/80 bg-white">
       <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-        <thead className="bg-slate-50 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+        <thead className="bg-slate-50 text-xs font-semibold tracking-[0.2em] text-slate-500 uppercase">
           <tr>
             <th className="px-3 py-2.5 sm:px-4 sm:py-3">User</th>
             <th className="px-3 py-2.5 sm:px-4 sm:py-3">Team picked</th>
@@ -117,7 +117,7 @@ const PickTable = ({
                 <td
                   className={[
                     "px-3 py-2.5 text-slate-700 sm:px-4 sm:py-3",
-                    pick.pickIsSecret ? "italic text-slate-500" : "",
+                    pick.pickIsSecret ? "text-slate-500 italic" : "",
                   ]
                     .filter(Boolean)
                     .join(" ")}
@@ -153,7 +153,7 @@ const MemberTable = ({
 }: MemberTableProps) => (
   <div className="overflow-x-auto rounded-xl border border-slate-200/80 bg-white">
     <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-      <thead className="bg-slate-50 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+      <thead className="bg-slate-50 text-xs font-semibold tracking-[0.2em] text-slate-500 uppercase">
         <tr>
           <th className="px-3 py-2.5 sm:px-4 sm:py-3">User</th>
           <th className="px-3 py-2.5 sm:px-4 sm:py-3">Lives remaining</th>
@@ -186,13 +186,17 @@ const MemberTable = ({
                     { length: member.livesRemaining },
                     (_, i) => i + 1,
                   ).map((heartIndex) => (
-                    <FilledHeart key={`filled-heart-${member.id}-${heartIndex}`} />
+                    <FilledHeart
+                      key={`filled-heart-${member.id}-${heartIndex}`}
+                    />
                   ))}
                   {Array.from(
                     { length: lives - member.livesRemaining },
                     (_, i) => i + 1,
                   ).map((heartIndex) => (
-                    <EmptyHeart key={`empty-heart-${member.id}-${heartIndex}`} />
+                    <EmptyHeart
+                      key={`empty-heart-${member.id}-${heartIndex}`}
+                    />
                   ))}
                 </div>
               </td>

@@ -56,7 +56,10 @@ const CreateComponent = ({ user }: PageProps) => {
           <Heading>{`${poolName} created successfully!`}</Heading>
           <Subheading>You are now a member of this pool.</Subheading>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Button onClick={() => navigate(`/pool/${data.poolId}`)} type="button">
+            <Button
+              onClick={() => navigate(`/pool/${data.poolId}`)}
+              type="button"
+            >
               Make your first pick
             </Button>
             <CopyInviteLinkButton poolId={data.poolId} />
@@ -128,7 +131,11 @@ const CreateComponent = ({ user }: PageProps) => {
             </p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <Button type="submit" disabled={!poolName.trim()} className="w-full sm:w-auto">
+            <Button
+              type="submit"
+              disabled={!poolName.trim()}
+              className="w-full sm:w-auto"
+            >
               Create Pool
             </Button>
             <p className="text-xs text-slate-500">

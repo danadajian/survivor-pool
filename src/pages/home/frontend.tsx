@@ -52,7 +52,7 @@ const PoolSelect = ({
   if (!data.length) {
     return (
       <div className="flex flex-col gap-4 text-left">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
+        <p className="text-sm font-semibold tracking-[0.2em] text-slate-500 uppercase">
           Pools
         </p>
         <p className="text-lg font-semibold text-slate-800">
@@ -68,7 +68,7 @@ const PoolSelect = ({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1 text-left">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
+        <p className="text-sm font-semibold tracking-[0.2em] text-slate-500 uppercase">
           Pools
         </p>
         <p className="text-lg font-semibold text-slate-800">

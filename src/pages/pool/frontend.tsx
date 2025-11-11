@@ -48,11 +48,11 @@ const PoolComponent = ({
         </Heading>
         <Surface className="flex flex-col gap-6">
           <p className="text-base text-slate-600">
-            Hang tight! The season hasn&apos;t started yet. Once games are on the
-            calendar, you&apos;ll see your weekly matchups here.
+            Hang tight! The season hasn&apos;t started yet. Once games are on
+            the calendar, you&apos;ll see your weekly matchups here.
           </p>
           <div className="flex flex-col gap-3">
-            <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
+            <h3 className="text-sm font-semibold tracking-[0.2em] text-slate-500 uppercase">
               Members
             </h3>
             <ul className="grid gap-2 text-left text-sm text-slate-700">
@@ -76,7 +76,8 @@ const PoolComponent = ({
       <div className="flex w-full flex-col gap-6">
         <Surface className="flex flex-col gap-4">
           <Heading>
-            {`${poolWinner.firstName} ${poolWinner.lastName}`} has won this pool!
+            {`${poolWinner.firstName} ${poolWinner.lastName}`} has won this
+            pool!
           </Heading>
           <p className="text-base text-slate-600">
             Celebrate the champ or spin up a brand new competition for the next
@@ -84,7 +85,11 @@ const PoolComponent = ({
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-start">
             {isPoolCreator ? (
-              <Button onClick={onReactivate} type="button" className="w-full sm:w-auto">
+              <Button
+                onClick={onReactivate}
+                type="button"
+                className="w-full sm:w-auto"
+              >
                 Reactivate pool
               </Button>
             ) : null}
@@ -172,15 +177,9 @@ const EventRow = ({ eventButton, username, poolId }: TeamRowProps) => {
         {matchupNote ? <span>{matchupNote}</span> : null}
       </div>
       <div className="mt-3 flex flex-row items-center justify-center gap-2 text-sm font-semibold text-slate-600 sm:mt-4 sm:gap-3">
-        <TeamButton
-          teamButton={eventButton.awayTeamButton}
-          {...commonProps}
-        />
+        <TeamButton teamButton={eventButton.awayTeamButton} {...commonProps} />
         <span className="font-bold text-slate-400">@</span>
-        <TeamButton
-          teamButton={eventButton.homeTeamButton}
-          {...commonProps}
-        />
+        <TeamButton teamButton={eventButton.homeTeamButton} {...commonProps} />
       </div>
     </li>
   );
