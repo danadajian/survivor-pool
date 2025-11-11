@@ -29,14 +29,9 @@ type AppProps = {
 };
 
 export const App = ({ userData, dehydratedState }: AppProps) => {
-  // Get endpoint from pathname for meta tags
-  // useLocation works in both StaticRouter (server) and BrowserRouter (client)
   const { pathname } = useLocation();
   const { endpoint } = parseRoute(pathname);
 
-  // Always use ClerkProvider structure for consistent hydration
-  // On the server, authState is used to render the correct content
-  // On the client, ClerkProvider will hydrate and take over
   const routes = (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -50,7 +45,6 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
     </Routes>
   );
 
-  // Always wrap with ClerkProvider for consistent structure
   // On server: Pass userData via UserProvider for SSR
   // On client: ClerkProvider will hydrate and provide full functionality
   // Use client components for navigation - server components only for initial SSR
@@ -61,7 +55,6 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
           fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
         >
           <ClientProvider dehydratedState={dehydratedState}>
-            {/* Always use client-side SignedIn/SignedOut for navigation to work */}
             <SignedIn>{routes}</SignedIn>
             <SignedOut>
               <RedirectToSignIn />

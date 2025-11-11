@@ -25,40 +25,31 @@ export type PageProps = {
 export const withPage = (Component: React.FC<PageProps>) => () => {
   const PageComponent = () => {
     const { pathname } = useLocation();
-    const { poolId } = parseRoute(pathname);
+    const { poolId = "" } = parseRoute(pathname);
 
-    // Try to get user data from server-provided context first
-    const serverUserData = useUserData();
-
-    // Fall back to Clerk's useUser hook if no server data
-    const userResult = useUser();
+    const clientUser = useUser();
     const { user: userResource, isLoaded } = useMemo(
-      () => userResult,
-      [userResult],
+      () => clientUser,
+      [clientUser],
     );
 
+    if (!isLoaded || !userResource) {
+      return <Loader />;
+    }
+
     let user: v.InferInput<typeof userSchema>;
-
-    if (serverUserData) {
-      // Use server-provided user data (SSR)
-      user = serverUserData;
+    const serverUser = useUserData();
+    if (serverUser) {
+      user = serverUser;
     } else {
-      // Use Clerk's useUser hook (client-side)
-      // Wait for user data to load before parsing
-      if (!isLoaded || !userResource) {
-        return <Loader />;
-      }
-
       const userInfo = {
         username: userResource.primaryEmailAddress?.emailAddress ?? "",
         firstName: userResource.firstName,
         lastName: userResource.lastName,
       };
 
-      // Use safeParse to handle validation errors gracefully
       const result = v.safeParse(userSchema, userInfo);
       if (!result.success) {
-        // If validation fails, show error or fallback
         return <ErrorPage error={new Error("Invalid user data")} />;
       }
       user = result.output;
@@ -72,7 +63,7 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
           <NavBar />
           <Suspense fallback={<Loader />}>
             <div className="flex flex-col items-center pt-16 text-center">
-              <Component user={user} poolId={poolId ?? ""} />
+              <Component user={user} poolId={poolId} />
             </div>
           </Suspense>
         </ErrorBoundary>
