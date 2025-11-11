@@ -1,9 +1,11 @@
 import React from "react";
 
 export const Heading = ({ children }: React.PropsWithChildren) => (
-  <h1 className="pt-8 pb-8 text-2xl font-bold text-red-700">{children}</h1>
+  <h1 className="text-left text-3xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-4xl">
+    {children}
+  </h1>
 );
 
 export const Subheading = ({ children }: React.PropsWithChildren) => (
-  <h2 className="pt-4 pb-4 text-lg font-bold text-slate-700">{children}</h2>
+  <h2 className="text-left text-lg font-semibold text-slate-600">{children}</h2>
 );

@@ -16,7 +16,8 @@ describe("home page", () => {
     cy.findByRole("heading", { name: "Welcome to Survivor Pool!" }).should(
       "be.visible",
     );
-    cy.findByRole("button", { name: "Pool 1" }).should("be.visible");
-    cy.findByRole("button", { name: "Pool 2" }).should("be.visible");
+    cy.findByText("Pool 1").should("be.visible");
+    cy.findByText("Pool 2").should("be.visible");
+    cy.findAllByRole("button", { name: "Open Pool" }).should("have.length", 2);
   });
 });
