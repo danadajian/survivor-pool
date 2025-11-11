@@ -13,8 +13,7 @@
     "preprod": "tailwindcss -o ./public/globals.css",
     "prod": "ENVIRONMENT=production bun ./src/server.tsx",
     "test-backend": "POSTGRES_URL=postgresql://postgres:pwd@localhost:5433/survivor-pool-test bun test test/**",
-    "test-frontend": "bunx cypress run --component",
-    "typecheck": "tsc"
+    "test-frontend": "bunx cypress run --component"
   },
   "dependencies": {
     "@clerk/backend": "2.20.0",

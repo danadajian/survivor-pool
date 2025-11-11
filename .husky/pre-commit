@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-bun typecheck && bun lint && bun format && git add .
+bun tsc && bun lint && bun format && git add .

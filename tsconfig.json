@@ -19,5 +19,6 @@
     "strict": true,
     "target": "esnext",
     "types": ["@testing-library/cypress"]
-  }
+  },
+  "exclude": ["node_modules", "public"]
 }
