@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "db": "docker compose up -d && bun drizzle",
-    "dev": "rm -f public/client-*.js && ENVIRONMENT=development bun --hot ./src/server.tsx",
+    "dev": "ENVIRONMENT=development bun --hot ./src/server.tsx",
     "drizzle": "drizzle-kit push",
     "docker": "docker build . --tag survivor-pool",
     "format": "prettier --write .",

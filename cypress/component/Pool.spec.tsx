@@ -22,8 +22,10 @@ describe("pool page", () => {
     );
     cy.findByRole("heading", { name: "Test Pool 2023" }).should("be.visible");
     cy.findByRole("heading", { name: "Week 1" }).should("be.visible");
-    cy.findByText("Make your pick, Test!").should("be.visible");
-    cy.findByText("BUF -2.0").should("be.visible");
+    cy.findByRole("heading", { name: "Make your pick, Test!" }).should(
+      "be.visible",
+    );
+    cy.findByRole("heading", { name: "BUF -2.0" }).should("be.visible");
   });
 
   it("can make a pick", () => {
@@ -36,7 +38,7 @@ describe("pool page", () => {
     );
     cy.findByRole("button", { name: /Bills/ }).click();
     cy.findByRole("heading", { name: "Confirm pick" }).should("be.visible");
-    cy.findByText(/Are you sure you want to pick the Bills\?/).should(
+    cy.findByText(/Are you sure you want to pick the Bills?/).should(
       "be.visible",
     );
     cy.findByRole("switch", {
@@ -45,9 +47,9 @@ describe("pool page", () => {
     }).should("be.visible");
     cy.intercept("/trpc/pool*", { body: responseWithPick });
     cy.findByRole("button", { name: "Lock it in" }).click();
-    cy.findByText("You're riding with the Bills this week!").should(
-      "be.visible",
-    );
+    cy.findByRole("heading", {
+      name: "You're riding with the Bills this week!",
+    }).should("be.visible");
   });
 
   it("sets secret toggle state for secret pick", () => {
@@ -74,8 +76,8 @@ describe("pool page", () => {
       </MockProviders>,
     );
     cy.findByRole("heading", { name: "Test Pool 2023" }).should("be.visible");
-    cy.findByText(
-      "Hang tight! The season hasn't started yet. Once games are on the calendar, you'll see your weekly matchups here.",
-    ).should("be.visible");
+    cy.findByRole("heading", {
+      name: "Hang tight! The season hasn't started yet...",
+    }).should("be.visible");
   });
 });
