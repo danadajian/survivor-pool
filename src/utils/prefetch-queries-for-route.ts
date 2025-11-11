@@ -16,7 +16,7 @@ export async function prefetchQueriesForRoute(
   const trpcContext = await createContext({ req: context.request });
   const caller = appRouter.createCaller(trpcContext);
 
-  // Home page - fetch pools for user
+  // Home page
   if (!endpoint) {
     await queryClient.prefetchQuery({
       queryKey: [
