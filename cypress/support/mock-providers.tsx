@@ -4,18 +4,15 @@ import React, { type ComponentProps, type PropsWithChildren } from "react";
 import { MemoryRouter } from "react-router-dom";
 
 import { ClientProvider } from "../../src/components/client-provider";
+import { UserProvider } from "../../src/components/user-context";
 import { CLERK_PUBLISHABLE_KEY } from "../../src/constants";
 
-const mockClerkState = {
-  user: {
-    id: "user_123",
-    firstName: "Test",
-    lastName: "User",
-    primaryEmailAddress: {
-      emailAddress: "test@user.com",
-    },
-  },
-} as InitialState;
+const userData = {
+  username: "test@user.com",
+  firstName: "Test",
+  lastName: "User",
+};
+const mockClerkState = { user: userData } as InitialState;
 export const MockProviders = ({
   children,
   initialEntries = ["/"],
@@ -27,7 +24,9 @@ export const MockProviders = ({
       initialState={mockClerkState}
       publishableKey={CLERK_PUBLISHABLE_KEY}
     >
-      <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
+      <UserProvider userData={userData}>
+        <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
+      </UserProvider>
     </ClerkProvider>
   </ClientProvider>
 );

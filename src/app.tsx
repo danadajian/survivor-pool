@@ -6,12 +6,13 @@ import {
 } from "@clerk/clerk-react";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 import { ClientProvider } from "./components/client-provider";
 import { ErrorPage } from "./components/error";
 import { Heading } from "./components/heading";
 import { withPage } from "./components/page-wrapper";
+import { UserData, UserProvider } from "./components/user-context";
 import { CLERK_PUBLISHABLE_KEY } from "./constants";
 import { Create } from "./pages/create/frontend";
 import { Edit } from "./pages/edit/frontend";
@@ -20,10 +21,50 @@ import { Join } from "./pages/join/frontend";
 import { Picks } from "./pages/picks/frontend";
 import { Pool } from "./pages/pool/frontend";
 import { Rules } from "./pages/rules/frontend";
-import { useEndpoint } from "./utils/use-endpoint";
+import { parseRoute } from "./utils/parse-route";
 
-export const App = () => {
-  const endpoint = useEndpoint();
+type AppProps = {
+  userData?: UserData;
+  dehydratedState?: unknown;
+};
+
+export const App = ({ userData, dehydratedState }: AppProps) => {
+  const { pathname } = useLocation();
+  const { endpoint } = parseRoute(pathname);
+
+  const routes = (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/rules" element={<Rules />} />
+      <Route path="/pool/:poolId" element={<Pool />} />
+      <Route path="/picks/:poolId" element={<Picks />} />
+      <Route path="/create" element={<Create />} />
+      <Route path="/edit/:poolId" element={<Edit />} />
+      <Route path="/join/:poolId" element={<Join />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+
+  // On server: Pass userData via UserProvider for SSR
+  // On client: ClerkProvider will hydrate and provide full functionality
+  // Use client components for navigation - server components only for initial SSR
+  const content = (
+    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+      <UserProvider userData={userData ?? null}>
+        <ErrorBoundary
+          fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
+        >
+          <ClientProvider dehydratedState={dehydratedState}>
+            <SignedIn>{routes}</SignedIn>
+            <SignedOut>
+              <RedirectToSignIn />
+            </SignedOut>
+          </ClientProvider>
+        </ErrorBoundary>
+      </UserProvider>
+    </ClerkProvider>
+  );
+
   return (
     <html lang="en">
       <head>
@@ -46,32 +87,15 @@ export const App = () => {
         />
         <link rel="stylesheet" href="/public/globals.css" />
         <title>Survivor Pool</title>
+        {dehydratedState ? (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.__DEHYDRATED_STATE__ = ${JSON.stringify(dehydratedState)};`,
+            }}
+          />
+        ) : null}
       </head>
-      <body>
-        <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
-          <ErrorBoundary
-            fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
-          >
-            <ClientProvider>
-              <SignedIn>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/rules" element={<Rules />} />
-                  <Route path="/pool/:poolId" element={<Pool />} />
-                  <Route path="/picks/:poolId" element={<Picks />} />
-                  <Route path="/create" element={<Create />} />
-                  <Route path="/edit/:poolId" element={<Edit />} />
-                  <Route path="/join/:poolId" element={<Join />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </SignedIn>
-              <SignedOut>
-                <RedirectToSignIn />
-              </SignedOut>
-            </ClientProvider>
-          </ErrorBoundary>
-        </ClerkProvider>
-      </body>
+      <body>{content}</body>
     </html>
   );
 };
