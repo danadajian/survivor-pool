@@ -33,15 +33,15 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
       [clientUser],
     );
 
-    if (!isLoaded || !userResource) {
-      return <Loader />;
-    }
-
     let user: v.InferInput<typeof userSchema>;
     const serverUser = useUserData();
     if (serverUser) {
       user = serverUser;
     } else {
+      if (!isLoaded || !userResource) {
+        return <Loader />;
+      }
+
       const userInfo = {
         username: userResource.primaryEmailAddress?.emailAddress ?? "",
         firstName: userResource.firstName,
