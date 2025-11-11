@@ -24,7 +24,7 @@ export const MockProviders = ({
       initialState={mockClerkState}
       publishableKey={CLERK_PUBLISHABLE_KEY}
     >
-      <UserProvider userData={userData}>
+      <UserProvider userData={userData ?? null}>
         <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
       </UserProvider>
     </ClerkProvider>
