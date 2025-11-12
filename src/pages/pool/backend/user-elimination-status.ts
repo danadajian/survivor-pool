@@ -1,3 +1,4 @@
+import { Events } from "src/utils/fetch-current-games";
 import { picks } from "../../../schema";
 
 export function userEliminationStatus({
@@ -6,12 +7,14 @@ export function userEliminationStatus({
   picksForPoolAndSeason,
   weekStarted,
   lives,
+  events,
 }: {
   username: string;
   currentWeek: number;
   picksForPoolAndSeason: (typeof picks.$inferSelect)[];
   weekStarted: number;
   lives: number;
+  events: Events;
 }) {
   const allUserPicks = picksForPoolAndSeason.filter(
     (pick) => pick.username === username,

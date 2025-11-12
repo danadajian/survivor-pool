@@ -69,6 +69,7 @@ export async function fetchPoolInfo({
     picksForPoolAndSeason,
     weekStarted,
     lives,
+    events,
   });
   const pickHeader = buildPickHeader({
     events,

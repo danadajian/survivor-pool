@@ -175,6 +175,7 @@ describe("user elimination", () => {
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
+      events: mockEspnResponse.events as Events,
     });
     expect(eliminated).toBeFalse();
     expect(livesRemaining).toEqual(1);
@@ -219,6 +220,7 @@ describe("user elimination", () => {
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
+      events: mockEspnResponse.events as Events,
     });
     expect(eliminated).toBeTrue();
     expect(livesRemaining).toEqual(0);
@@ -257,6 +259,7 @@ describe("user elimination", () => {
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
+      events: mockEspnResponse.events as Events,
     });
     expect(eliminated).toBeFalse();
     const { eliminated: eliminatedNextWeek } = userEliminationStatus({
@@ -265,6 +268,7 @@ describe("user elimination", () => {
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
+      events: mockEspnResponse.events as Events,
     });
     expect(eliminatedNextWeek).toBeFalse();
   });
@@ -302,6 +306,7 @@ describe("user elimination", () => {
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
+      events: mockEspnResponse.events as Events,
     });
     expect(eliminated).toBeTrue();
     const { eliminated: eliminatedNextWeek } = userEliminationStatus({
@@ -310,6 +315,7 @@ describe("user elimination", () => {
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
+      events: mockEspnResponse.events as Events,
     });
     expect(eliminatedNextWeek).toBeTrue();
   });
@@ -347,6 +353,7 @@ describe("user elimination", () => {
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
+      events: mockEspnResponse.events as Events,
     });
     expect(user1Eliminated).toBeFalse();
     const { eliminated: user2Eliminated } = userEliminationStatus({
@@ -355,6 +362,7 @@ describe("user elimination", () => {
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 1,
+      events: mockEspnResponse.events as Events,
     });
     expect(user2Eliminated).toBeFalse();
   });
@@ -398,6 +406,7 @@ describe("user elimination", () => {
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 2,
+      events: mockEspnResponse.events as Events,
     });
     expect(user1Eliminated).toBeFalse();
   });
@@ -441,7 +450,83 @@ describe("user elimination", () => {
       picksForPoolAndSeason,
       weekStarted: 1,
       lives: 2,
+      events: mockEspnResponse.events as Events,
     });
     expect(user1Eliminated).toBeTrue();
+  });
+
+  test("running out of teams to pick eliminates user", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "Bills",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 1,
+        teamPicked: "Bills",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 2,
+        teamPicked: "Jets",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 2,
+        teamPicked: "Jets",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 3,
+        teamPicked: "Lions",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 3,
+        teamPicked: "Lions",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 4,
+        teamPicked: "Chiefs",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 4,
+        teamPicked: "Giants",
+        result: "WON",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    const events = (mockEspnResponse.events as Events).slice(0, 2);
+    const { eliminated: user1Eliminated, livesRemaining: user1LivesRemaining } = userEliminationStatus({
+      username: "user1",
+      currentWeek: 5,
+      picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
+      events,
+    });
+    expect(user1Eliminated).toBeTrue();
+    expect(user1LivesRemaining).toEqual(0);
+    
+    const { eliminated: user2Eliminated, livesRemaining: user2LivesRemaining } = userEliminationStatus({
+      username: "user2",
+      currentWeek: 5,
+      picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
+      events,
+    });
+    expect(user2Eliminated).toBeFalse();
+    expect(user2LivesRemaining).toEqual(1);
   });
 });
