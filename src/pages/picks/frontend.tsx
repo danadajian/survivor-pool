@@ -83,7 +83,9 @@ const PickTable = ({
         <thead className="bg-slate-50 text-xs font-semibold tracking-[0.2em] text-slate-500 uppercase">
           <tr>
             <th className="px-3 py-2.5 sm:px-4 sm:py-3">User</th>
-            <th className="px-3 py-2.5 sm:px-4 sm:py-3">Team picked</th>
+            <th className="px-3 py-2.5 text-center sm:px-4 sm:py-3">
+              Team picked
+            </th>
             <th className="px-3 py-2.5 text-center sm:px-4 sm:py-3">Result</th>
           </tr>
         </thead>
@@ -116,7 +118,7 @@ const PickTable = ({
                 </td>
                 <td
                   className={[
-                    "px-3 py-2.5 text-slate-700 sm:px-4 sm:py-3",
+                    "px-3 py-2.5 text-center text-slate-700 sm:px-4 sm:py-3",
                     pick.pickIsSecret ? "text-slate-500 italic" : "",
                   ]
                     .filter(Boolean)
