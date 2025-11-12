@@ -14,6 +14,7 @@ import { CLERK_PUBLISHABLE_KEY } from "./constants";
 import { environmentVariables } from "./env";
 import { appRouter } from "./router";
 import { trpcRouter } from "./trpc";
+import { logger } from "./utils/logger";
 import { prefetchQueriesForRoute } from "./utils/prefetch-queries-for-route";
 import { redirectToSignIn } from "./utils/redirect-to-sign-in";
 
@@ -113,7 +114,6 @@ if (isDev) {
   app.use(hotModuleReload());
 }
 
-// eslint-disable-next-line no-console
-console.info(
+logger.info(
   `App is running at http://${app.server?.hostname}:${app.server?.port}`,
 );

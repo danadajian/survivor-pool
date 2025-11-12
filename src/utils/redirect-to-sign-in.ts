@@ -3,6 +3,7 @@ import { buildAccountsBaseUrl } from "@clerk/shared/buildAccountsBaseUrl";
 import { parsePublishableKey } from "@clerk/shared/keys";
 
 import { CLERK_PUBLISHABLE_KEY } from "../constants";
+import { logger } from "./logger";
 
 export function redirectToSignIn(
   authResult: Awaited<ReturnType<ClerkClient["authenticateRequest"]>>,
@@ -42,23 +43,18 @@ const getSignInUrlFromPublishableKey = () => {
     }
     return `${accountsBaseUrl}/sign-in`;
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(
+    logger.error(
+      { error },
       "Failed to derive fallback sign-in URL from publishable key.",
-      error,
     );
     return null;
   }
 };
 
-const resolveSignInUrl = (
-  signInUrl: string | undefined | null,
-  requestUrl: URL,
-) => {
-  const primary = signInUrl?.trim()?.length ? signInUrl.trim() : null;
+const resolveSignInUrl = (signInUrl: string, requestUrl: URL) => {
   const fallback =
     getSignInUrlFromPublishableKey() ?? `${requestUrl.origin}/sign-in`;
-  const target = primary ?? fallback;
+  const target = signInUrl.trim() ?? fallback;
 
   return target.startsWith("http")
     ? new URL(target)

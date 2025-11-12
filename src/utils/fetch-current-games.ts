@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import * as v from "valibot";
 
 import { environmentVariables } from "../env";
+import { logger } from "./logger";
 
 export async function fetchCurrentGames(): Promise<GamesResponse> {
   if (!environmentVariables.GAMES_API_URL) {
@@ -11,8 +12,10 @@ export async function fetchCurrentGames(): Promise<GamesResponse> {
   const games = await response.json();
   const parseResult = v.safeParse(gamesSchema, games);
   if (!parseResult.success) {
-    // eslint-disable-next-line no-console
-    console.error(JSON.stringify(parseResult.issues));
+    logger.error(
+      { issues: parseResult.issues },
+      "Failed to validate games response from API.",
+    );
     throw new TRPCError({
       message: "ESPN has changed their API recently, an update is needed.",
       code: "INTERNAL_SERVER_ERROR",
