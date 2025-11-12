@@ -1,4 +1,5 @@
 import { Events } from "src/utils/fetch-current-games";
+
 import { picks } from "../../../schema";
 
 export function userEliminationStatus({
@@ -36,16 +37,20 @@ export function userEliminationStatus({
   const livesLost =
     lostPicksWhereSomeoneElseWonThatWeek.length + numberOfWeeksFailedToPick;
 
-  const teamsAvailableToPick = events.flatMap((event) => event.competitions.flatMap((competition) => competition.competitors.map((competitor) => competitor.team.name)));
-  const teamsUserHasPicked = picksForPoolAndSeason.filter(
-    (pick) => pick.username === username,
-  ).map((pick) => pick.teamPicked);
-  
+  const teamsAvailableToPick = events.flatMap((event) =>
+    event.competitions.flatMap((competition) =>
+      competition.competitors.map((competitor) => competitor.team.name),
+    ),
+  );
+  const teamsUserHasPicked = picksForPoolAndSeason
+    .filter((pick) => pick.username === username)
+    .map((pick) => pick.teamPicked);
+
   const otherUsernames = [
     ...new Set(
       picksForPoolAndSeason
         .filter((pick) => pick.username !== username)
-        .map((pick) => pick.username)
+        .map((pick) => pick.username),
     ),
   ];
   const noOtherUserHasTeamsToPick = otherUsernames.every((otherUser) => {
@@ -53,11 +58,11 @@ export function userEliminationStatus({
       .filter((pick) => pick.username === otherUser)
       .map((pick) => pick.teamPicked);
     return teamsAvailableToPick.every((team) =>
-      teamsOtherUserHasPicked.includes(team)
+      teamsOtherUserHasPicked.includes(team),
     );
   });
   const userHasNoTeamsToPick = teamsAvailableToPick.every((team) =>
-    teamsUserHasPicked.includes(team)
+    teamsUserHasPicked.includes(team),
   );
   const userRanOutOfTeams = userHasNoTeamsToPick && !noOtherUserHasTeamsToPick;
 

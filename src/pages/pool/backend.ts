@@ -62,6 +62,7 @@ export async function fetchPoolInfo({
     poolMembers,
     weekStarted,
     lives,
+    events,
   });
   const { eliminated, livesRemaining } = userEliminationStatus({
     username,

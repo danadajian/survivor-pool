@@ -24,6 +24,7 @@ import { reactivatePool } from "../src/pages/pool/backend/reactivate-pool";
 import { userEliminationStatus } from "../src/pages/pool/backend/user-elimination-status";
 import { members, picks, pools } from "../src/schema";
 import { Events, GamesResponse } from "../src/utils/fetch-current-games";
+import { mockEspnResponse } from "./mocks";
 
 async function clearAllTables() {
   await db.delete(picks);
@@ -80,6 +81,7 @@ describe("feature tests", () => {
       poolMembers,
       weekStarted: 1,
       lives: 1,
+      events: mockEspnResponse.events as Events,
     });
     expect(poolWinner).toBeUndefined();
   });
@@ -225,6 +227,7 @@ describe("feature tests", () => {
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
+        events: eventsWithPendingResult,
       }).eliminated,
     ).toBeFalse();
     expect(
@@ -234,6 +237,7 @@ describe("feature tests", () => {
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
+        events: eventsWithPendingResult,
       }).eliminated,
     ).toBeFalse();
   });
@@ -292,6 +296,7 @@ describe("feature tests", () => {
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
+        events: eventsWithWinningResult,
       }).eliminated,
     ).toBeFalse();
 
@@ -310,6 +315,7 @@ describe("feature tests", () => {
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
+        events: eventsWithWinningResult,
       }).eliminated,
     ).toBeFalse();
   });
@@ -352,15 +358,7 @@ describe("feature tests", () => {
 
   it("should eliminate users who fail to make a pick the week before", async () => {
     const poolId = await getPoolId();
-    const events = [
-      {
-        competitions: [
-          {
-            competitors: [{}],
-          },
-        ],
-      },
-    ] as Events;
+    const events = mockEspnResponse.events as Events;
     await updateResults(events, 2, season);
 
     const picksForPoolAndSeason = await fetchPicks(poolId, season);
@@ -371,6 +369,7 @@ describe("feature tests", () => {
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
+        events,
       }).eliminated,
     ).toBeTrue();
   });
@@ -407,6 +406,7 @@ describe("feature tests", () => {
       poolMembers,
       weekStarted: 1,
       lives: 1,
+      events: mockEspnResponse.events as Events,
     });
     expect(poolWinner).toBeUndefined();
   });
@@ -445,6 +445,7 @@ describe("feature tests", () => {
               },
             ],
           },
+          ...mockEspnResponse.events.flatMap((event) => event.competitions[0]),
         ],
       },
     ] as Events;
@@ -457,6 +458,7 @@ describe("feature tests", () => {
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
+        events,
       }).eliminated,
     ).toBeFalse();
     expect(
@@ -466,6 +468,7 @@ describe("feature tests", () => {
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
+        events,
       }).eliminated,
     ).toBeFalse();
   });
@@ -535,6 +538,7 @@ describe("feature tests", () => {
         picksForPoolAndSeason,
         weekStarted: 1,
         lives: 1,
+        events: eventsWithTie,
       }).eliminated,
     ).toBeTrue();
   });
@@ -549,6 +553,7 @@ describe("feature tests", () => {
       poolMembers,
       weekStarted: 1,
       lives: 1,
+      events: mockEspnResponse.events as Events,
     });
     expect(poolWinner?.username).toEqual(user1);
     const poolWinnerNextWeek = await findPoolWinner({
@@ -557,6 +562,7 @@ describe("feature tests", () => {
       poolMembers,
       weekStarted: 1,
       lives: 1,
+      events: mockEspnResponse.events as Events,
     });
     expect(poolWinnerNextWeek?.username).toEqual(user1);
   });
@@ -639,6 +645,7 @@ describe("feature tests", () => {
         picksForPoolAndSeason,
         weekStarted: 4,
         lives: 2,
+        events,
       }).eliminated,
     ).toBeFalse();
     const poolMembers = await fetchPoolMembers(poolId);
@@ -648,6 +655,7 @@ describe("feature tests", () => {
       poolMembers,
       weekStarted: 4,
       lives: 2,
+      events,
     });
     expect(poolWinner).toBeUndefined();
   });
@@ -696,6 +704,7 @@ describe("feature tests", () => {
         weekStarted: 4,
         picksForPoolAndSeason,
         lives: 2,
+        events,
       }).eliminated,
     ).toBeTrue();
     const poolMembers = await fetchPoolMembers(poolId);
@@ -705,6 +714,7 @@ describe("feature tests", () => {
       poolMembers,
       weekStarted: 4,
       lives: 2,
+      events,
     });
     expect(poolWinner).toBeUndefined();
     const poolWinnerNextWeek = await findPoolWinner({
@@ -713,6 +723,7 @@ describe("feature tests", () => {
       poolMembers,
       weekStarted: 4,
       lives: 2,
+      events,
     });
     expect(poolWinnerNextWeek?.username).toEqual(user2);
   });

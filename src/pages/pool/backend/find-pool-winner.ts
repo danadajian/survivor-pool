@@ -1,3 +1,5 @@
+import { Events } from "src/utils/fetch-current-games";
+
 import { members, picks } from "../../../schema";
 import { userEliminationStatus } from "./user-elimination-status";
 
@@ -7,12 +9,14 @@ export async function findPoolWinner({
   poolMembers,
   weekStarted,
   lives,
+  events,
 }: {
   currentWeek: number;
   picksForPoolAndSeason: (typeof picks.$inferSelect)[];
   poolMembers: (typeof members.$inferSelect)[];
   weekStarted: number;
   lives: number;
+  events: Events;
 }) {
   const winners = poolMembers.filter(
     ({ username }) =>
@@ -22,6 +26,7 @@ export async function findPoolWinner({
         weekStarted,
         picksForPoolAndSeason,
         lives,
+        events,
       }).eliminated,
   );
   if (

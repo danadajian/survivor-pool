@@ -97,6 +97,7 @@ export async function fetchPicksForPool({
         picksForPoolAndSeason,
         weekStarted,
         lives,
+        events: gamesResponse.events,
       }),
     }))
     .toSorted((a, b) => b.livesRemaining - a.livesRemaining);
