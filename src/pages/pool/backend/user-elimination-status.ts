@@ -39,9 +39,14 @@ export function userEliminationStatus({
   const livesLost =
     lostPicksWhereSomeoneElseWonThatWeek.length + numberOfWeeksFailedToPick;
 
+  const teamsAvailableToPick = events.flatMap((event) => event.competitions.flatMap((competition) => competition.competitors.map((competitor) => competitor.team.name)));
+  const teamsUserHasPicked = allUserPicks.map((pick) => pick.teamPicked);
+  const teamsUserCanPick = teamsAvailableToPick.filter((team) => !teamsUserHasPicked.includes(team));
+  const userHasNoTeamsToPick = teamsUserCanPick.length === 0;
+
   return {
-    eliminated: livesLost >= lives,
-    livesRemaining: Math.max(lives - livesLost, 0),
+    eliminated: userHasNoTeamsToPick || livesLost >= lives,
+    livesRemaining: userHasNoTeamsToPick ? 0 : Math.max(lives - livesLost, 0),
   };
 }
 
