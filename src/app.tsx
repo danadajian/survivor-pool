@@ -85,15 +85,7 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
         />
-        <link rel="stylesheet" href="/public/globals.css" />
         <title>Survivor Pool</title>
-        {dehydratedState ? (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.__DEHYDRATED_STATE__ = ${JSON.stringify(dehydratedState)};`,
-            }}
-          />
-        ) : null}
       </head>
       <body className="bg-slate-100 text-slate-900 antialiased">{content}</body>
     </html>
