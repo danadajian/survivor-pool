@@ -15,6 +15,7 @@ import { environmentVariables } from "./env";
 import { appRouter } from "./router";
 import { trpcRouter } from "./trpc";
 import { prefetchQueriesForRoute } from "./utils/prefetch-queries-for-route";
+import { redirectToSignIn } from "./utils/redirect-to-sign-in";
 
 const { outputs } = await Bun.build({
   entrypoints: ["./src/client.tsx"],
@@ -46,6 +47,11 @@ const app = new Elysia()
   .get(relativePathToGlobalsCss, () => Bun.file("./public/globals.css"))
   .get("*", async (context) => {
     const authResult = await clerkClient.authenticateRequest(context.request);
+
+    if (!authResult.isAuthenticated) {
+      return redirectToSignIn(authResult, new URL(context.request.url));
+    }
+
     const auth = authResult.toAuth();
 
     let userData;
