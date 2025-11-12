@@ -26,6 +26,13 @@ const absolutePathToBundleFile = outputs[0]?.path;
 if (!absolutePathToBundleFile)
   throw new Error("Path to bundle file is missing.");
 const relativePathToBundleFile = `/${path.relative(process.cwd(), absolutePathToBundleFile).replace(/\\/g, "/")}`;
+const bundleHashMatch = relativePathToBundleFile.match(
+  /-(?<hash>[^./]+)\.[^.]+$/,
+);
+const bundleHash = bundleHashMatch?.groups?.hash ?? bundleHashMatch?.[1];
+const relativePathToGlobalsCss = bundleHash
+  ? `/public/globals-${bundleHash}.css`
+  : "/public/globals.css";
 
 const isDev = environmentVariables.ENVIRONMENT === "development";
 
@@ -36,6 +43,7 @@ const clerkClient = createClerkClient({
 
 const app = new Elysia()
   .get("/health", () => "all good")
+  .get(relativePathToGlobalsCss, () => Bun.file("./public/globals.css"))
   .get("*", async (context) => {
     const authResult = await clerkClient.authenticateRequest(context.request);
     const auth = authResult.toAuth();
@@ -67,7 +75,7 @@ const app = new Elysia()
     const stream = await renderToReadableStream(
       <StaticRouter location={context.path}>
         <App userData={userData} dehydratedState={dehydratedState} />
-        <link rel="stylesheet" href="/public/globals.css" />
+        <link rel="stylesheet" href={relativePathToGlobalsCss} />
         {dehydratedState ? (
           <script
             dangerouslySetInnerHTML={{
