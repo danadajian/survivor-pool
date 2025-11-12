@@ -84,7 +84,7 @@ const PickTable = ({
           <tr>
             <th className="px-3 py-2.5 sm:px-4 sm:py-3">User</th>
             <th className="px-3 py-2.5 sm:px-4 sm:py-3">Team picked</th>
-            <th className="px-3 py-2.5 text-right sm:px-4 sm:py-3">Result</th>
+            <th className="px-3 py-2.5 text-center sm:px-4 sm:py-3">Result</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-200">
@@ -124,9 +124,9 @@ const PickTable = ({
                 >
                   {pick.teamPicked}
                 </td>
-                <td className="px-3 py-2.5 sm:px-4 sm:py-3">
+                <td className="px-3 py-2.5 text-center sm:px-4 sm:py-3">
                   <span
-                    className={`inline-flex min-w-[4.5rem] justify-end rounded-full px-2.5 py-1 text-xs font-semibold sm:px-3 ${resultBadge}`}
+                    className={`inline-flex min-w-[4.5rem] justify-center rounded-full px-2.5 py-1 text-xs font-semibold sm:px-3 ${resultBadge}`}
                   >
                     {pick.result}
                   </span>
@@ -156,7 +156,9 @@ const MemberTable = ({
       <thead className="bg-slate-50 text-xs font-semibold tracking-[0.2em] text-slate-500 uppercase">
         <tr>
           <th className="px-3 py-2.5 sm:px-4 sm:py-3">User</th>
-          <th className="px-3 py-2.5 sm:px-4 sm:py-3">Lives remaining</th>
+          <th className="px-3 py-2.5 text-center sm:px-4 sm:py-3">
+            Lives remaining
+          </th>
         </tr>
       </thead>
       <tbody className="divide-y divide-slate-200">
@@ -180,8 +182,8 @@ const MemberTable = ({
               <td className="px-3 py-2.5 text-slate-800 sm:px-4 sm:py-3">
                 {userFullName ?? member.username}
               </td>
-              <td className="px-3 py-2.5 sm:px-4 sm:py-3">
-                <div className="flex items-center gap-1.5">
+              <td className="px-3 py-2.5 text-center sm:px-4 sm:py-3">
+                <div className="flex items-center justify-center gap-1.5">
                   {Array.from(
                     { length: member.livesRemaining },
                     (_, i) => i + 1,
