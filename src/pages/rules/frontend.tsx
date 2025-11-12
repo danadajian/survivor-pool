@@ -2,84 +2,69 @@ import React from "react";
 
 import { Heading } from "../../components/heading";
 import { withPage } from "../../components/page-wrapper";
+import { Surface } from "../../components/ui/surface";
+
+const sections = [
+  {
+    id: "how-it-works",
+    title: "How it works",
+    body: [
+      "Each week, pick one NFL team to win their game. If they win, you survive to play another week. If they lose or tie, you're out.",
+      "The goal is simple: be the last person standing.",
+    ],
+  },
+  {
+    id: "picking-teams",
+    title: "Picking your teams",
+    body: [
+      "You can only use each NFL team once per season. Choose wisely and plan several weeks ahead.",
+      "Submit your pick before that team's game kicks off. You can wait until later in the week—just don't miss the start time.",
+    ],
+  },
+  {
+    id: "elimination",
+    title: "Elimination",
+    body: [
+      "Missed picks or losing selections cost you a life. Run out of lives and you're eliminated.",
+      "If every remaining player misses in the same week, everyone survives to fight another round.",
+    ],
+  },
+  {
+    id: "winning",
+    title: "Winning the pool",
+    body: [
+      "Last player standing takes the pot. If multiple players survive the regular season, the pool continues into the playoffs.",
+      "Run out of teams to pick in the postseason? You're eliminated. If everyone runs out, picks reset.",
+      "Reached the Super Bowl with multiple survivors? Submit a final score prediction as a tiebreaker—the closest total score differential wins.",
+    ],
+  },
+];
 
 const RulesComponent = () => {
   return (
-    <>
-      <Heading>Survivor Pool Rules</Heading>
-      <main>
-        <section id="how-it-works" className="mb-8">
-          <h2 className="mb-4 border-b-2 border-indigo-500 pb-2 text-2xl font-bold text-gray-700">
-            How It Works
-          </h2>
-          <p className="m-2 leading-relaxed text-gray-600">
-            Each week, you will pick one NFL team to win their game. If your
-            chosen team wins, you survive and advance to the next week.
-            Otherwise, you are eliminated from the pool. The goal is to be the
-            last person standing.
-          </p>
-        </section>
-
-        <section id="picking-teams" className="mb-8">
-          <h2 className="mb-4 border-b-2 border-indigo-500 pb-2 text-2xl font-bold text-gray-700">
-            Picking Your Teams
-          </h2>
-          <ul className="m-2 space-y-4 text-gray-600">
-            <li>
-              <strong>One-Time Use:</strong> You can only use each NFL team once
-              for the entire season. For example, if you pick the Kansas City
-              Chiefs in Week 1, you cannot pick them again for the rest of the
-              season.
-            </li>
-            <li>
-              <strong>Deadline:</strong> Your pick just needs to be submitted
-              before your team's game kicks off. Your pick does not need to be
-              locked in before the first game of each week.
-            </li>
-          </ul>
-        </section>
-
-        <section id="elimination" className="mb-8">
-          <h2 className="mb-4 border-b-2 border-indigo-500 pb-2 text-2xl font-bold text-gray-700">
-            Elimination
-          </h2>
-          <ul className="m-2 space-y-4 text-gray-600">
-            <li>
-              You are eliminated from the pool if your selected team loses or
-              ties their game. You are also eliminated if you fail to pick a
-              team by the time the final game of a week starts.
-            </li>
-            <li>
-              If all remaining survivors fail to pick a winning team, everyone
-              survives the week.
-            </li>
-            <li>The pool continues until only one player remains.</li>
-          </ul>
-        </section>
-
-        <section id="winning" className="mb-8">
-          <h2 className="mb-4 border-b-2 border-indigo-500 pb-2 text-2xl font-bold text-gray-700">
-            Winning the Pool
-          </h2>
-          <ul className="m-2 space-y-4 text-gray-600">
-            <li>The last person remaining in the pool wins the whole pot.</li>
-            <li>
-              If the pool reaches the end of the regular season and there is
-              more than one survivor, the pool will continue through the
-              playoffs. If a survivor has already picked all remaining NFL teams
-              in the playoffs, they are eliminated. If all remaining survivors
-              have run out of teams to pick, all picks will reset.
-            </li>
-            <li>
-              If the pool somehow reaches the Superbowl, remaining survivors
-              must submit an exact score along with their pick to the
-              commissioner to act as a tiebreaker. Closest total score
-              differential breaks a tie.
-            </li>
-          </ul>
-        </section>
-      </main>
-    </>
+    <div className="flex w-full flex-col gap-6">
+      <div className="flex flex-col gap-3">
+        <Heading>Survivor Pool Rules</Heading>
+        <p className="max-w-3xl text-left text-base text-slate-600">
+          Here's everything you need to know to run your pool smoothly and keep
+          players on the same page.
+        </p>
+      </div>
+      <article>
+        <Surface className="flex flex-col gap-8">
+          {sections.map(({ id, title, body }) => (
+            <section key={id} id={id} className="flex flex-col gap-3 text-left">
+              <h2 className="text-xl font-semibold text-slate-800">{title}</h2>
+              <div className="flex flex-col gap-3 text-sm leading-relaxed text-slate-600">
+                {body.map((paragraph, index) => (
+                  <p key={`${id}-paragraph-${index}`}>{paragraph}</p>
+                ))}
+              </div>
+            </section>
+          ))}
+        </Surface>
+      </article>
+    </div>
   );
 };
 

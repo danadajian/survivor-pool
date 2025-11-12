@@ -5,100 +5,137 @@ import { CopyInviteLinkButton } from "../../components/copy-invite-link-button";
 import { ErrorMessage } from "../../components/error";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
+import { Button } from "../../components/ui/button";
+import { Surface } from "../../components/ui/surface";
 import { trpc } from "../../trpc";
+
+const MIN_LIVES = 1;
+const MAX_LIVES = 9;
 
 const EditComponent = ({ poolId }: PageProps) => {
   const utils = trpc.useUtils();
   const [data] = trpc.getPool.useSuspenseQuery({ poolId });
-  const { mutate, isSuccess } = trpc.editPool.useMutation({
-    throwOnError: false,
-    onSettled: (_, error) => {
-      if (error) {
-        setError(error.message);
-      }
-      utils.getPool.invalidate();
-    },
-  });
   const [poolName, setPoolName] = useState(data.name);
   const [lives, setLives] = useState(data.lives);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { mutate, isSuccess } = trpc.editPool.useMutation({
+    throwOnError: false,
+    onSettled: (_, mutationError) => {
+      if (mutationError) {
+        setError(mutationError.message);
+      } else {
+        setError("");
+      }
+      utils.getPool.invalidate();
+    },
+  });
 
-  const onSubmit = () => mutate({ poolId, poolName, lives });
+  const adjustLives = (delta: number) => {
+    setLives((current) => {
+      const next = current + delta;
+      if (next < MIN_LIVES) return MIN_LIVES;
+      if (next > MAX_LIVES) return MAX_LIVES;
+      return next;
+    });
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!poolName.trim()) {
+      setError("Pool name cannot be empty.");
+      return;
+    }
+    setError("");
+    mutate({ poolId, poolName: poolName.trim(), lives });
+  };
 
   if (isSuccess) {
     return (
-      <>
-        <Heading>{`${poolName} updated successfully!`}</Heading>
-        <div className="flex-col">
-          <button
-            onClick={() => navigate(`/pool/${data.id}`)}
-            className="focus:shadow-outline mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-            type="button"
-          >
-            Go to pool
-          </button>
-          <div className="mt-4 flex justify-center rounded bg-green-700/60 font-semibold">
+      <div className="flex w-full flex-col gap-6">
+        <Surface className="flex flex-col gap-4">
+          <Heading>{`${poolName} updated successfully!`}</Heading>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Button onClick={() => navigate(`/pool/${data.id}`)} type="button">
+              Go to pool
+            </Button>
             <CopyInviteLinkButton poolId={data.id} />
           </div>
-        </div>
-      </>
+        </Surface>
+      </div>
     );
   }
 
   return (
-    <>
-      <Heading>Edit Pool</Heading>
+    <div className="flex w-full flex-col gap-6">
+      <div className="flex flex-col gap-3">
+        <Heading>Edit Pool</Heading>
+        <p className="max-w-2xl text-left text-base text-slate-600">
+          Update the pool name or adjust how many lives each participant has
+          remaining.
+        </p>
+      </div>
       {error ? <ErrorMessage message={error} /> : null}
-      <form className="mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md">
-        <div className="pb-6">
-          <label
-            className="text-md mb-2 block font-bold text-gray-700"
-            htmlFor="poolName"
-          >
-            Pool Name
-          </label>
-          <input
-            placeholder={poolName}
-            onChange={(event) => setPoolName(event.target.value)}
-            className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-            id="poolName"
-            type="text"
-          />
-        </div>
-        <div className="pb-6">
-          <label className="text-md mb-2 block font-bold text-gray-700">
-            Number of Lives
-          </label>
-          <div className="flex items-center justify-center">
-            <button
-              type="button"
-              onClick={() => setLives(lives - 1)}
-              disabled={lives <= 1}
-              className="focus:shadow-outline mr-4 rounded-full border px-3 py-1 text-gray-700 shadow focus:outline-none"
+      <Surface>
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-2">
+            <label
+              className="text-sm font-medium text-slate-600"
+              htmlFor="poolName"
             >
-              -
-            </button>
-            <p>{lives}</p>
-            <button
-              type="button"
-              onClick={() => setLives(lives + 1)}
-              disabled={lives >= 9}
-              className="focus:shadow-outline ml-4 rounded-full border px-3 py-1 text-gray-700 shadow focus:outline-none"
-            >
-              +
-            </button>
+              Pool name
+            </label>
+            <input
+              id="poolName"
+              name="poolName"
+              type="text"
+              value={poolName}
+              onChange={(event) => setPoolName(event.target.value)}
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-base text-slate-800 shadow-inner focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 sm:px-4 sm:py-3"
+            />
           </div>
-        </div>
-        <button
-          onClick={onSubmit}
-          className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-          type="button"
-        >
-          Update
-        </button>
-      </form>
-    </>
+          <div className="flex flex-col gap-3">
+            <span className="text-sm font-medium text-slate-600">
+              Number of lives
+            </span>
+            <div className="flex items-center gap-3">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => adjustLives(-1)}
+                disabled={lives <= MIN_LIVES}
+              >
+                −
+              </Button>
+              <span className="min-w-[3rem] text-center text-lg font-semibold text-slate-800">
+                {lives}
+              </span>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => adjustLives(1)}
+                disabled={lives >= MAX_LIVES}
+              >
+                +
+              </Button>
+            </div>
+            <p className="text-sm text-slate-500">
+              Keep it between {MIN_LIVES} and {MAX_LIVES} lives to stay within
+              Survivor Pool rules.
+            </p>
+          </div>
+          <Button
+            type="submit"
+            disabled={!poolName.trim()}
+            className="w-full sm:w-auto"
+          >
+            Update Pool
+          </Button>
+        </form>
+      </Surface>
+    </div>
   );
 };
 

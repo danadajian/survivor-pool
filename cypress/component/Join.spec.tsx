@@ -20,7 +20,7 @@ describe("join page", () => {
     cy.findByRole("heading", { name: "Join New Survivor Pool" }).should(
       "be.visible",
     );
-    cy.findByRole("button", { name: "Join" }).click();
+    cy.findByRole("button", { name: "Join Pool" }).click();
     cy.findByRole("heading", { name: "You have joined Test Pool!" }).should(
       "be.visible",
     );

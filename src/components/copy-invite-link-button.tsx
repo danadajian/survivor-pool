@@ -1,22 +1,33 @@
 import { Square2StackIcon } from "@heroicons/react/24/solid";
 import React, { useState } from "react";
 
+import { Button } from "./ui/button";
+
 export const CopyInviteLinkButton = ({ poolId }: { poolId: string }) => {
   const [copied, setCopied] = useState(false);
 
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setCopied(true);
+    void navigator.clipboard.writeText(
+      `${window.location.origin}/join/${poolId}`,
+    );
+    window.setTimeout(() => setCopied(false), 2500);
+  };
+
   return (
-    <button
-      onClick={(event) => {
-        event.preventDefault();
-        setCopied(true);
-        void navigator.clipboard.writeText(
-          `${window.location.origin}/join/${poolId}`,
-        );
-      }}
-      className="group flex w-full items-center gap-2 rounded-lg px-3 py-2 data-focus:bg-gray-100"
+    <Button
+      type="button"
+      variant={copied ? "primary" : "secondary"}
+      className="w-full justify-center gap-2 sm:w-auto"
+      onClick={handleClick}
     >
-      <Square2StackIcon className="size-5 fill-gray-900/50" />
+      <Square2StackIcon
+        className={`size-5 ${
+          copied ? "text-white" : "text-slate-500"
+        } transition`}
+      />
       {copied ? "Invite link copied!" : "Copy invite link"}
-    </button>
+    </Button>
   );
 };

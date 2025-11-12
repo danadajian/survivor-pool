@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
+import { Button } from "../../components/ui/button";
+import { Surface } from "../../components/ui/surface";
 import { trpc } from "../../trpc";
 
 const JoinComponent = ({ user, poolId }: PageProps) => {
   const { mutate, isSuccess } = trpc.joinPool.useMutation();
   const navigate = useNavigate();
-
   const [pool] = trpc.getPool.useSuspenseQuery({ poolId });
 
   const joinPool = () =>
@@ -19,35 +20,48 @@ const JoinComponent = ({ user, poolId }: PageProps) => {
 
   if (isSuccess) {
     return (
-      <>
-        <Heading>You have joined {pool.name}!</Heading>
-        <button
-          onClick={() => navigate(`/pool/${poolId}`)}
-          className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-          type="button"
-        >
-          Make your first pick
-        </button>
-      </>
+      <div className="flex w-full flex-col gap-6">
+        <Surface className="flex flex-col gap-4">
+          <Heading>You have joined {pool.name}!</Heading>
+          <Button onClick={() => navigate(`/pool/${poolId}`)} type="button">
+            Make your first pick
+          </Button>
+        </Surface>
+      </div>
     );
   }
 
   return (
-    <>
-      <Heading>Join New Survivor Pool</Heading>
-      <div className="mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md">
-        <p className="text-md block pb-8 font-bold text-gray-700">
-          You have been invited to join {pool.name}!
+    <div className="flex w-full flex-col gap-6">
+      <div className="flex flex-col gap-3">
+        <Heading>Join New Survivor Pool</Heading>
+        <p className="max-w-2xl text-left text-base text-slate-600">
+          Accept your invitation to join the pool and start making picks right
+          away.
         </p>
-        <button
-          onClick={joinPool}
-          className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-          type="button"
-        >
-          Join
-        </button>
       </div>
-    </>
+      <Surface className="flex flex-col gap-4">
+        <p className="text-sm font-semibold tracking-[0.2em] text-slate-500 uppercase">
+          Invitation
+        </p>
+        <p className="text-lg font-semibold text-slate-800">
+          You have been invited to join{" "}
+          <span className="text-slate-900">{pool.name}</span>.
+        </p>
+        <p className="text-sm text-slate-500">
+          Joining connects you to the latest picks, standings, and weekly
+          updates.
+        </p>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Button onClick={joinPool} type="button" className="w-full sm:w-auto">
+            Join Pool
+          </Button>
+          <p className="text-xs text-slate-500">
+            Your details are pulled from your Clerk profile.
+          </p>
+        </div>
+      </Surface>
+    </div>
   );
 };
 
