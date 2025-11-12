@@ -4,21 +4,29 @@ import { useNavigate } from "react-router-dom";
 import { EditPoolDropdown } from "../../components/edit-pool-dropdown";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
+import { Button } from "../../components/ui/button";
+import { Surface } from "../../components/ui/surface";
 import { type RouterOutput, trpc } from "../../trpc";
 
 const HomeComponent = ({ user: { username } }: PageProps) => {
   const [data] = trpc.poolsForUser.useSuspenseQuery({ username });
 
   return (
-    <>
-      <Heading>Welcome to Survivor Pool!</Heading>
-      <div className="mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md">
+    <div className="flex w-full flex-col gap-6">
+      <div className="flex flex-col gap-3">
+        <Heading>Welcome to Survivor Pool!</Heading>
+        <p className="max-w-2xl text-left text-base text-slate-600">
+          Jump back into your pools or start a new one with a cleaner,
+          streamlined dashboard.
+        </p>
+      </div>
+      <Surface className="flex flex-col gap-6">
         <PoolSelect data={data} username={username} />
-      </div>
-      <div className="mb-4 rounded bg-white px-8 pt-6 pb-8 shadow-md">
+      </Surface>
+      <Surface className="flex flex-col gap-4">
         <CreatePoolLink />
-      </div>
-    </>
+      </Surface>
+    </div>
   );
 };
 
@@ -26,13 +34,9 @@ const CreatePoolLink = () => {
   const navigate = useNavigate();
 
   return (
-    <button
-      onClick={() => navigate(`/create`)}
-      className="focus:shadow-outline my-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-      type="button"
-    >
+    <Button onClick={() => navigate(`/create`)} type="button">
       Create New Pool
-    </button>
+    </Button>
   );
 };
 
@@ -47,36 +51,61 @@ const PoolSelect = ({
 
   if (!data.length) {
     return (
-      <>
-        <p className="block text-lg font-bold text-gray-700">
-          You have not joined any pools.
+      <div className="flex flex-col gap-4 text-left">
+        <p className="text-sm font-semibold tracking-[0.2em] text-slate-500 uppercase">
+          Pools
         </p>
-      </>
+        <p className="text-lg font-semibold text-slate-800">
+          You have not joined any pools yet.
+        </p>
+        <p className="text-sm text-slate-500">
+          Create a new pool or ask a commissioner to send you an invite link.
+        </p>
+      </div>
     );
   }
 
   return (
-    <>
-      <p className="block pb-8 text-lg font-bold text-gray-700">
-        Select a pool:
-      </p>
-      <div className="flex flex-col">
-        {data.map(({ poolId, poolName, creator }, index) => (
-          <div key={index} className="m-2 flex items-center justify-between">
-            <button
-              key={poolId}
-              id={poolId}
-              onClick={(event) => navigate(`/pool/${event.currentTarget.id}`)}
-              className="focus:shadow-outline mr-4 rounded bg-blue-500 font-bold text-white hover:bg-blue-700 focus:outline-none"
-              type="button"
-            >
-              <p className="px-4 py-2">{poolName}</p>
-            </button>
-            {username === creator ? <EditPoolDropdown poolId={poolId} /> : null}
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-1 text-left">
+        <p className="text-sm font-semibold tracking-[0.2em] text-slate-500 uppercase">
+          Pools
+        </p>
+        <p className="text-lg font-semibold text-slate-800">
+          Select a pool to jump back in:
+        </p>
+      </div>
+      <div className="flex flex-col gap-3">
+        {data.map(({ poolId, poolName, creator }) => (
+          <div
+            key={poolId}
+            className="flex flex-col items-stretch justify-between gap-3 rounded-2xl border border-slate-200/70 bg-white/80 p-3 shadow-sm shadow-slate-900/5 transition hover:-translate-y-0.5 hover:shadow-md sm:flex-row sm:items-center sm:p-4"
+          >
+            <div className="text-left">
+              <p className="text-base font-semibold text-slate-800">
+                {poolName}
+              </p>
+              {username === creator ? (
+                <p className="text-sm text-slate-500">You manage this pool</p>
+              ) : null}
+            </div>
+            <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-3">
+              <Button
+                type="button"
+                onClick={() => navigate(`/pool/${poolId}`)}
+                size="sm"
+                className="flex-1 sm:flex-initial"
+              >
+                Open Pool
+              </Button>
+              {username === creator ? (
+                <EditPoolDropdown poolId={poolId} />
+              ) : null}
+            </div>
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

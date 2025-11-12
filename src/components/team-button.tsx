@@ -8,6 +8,7 @@ import { ButtonStyle } from "../utils/button-style";
 import { DialogWrapper } from "./dialog-wrapper";
 import { SecretPickContext } from "./secret-pick-provider";
 import { Toggle } from "./toggle";
+import { Button } from "./ui/button";
 
 type TeamProps = {
   teamButton: TeamButtonProps;
@@ -52,13 +53,28 @@ export const TeamButton = ({ teamButton, username, poolId }: TeamProps) => {
       pickIsSecret,
     });
 
+  const baseButtonClasses =
+    "flex w-28 flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-3 text-xs font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-36 sm:gap-3 sm:px-4 sm:py-4 sm:text-sm";
   const buttonStyleMap = {
-    [ButtonStyle.CURRENTLY_PICKED]: "bg-blue-800 text-white",
-    [ButtonStyle.PREVIOUSLY_PICKED]: "bg-blue-800 text-white opacity-30",
-    [ButtonStyle.PICK_FORBIDDEN]: "bg-slate-300 opacity-30",
-    [ButtonStyle.DEFAULT]: "bg-slate-300",
-  };
-  const buttonClass = buttonStyleMap[buttonStyle];
+    [ButtonStyle.CURRENTLY_PICKED]:
+      "bg-slate-900 text-white shadow-lg shadow-slate-900/15",
+    [ButtonStyle.PREVIOUSLY_PICKED]:
+      "bg-slate-800/90 text-white/80 border-slate-500",
+    [ButtonStyle.PICK_FORBIDDEN]:
+      "bg-slate-200 text-slate-400 border-slate-200",
+    [ButtonStyle.DEFAULT]: "bg-white text-slate-700",
+  } as const;
+  const interactiveClasses =
+    buttonStyle === ButtonStyle.DEFAULT && !buttonDisabled
+      ? "hover:-translate-y-0.5 hover:shadow-lg shadow-slate-900/10"
+      : "";
+  const buttonClass = [
+    baseButtonClasses,
+    buttonStyleMap[buttonStyle],
+    interactiveClasses,
+  ]
+    .filter(Boolean)
+    .join(" ");
   const imageClass =
     buttonStyle === ButtonStyle.PREVIOUSLY_PICKED ? "opacity-80" : "";
   return (
@@ -66,43 +82,39 @@ export const TeamButton = ({ teamButton, username, poolId }: TeamProps) => {
       <button
         disabled={buttonDisabled}
         onClick={toggleDialog}
-        className={`flex flex-col items-center rounded-lg border-2 border-slate-100 p-2 ${buttonClass}`}
+        className={buttonClass}
       >
         <img
           alt={team.abbreviation}
           src={team.logo}
-          className={`h-14 w-14 ${imageClass}`}
+          className={`h-12 w-12 sm:h-16 sm:w-16 ${imageClass}`}
         />
-        <p>{team.name}</p>
+        <p className="text-center">{team.name}</p>
       </button>
       <DialogWrapper dialogIsOpen={dialogIsOpen} toggleDialog={toggleDialog}>
         <>
-          <DialogTitle as="h3" className="pt-2 text-xl leading-6 font-semibold">
+          <DialogTitle
+            as="h3"
+            className="pt-2 text-xl font-semibold text-slate-900"
+          >
             Confirm pick
           </DialogTitle>
-          <Description className="pt-5 font-semibold text-slate-500">
+          <Description className="pt-3 text-sm text-slate-600">
             Are you sure you want to pick the {team.name}? You won't be able to
             pick them again this season.
           </Description>
 
-          <div className="mt-5 flex justify-between">
-            <div className="flex items-center">
+          <div className="mt-6 flex flex-col gap-4">
+            <div className="flex justify-start">
               <Toggle />
             </div>
-            <div className="flex justify-end">
-              <button
-                className="rounded-md bg-blue-800 px-3 py-2 font-medium text-white uppercase hover:bg-blue-500"
-                autoFocus
-                onClick={handleUpdate}
-              >
-                Lock it in
-              </button>
-              <button
-                className="ml-3 rounded-md border border-blue-800 px-3 py-2 font-medium text-blue-800 uppercase hover:bg-blue-300"
-                onClick={toggleDialog}
-              >
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <Button variant="secondary" onClick={toggleDialog}>
                 Cancel
-              </button>
+              </Button>
+              <Button autoFocus onClick={handleUpdate}>
+                Lock it in
+              </Button>
             </div>
           </div>
         </>
