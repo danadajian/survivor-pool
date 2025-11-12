@@ -16,11 +16,8 @@ export function userEliminationStatus({
   lives: number;
   events: Events;
 }) {
-  const allUserPicks = picksForPoolAndSeason.filter(
-    (pick) => pick.username === username,
-  );
-  const userPicksThatLost = allUserPicks.filter(
-    (pick) => pick.result === "LOST",
+  const userPicksThatLost = picksForPoolAndSeason.filter(
+    (pick) => pick.username === username && pick.result === "LOST",
   );
   const lostPicksWhereSomeoneElseWonThatWeek = userPicksThatLost.filter(
     (userPick) =>
@@ -40,13 +37,33 @@ export function userEliminationStatus({
     lostPicksWhereSomeoneElseWonThatWeek.length + numberOfWeeksFailedToPick;
 
   const teamsAvailableToPick = events.flatMap((event) => event.competitions.flatMap((competition) => competition.competitors.map((competitor) => competitor.team.name)));
-  const teamsUserHasPicked = allUserPicks.map((pick) => pick.teamPicked);
-  const teamsUserCanPick = teamsAvailableToPick.filter((team) => !teamsUserHasPicked.includes(team));
-  const userHasNoTeamsToPick = teamsUserCanPick.length === 0;
+  const teamsUserHasPicked = picksForPoolAndSeason.filter(
+    (pick) => pick.username === username,
+  ).map((pick) => pick.teamPicked);
+  
+  const otherUsernames = [
+    ...new Set(
+      picksForPoolAndSeason
+        .filter((pick) => pick.username !== username)
+        .map((pick) => pick.username)
+    ),
+  ];
+  const noOtherUserHasTeamsToPick = otherUsernames.every((otherUser) => {
+    const teamsOtherUserHasPicked = picksForPoolAndSeason
+      .filter((pick) => pick.username === otherUser)
+      .map((pick) => pick.teamPicked);
+    return teamsAvailableToPick.every((team) =>
+      teamsOtherUserHasPicked.includes(team)
+    );
+  });
+  const userHasNoTeamsToPick = teamsAvailableToPick.every((team) =>
+    teamsUserHasPicked.includes(team)
+  );
+  const userRanOutOfTeams = userHasNoTeamsToPick && !noOtherUserHasTeamsToPick;
 
   return {
-    eliminated: userHasNoTeamsToPick || livesLost >= lives,
-    livesRemaining: userHasNoTeamsToPick ? 0 : Math.max(lives - livesLost, 0),
+    eliminated: userRanOutOfTeams || livesLost >= lives,
+    livesRemaining: userRanOutOfTeams ? 0 : Math.max(lives - livesLost, 0),
   };
 }
 
