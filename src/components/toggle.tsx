@@ -16,11 +16,11 @@ export function Toggle() {
           <button
             className={`${
               checked ? "bg-slate-900" : "bg-slate-200"
-            } relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-out`}
+            } relative inline-flex h-6 w-11 items-center overflow-hidden rounded-full px-0.5 transition-colors duration-200 ease-out`}
           >
             <span
               className={`${
-                checked ? "translate-x-6" : "translate-x-1"
+                checked ? "translate-x-[1.35rem]" : "translate-x-0.5"
               } inline-block h-4 w-4 transform rounded-full bg-white shadow transition duration-200 ease-out`}
             />
           </button>
