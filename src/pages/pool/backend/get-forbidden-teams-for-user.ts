@@ -10,21 +10,27 @@ export function getForbiddenTeamsForUser({
   picksForPoolAndSeason: (typeof picks.$inferSelect)[];
   events: Events;
 }): string[] {
+  const completedPicksForPoolAndSeason = picksForPoolAndSeason.filter(
+    (pick) => pick.result !== "PENDING",
+  );
+
+  if (completedPicksForPoolAndSeason.length === 0) {
+    return [];
+  }
+
   const teamsAvailableToPick = events.flatMap((event) =>
     event.competitions.flatMap((competition) =>
       competition.competitors.map((competitor) => competitor.team.name),
     ),
   );
-  const teamsUserHasPicked = picksForPoolAndSeason
+  const teamsUserHasPicked = completedPicksForPoolAndSeason
     .filter((pick) => pick.username === username)
     .map((pick) => pick.teamPicked);
 
   const maxWeekWithResults = Math.max(
-    ...picksForPoolAndSeason
-      .filter((pick) => pick.result !== "PENDING")
-      .map((pick) => pick.week),
+    ...completedPicksForPoolAndSeason.map((pick) => pick.week),
   );
-  const picksFromRemainingUsers = picksForPoolAndSeason.filter(
+  const picksFromRemainingUsers = completedPicksForPoolAndSeason.filter(
     (pick) => pick.week === maxWeekWithResults,
   );
   const remainingUsers = [
@@ -32,7 +38,7 @@ export function getForbiddenTeamsForUser({
   ];
   const allRemainingUsersHavePickedAllAvailableTeams = remainingUsers.every(
     (user) => {
-      const teamsUserHasPicked = picksForPoolAndSeason
+      const teamsUserHasPicked = completedPicksForPoolAndSeason
         .filter((pick) => pick.username === user)
         .map((pick) => pick.teamPicked);
       return teamsAvailableToPick.every((team) =>
@@ -48,7 +54,7 @@ export function getForbiddenTeamsForUser({
     return [...new Set(teamsUserHasPickedMoreThanOnce)];
   }
 
-  return picksForPoolAndSeason
+  return completedPicksForPoolAndSeason
     .filter((pick) => pick.username === username)
     .map((pick) => pick.teamPicked);
 }

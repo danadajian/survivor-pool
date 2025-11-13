@@ -652,6 +652,35 @@ describe("forbidden teams", () => {
     expect(forbiddenTeams).toEqual(["Bills"]);
   });
 
+  test("excludes pending picks from forbidden teams", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "Bills",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 1,
+        teamPicked: "Giants",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 2,
+        teamPicked: "Jets",
+        result: "PENDING",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    const forbiddenTeams = getForbiddenTeamsForUser({
+      username: "user1",
+      picksForPoolAndSeason,
+      events: mockEspnResponse.events as Events,
+    });
+    expect(forbiddenTeams).toEqual(["Bills"]);
+  });
+
   test("returns empty list when all users have picked all available teams", () => {
     const picksForPoolAndSeason = [
       {

@@ -16,8 +16,8 @@ const HomeComponent = ({ user: { username } }: PageProps) => {
       <div className="flex flex-col gap-3">
         <Heading>Welcome to Survivor Pool!</Heading>
         <p className="max-w-2xl text-left text-base text-slate-600">
-          Jump back into your pools or start a new one with a cleaner,
-          streamlined dashboard.
+          Jump back into your pools, manage the pools you created, or start a
+          new one.
         </p>
       </div>
       <Surface className="flex flex-col gap-6">
