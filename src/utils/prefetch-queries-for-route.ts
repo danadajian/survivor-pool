@@ -28,6 +28,17 @@ export async function prefetchQueriesForRoute(
     return;
   }
 
+  if (endpoint === "winners") {
+    await queryClient.prefetchQuery({
+      queryKey: [
+        ["winners"],
+        { input: { username: userData.username }, type: "query" },
+      ],
+      queryFn: () => caller.winners({ username: userData.username }),
+    });
+    return;
+  }
+
   if (!poolId) return;
 
   if (endpoint === "pool") {

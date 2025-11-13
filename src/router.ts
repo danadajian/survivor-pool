@@ -25,6 +25,10 @@ import {
   reactivatePool,
   reactivatePoolInput,
 } from "./pages/pool/backend/reactivate-pool";
+import {
+  fetchPoolWinners,
+  fetchPoolWinnersInput,
+} from "./pages/winners/backend";
 
 const t = initTRPC.context<Context>().create();
 
@@ -66,6 +70,9 @@ export const appRouter = t.router({
   reactivatePool: authenticatedProcedure
     .input(v.parser(reactivatePoolInput))
     .mutation(({ input }) => reactivatePool(input)),
+  winners: authenticatedProcedure
+    .input(v.parser(fetchPoolWinnersInput))
+    .query(({ input }) => fetchPoolWinners(input)),
 });
 
 export type AppRouter = typeof appRouter;

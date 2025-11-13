@@ -2,34 +2,39 @@ import { UserButton } from "@clerk/clerk-react";
 import React from "react";
 import { useErrorBoundary } from "react-error-boundary";
 import { NavLink, useMatch } from "react-router-dom";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export const NavBar = () => {
   const picksMatch = useMatch("/picks/:poolId");
   const poolMatch = useMatch("/pool/:poolId");
   const { resetBoundary } = useErrorBoundary();
-  const dynamicLink = picksMatch?.pathname
-    ? {
-        to: `/pool/${picksMatch.params.poolId}`,
-        label: "View Your Picks",
-      }
-    : poolMatch?.pathname
-      ? {
-          to: `/picks/${poolMatch.params.poolId}`,
-          label: "View All Picks",
-        }
-      : null;
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const poolId = picksMatch?.params.poolId ?? poolMatch?.params.poolId ?? null;
   const navItems = [
     { to: "/", label: "Home" },
+    { to: "/winners", label: "Winners" },
     { to: "/rules", label: "Rules" },
-    ...(dynamicLink ? [dynamicLink] : []),
+    ...(poolId
+      ? [
+          { to: `/pool/${poolId}`, label: "Your Pool" },
+          { to: `/picks/${poolId}`, label: "View All Picks" },
+        ]
+      : []),
   ];
   const classNameForLink = ({ isActive }: { isActive: boolean }) =>
     [
-      "inline-flex items-center justify-center rounded-full px-3 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 whitespace-nowrap sm:px-4",
+      "inline-flex items-center rounded-full px-3 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 whitespace-nowrap w-full justify-start sm:w-auto sm:justify-center sm:px-4",
       isActive
         ? "bg-slate-900 text-white shadow-md shadow-slate-900/10 focus-visible:outline-slate-900"
         : "text-slate-600 hover:bg-slate-100 focus-visible:outline-slate-300",
     ].join(" ");
+  const handleNavLinkClick = () => {
+    resetBoundary();
+    setIsMenuOpen(false);
+  };
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur">
@@ -42,12 +47,12 @@ export const NavBar = () => {
             Survivor Pool
           </span>
         </div>
-        <div className="flex flex-1 items-center justify-center gap-1.5 sm:gap-2">
+        <div className="hidden flex-1 items-center justify-center gap-1.5 sm:flex sm:gap-2">
           {navItems.map(({ to, label }) => (
             <NavLink
               key={label}
               to={to}
-              onClick={() => resetBoundary()}
+              onClick={handleNavLinkClick}
               className={classNameForLink}
             >
               {label}
@@ -55,9 +60,42 @@ export const NavBar = () => {
           ))}
         </div>
         <div className="flex items-center justify-end gap-2">
+          <button
+            type="button"
+            className="inline-flex items-center justify-center rounded-full p-2 text-slate-600 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-300 sm:hidden"
+            onClick={toggleMenu}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-nav"
+            aria-label="Toggle navigation"
+          >
+            {isMenuOpen ? (
+              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+            ) : (
+              <Bars3Icon className="h-5 w-5" aria-hidden="true" />
+            )}
+          </button>
           <UserButton />
         </div>
       </nav>
+      {isMenuOpen ? (
+        <div
+          id="mobile-nav"
+          className="sm:hidden border-t border-slate-200/80 bg-white/95 backdrop-blur"
+        >
+          <div className="mx-auto flex max-w-5xl flex-col gap-1.5 px-4 py-3">
+            {navItems.map(({ to, label }) => (
+              <NavLink
+                key={label}
+                to={to}
+                onClick={handleNavLinkClick}
+                className={classNameForLink}
+              >
+                {label}
+              </NavLink>
+            ))}
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 };

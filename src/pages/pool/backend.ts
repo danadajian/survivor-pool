@@ -6,7 +6,7 @@ import { db } from "../../db";
 import { members, picks, pools } from "../../schema";
 import { buildPickHeader } from "../../utils/build-pick-header";
 import { fetchCurrentGames } from "../../utils/fetch-current-games";
-import { findPoolWinner } from "./backend/find-pool-winner";
+import { buildUserDisplayName } from "../../utils/build-user-display-name";
 import { getEventButtons } from "./backend/get-event-buttons";
 import { getForbiddenTeamsForUser } from "./backend/get-forbidden-teams-for-user";
 import { userEliminationStatus } from "./backend/user-elimination-status";
@@ -50,14 +50,17 @@ export async function fetchPoolInfo({
     name: poolName,
     creator: poolCreatorUsername,
   } = poolsResult;
-  const poolWinner = await findPoolWinner({
-    currentWeek,
-    picksForPoolAndSeason,
-    poolMembers,
-    weekStarted,
-    lives,
-    events,
-  });
+  const poolWinnerUsername = poolsResult.poolWinner;
+  const poolWinnerMember = poolWinnerUsername
+    ? poolMembers.find((member) => member.username === poolWinnerUsername)
+    : undefined;
+  const poolWinnerDisplayName = poolWinnerUsername
+    ? buildUserDisplayName({
+        username: poolWinnerUsername,
+        firstName: poolWinnerMember?.firstName,
+        lastName: poolWinnerMember?.lastName,
+      })
+    : undefined;
   const { eliminated, livesRemaining } = userEliminationStatus({
     username,
     currentWeek,
@@ -88,13 +91,11 @@ export async function fetchPoolInfo({
   const poolCreatorMember = poolMembers.find(
     (member) => member.username === poolCreatorUsername,
   );
-  const poolCreatorDisplayName =
-    poolCreatorMember &&
-    (poolCreatorMember.firstName || poolCreatorMember.lastName)
-      ? [poolCreatorMember.firstName, poolCreatorMember.lastName]
-          .filter(Boolean)
-          .join(" ")
-      : poolCreatorUsername;
+  const poolCreatorDisplayName = buildUserDisplayName({
+    username: poolCreatorUsername,
+    firstName: poolCreatorMember?.firstName,
+    lastName: poolCreatorMember?.lastName,
+  });
 
   return {
     pickHeader,
@@ -107,7 +108,7 @@ export async function fetchPoolInfo({
     poolCreatorUsername,
     poolCreatorDisplayName,
     poolMembers,
-    poolWinner,
+    poolWinnerDisplayName,
   };
 }
 

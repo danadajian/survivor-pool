@@ -16,18 +16,59 @@ export const WeekDropdown = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!showOptions || !dropdownRef.current) {
+      return;
+    }
+
+    const selectedOption = dropdownRef.current.querySelector<HTMLButtonElement>(
+      "[data-selected='true']",
+    );
+
+    if (selectedOption) {
+      selectedOption.scrollIntoView({ block: "center" });
+    }
+  }, [selected, showOptions]);
+
+  useEffect(() => {
     const updatePosition = () => {
-      if (buttonRef.current) {
-        const rect = buttonRef.current.getBoundingClientRect();
-        setPosition({
-          top: rect.bottom + window.scrollY + 12, // mt-3 = 12px
-          right: window.innerWidth - rect.right + window.scrollX,
-        });
+      if (!buttonRef.current) {
+        return;
       }
+
+      const margin = 8;
+      const rect = buttonRef.current.getBoundingClientRect();
+      const dropdownHeight = dropdownRef.current?.offsetHeight ?? 0;
+      const viewportTop = window.scrollY;
+      const viewportHeight = window.innerHeight;
+      const viewportBottom = viewportTop + viewportHeight;
+
+      let top = rect.bottom + window.scrollY + margin;
+
+      if (dropdownHeight > 0) {
+        const preferredBottom = top + dropdownHeight;
+        if (preferredBottom > viewportBottom - margin) {
+          top = rect.top + window.scrollY - dropdownHeight - margin;
+        }
+
+        const maxTop = viewportBottom - dropdownHeight - margin;
+        const minTop = viewportTop + margin;
+
+        if (dropdownHeight >= viewportHeight - margin * 2) {
+          top = viewportTop + margin;
+        } else {
+          top = Math.min(Math.max(top, minTop), maxTop);
+        }
+      }
+
+      setPosition({
+        top,
+        right: window.innerWidth - rect.right + window.scrollX,
+      });
     };
 
     if (showOptions) {
       updatePosition();
+      requestAnimationFrame(updatePosition);
       window.addEventListener("resize", updatePosition);
       window.addEventListener("scroll", updatePosition, true);
       return () => {
@@ -65,7 +106,7 @@ export const WeekDropdown = ({
   const dropdownMenu = showOptions && (
     <div
       ref={dropdownRef}
-      className="fixed z-50 w-44 origin-top-right rounded-2xl border border-slate-200 bg-white/95 p-1 shadow-xl shadow-slate-900/10 focus:outline-none"
+      className="fixed z-50 w-44 origin-top-right rounded-2xl border border-slate-200 bg-white/95 p-1 shadow-xl shadow-slate-900/10 focus:outline-none overflow-y-auto overscroll-contain max-h-56 sm:max-h-64"
       style={{
         top: `${position.top}px`,
         right: `${position.right}px`,
@@ -82,6 +123,7 @@ export const WeekDropdown = ({
             disabled={option === selected}
             type="button"
             onClick={() => onClick(option)}
+            data-selected={option === selected}
             className={[
               "w-full rounded-xl px-3 py-2 text-left text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
               option === selected

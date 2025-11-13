@@ -31,6 +31,7 @@ export const pools = pgTable("pools", {
   weekEnded: integer("week_ended"),
   season: integer("season").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  poolWinner: varchar("pool_winner", { length: 256 }),
 });
 
 export const members = pgTable("members", {
