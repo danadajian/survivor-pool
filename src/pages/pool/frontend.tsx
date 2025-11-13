@@ -31,14 +31,15 @@ const PoolComponent = ({
     poolName,
     poolWinner,
     poolMembers,
-    poolCreator,
+    poolCreatorUsername,
+    poolCreatorDisplayName,
     userPickIsSecret,
     pickHeader,
     livesRemaining,
   } = data;
 
   const onReactivate = () => mutate({ poolId });
-  const isPoolCreator = username === poolCreator;
+  const isPoolCreator = username === poolCreatorUsername;
 
   if (!eventButtons.length) {
     return (
@@ -118,7 +119,9 @@ const PoolComponent = ({
           </Heading>
           <p className="text-sm text-slate-500">
             Commissioner:{" "}
-            <span className="font-medium text-slate-700">{poolCreator}</span>
+            <span className="font-medium text-slate-700">
+              {poolCreatorDisplayName}
+            </span>
           </p>
         </div>
         <Surface className="flex flex-col gap-6">

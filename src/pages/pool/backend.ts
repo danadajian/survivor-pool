@@ -48,7 +48,7 @@ export async function fetchPoolInfo({
     weekStarted,
     lives,
     name: poolName,
-    creator: poolCreator,
+    creator: poolCreatorUsername,
   } = poolsResult;
   const poolWinner = await findPoolWinner({
     currentWeek,
@@ -85,6 +85,16 @@ export async function fetchPoolInfo({
     forbiddenTeams,
     eliminated,
   });
+  const poolCreatorMember = poolMembers.find(
+    (member) => member.username === poolCreatorUsername,
+  );
+  const poolCreatorDisplayName =
+    poolCreatorMember &&
+    (poolCreatorMember.firstName || poolCreatorMember.lastName)
+      ? [poolCreatorMember.firstName, poolCreatorMember.lastName]
+          .filter(Boolean)
+          .join(" ")
+      : poolCreatorUsername;
 
   return {
     pickHeader,
@@ -94,7 +104,8 @@ export async function fetchPoolInfo({
     currentWeek,
     userPickIsSecret: userPick?.pickIsSecret,
     poolName,
-    poolCreator,
+    poolCreatorUsername,
+    poolCreatorDisplayName,
     poolMembers,
     poolWinner,
   };

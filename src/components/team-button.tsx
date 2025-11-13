@@ -57,9 +57,9 @@ export const TeamButton = ({ teamButton, username, poolId }: TeamProps) => {
     "flex w-28 flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200 px-3 py-3 text-xs font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-36 sm:gap-3 sm:px-4 sm:py-4 sm:text-sm";
   const buttonStyleMap = {
     [ButtonStyle.CURRENTLY_PICKED]:
-      "bg-slate-900 text-white shadow-lg shadow-slate-900/15",
+      "bg-emerald-600 text-white border-emerald-600 shadow-lg shadow-emerald-600/30",
     [ButtonStyle.PREVIOUSLY_PICKED]:
-      "bg-slate-800/90 text-white/80 border-slate-500",
+      "bg-slate-800/95 text-white/70 border-slate-600",
     [ButtonStyle.PICK_FORBIDDEN]:
       "bg-slate-200 text-slate-400 border-slate-200",
     [ButtonStyle.DEFAULT]: "bg-white text-slate-700",

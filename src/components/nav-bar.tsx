@@ -10,12 +10,12 @@ export const NavBar = () => {
   const dynamicLink = picksMatch?.pathname
     ? {
         to: `/pool/${picksMatch.params.poolId}`,
-        label: "View All Picks",
+        label: "View Your Picks",
       }
     : poolMatch?.pathname
       ? {
           to: `/picks/${poolMatch.params.poolId}`,
-          label: "View Your Picks",
+          label: "View All Picks",
         }
       : null;
   const navItems = [
@@ -25,7 +25,7 @@ export const NavBar = () => {
   ];
   const classNameForLink = ({ isActive }: { isActive: boolean }) =>
     [
-      "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+      "inline-flex items-center justify-center rounded-full px-3 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 whitespace-nowrap sm:px-4",
       isActive
         ? "bg-slate-900 text-white shadow-md shadow-slate-900/10 focus-visible:outline-slate-900"
         : "text-slate-600 hover:bg-slate-100 focus-visible:outline-slate-300",
