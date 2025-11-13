@@ -6,9 +6,9 @@ import { db } from "../../db";
 import { members, picks, pools } from "../../schema";
 import { buildPickHeader } from "../../utils/build-pick-header";
 import { fetchCurrentGames } from "../../utils/fetch-current-games";
-import { fetchPicksDataForUser } from "./backend/fetch-picks-data-for-user";
 import { findPoolWinner } from "./backend/find-pool-winner";
 import { getEventButtons } from "./backend/get-event-buttons";
+import { getForbiddenTeamsForUser } from "./backend/get-forbidden-teams-for-user";
 import { userEliminationStatus } from "./backend/user-elimination-status";
 
 export const fetchPoolInfoInput = v.object({
@@ -34,12 +34,6 @@ export async function fetchPoolInfo({
     season: { year: currentSeason },
     week: { number: currentWeek },
   } = games;
-  const { userPick, forbiddenTeams } = await fetchPicksDataForUser({
-    username,
-    poolId,
-    week: currentWeek,
-    season: currentSeason,
-  });
 
   const picksForPoolAndSeason = await fetchPicks(poolId, currentSeason);
   const poolsResult = await db.query.pools.findFirst({
@@ -72,10 +66,18 @@ export async function fetchPoolInfo({
     lives,
     events,
   });
+  const userPick = picksForPoolAndSeason.find(
+    (pick) => pick.username === username && pick.week === currentWeek,
+  );
   const pickHeader = buildPickHeader({
     events,
     userPick,
     eliminated,
+  });
+  const forbiddenTeams = getForbiddenTeamsForUser({
+    username,
+    picksForPoolAndSeason,
+    events,
   });
   const eventButtons = getEventButtons({
     events,

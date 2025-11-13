@@ -17,7 +17,6 @@ import { deletePool } from "../src/pages/home/backend";
 import { getPool, joinPool } from "../src/pages/join/backend";
 import { fetchPicksForPool } from "../src/pages/picks/backend";
 import { fetchPicks, fetchPoolMembers } from "../src/pages/pool/backend";
-import { fetchPicksDataForUser } from "../src/pages/pool/backend/fetch-picks-data-for-user";
 import { findPoolWinner } from "../src/pages/pool/backend/find-pool-winner";
 import { makePick } from "../src/pages/pool/backend/make-pick";
 import { reactivatePool } from "../src/pages/pool/backend/reactivate-pool";
@@ -114,22 +113,26 @@ describe("feature tests", () => {
       poolId,
       pickIsSecret: true,
     });
-    const { userPick: user1Pick } = await fetchPicksDataForUser({
-      username: user1,
-      week: 1,
-      season,
-      poolId,
+    const user1Pick = await db.query.picks.findFirst({
+      where: and(
+        eq(picks.username, user1),
+        eq(picks.week, 1),
+        eq(picks.poolId, poolId),
+        eq(picks.season, season),
+      ),
     });
     expect(user1Pick?.username).toEqual(user1);
     expect(user1Pick?.week).toEqual(1);
     expect(user1Pick?.season).toEqual(season);
     expect(user1Pick?.poolId).toEqual(poolId);
     expect(user1Pick?.teamPicked).toEqual("Giants");
-    const { userPick: user2Pick } = await fetchPicksDataForUser({
-      username: user2,
-      week: 1,
-      season,
-      poolId,
+    const user2Pick = await db.query.picks.findFirst({
+      where: and(
+        eq(picks.username, user2),
+        eq(picks.week, 1),
+        eq(picks.poolId, poolId),
+        eq(picks.season, season),
+      ),
     });
     expect(user2Pick?.username).toEqual(user2);
     expect(user2Pick?.week).toEqual(1);
@@ -172,28 +175,6 @@ describe("feature tests", () => {
     expect(secretPick?.username).toEqual(user2);
     expect(secretPick?.result).toEqual("PENDING");
     expect(secretPick?.teamPicked).toEqual("SECRET");
-  });
-
-  it("should have no forbidden picks this week", async () => {
-    const poolId = await getPoolId();
-    const { forbiddenTeams: user1ForbiddenTeams } = await fetchPicksDataForUser(
-      {
-        username: user1,
-        week: 1,
-        season,
-        poolId,
-      },
-    );
-    expect(user1ForbiddenTeams).toBeEmpty();
-    const { forbiddenTeams: user2ForbiddenTeams } = await fetchPicksDataForUser(
-      {
-        username: user2,
-        week: 1,
-        season,
-        poolId,
-      },
-    );
-    expect(user2ForbiddenTeams).toBeEmpty();
   });
 
   it("should update results to pending when no results yet", async () => {
@@ -372,28 +353,6 @@ describe("feature tests", () => {
         events,
       }).eliminated,
     ).toBeTrue();
-  });
-
-  it("should make teams picked forbidden next week", async () => {
-    const poolId = await getPoolId();
-    const { forbiddenTeams: user1ForbiddenTeams } = await fetchPicksDataForUser(
-      {
-        username: user1,
-        week: 2,
-        season,
-        poolId,
-      },
-    );
-    expect(user1ForbiddenTeams).toEqual(["Giants"]);
-    const { forbiddenTeams: user2ForbiddenTeams } = await fetchPicksDataForUser(
-      {
-        username: user2,
-        week: 2,
-        season,
-        poolId,
-      },
-    );
-    expect(user2ForbiddenTeams).toEqual(["49ers"]);
   });
 
   it("should not return poolWinner when no one has won the pool yet", async () => {

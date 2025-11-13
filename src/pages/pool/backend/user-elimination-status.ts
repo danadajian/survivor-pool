@@ -1,6 +1,7 @@
 import { Events } from "src/utils/fetch-current-games";
 
 import { picks } from "../../../schema";
+import { getForbiddenTeamsForUser } from "./get-forbidden-teams-for-user";
 
 export function userEliminationStatus({
   username,
@@ -42,33 +43,19 @@ export function userEliminationStatus({
       competition.competitors.map((competitor) => competitor.team.name),
     ),
   );
-  const teamsUserHasPicked = picksForPoolAndSeason
-    .filter((pick) => pick.username === username)
-    .map((pick) => pick.teamPicked);
 
-  const otherUsernames = [
-    ...new Set(
-      picksForPoolAndSeason
-        .filter((pick) => pick.username !== username)
-        .map((pick) => pick.username),
-    ),
-  ];
-  const noOtherUserHasTeamsToPick = otherUsernames.every((otherUser) => {
-    const teamsOtherUserHasPicked = picksForPoolAndSeason
-      .filter((pick) => pick.username === otherUser)
-      .map((pick) => pick.teamPicked);
-    return teamsAvailableToPick.every((team) =>
-      teamsOtherUserHasPicked.includes(team),
-    );
+  const forbiddenTeamsForUser = getForbiddenTeamsForUser({
+    username,
+    picksForPoolAndSeason,
+    events,
   });
   const userHasNoTeamsToPick = teamsAvailableToPick.every((team) =>
-    teamsUserHasPicked.includes(team),
+    forbiddenTeamsForUser.includes(team),
   );
-  const userRanOutOfTeams = userHasNoTeamsToPick && !noOtherUserHasTeamsToPick;
 
   return {
-    eliminated: userRanOutOfTeams || livesLost >= lives,
-    livesRemaining: userRanOutOfTeams ? 0 : Math.max(lives - livesLost, 0),
+    eliminated: userHasNoTeamsToPick || livesLost >= lives,
+    livesRemaining: userHasNoTeamsToPick ? 0 : Math.max(lives - livesLost, 0),
   };
 }
 

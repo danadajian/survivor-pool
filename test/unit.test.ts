@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { getForbiddenTeamsForUser } from "src/pages/pool/backend/get-forbidden-teams-for-user";
 
 import { getEventButtons } from "../src/pages/pool/backend/get-event-buttons";
 import { userEliminationStatus } from "../src/pages/pool/backend/user-elimination-status";
@@ -624,5 +625,156 @@ describe("user elimination", () => {
       });
     expect(user2Eliminated).toBeTrue();
     expect(user2LivesRemaining).toEqual(0);
+  });
+});
+
+describe("forbidden teams", () => {
+  test("returns the teams that the user has picked in previous weeks", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "Bills",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 1,
+        teamPicked: "Jets",
+        result: "WON",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    const forbiddenTeams = getForbiddenTeamsForUser({
+      username: "user1",
+      picksForPoolAndSeason,
+      events: mockEspnResponse.events as Events,
+    });
+    expect(forbiddenTeams).toEqual(["Bills"]);
+  });
+
+  test("returns empty list when all users have picked all available teams", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "Bills",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 1,
+        teamPicked: "Bills",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 2,
+        teamPicked: "Jets",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 2,
+        teamPicked: "Jets",
+        result: "WON",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    const events = (mockEspnResponse.events as Events).slice(0, 1);
+    const forbiddenTeams = getForbiddenTeamsForUser({
+      username: "user1",
+      picksForPoolAndSeason,
+      events,
+    });
+    expect(forbiddenTeams).toEqual([]);
+  });
+
+  test("returns all teams when not all users have picked all available teams", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "Bills",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 1,
+        teamPicked: "Giants",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 2,
+        teamPicked: "Jets",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 2,
+        teamPicked: "Jets",
+        result: "WON",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    const events = (mockEspnResponse.events as Events).slice(0, 1);
+    const forbiddenTeams = getForbiddenTeamsForUser({
+      username: "user1",
+      picksForPoolAndSeason,
+      events,
+    });
+    expect(forbiddenTeams).toEqual(["Bills", "Jets"]);
+  });
+
+  test("returns the teams picked after all users picked all available teams", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "Bills",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 1,
+        teamPicked: "Bills",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 2,
+        teamPicked: "Jets",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 2,
+        teamPicked: "Jets",
+        result: "WON",
+      },
+      {
+        username: "user1",
+        week: 3,
+        teamPicked: "Bills",
+        result: "WON",
+      },
+      {
+        username: "user2",
+        week: 3,
+        teamPicked: "Jets",
+        result: "WON",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    const events = (mockEspnResponse.events as Events).slice(0, 1);
+    const forbiddenTeams = getForbiddenTeamsForUser({
+      username: "user1",
+      picksForPoolAndSeason,
+      events,
+    });
+    expect(forbiddenTeams).toEqual(["Bills"]);
+    const forbiddenTeamsForUser2 = getForbiddenTeamsForUser({
+      username: "user2",
+      picksForPoolAndSeason,
+      events,
+    });
+    expect(forbiddenTeamsForUser2).toEqual(["Jets"]);
   });
 });
