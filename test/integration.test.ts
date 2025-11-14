@@ -84,6 +84,11 @@ describe("feature tests", () => {
       events: mockEspnResponse.events as Events,
     });
     expect(poolWinner).toBeUndefined();
+
+    const pool = await db.query.pools.findFirst({
+      where: eq(pools.id, poolId),
+    });
+    expect(pool?.poolWinner).toBeNull();
   });
 
   it("should allow other users to join the pool", async () => {
@@ -525,6 +530,18 @@ describe("feature tests", () => {
       events: mockEspnResponse.events as Events,
     });
     expect(poolWinnerNextWeek?.username).toEqual(user1);
+  });
+
+  it("should set poolWinner field in pools table when updateResults finds a winner", async () => {
+    const poolId = await getPoolId();
+
+    const events = mockEspnResponse.events as Events;
+    await updateResults(events, 3, season);
+
+    const pool = await db.query.pools.findFirst({
+      where: eq(pools.id, poolId),
+    });
+    expect(pool?.poolWinner).toEqual(user1);
   });
 
   it("should reactivate the pool by creating a new pool and adding all members", async () => {
