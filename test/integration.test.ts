@@ -21,6 +21,7 @@ import { findPoolWinner } from "../src/pages/pool/backend/find-pool-winner";
 import { makePick } from "../src/pages/pool/backend/make-pick";
 import { reactivatePool } from "../src/pages/pool/backend/reactivate-pool";
 import { userEliminationStatus } from "../src/pages/pool/backend/user-elimination-status";
+import { fetchPoolWinners } from "../src/pages/winners/backend";
 import { members, picks, pools } from "../src/schema";
 import { Events, GamesResponse } from "../src/utils/fetch-current-games";
 import { mockEspnResponse } from "./mocks";
@@ -548,6 +549,19 @@ describe("feature tests", () => {
       where: eq(members.poolId, newPool.id),
     });
     expect(oldPoolMembers.length).toEqual(newPoolMembers.length);
+  });
+
+  it("should fetch previous pool winners for a user", async () => {
+    const { seasons, winners } = await fetchPoolWinners({ username: user1 });
+    expect(seasons).toContain(season);
+    const seasonWinners = winners.filter((winner) => winner.season === season);
+    expect(seasonWinners).not.toHaveLength(0);
+    const testPoolWinner = seasonWinners.find(
+      (winner) => winner.poolName === "Test Pool",
+    );
+    expect(testPoolWinner?.winner).toEqual(user1);
+    expect(testPoolWinner?.weekStarted).toEqual(1);
+    expect(testPoolWinner?.weekEnded).toEqual(4);
   });
 
   it("should edit the pool to add multiple lives", async () => {

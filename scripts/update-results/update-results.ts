@@ -2,7 +2,8 @@ import { and, eq } from "drizzle-orm";
 
 import { db } from "../../src/db";
 import { type Events } from "../../src/utils/fetch-current-games";
-import { picks } from "../../src/schema";
+import { picks, pools } from "../../src/schema";
+import { findPoolWinner } from "../../src/pages/pool/backend/find-pool-winner";
 
 export async function updateResults(
   events: Events,
@@ -42,6 +43,43 @@ export async function updateResults(
           eq(picks.result, "PENDING"),
         ),
       );
+  }
+
+  const poolIds = [...new Set(allPoolMembers.map((member) => member.poolId))];
+  for (const poolId of poolIds) {
+    const pool = await db.query.pools.findFirst({
+      where: and(eq(pools.id, poolId), eq(pools.season, season)),
+    });
+    if (!pool || pool.poolWinner) {
+      continue;
+    }
+
+    const poolMembers = allPoolMembers.filter(
+      (member) => member.poolId === poolId,
+    );
+    if (!poolMembers.length) {
+      continue;
+    }
+
+    const picksForPoolAndSeason = await db.query.picks.findMany({
+      where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
+    });
+
+    const poolWinner = await findPoolWinner({
+      currentWeek: week,
+      picksForPoolAndSeason,
+      poolMembers,
+      weekStarted: pool.weekStarted,
+      lives: pool.lives,
+      events,
+    });
+
+    if (poolWinner) {
+      await db
+        .update(pools)
+        .set({ poolWinner: poolWinner.username })
+        .where(eq(pools.id, poolId));
+    }
   }
 }
 

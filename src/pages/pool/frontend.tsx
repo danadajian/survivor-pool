@@ -29,7 +29,7 @@ const PoolComponent = ({
     currentSeason,
     currentWeek,
     poolName,
-    poolWinner,
+    poolWinnerDisplayName,
     poolMembers,
     poolCreatorUsername,
     poolCreatorDisplayName,
@@ -72,14 +72,11 @@ const PoolComponent = ({
     );
   }
 
-  if (poolWinner) {
+  if (poolWinnerDisplayName) {
     return (
       <div className="flex w-full flex-col gap-6">
         <Surface className="flex flex-col gap-4">
-          <Heading>
-            {`${poolWinner.firstName} ${poolWinner.lastName}`} has won this
-            pool!
-          </Heading>
+          <Heading>{`${poolWinnerDisplayName} has won this pool!`}</Heading>
           <p className="text-base text-slate-600">
             Celebrate the champ or spin up a brand new competition for the next
             season.

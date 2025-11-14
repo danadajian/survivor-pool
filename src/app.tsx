@@ -21,6 +21,7 @@ import { Join } from "./pages/join/frontend";
 import { Picks } from "./pages/picks/frontend";
 import { Pool } from "./pages/pool/frontend";
 import { Rules } from "./pages/rules/frontend";
+import { Winners } from "./pages/winners/frontend";
 import { parseRoute } from "./utils/parse-route";
 
 type AppProps = {
@@ -36,6 +37,7 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/rules" element={<Rules />} />
+      <Route path="/winners" element={<Winners />} />
       <Route path="/pool/:poolId" element={<Pool />} />
       <Route path="/picks/:poolId" element={<Picks />} />
       <Route path="/create" element={<Create />} />
