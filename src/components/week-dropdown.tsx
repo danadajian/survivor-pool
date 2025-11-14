@@ -106,7 +106,7 @@ export const WeekDropdown = ({
   const dropdownMenu = showOptions && (
     <div
       ref={dropdownRef}
-      className="fixed z-50 w-44 origin-top-right rounded-2xl border border-slate-200 bg-white/95 p-1 shadow-xl shadow-slate-900/10 focus:outline-none overflow-y-auto overscroll-contain max-h-56 sm:max-h-64"
+      className="fixed z-50 max-h-56 w-44 origin-top-right overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white/95 p-1 shadow-xl shadow-slate-900/10 focus:outline-none sm:max-h-64"
       style={{
         top: `${position.top}px`,
         right: `${position.right}px`,

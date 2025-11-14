@@ -1,8 +1,8 @@
 import { UserButton } from "@clerk/clerk-react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import { useErrorBoundary } from "react-error-boundary";
 import { NavLink, useMatch } from "react-router-dom";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export const NavBar = () => {
   const picksMatch = useMatch("/picks/:poolId");
@@ -80,7 +80,7 @@ export const NavBar = () => {
       {isMenuOpen ? (
         <div
           id="mobile-nav"
-          className="sm:hidden border-t border-slate-200/80 bg-white/95 backdrop-blur"
+          className="border-t border-slate-200/80 bg-white/95 backdrop-blur sm:hidden"
         >
           <div className="mx-auto flex max-w-5xl flex-col gap-1.5 px-4 py-3">
             {navItems.map(({ to, label }) => (

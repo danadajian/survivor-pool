@@ -13,4 +13,3 @@ export function buildUserDisplayName({
 
   return nameParts.length > 0 ? nameParts.join(" ") : username;
 }
-

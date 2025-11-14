@@ -1,15 +1,12 @@
 import {
-  CheckIcon,
-  ChevronUpDownIcon,
-} from "@heroicons/react/24/outline";
-import { TrophyIcon } from "@heroicons/react/24/solid";
-import {
   Listbox,
   ListboxButton,
   ListboxOption,
   ListboxOptions,
   Transition,
 } from "@headlessui/react";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
+import { TrophyIcon } from "@heroicons/react/24/solid";
 import React, { Fragment } from "react";
 
 import { Heading } from "../../components/heading";
@@ -58,15 +55,15 @@ const WinnersComponent = ({ user: { username } }: PageProps) => {
       <Surface className="flex flex-col gap-4 sm:gap-6">
         {seasons.length === 0 ? (
           <div className="flex flex-col gap-2 text-left sm:gap-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 sm:text-sm">
+            <p className="text-xs font-semibold tracking-[0.25em] text-slate-500 uppercase sm:text-sm">
               History
             </p>
             <p className="text-base font-semibold text-slate-800 sm:text-lg">
               No completed pools yet
             </p>
             <p className="text-sm text-slate-500 sm:text-base">
-              Once your pools finish, you&apos;ll be able to revisit the
-              winners right here.
+              Once your pools finish, you&apos;ll be able to revisit the winners
+              right here.
             </p>
           </div>
         ) : (
@@ -105,7 +102,7 @@ const SeasonSelector = ({
     <div className="flex flex-col gap-1.5 text-left sm:gap-2">
       <label
         htmlFor="season-select"
-        className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500 sm:text-sm"
+        className="text-xs font-semibold tracking-[0.28em] text-slate-500 uppercase sm:text-sm"
       >
         Season
       </label>
@@ -117,7 +114,10 @@ const SeasonSelector = ({
           >
             <span>{selectedSeason}</span>
             <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center sm:right-4">
-              <ChevronUpDownIcon className="h-5 w-5 text-slate-400" aria-hidden="true" />
+              <ChevronUpDownIcon
+                className="h-5 w-5 text-slate-400"
+                aria-hidden="true"
+              />
             </span>
           </ListboxButton>
           <Transition
@@ -132,16 +132,25 @@ const SeasonSelector = ({
                   key={season}
                   value={season}
                   className={({ focus }) =>
-                    `relative cursor-pointer select-none px-3 py-2 text-sm sm:px-4 ${focus ? "bg-slate-100 text-slate-900" : "text-slate-600"}`
+                    `relative cursor-pointer px-3 py-2 text-sm select-none sm:px-4 ${focus ? "bg-slate-100 text-slate-900" : "text-slate-600"}`
                   }
                 >
                   {({ selected }) => (
                     <div className="flex items-center justify-between gap-3">
-                      <span className={selected ? "font-semibold text-slate-900" : "font-medium"}>
+                      <span
+                        className={
+                          selected
+                            ? "font-semibold text-slate-900"
+                            : "font-medium"
+                        }
+                      >
                         {season}
                       </span>
                       {selected ? (
-                        <CheckIcon className="h-4 w-4 text-slate-900" aria-hidden="true" />
+                        <CheckIcon
+                          className="h-4 w-4 text-slate-900"
+                          aria-hidden="true"
+                        />
                       ) : null}
                     </div>
                   )}
@@ -218,7 +227,7 @@ const WinnerCard = ({ winner }: { winner: WinnerRecord }) => {
             <TrophyIcon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
           </span>
           <div className="flex flex-col gap-0.5 sm:gap-1">
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-amber-700 sm:text-xs sm:tracking-[0.34em]">
+            <p className="text-[0.65rem] font-semibold tracking-[0.35em] text-amber-700 uppercase sm:text-xs sm:tracking-[0.34em]">
               {winner.poolName}
             </p>
             <p className="text-base font-semibold text-slate-900 sm:text-lg">
@@ -230,7 +239,9 @@ const WinnerCard = ({ winner }: { winner: WinnerRecord }) => {
           <span className="inline-flex w-max items-center rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600 sm:px-3.5">
             {weekRange}
           </span>
-          <span className="hidden sm:inline">Champion locked in and the pool is complete.</span>
+          <span className="hidden sm:inline">
+            Champion locked in and the pool is complete.
+          </span>
         </div>
       </div>
     </div>
@@ -238,4 +249,3 @@ const WinnerCard = ({ winner }: { winner: WinnerRecord }) => {
 };
 
 export const Winners = withPage(WinnersComponent);
-
