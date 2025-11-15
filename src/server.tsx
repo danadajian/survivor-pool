@@ -49,8 +49,9 @@ const app = new Elysia()
   .get("*", async (context) => {
     const authResult = await clerkClient.authenticateRequest(context.request);
 
+    const requestUrl = new URL(context.request.url);
     if (!authResult.isAuthenticated) {
-      return redirectToSignIn(authResult, new URL(context.request.url));
+      return redirectToSignIn(authResult, requestUrl);
     }
 
     const auth = authResult.toAuth();

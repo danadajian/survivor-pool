@@ -3,7 +3,6 @@ import { buildAccountsBaseUrl } from "@clerk/shared/buildAccountsBaseUrl";
 import { parsePublishableKey } from "@clerk/shared/keys";
 
 import { CLERK_PUBLISHABLE_KEY } from "../constants";
-import { logger } from "./logger";
 
 export function redirectToSignIn(
   authResult: Awaited<ReturnType<ClerkClient["authenticateRequest"]>>,
@@ -31,32 +30,23 @@ export function redirectToSignIn(
   });
 }
 
-const getSignInUrlFromPublishableKey = () => {
-  try {
-    const parsed = parsePublishableKey(CLERK_PUBLISHABLE_KEY);
-    if (!parsed?.frontendApi) {
-      return null;
-    }
-    const accountsBaseUrl = buildAccountsBaseUrl(parsed.frontendApi);
-    if (!accountsBaseUrl) {
-      return null;
-    }
-    return `${accountsBaseUrl}/sign-in`;
-  } catch (error) {
-    logger.error(
-      { error },
-      "Failed to derive fallback sign-in URL from publishable key.",
-    );
-    return null;
-  }
-};
-
-const resolveSignInUrl = (signInUrl: string, requestUrl: URL) => {
-  const fallback =
-    getSignInUrlFromPublishableKey() ?? `${requestUrl.origin}/sign-in`;
-  const target = signInUrl.trim() ?? fallback;
+function resolveSignInUrl(signInUrl: string, requestUrl: URL) {
+  const accountsBaseUrl = getSignInUrlFromPublishableKey();
+  const target = signInUrl.trim() || accountsBaseUrl;
 
   return target.startsWith("http")
     ? new URL(target)
     : new URL(target, requestUrl.origin);
-};
+}
+
+function getSignInUrlFromPublishableKey() {
+  const parsed = parsePublishableKey(CLERK_PUBLISHABLE_KEY);
+
+  const accountsBaseUrl = buildAccountsBaseUrl(parsed?.frontendApi);
+  if (!accountsBaseUrl) {
+    throw new Error(
+      "Failed to derive fallback sign-in URL from publishable key.",
+    );
+  }
+  return `${accountsBaseUrl}/sign-in`;
+}
