@@ -9,7 +9,23 @@ export function redirectToSignIn(
   requestUrl: URL,
 ) {
   if (authResult.status === "handshake") {
-    // For handshake status, use Clerk's headers directly - they handle redirect properly
+    // For handshake, Clerk handles the redirect, but we may need to ensure redirect_url
+    // is set for Safari compatibility. Check if Location header has redirect_url.
+    const location = authResult.headers.get("Location");
+    if (location) {
+      const locationUrl = new URL(location);
+      // If redirect_url is missing or points to accounts.dev, override it
+      const currentRedirectUrl = locationUrl.searchParams.get("redirect_url");
+      if (!currentRedirectUrl || currentRedirectUrl.includes("accounts.dev")) {
+        locationUrl.searchParams.set("redirect_url", requestUrl.toString());
+        const headers = new Headers(authResult.headers);
+        headers.set("Location", locationUrl.toString());
+        return new Response(null, {
+          status: 307,
+          headers,
+        });
+      }
+    }
     return new Response(null, {
       status: 307,
       headers: authResult.headers,
@@ -18,16 +34,7 @@ export function redirectToSignIn(
 
   const signInUrl = resolveSignInUrl(authResult.signInUrl, requestUrl);
 
-  // Ensure redirect_url is set with absolute URL
-  // Safari in production requires absolute URLs for redirects
-  if (!signInUrl.searchParams.has("redirect_url")) {
-    // Use absolute URL for Safari compatibility in production
-    const redirectUrl = new URL(
-      requestUrl.pathname + requestUrl.search,
-      requestUrl.origin,
-    );
-    signInUrl.searchParams.set("redirect_url", redirectUrl.toString());
-  }
+  signInUrl.searchParams.set("redirect_url", requestUrl.toString());
 
   // Preserve all Clerk headers (important for Safari cookie handling)
   const headers = new Headers(authResult.headers);
