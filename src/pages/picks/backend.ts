@@ -7,26 +7,24 @@ import { members, picks, pools } from "../../schema";
 import { fetchCurrentGames } from "../../utils/fetch-current-games";
 import { userEliminationStatus } from "../pool/backend/user-elimination-status";
 
-export const fetchPicksForPoolInput = v.object({
+export const fetchPoolMembersInput = v.object({
   poolId: v.string(),
-  week: v.optional(v.number()),
-  season: v.optional(v.number()),
 });
 
-export async function fetchPicksForPool({
+export const fetchPicksForWeekInput = v.object({
+  poolId: v.string(),
+  week: v.number(),
+  season: v.number(),
+});
+
+export async function fetchPicksForWeek({
   poolId,
   week,
   season,
-}: v.InferInput<typeof fetchPicksForPoolInput>) {
+}: v.InferInput<typeof fetchPicksForWeekInput>) {
   const gamesResponse = await fetchCurrentGames();
+  const { events } = gamesResponse;
 
-  const {
-    week: { number: currentWeek },
-    season: { year: currentSeason },
-    events,
-  } = gamesResponse;
-  const weekToUse = week ?? currentWeek;
-  const seasonToUse = season ?? currentSeason;
   const picksResult = await db
     .select({
       username: members.username,
@@ -50,8 +48,8 @@ export async function fetchPicksForPool({
     )
     .where(
       and(
-        eq(picks.week, weekToUse),
-        eq(picks.season, seasonToUse),
+        eq(picks.week, week),
+        eq(picks.season, season),
         eq(picks.poolId, poolId),
       ),
     )
@@ -73,6 +71,19 @@ export async function fetchPicksForPool({
     };
   });
 
+  return picksWithSecrets;
+}
+
+export async function fetchPoolMembers({
+  poolId,
+}: v.InferInput<typeof fetchPoolMembersInput>) {
+  const gamesResponse = await fetchCurrentGames();
+
+  const {
+    week: { number: currentWeek },
+    season: { year: currentSeason },
+  } = gamesResponse;
+
   const poolMembers = await db.query.members.findMany({
     where: eq(members.poolId, poolId),
   });
@@ -93,7 +104,7 @@ export async function fetchPicksForPool({
       ...member,
       ...userEliminationStatus({
         username: member.username,
-        currentWeek: weekToUse,
+        currentWeek,
         picksForPoolAndSeason,
         weekStarted,
         lives,
@@ -103,7 +114,6 @@ export async function fetchPicksForPool({
     .toSorted((a, b) => b.livesRemaining - a.livesRemaining);
 
   return {
-    picks: picksWithSecrets,
     membersWithEliminationStatus,
     lives,
     week: currentWeek,

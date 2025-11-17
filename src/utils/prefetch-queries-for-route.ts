@@ -35,9 +35,28 @@ export async function prefetchQueriesForRoute(
       });
     case "picks":
       if (!poolId) return;
+      const poolMemberData = await caller.poolMemberLivesRemaining({ poolId });
       await queryClient.prefetchQuery({
-        queryKey: [["picksForPool"], { input: { poolId }, type: "query" }],
-        queryFn: () => caller.picksForPool({ poolId }),
+        queryKey: [
+          ["poolMemberLivesRemaining"],
+          { input: { poolId }, type: "query" },
+        ],
+        queryFn: () => Promise.resolve(poolMemberData),
+      });
+
+      // Parse URL params for week/season if present
+      const url = new URL(context.request.url);
+      const weekParam = url.searchParams.get("week");
+      const seasonParam = url.searchParams.get("season");
+      const week = weekParam ? Number(weekParam) : poolMemberData.week;
+      const season = seasonParam ? Number(seasonParam) : poolMemberData.season;
+
+      await queryClient.prefetchQuery({
+        queryKey: [
+          ["picksForWeek"],
+          { input: { poolId, week, season }, type: "query" },
+        ],
+        queryFn: () => caller.picksForWeek({ poolId, week, season }),
       });
   }
 }

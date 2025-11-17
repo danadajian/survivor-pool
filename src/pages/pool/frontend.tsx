@@ -21,7 +21,11 @@ const PoolComponent = ({
 
   const { mutate } = trpc.reactivatePool.useMutation({
     onSettled: () =>
-      Promise.all([utils.pool.invalidate(), utils.picksForPool.invalidate()]),
+      Promise.all([
+        utils.pool.invalidate(),
+        utils.poolMemberLivesRemaining.invalidate(),
+        utils.picksForWeek.invalidate(),
+      ]),
   });
 
   const {

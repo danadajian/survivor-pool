@@ -16,8 +16,10 @@ import {
   poolInput,
 } from "./pages/join/backend";
 import {
-  fetchPicksForPool,
-  fetchPicksForPoolInput,
+  fetchPicksForWeek,
+  fetchPicksForWeekInput,
+  fetchPoolMembers as fetchPoolMemberLivesRemaining,
+  fetchPoolMembersInput,
 } from "./pages/picks/backend";
 import { fetchPoolInfo, fetchPoolInfoInput } from "./pages/pool/backend";
 import { makePick, makePickInput } from "./pages/pool/backend/make-pick";
@@ -49,9 +51,12 @@ export const appRouter = t.router({
   poolsForUser: authenticatedProcedure
     .input(v.parser(fetchPoolsForUserInput))
     .query(({ input }) => fetchPoolsForUser(input)),
-  picksForPool: authenticatedProcedure
-    .input(v.parser(fetchPicksForPoolInput))
-    .query(({ input }) => fetchPicksForPool(input)),
+  poolMemberLivesRemaining: authenticatedProcedure
+    .input(v.parser(fetchPoolMembersInput))
+    .query(({ input }) => fetchPoolMemberLivesRemaining(input)),
+  picksForWeek: authenticatedProcedure
+    .input(v.parser(fetchPicksForWeekInput))
+    .query(({ input }) => fetchPicksForWeek(input)),
   createPool: authenticatedProcedure
     .input(v.parser(createPoolInput))
     .mutation(({ input }) => createPool(input)),

@@ -15,7 +15,7 @@ import { createPool } from "../src/pages/create/backend";
 import { editPool } from "../src/pages/edit/backend";
 import { deletePool } from "../src/pages/home/backend";
 import { getPool, joinPool } from "../src/pages/join/backend";
-import { fetchPicksForPool } from "../src/pages/picks/backend";
+import { fetchPicksForWeek } from "../src/pages/picks/backend";
 import { fetchPicks, fetchPoolMembers } from "../src/pages/pool/backend";
 import { findPoolWinner } from "../src/pages/pool/backend/find-pool-winner";
 import { makePick } from "../src/pages/pool/backend/make-pick";
@@ -172,7 +172,7 @@ describe("feature tests", () => {
       season: { year: season },
       events: mockEvents,
     });
-    const { picks } = await fetchPicksForPool({
+    const picks = await fetchPicksForWeek({
       poolId,
       week: 1,
       season,
@@ -332,7 +332,7 @@ describe("feature tests", () => {
       season: { year: season },
       events: mockEvents,
     });
-    const { picks } = await fetchPicksForPool({
+    const picks = await fetchPicksForWeek({
       poolId,
       week: 1,
       season,

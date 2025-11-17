@@ -11078,60 +11078,67 @@ export const responseWithSecretPick: TRPCResponse<RouterOutput["pool"]> = {
   },
 };
 
-export const picksForPoolResponse: TRPCResponse<RouterOutput["picksForPool"]> =
+export const poolMemberLivesRemainingResponse: TRPCResponse<
+  RouterOutput["poolMemberLivesRemaining"]
+> = {
+  result: {
+    data: {
+      week: 1,
+      season: 2023,
+      lives: 1,
+      membersWithEliminationStatus: [
+        {
+          username: "test@user.com",
+          livesRemaining: 1,
+          eliminated: false,
+          id: "",
+          poolId: "",
+          firstName: "Test",
+          lastName: "User1",
+        },
+        {
+          username: "test2@user.com",
+          livesRemaining: 1,
+          eliminated: false,
+          id: "",
+          poolId: "",
+          firstName: "Test",
+          lastName: "User2",
+        },
+      ],
+    },
+  },
+};
+
+export const picksForWeekResponse: TRPCResponse<RouterOutput["picksForWeek"]> =
   {
     result: {
-      data: {
-        week: 1,
-        season: 2023,
-        lives: 1,
-        membersWithEliminationStatus: [
-          {
-            username: "test@user.com",
-            livesRemaining: 1,
-            eliminated: false,
-            id: "",
-            poolId: "",
-            firstName: "Test",
-            lastName: "User1",
-          },
-          {
-            username: "test2@user.com",
-            livesRemaining: 1,
-            eliminated: false,
-            id: "",
-            poolId: "",
-            firstName: "Test",
-            lastName: "User2",
-          },
-        ],
-        picks: [
-          {
-            username: "test@user.com",
-            firstName: "Test",
-            lastName: "User1",
-            teamPicked: "Chiefs",
-            pickIsSecret: false,
-            week: 1,
-            season: 2023,
-            poolId: "12345",
-            result: "PENDING",
-            timestamp: "123",
-          },
-          {
-            username: "test2@user.com",
-            firstName: "Test",
-            lastName: "User2",
-            teamPicked: "Bills",
-            pickIsSecret: false,
-            week: 1,
-            season: 2023,
-            poolId: "12345",
-            result: "PENDING",
-            timestamp: "123",
-          },
-        ],
-      },
+      data: [
+        {
+          username: "test@user.com",
+          firstName: "Test",
+          lastName: "User1",
+          teamPicked: "Chiefs",
+          pickIsSecret: false,
+          week: 1,
+          season: 2023,
+          poolId: "12345",
+          result: "PENDING",
+          timestamp: "123",
+        },
+        {
+          username: "test2@user.com",
+          firstName: "Test",
+          lastName: "User2",
+          teamPicked: "Bills",
+          pickIsSecret: false,
+          week: 1,
+          season: 2023,
+          poolId: "12345",
+          result: "PENDING",
+          timestamp: "123",
+        },
+      ],
     },
   };
 

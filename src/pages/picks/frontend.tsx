@@ -12,14 +12,24 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
     urlParams: { week: weekUrlParam, season: seasonUrlParam },
     setUrlParams,
   } = useUrlParams();
-  const [data] = trpc.picksForPool.useSuspenseQuery({
+  const [poolData] = trpc.poolMemberLivesRemaining.useSuspenseQuery({
     poolId,
-    ...(weekUrlParam ? { week: Number(weekUrlParam) } : {}),
-    ...(seasonUrlParam ? { season: Number(seasonUrlParam) } : {}),
   });
 
-  const { membersWithEliminationStatus, week: currentWeek } = data;
+  const {
+    membersWithEliminationStatus,
+    week: currentWeek,
+    season: currentSeason,
+    lives,
+  } = poolData;
   const week = Number(weekUrlParam ?? currentWeek);
+  const season = Number(seasonUrlParam ?? currentSeason);
+
+  const { data: picksData } = trpc.picksForWeek.useQuery({
+    poolId,
+    week,
+    season,
+  });
   const weekOptions = Array.from({ length: currentWeek }, (_, i) => i + 1);
 
   return (
@@ -42,14 +52,14 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
             onSelect={(option) => setUrlParams({ week: String(option) })}
           />
         </div>
-        <PickTable picksForPool={data} username={username} week={week} />
+        <PickTable picks={picksData ?? []} username={username} week={week} />
       </Surface>
       <Surface className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold text-slate-800">Pool members</h2>
         <MemberTable
           membersWithEliminationStatus={membersWithEliminationStatus}
           username={username}
-          lives={data.lives}
+          lives={lives}
         />
       </Surface>
     </div>
@@ -59,17 +69,13 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
 export const Picks = withPage(PicksComponent);
 
 type PickTableProps = {
-  picksForPool: RouterOutput["picksForPool"];
+  picks: RouterOutput["picksForWeek"];
   username: string;
   week: string | number;
 };
 
-const PickTable = ({
-  picksForPool: { picks },
-  username,
-  week,
-}: PickTableProps) => {
-  if (!picks.length) {
+const PickTable = ({ picks, username, week }: PickTableProps) => {
+  if (!picks || picks.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-slate-300/80 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
         No picks recorded for Week {week} yet.
@@ -143,7 +149,7 @@ const PickTable = ({
 };
 
 type MemberTableProps = {
-  membersWithEliminationStatus: RouterOutput["picksForPool"]["membersWithEliminationStatus"];
+  membersWithEliminationStatus: RouterOutput["poolMemberLivesRemaining"]["membersWithEliminationStatus"];
   username: string;
   lives: number;
 };

@@ -30,7 +30,11 @@ export const TeamButton = ({ teamButton, username, poolId }: TeamProps) => {
       }, 50);
     },
     onSettled: () =>
-      Promise.all([utils.pool.invalidate(), utils.picksForPool.invalidate()]),
+      Promise.all([
+        utils.pool.invalidate(),
+        utils.poolMemberLivesRemaining.invalidate(),
+        utils.picksForWeek.invalidate(),
+      ]),
   });
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const { pickIsSecret } = useContext(SecretPickContext);

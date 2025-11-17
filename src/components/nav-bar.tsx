@@ -16,7 +16,7 @@ export const NavBar = () => {
     { to: "/rules", label: "Rules" },
     ...(poolId
       ? [
-          { to: `/pool/${poolId}`, label: "Your Pool" },
+          { to: `/pool/${poolId}`, label: "Your Pick" },
           { to: `/picks/${poolId}`, label: "View All Picks" },
         ]
       : []),

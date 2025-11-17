@@ -1,12 +1,21 @@
 import React from "react";
 
 import { Picks } from "../../src/pages/picks/frontend";
-import { picksForPoolResponse } from "../../test/mocks";
+import {
+  picksForWeekResponse,
+  poolMemberLivesRemainingResponse,
+} from "../../test/mocks";
 import { MockProviders } from "../support/mock-providers";
 
 describe("picks page", () => {
   it("renders all picks for the week", () => {
-    cy.intercept("/trpc/*", { body: picksForPoolResponse });
+    cy.intercept("/trpc/*", (req) => {
+      if (req.url.includes("poolMemberLivesRemaining")) {
+        req.reply({ body: poolMemberLivesRemainingResponse });
+      } else if (req.url.includes("picksForWeek")) {
+        req.reply({ body: picksForWeekResponse });
+      }
+    });
 
     cy.mount(
       <MockProviders initialEntries={["/picks/123"]}>
