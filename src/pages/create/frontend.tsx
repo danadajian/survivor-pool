@@ -27,6 +27,7 @@ const CreateComponent = ({ user }: PageProps) => {
         setError("");
       }
       utils.poolsForUser.invalidate();
+      utils.pool.invalidate();
     },
   });
 

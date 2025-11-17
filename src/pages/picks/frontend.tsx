@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ChangePoolDropdown } from "../../components/change-pool-dropdown";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { PoolTabs } from "../../components/pool-tabs";
@@ -37,15 +38,22 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
   return (
     <div className="flex w-full flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <Heading>
-          {poolInfo.poolName} {poolInfo.currentSeason}
-        </Heading>
-        <p className="text-sm text-slate-500">
-          Commissioner:{" "}
-          <span className="font-medium text-slate-700">
-            {poolInfo.poolCreatorDisplayName}
-          </span>
-        </p>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex min-w-0 flex-1 flex-col gap-2">
+            <Heading>
+              {poolInfo.poolName} {poolInfo.currentSeason}
+            </Heading>
+            <p className="text-sm text-slate-500">
+              Commissioner:{" "}
+              <span className="font-medium text-slate-700">
+                {poolInfo.poolCreatorDisplayName}
+              </span>
+            </p>
+          </div>
+          <div className="shrink-0">
+            <ChangePoolDropdown username={username} currentPoolId={poolId} />
+          </div>
+        </div>
         <PoolTabs poolId={poolId} />
       </div>
       <Surface className="flex flex-col gap-6">

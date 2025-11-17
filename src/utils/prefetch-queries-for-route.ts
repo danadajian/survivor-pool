@@ -16,22 +16,22 @@ export async function prefetchQueriesForRoute(
   const trpcContext = await createContext({ req: context.request });
   const caller = appRouter.createCaller(trpcContext);
 
+  await queryClient.prefetchQuery({
+    queryKey: [["poolsForUser"], { input: { username }, type: "query" }],
+    queryFn: () => caller.poolsForUser({ username }),
+  });
+  if (poolId) {
+    await queryClient.prefetchQuery({
+      queryKey: [["pool"], { input: { username, poolId }, type: "query" }],
+      queryFn: () => caller.pool({ username, poolId }),
+    });
+  }
+
   switch (endpoint) {
-    case "":
-      await queryClient.prefetchQuery({
-        queryKey: [["poolsForUser"], { input: { username }, type: "query" }],
-        queryFn: () => caller.poolsForUser({ username }),
-      });
     case "winners":
       await queryClient.prefetchQuery({
         queryKey: [["winners"], { input: { username }, type: "query" }],
         queryFn: () => caller.winners({ username }),
-      });
-    case "pool":
-      if (!poolId) return;
-      await queryClient.prefetchQuery({
-        queryKey: [["pool"], { input: { username, poolId }, type: "query" }],
-        queryFn: () => caller.pool({ username, poolId }),
       });
     case "picks":
       if (!poolId) return;

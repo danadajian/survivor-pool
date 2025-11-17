@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
 
+import { ChangePoolDropdown } from "../../components/change-pool-dropdown";
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { PoolTabs } from "../../components/pool-tabs";
@@ -49,9 +50,12 @@ const PoolComponent = ({
   if (!eventButtons.length) {
     return (
       <div className="flex w-full flex-col gap-6">
-        <Heading>
-          {poolName} {currentSeason}
-        </Heading>
+        <div className="flex items-start justify-between gap-4">
+          <Heading>
+            {poolName} {currentSeason}
+          </Heading>
+          <ChangePoolDropdown username={username} currentPoolId={poolId} />
+        </div>
         <Surface className="flex flex-col gap-6">
           <p className="text-base text-slate-600">
             Hang tight! The season hasn&apos;t started yet. Once games are on
@@ -80,8 +84,11 @@ const PoolComponent = ({
   if (poolWinnerDisplayName) {
     return (
       <div className="flex w-full flex-col gap-6">
-        <Surface className="flex flex-col gap-4">
+        <div className="flex items-start justify-between gap-4">
           <Heading>{`${poolWinnerDisplayName} has won this pool!`}</Heading>
+          <ChangePoolDropdown username={username} currentPoolId={poolId} />
+        </div>
+        <Surface className="flex flex-col gap-4">
           <p className="text-base text-slate-600">
             Celebrate the champ or spin up a brand new competition for the next
             season.
@@ -116,15 +123,22 @@ const PoolComponent = ({
     <SecretPickProvider initialValue={userPickIsSecret ?? false}>
       <div className="flex w-full flex-col gap-6">
         <div className="flex flex-col gap-2">
-          <Heading>
-            {poolName} {currentSeason}
-          </Heading>
-          <p className="text-sm text-slate-500">
-            Commissioner:{" "}
-            <span className="font-medium text-slate-700">
-              {poolCreatorDisplayName}
-            </span>
-          </p>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex min-w-0 flex-1 flex-col gap-2">
+              <Heading>
+                {poolName} {currentSeason}
+              </Heading>
+              <p className="text-sm text-slate-500">
+                Commissioner:{" "}
+                <span className="font-medium text-slate-700">
+                  {poolCreatorDisplayName}
+                </span>
+              </p>
+            </div>
+            <div className="shrink-0">
+              <ChangePoolDropdown username={username} currentPoolId={poolId} />
+            </div>
+          </div>
           <PoolTabs poolId={poolId} />
         </div>
         <Surface className="flex flex-col gap-6">
