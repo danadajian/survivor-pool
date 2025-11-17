@@ -18,6 +18,6 @@ describe("home page", () => {
     );
     cy.findByText("Pool 1").should("be.visible");
     cy.findByText("Pool 2").should("be.visible");
-    cy.findAllByRole("button", { name: "Open Pool" }).should("have.length", 2);
+    cy.findAllByRole("button", { name: "Go to Pool" }).should("have.length", 2);
   });
 });

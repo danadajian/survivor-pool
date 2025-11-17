@@ -4,6 +4,7 @@ import spacetime from "spacetime";
 
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
+import { PoolTabs } from "../../components/pool-tabs";
 import { SecretPickProvider } from "../../components/secret-pick-provider";
 import { TeamButton } from "../../components/team-button";
 import { Button } from "../../components/ui/button";
@@ -124,6 +125,7 @@ const PoolComponent = ({
               {poolCreatorDisplayName}
             </span>
           </p>
+          <PoolTabs poolId={poolId} />
         </div>
         <Surface className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">

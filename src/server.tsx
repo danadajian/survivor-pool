@@ -83,7 +83,6 @@ const app = new Elysia()
     const stream = await renderToReadableStream(
       <StaticRouter location={context.path}>
         <App userData={userData} dehydratedState={dehydratedState} />
-        <link rel="stylesheet" href={relativePathToGlobalsCss} />
         {dehydratedState ? (
           <script
             dangerouslySetInnerHTML={{
@@ -91,6 +90,9 @@ const app = new Elysia()
             }}
           />
         ) : null}
+        {isDev ? null : (
+          <link rel="stylesheet" href={relativePathToGlobalsCss} />
+        )}
         {isDev && (
           <>
             <script src="https://cdn.tailwindcss.com" />

@@ -96,7 +96,7 @@ const PoolSelect = ({
                 size="sm"
                 className="flex-1 sm:flex-initial"
               >
-                Open Pool
+                Go to Pool
               </Button>
               {username === creator ? (
                 <EditPoolDropdown poolId={poolId} />

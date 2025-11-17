@@ -2,24 +2,15 @@ import { UserButton } from "@clerk/clerk-react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import { useErrorBoundary } from "react-error-boundary";
-import { NavLink, useMatch } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export const NavBar = () => {
-  const picksMatch = useMatch("/picks/:poolId");
-  const poolMatch = useMatch("/pool/:poolId");
   const { resetBoundary } = useErrorBoundary();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const poolId = picksMatch?.params.poolId ?? poolMatch?.params.poolId ?? null;
   const navItems = [
     { to: "/", label: "Home" },
     { to: "/winners", label: "Winners" },
     { to: "/rules", label: "Rules" },
-    ...(poolId
-      ? [
-          { to: `/pool/${poolId}`, label: "Your Pick" },
-          { to: `/picks/${poolId}`, label: "View All Picks" },
-        ]
-      : []),
   ];
   const classNameForLink = ({ isActive }: { isActive: boolean }) =>
     [

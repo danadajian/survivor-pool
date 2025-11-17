@@ -2,6 +2,7 @@ import React from "react";
 
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
+import { PoolTabs } from "../../components/pool-tabs";
 import { Surface } from "../../components/ui/surface";
 import { WeekDropdown } from "../../components/week-dropdown";
 import { type RouterOutput, trpc } from "../../trpc";
@@ -15,6 +16,7 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
   const [poolData] = trpc.poolMemberLivesRemaining.useSuspenseQuery({
     poolId,
   });
+  const [poolInfo] = trpc.pool.useSuspenseQuery({ username, poolId });
 
   const {
     membersWithEliminationStatus,
@@ -34,12 +36,17 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
 
   return (
     <div className="flex w-full flex-col gap-6">
-      <div className="flex flex-col gap-3">
-        <Heading>Week {week} Picks</Heading>
-        <p className="max-w-3xl text-left text-base text-slate-600">
-          Track how every selection performed this week and quickly jump to
-          previous games to stay ahead.
+      <div className="flex flex-col gap-2">
+        <Heading>
+          {poolInfo.poolName} {poolInfo.currentSeason}
+        </Heading>
+        <p className="text-sm text-slate-500">
+          Commissioner:{" "}
+          <span className="font-medium text-slate-700">
+            {poolInfo.poolCreatorDisplayName}
+          </span>
         </p>
+        <PoolTabs poolId={poolId} />
       </div>
       <Surface className="flex flex-col gap-6">
         <div className="flex flex-wrap items-center justify-between gap-3">

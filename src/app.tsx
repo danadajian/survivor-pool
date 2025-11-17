@@ -89,7 +89,9 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
         />
         <title>Survivor Pool</title>
       </head>
-      <body className="bg-slate-100 text-slate-900 antialiased">{content}</body>
+      <body className="min-h-screen overflow-y-scroll bg-slate-100 text-slate-900 antialiased">
+        {content}
+      </body>
     </html>
   );
 };
