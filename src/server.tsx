@@ -47,14 +47,13 @@ const clerkClient = createClerkClient({
 
 const app = new Elysia()
   .get("/health", () => "all good")
-  .use(staticPlugin())
   .get(relativePathToGlobalsCss, () => Bun.file("./public/globals.css"))
   .get("*", async (context) => {
     const userAgent = context.request.headers.get("user-agent");
     const requestUrl = new URL(context.request.url);
 
     if (isbot(userAgent)) {
-      return handleBotRequest(requestUrl);
+      return handleBotRequest(requestUrl, context.request.headers);
     }
 
     const authResult = await clerkClient.authenticateRequest(context.request);
@@ -144,6 +143,7 @@ const app = new Elysia()
   })
   .use(rateLimit({ max: 100 }))
   .use(trpcRouter(appRouter))
+  .use(staticPlugin())
   .listen(environmentVariables.PORT ?? 8080);
 
 if (isDev) {
