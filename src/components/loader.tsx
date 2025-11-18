@@ -1,7 +1,15 @@
 import React from "react";
 
-export const Loader = () => (
-  <div className="flex h-screen animate-pulse items-center justify-center">
+type LoaderProps = {
+  inline?: boolean;
+};
+
+export const Loader = ({ inline = false }: LoaderProps = {}) => (
+  <div
+    className={`flex animate-pulse items-center justify-center ${
+      inline ? "h-full" : "h-screen"
+    }`}
+  >
     <svg
       height="120px"
       width="120px"

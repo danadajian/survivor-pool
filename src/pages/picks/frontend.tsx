@@ -2,6 +2,7 @@ import React from "react";
 
 import { ChangePoolDropdown } from "../../components/change-pool-dropdown";
 import { Heading } from "../../components/heading";
+import { Loader } from "../../components/loader";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { PoolTabs } from "../../components/pool-tabs";
 import { Surface } from "../../components/ui/surface";
@@ -28,11 +29,6 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
   const week = Number(weekUrlParam ?? currentWeek);
   const season = Number(seasonUrlParam ?? currentSeason);
 
-  const { data: picksData } = trpc.picksForWeek.useQuery({
-    poolId,
-    week,
-    season,
-  });
   const weekOptions = Array.from({ length: currentWeek }, (_, i) => i + 1);
 
   return (
@@ -67,7 +63,12 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
             onSelect={(option) => setUrlParams({ week: String(option) })}
           />
         </div>
-        <PickTable picks={picksData ?? []} username={username} week={week} />
+        <PickTable
+          poolId={poolId}
+          username={username}
+          week={week}
+          season={season}
+        />
       </Surface>
       <Surface className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold text-slate-800">Pool members</h2>
@@ -84,12 +85,27 @@ const PicksComponent = ({ user: { username }, poolId }: PageProps) => {
 export const Picks = withPage(PicksComponent);
 
 type PickTableProps = {
-  picks: RouterOutput["picksForWeek"];
+  poolId: string;
   username: string;
-  week: string | number;
+  week: number;
+  season: number;
 };
 
-const PickTable = ({ picks, username, week }: PickTableProps) => {
+const PickTable = ({ poolId, username, week, season }: PickTableProps) => {
+  const { data: picks, isFetching } = trpc.picksForWeek.useQuery({
+    poolId,
+    week,
+    season,
+  });
+
+  if (isFetching) {
+    return (
+      <div className="flex min-h-[400px] items-center justify-center rounded-xl border border-slate-200/80 bg-white">
+        <Loader inline />
+      </div>
+    );
+  }
+
   if (!picks || picks.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-slate-300/80 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
