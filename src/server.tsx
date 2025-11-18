@@ -47,6 +47,7 @@ const clerkClient = createClerkClient({
 
 const app = new Elysia()
   .get("/health", () => "all good")
+  .use(staticPlugin())
   .get(relativePathToGlobalsCss, () => Bun.file("./public/globals.css"))
   .get("*", async (context) => {
     const userAgent = context.request.headers.get("user-agent");
@@ -57,8 +58,34 @@ const app = new Elysia()
     }
 
     const authResult = await clerkClient.authenticateRequest(context.request);
+
+    // Check if user just authenticated (OAuth callback) and needs redirect
+    // Look for redirect_url in query params or check if this is a fresh auth
+    const searchParams = requestUrl.searchParams;
+    const redirectUrlParam = searchParams.get("redirect_url");
+    const isOAuthCallback =
+      searchParams.has("__clerk_redirect_url") ||
+      searchParams.has("__clerk_handshake") ||
+      requestUrl.pathname.includes("/sso-callback");
+
     if (!authResult.isAuthenticated) {
       return redirectToSignIn(authResult, requestUrl);
+    }
+
+    // If this is an OAuth callback and we have a redirect_url, redirect there
+    if (isOAuthCallback && redirectUrlParam) {
+      try {
+        const redirectUrl = new URL(redirectUrlParam, requestUrl.origin);
+        // Only redirect to same origin for security
+        if (redirectUrl.origin === requestUrl.origin) {
+          return new Response(null, {
+            status: 307,
+            headers: { Location: redirectUrl.toString() },
+          });
+        }
+      } catch {
+        // Invalid redirect URL, continue with normal flow
+      }
     }
 
     const auth = authResult.toAuth();
@@ -117,7 +144,6 @@ const app = new Elysia()
   })
   .use(rateLimit({ max: 100 }))
   .use(trpcRouter(appRouter))
-  .use(staticPlugin())
   .listen(environmentVariables.PORT ?? 8080);
 
 if (isDev) {
