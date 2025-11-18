@@ -11,8 +11,8 @@ import { renderToReadableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 
 import { App } from "./app";
-import { CLERK_PUBLISHABLE_KEY, isDev } from "./constants";
-import { environmentVariables } from "./env";
+import { CLERK_PUBLISHABLE_KEY } from "./constants";
+import { environmentVariables, isDev } from "./env";
 import { appRouter } from "./router";
 import { trpcRouter } from "./trpc";
 import { handleBotRequest } from "./utils/handle-bot-request";

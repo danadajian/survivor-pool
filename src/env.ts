@@ -13,3 +13,4 @@ if (!result.success) {
   throw new Error("Environment variable schema invalid.");
 }
 export const environmentVariables = result.output;
+export const isDev = environmentVariables.ENVIRONMENT === "development";

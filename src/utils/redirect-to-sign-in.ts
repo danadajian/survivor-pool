@@ -8,7 +8,14 @@ export function redirectToSignIn(
   authResult: Awaited<ReturnType<ClerkClient["authenticateRequest"]>>,
   requestUrl: URL,
 ) {
-  const signInUrl = resolveSignInUrl(authResult.signInUrl, requestUrl);
+  if (authResult.status === "handshake") {
+    return new Response(null, {
+      status: 307,
+      headers: authResult.headers,
+    });
+  }
+
+  const signInUrl = resolveSignInUrl(requestUrl);
   const headers = new Headers(authResult.headers);
   headers.set("location", signInUrl.toString());
 
@@ -18,18 +25,18 @@ export function redirectToSignIn(
   });
 }
 
-function resolveSignInUrl(signInUrl: string, requestUrl: URL) {
-  const accountsBaseUrl = getSignInUrlFromPublishableKey();
-  const target = signInUrl.trim() || accountsBaseUrl;
+function resolveSignInUrl(requestUrl: URL) {
+  const signInUrl = getSignInUrlFromPublishableKey(requestUrl);
 
-  return target.startsWith("http")
-    ? new URL(target)
-    : new URL(target, requestUrl.origin);
+  return signInUrl.startsWith("http")
+    ? new URL(signInUrl)
+    : new URL(signInUrl, requestUrl.origin);
 }
 
-function getSignInUrlFromPublishableKey() {
+function getSignInUrlFromPublishableKey(requestUrl: URL) {
   const parsed = parsePublishableKey(CLERK_PUBLISHABLE_KEY);
 
   const accountsBaseUrl = buildAccountsBaseUrl(parsed?.frontendApi);
-  return `${accountsBaseUrl}/sign-in`;
+  const redirectUrl = `${requestUrl.origin}${requestUrl.pathname}`;
+  return `${accountsBaseUrl}/sign-in?redirect_url=${encodeURIComponent(redirectUrl)}`;
 }
