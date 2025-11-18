@@ -61,30 +61,17 @@ const app = new Elysia()
     // Check if user just authenticated (OAuth callback) and needs redirect
     // Look for redirect_url in query params or check if this is a fresh auth
     const searchParams = requestUrl.searchParams;
-    const redirectUrlParam = searchParams.get("redirect_url");
     const isOAuthCallback =
       searchParams.has("__clerk_redirect_url") ||
       searchParams.has("__clerk_handshake") ||
       requestUrl.pathname.includes("/sso-callback");
 
-    if (!authResult.isAuthenticated) {
-      return redirectToSignIn(authResult, requestUrl);
-    }
+    logger.info({ authResult });
+    logger.info({ requestUrl });
+    logger.info({ isOAuthCallback });
 
-    // If this is an OAuth callback and we have a redirect_url, redirect there
-    if (isOAuthCallback && redirectUrlParam) {
-      try {
-        const redirectUrl = new URL(redirectUrlParam, requestUrl.origin);
-        // Only redirect to same origin for security
-        if (redirectUrl.origin === requestUrl.origin) {
-          return new Response(null, {
-            status: 307,
-            headers: { Location: redirectUrl.toString() },
-          });
-        }
-      } catch {
-        // Invalid redirect URL, continue with normal flow
-      }
+    if (isOAuthCallback || !authResult.isAuthenticated) {
+      return redirectToSignIn(authResult, requestUrl);
     }
 
     const auth = authResult.toAuth();
