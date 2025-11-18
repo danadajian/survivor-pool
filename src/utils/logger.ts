@@ -1,8 +1,6 @@
 import pino from "pino";
 
-import { environmentVariables } from "../env";
-
-const isDev = environmentVariables.ENVIRONMENT === "development";
+import { isDev } from "../constants";
 
 export const logger = pino({
   level: "info",

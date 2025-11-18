@@ -11,7 +11,7 @@ import { renderToReadableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 
 import { App } from "./app";
-import { CLERK_PUBLISHABLE_KEY } from "./constants";
+import { CLERK_PUBLISHABLE_KEY, isDev } from "./constants";
 import { environmentVariables } from "./env";
 import { appRouter } from "./router";
 import { trpcRouter } from "./trpc";
@@ -38,8 +38,6 @@ const relativePathToGlobalsCss = bundleHash
   ? `/public/globals-${bundleHash}.css`
   : "/public/globals.css";
 
-const isDev = environmentVariables.ENVIRONMENT === "development";
-
 const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,
   publishableKey: CLERK_PUBLISHABLE_KEY,
@@ -63,16 +61,12 @@ const app = new Elysia()
     }
 
     const auth = authResult.toAuth();
-
-    let userData;
-    if (authResult.isAuthenticated && auth?.userId) {
-      const user = await clerkClient.users.getUser(auth.userId);
-      userData = {
-        username: user.primaryEmailAddress?.emailAddress ?? "",
-        firstName: user.firstName ?? undefined,
-        lastName: user.lastName ?? undefined,
-      };
-    }
+    const user = await clerkClient.users.getUser(auth.userId);
+    const userData = {
+      username: user.primaryEmailAddress?.emailAddress ?? "",
+      firstName: user.firstName ?? undefined,
+      lastName: user.lastName ?? undefined,
+    };
 
     const queryClient = new QueryClient({
       defaultOptions: {
