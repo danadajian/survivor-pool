@@ -58,19 +58,7 @@ const app = new Elysia()
 
     const authResult = await clerkClient.authenticateRequest(context.request);
 
-    // Check if user just authenticated (OAuth callback) and needs redirect
-    // Look for redirect_url in query params or check if this is a fresh auth
-    const searchParams = requestUrl.searchParams;
-    const isOAuthCallback =
-      searchParams.has("__clerk_redirect_url") ||
-      searchParams.has("__clerk_handshake") ||
-      requestUrl.pathname.includes("/sso-callback");
-
-    logger.info({ authResult });
-    logger.info({ requestUrl });
-    logger.info({ isOAuthCallback });
-
-    if (isOAuthCallback || !authResult.isAuthenticated) {
+    if (!authResult.isAuthenticated) {
       return redirectToSignIn(authResult, requestUrl);
     }
 

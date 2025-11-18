@@ -11,15 +11,11 @@ export function redirectToSignIn(
 ) {
   const signInUrl = resolveSignInUrl(authResult.signInUrl, requestUrl);
 
-  signInUrl.searchParams.set("redirect_url", requestUrl.toString());
-
-  // Preserve all Clerk headers (important for Safari cookie handling)
   const headers = new Headers(authResult.headers);
   if (!headers.has("location")) {
+    logger.info({ signInUrl }, "Setting location header to sign-in URL");
     headers.set("location", signInUrl.toString());
   }
-  logger.info({ signInUrl });
-  logger.info({ headers });
 
   return new Response(null, {
     status: 307,
