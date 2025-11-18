@@ -14,9 +14,21 @@ export function redirectToSignIn(
     const location = authResult.headers.get("Location");
     if (location) {
       const locationUrl = new URL(location);
-      // If redirect_url is missing or points to accounts.dev, override it
       const currentRedirectUrl = locationUrl.searchParams.get("redirect_url");
-      if (!currentRedirectUrl || currentRedirectUrl.includes("accounts.dev")) {
+
+      // Always ensure redirect_url is set and absolute for Safari compatibility
+      // Safari requires absolute URLs in production, especially for OAuth redirects
+      const needsUpdate =
+        !currentRedirectUrl ||
+        currentRedirectUrl.includes("accounts.dev") ||
+        (!currentRedirectUrl.startsWith("http://") &&
+          !currentRedirectUrl.startsWith("https://")) ||
+        // Ensure redirect points to our domain (not a different domain)
+        (currentRedirectUrl.startsWith("http") &&
+          !currentRedirectUrl.startsWith(requestUrl.origin));
+
+      if (needsUpdate) {
+        // Use absolute URL for Safari compatibility
         locationUrl.searchParams.set("redirect_url", requestUrl.toString());
         const headers = new Headers(authResult.headers);
         headers.set("Location", locationUrl.toString());

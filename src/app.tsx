@@ -6,7 +6,7 @@ import {
 } from "@clerk/clerk-react";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import { ClientProvider } from "./components/client-provider";
 import { ErrorPage } from "./components/error";
@@ -22,7 +22,6 @@ import { Picks } from "./pages/picks/frontend";
 import { Pool } from "./pages/pool/frontend";
 import { Rules } from "./pages/rules/frontend";
 import { Winners } from "./pages/winners/frontend";
-import { parseRoute } from "./utils/parse-route";
 
 type AppProps = {
   userData?: UserData;
@@ -30,9 +29,6 @@ type AppProps = {
 };
 
 export const App = ({ userData, dehydratedState }: AppProps) => {
-  const { pathname } = useLocation();
-  const { endpoint } = parseRoute(pathname);
-
   const routes = (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -72,16 +68,6 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-          name="og:title"
-          content={
-            endpoint === "join" ? "Join My Survivor Pool!" : "Survivor Pool"
-          }
-        />
-        <meta
-          name="og:image"
-          content="https://survivor-pool.up.railway.app/public/og.png"
-        />
         <link rel="icon" type="image/x-icon" href="/public/favicon.ico" />
         <link
           rel="stylesheet"

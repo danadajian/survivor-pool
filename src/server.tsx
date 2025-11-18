@@ -4,6 +4,7 @@ import { dehydrate, QueryClient } from "@tanstack/react-query";
 import Elysia from "elysia";
 import { HotModuleReload, hotModuleReload } from "elysia-hot-module-reload";
 import { rateLimit } from "elysia-rate-limit";
+import { isbot } from "isbot";
 import path from "path";
 import React from "react";
 import { renderToReadableStream } from "react-dom/server";
@@ -14,6 +15,7 @@ import { CLERK_PUBLISHABLE_KEY } from "./constants";
 import { environmentVariables } from "./env";
 import { appRouter } from "./router";
 import { trpcRouter } from "./trpc";
+import { handleBotRequest } from "./utils/handle-bot-request";
 import { logger } from "./utils/logger";
 import { prefetchQueriesForRoute } from "./utils/prefetch-queries-for-route";
 import { redirectToSignIn } from "./utils/redirect-to-sign-in";
@@ -47,9 +49,14 @@ const app = new Elysia()
   .get("/health", () => "all good")
   .get(relativePathToGlobalsCss, () => Bun.file("./public/globals.css"))
   .get("*", async (context) => {
-    const authResult = await clerkClient.authenticateRequest(context.request);
-
+    const userAgent = context.request.headers.get("user-agent");
     const requestUrl = new URL(context.request.url);
+
+    if (isbot(userAgent)) {
+      return handleBotRequest(requestUrl);
+    }
+
+    const authResult = await clerkClient.authenticateRequest(context.request);
     if (!authResult.isAuthenticated) {
       return redirectToSignIn(authResult, requestUrl);
     }
