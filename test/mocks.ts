@@ -11027,6 +11027,8 @@ export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pool"]> = {
       poolMembers: [],
       pickHeader: "Make your pick, Test!",
       livesRemaining: 1,
+      pickStatus: "PENDING",
+      eliminated: false,
     },
   },
 };
@@ -11043,6 +11045,9 @@ export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
       poolCreatorDisplayName: "test@user.com",
       poolMembers: [],
       livesRemaining: 1,
+      pickStatus: "PENDING",
+      eliminated: false,
+      pickHeader: "Make your pick, Test!",
     },
   },
 };
@@ -11058,6 +11063,19 @@ export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
       poolMembers: [],
       pickHeader: "You're riding with the Bills this week!",
       livesRemaining: 1,
+      pickStatus: "PICKED",
+      eliminated: false,
+      userPick: {
+        teamPicked: "Bills",
+        week: 1,
+        season: 2023,
+        poolId: "123",
+        username: "test@user.com",
+        pickIsSecret: false,
+        id: "1",
+        timestamp: new Date().toISOString(),
+        result: "PENDING",
+      },
     },
   },
 };
@@ -11065,7 +11083,6 @@ export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
 export const responseWithSecretPick: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
-      userPickIsSecret: true,
       eventButtons: basicEventButtons,
       currentWeek: mockEspnResponse.week.number,
       currentSeason: mockEspnResponse.season.year,
@@ -11074,6 +11091,20 @@ export const responseWithSecretPick: TRPCResponse<RouterOutput["pool"]> = {
       poolCreatorDisplayName: "test@user.com",
       poolMembers: [],
       livesRemaining: 1,
+      pickStatus: "PICKED",
+      eliminated: false,
+      pickHeader: "You're riding with the Bills this week!",
+      userPick: {
+        teamPicked: "Bills",
+        week: 1,
+        season: 2023,
+        poolId: "123",
+        username: "test@user.com",
+        pickIsSecret: true,
+        id: "1",
+        timestamp: new Date().toISOString(),
+        result: "PENDING",
+      },
     },
   },
 };

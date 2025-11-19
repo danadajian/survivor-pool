@@ -13,13 +13,11 @@ import { Button } from "../../components/ui/button";
 import { Surface } from "../../components/ui/surface";
 import { WeekDropdown } from "../../components/week-dropdown";
 import { type RouterOutput, trpc } from "../../trpc";
+import { type PickStatus } from "../../utils/get-pick-status";
 import { useUrlParams } from "../../utils/use-url-params";
 import { EventButton } from "./backend/get-event-buttons";
 
-const PoolComponent = ({
-  user: { username, firstName },
-  poolId,
-}: PageProps) => {
+const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
   const {
     urlParams: { view = "pick" },
     setUrlParams,
@@ -48,15 +46,15 @@ const PoolComponent = ({
     poolMembers,
     poolCreatorUsername,
     poolCreatorDisplayName,
-    userPickIsSecret,
     pickHeader,
     livesRemaining,
+    userPick,
+    pickStatus,
   } = data;
 
   const onReactivate = () => mutate({ poolId });
   const isPoolCreator = username === poolCreatorUsername;
-
-  const defaultPickHeader = `Make your pick, ${firstName}!`;
+  const userPickIsSecret = userPick?.pickIsSecret;
 
   const renderContent = () => {
     if (activeTab === "all-picks") {
@@ -132,9 +130,9 @@ const PoolComponent = ({
           <h2 className="text-xl font-semibold text-slate-800">
             Week {currentWeek}
           </h2>
-          <p className="text-sm text-slate-600">
-            {pickHeader ?? defaultPickHeader}
-          </p>
+          <PickStatusCard status={pickStatus} userPick={userPick}>
+            {pickHeader}
+          </PickStatusCard>
           <p className="text-sm font-medium text-slate-700">
             You have {livesRemaining} {livesRemaining === 1 ? "life" : "lives"}{" "}
             remaining.
@@ -184,6 +182,74 @@ const PoolComponent = ({
         {renderContent()}
       </div>
     </SecretPickProvider>
+  );
+};
+
+type PickStatusCardProps = {
+  status: PickStatus;
+  userPick: RouterOutput["pool"]["userPick"];
+  children: React.ReactNode;
+};
+
+const PickStatusCard = ({
+  status,
+  userPick,
+  children,
+}: PickStatusCardProps) => {
+  const styles = {
+    PENDING: {
+      container: "bg-slate-50 text-slate-900",
+      badge: "bg-slate-200 text-slate-800",
+      message: "text-slate-700",
+    },
+    ELIMINATED: {
+      container: "bg-rose-50 text-rose-900",
+      badge: "bg-rose-200 text-rose-800",
+      message: "text-rose-700",
+    },
+    WON: {
+      container: "bg-emerald-50 text-emerald-900",
+      badge: "bg-emerald-200 text-emerald-800",
+      message: "text-emerald-700",
+    },
+    LOST: {
+      container: "bg-rose-50 text-rose-900",
+      badge: "bg-rose-200 text-rose-800",
+      message: "text-rose-700",
+    },
+    LOCKED: {
+      container: "bg-amber-50 text-amber-900",
+      badge: "bg-amber-200 text-amber-800",
+      message: "text-amber-700",
+    },
+    PICKED: {
+      container: "bg-blue-50 text-blue-900",
+      badge: "bg-blue-200 text-blue-800",
+      message: "text-blue-700",
+    },
+  };
+
+  const { container, badge, message } = styles[status];
+
+  const secretBadge = userPick?.pickIsSecret ? (
+    <span className="inline-flex items-center rounded-full bg-slate-200 px-2 py-0.5 text-xs font-semibold text-slate-600">
+      SECRET
+    </span>
+  ) : null;
+
+  return (
+    <div className={`flex flex-col gap-1 rounded-lg p-4 ${container}`}>
+      <div className="flex items-center gap-2">
+        <span
+          className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${badge}`}
+        >
+          {status}
+        </span>
+        <span className="font-bold">{userPick?.teamPicked}</span>
+        {secretBadge}
+      </div>
+      <p className={`text-sm font-medium ${message}`}>{children}</p>
+    </div>
   );
 };
 
@@ -354,15 +420,14 @@ const PickTable = ({ poolId, username, week, season }: PickTableProps) => {
                 <td className="px-3 py-2.5 text-slate-800 sm:px-4 sm:py-3">
                   {userFullName ?? pick.username}
                 </td>
-                <td
-                  className={[
-                    "px-3 py-2.5 text-center text-slate-700 sm:px-4 sm:py-3",
-                    pick.pickIsSecret ? "text-slate-500 italic" : "",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  {pick.teamPicked}
+                <td className="px-3 py-2.5 text-center text-slate-700 sm:px-4 sm:py-3">
+                  {pick.pickIsSecret ? (
+                    <span className="inline-flex items-center rounded-full bg-slate-200 px-2 py-0.5 text-xs font-semibold text-slate-600">
+                      SECRET
+                    </span>
+                  ) : (
+                    <span className="font-semibold">{pick.teamPicked}</span>
+                  )}
                 </td>
                 <td className="px-3 py-2.5 text-center sm:px-4 sm:py-3">
                   <span

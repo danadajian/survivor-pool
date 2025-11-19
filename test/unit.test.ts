@@ -11,75 +11,55 @@ import { mockEspnResponse } from "./mocks";
 describe("pick header", () => {
   test("pick has been made", () => {
     const result = buildPickHeader({
-      events: mockEspnResponse.events as Events,
       userPick: {
         teamPicked: "Bills",
         result: "PENDING",
       } as typeof picks.$inferSelect,
-      eliminated: false,
+      pickStatus: "PICKED",
     });
     expect(result).toEqual("You're riding with the Bills this week!");
   });
 
-  test("pick has been made secretly", () => {
-    const result = buildPickHeader({
-      events: mockEspnResponse.events as Events,
-      userPick: {
-        teamPicked: "Bills",
-        result: "PENDING",
-        pickIsSecret: true,
-      } as typeof picks.$inferSelect,
-      eliminated: false,
-    });
-    expect(result).toEqual(
-      "You're riding with the Bills this week (secretly)!",
-    );
-  });
-
   test("pick is locked", () => {
     const result = buildPickHeader({
-      events: mockEspnResponse.events as Events,
       userPick: {
         teamPicked: "49ers",
         result: "PENDING",
       } as typeof picks.$inferSelect,
-      eliminated: false,
+      pickStatus: "LOCKED",
     });
     expect(result).toEqual("Your 49ers pick is locked. Good luck!");
   });
 
   test("you survived a week by winning", () => {
     const result = buildPickHeader({
-      events: mockEspnResponse.events as Events,
       userPick: {
         teamPicked: "49ers",
         result: "WON",
       } as typeof picks.$inferSelect,
-      eliminated: false,
+      pickStatus: "WON",
     });
     expect(result).toEqual("The 49ers won, and you're still alive!");
   });
 
   test("you survived a week by everyone losing with you", () => {
     const result = buildPickHeader({
-      events: mockEspnResponse.events as Events,
       userPick: {
         teamPicked: "49ers",
         result: "LOST",
       } as typeof picks.$inferSelect,
-      eliminated: false,
+      pickStatus: "LOST",
     });
     expect(result).toEqual("The 49ers lost, but you're still alive!");
   });
 
   test("you were eliminated from the pool", () => {
     const result = buildPickHeader({
-      events: mockEspnResponse.events as Events,
       userPick: {
         teamPicked: "49ers",
         result: "LOST",
       } as typeof picks.$inferSelect,
-      eliminated: true,
+      pickStatus: "ELIMINATED",
     });
     expect(result).toEqual("Sorry, you have been eliminated from this pool.");
   });

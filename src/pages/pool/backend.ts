@@ -6,7 +6,9 @@ import { db } from "../../db";
 import { members, picks, pools } from "../../schema";
 import { buildPickHeader } from "../../utils/build-pick-header";
 import { buildUserDisplayName } from "../../utils/build-user-display-name";
+import { checkIfPickIsLocked } from "../../utils/check-if-pick-is-locked";
 import { fetchCurrentGames } from "../../utils/fetch-current-games";
+import { getPickStatus } from "../../utils/get-pick-status";
 import { getEventButtons } from "./backend/get-event-buttons";
 import { getForbiddenTeamsForUser } from "./backend/get-forbidden-teams-for-user";
 import { userEliminationStatus } from "./backend/user-elimination-status";
@@ -72,10 +74,19 @@ export async function fetchPoolInfo({
   const userPick = picksForPoolAndSeason.find(
     (pick) => pick.username === username && pick.week === currentWeek,
   );
-  const pickHeader = buildPickHeader({
+  const pickIsLocked = checkIfPickIsLocked({
     events,
     userPick,
+  });
+  const pickStatus = getPickStatus({
     eliminated,
+    userPick,
+    pickIsLocked,
+  });
+  const pickHeader = buildPickHeader({
+    userPick,
+    pickStatus,
+    firstName: poolMember.firstName,
   });
   const forbiddenTeams = getForbiddenTeamsForUser({
     username,
@@ -98,12 +109,14 @@ export async function fetchPoolInfo({
   });
 
   return {
+    pickStatus,
     pickHeader,
+    userPick,
+    eliminated,
     livesRemaining,
     eventButtons,
     currentSeason,
     currentWeek,
-    userPickIsSecret: userPick?.pickIsSecret,
     poolName,
     poolCreatorUsername,
     poolCreatorDisplayName,

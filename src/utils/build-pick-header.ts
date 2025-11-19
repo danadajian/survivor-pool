@@ -1,36 +1,27 @@
 import { picks } from "../schema";
-import { checkIfPickIsLocked } from "./check-if-pick-is-locked";
-import { Events } from "./fetch-current-games";
+import { PickStatus } from "./get-pick-status";
 
 export function buildPickHeader({
-  events,
   userPick,
-  eliminated,
+  pickStatus,
+  firstName,
 }: {
-  events: Events;
   userPick?: typeof picks.$inferSelect;
-  eliminated: boolean;
+  pickStatus: PickStatus;
+  firstName?: string | null;
 }) {
-  if (eliminated) {
-    return "Sorry, you have been eliminated from this pool.";
-  }
-
-  switch (userPick?.result) {
+  switch (pickStatus) {
+    case "ELIMINATED":
+      return "Sorry, you have been eliminated from this pool.";
     case "WON":
-      return `The ${userPick.teamPicked} won, and you're still alive!`;
+      return `The ${userPick?.teamPicked} won, and you're still alive!`;
     case "LOST":
-      return `The ${userPick.teamPicked} lost, but you're still alive!`;
+      return `The ${userPick?.teamPicked} lost, but you're still alive!`;
+    case "LOCKED":
+      return `Your ${userPick?.teamPicked} pick is locked. Good luck!`;
+    case "PICKED":
+      return `You're riding with the ${userPick?.teamPicked} this week!`;
     default:
-      const pickIsLocked = checkIfPickIsLocked({
-        events,
-        userPick,
-      });
-      if (pickIsLocked) {
-        return `Your ${userPick?.teamPicked} pick is locked. Good luck!`;
-      } else if (userPick?.teamPicked) {
-        return `You're riding with the ${userPick.teamPicked} this week${userPick.pickIsSecret ? " (secretly)" : ""}!`;
-      } else {
-        return undefined;
-      }
+      return `Make your pick, ${firstName ?? userPick?.username}!`;
   }
 }
