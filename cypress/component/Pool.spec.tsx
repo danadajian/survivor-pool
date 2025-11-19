@@ -4,6 +4,8 @@ import { Pool } from "../../src/pages/pool/frontend";
 import {
   basicGamesAndPicksPreseasonResponse,
   basicGamesAndPicksResponse,
+  picksForWeekResponse,
+  poolMemberLivesRemainingResponse,
   responseWithPick,
   responseWithSecretPick,
 } from "../../test/mocks";
@@ -77,5 +79,25 @@ describe("pool page", () => {
     cy.findByText(
       "Hang tight! The season hasn't started yet. Once games are on the calendar, you'll see your weekly matchups here.",
     ).should("be.visible");
+  });
+
+  it("renders all picks for the week", () => {
+    cy.intercept("/trpc/pool*", { body: basicGamesAndPicksResponse });
+    cy.intercept("/trpc/poolMemberLivesRemaining*", {
+      body: poolMemberLivesRemainingResponse,
+    });
+    cy.intercept("/trpc/picksForWeek*", { body: picksForWeekResponse });
+
+    cy.mount(
+      <MockProviders initialEntries={["/pick/123?view=all-picks"]}>
+        <Pool />
+      </MockProviders>,
+    );
+    cy.findByRole("heading", { name: "Weekly results" }).should("be.visible");
+    cy.findByRole("heading", { name: "Pool members" }).should("be.visible");
+    cy.findByText(/Team picked/i).should("be.visible");
+    cy.findByText(/Lives remaining/i).should("be.visible");
+    cy.findAllByText("Test User1").should("be.visible");
+    cy.findAllByText("Test User2").should("be.visible");
   });
 });

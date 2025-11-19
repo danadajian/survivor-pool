@@ -18,7 +18,6 @@ import { Create } from "./pages/create/frontend";
 import { Edit } from "./pages/edit/frontend";
 import { Home } from "./pages/home/frontend";
 import { Join } from "./pages/join/frontend";
-import { Picks } from "./pages/picks/frontend";
 import { Pool } from "./pages/pool/frontend";
 import { Rules } from "./pages/rules/frontend";
 import { Winners } from "./pages/winners/frontend";
@@ -35,7 +34,7 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
       <Route path="/rules" element={<Rules />} />
       <Route path="/winners" element={<Winners />} />
       <Route path="/pool/:poolId" element={<Pool />} />
-      <Route path="/picks/:poolId" element={<Picks />} />
+
       <Route path="/create" element={<Create />} />
       <Route path="/edit/:poolId" element={<Edit />} />
       <Route path="/join/:poolId" element={<Join />} />
@@ -75,7 +74,7 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
         />
         <title>Survivor Pool</title>
       </head>
-      <body className="min-h-screen overflow-y-scroll bg-slate-100 text-slate-900 antialiased">
+      <body className="min-h-screen bg-slate-100 text-slate-900 antialiased">
         {content}
       </body>
     </html>

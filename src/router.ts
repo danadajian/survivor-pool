@@ -15,14 +15,14 @@ import {
   joinPoolInput,
   poolInput,
 } from "./pages/join/backend";
+import { fetchPoolInfo, fetchPoolInfoInput } from "./pages/pool/backend";
+import { makePick, makePickInput } from "./pages/pool/backend/make-pick";
 import {
   fetchPicksForWeek,
   fetchPicksForWeekInput,
   fetchPoolMembers as fetchPoolMemberLivesRemaining,
   fetchPoolMembersInput,
-} from "./pages/picks/backend";
-import { fetchPoolInfo, fetchPoolInfoInput } from "./pages/pool/backend";
-import { makePick, makePickInput } from "./pages/pool/backend/make-pick";
+} from "./pages/pool/backend/picks";
 import {
   reactivatePool,
   reactivatePoolInput,
