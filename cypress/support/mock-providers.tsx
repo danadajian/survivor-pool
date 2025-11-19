@@ -5,8 +5,9 @@ import { MemoryRouter } from "react-router-dom";
 
 import { ClientProvider } from "../../src/components/client-provider";
 import { UserProvider } from "../../src/components/user-context";
-import { CLERK_PUBLISHABLE_KEY } from "../../src/constants";
 
+const DEV_PUBLISHABLE_KEY =
+  "pk_test_ZHJpdmVuLXNwYXJyb3ctNDguY2xlcmsuYWNjb3VudHMuZGV2JA";
 const userData = {
   username: "test@user.com",
   firstName: "Test",
@@ -22,7 +23,7 @@ export const MockProviders = ({
   <ClientProvider>
     <ClerkProvider
       initialState={mockClerkState}
-      publishableKey={CLERK_PUBLISHABLE_KEY}
+      publishableKey={DEV_PUBLISHABLE_KEY}
     >
       <UserProvider userData={userData ?? null}>
         <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>

@@ -2,7 +2,7 @@ import { ClerkClient } from "@clerk/backend";
 import { buildAccountsBaseUrl } from "@clerk/shared/buildAccountsBaseUrl";
 import { parsePublishableKey } from "@clerk/shared/keys";
 
-import { CLERK_PUBLISHABLE_KEY } from "../constants";
+import { environmentVariables } from "../env";
 
 export function redirectToSignIn(
   authResult: Awaited<ReturnType<ClerkClient["authenticateRequest"]>>,
@@ -34,7 +34,9 @@ function resolveSignInUrl(requestUrl: URL) {
 }
 
 function getSignInUrlFromPublishableKey(requestUrl: URL) {
-  const parsed = parsePublishableKey(CLERK_PUBLISHABLE_KEY);
+  const parsed = parsePublishableKey(
+    environmentVariables.CLERK_PUBLISHABLE_KEY,
+  );
 
   const accountsBaseUrl = buildAccountsBaseUrl(parsed?.frontendApi);
   const redirectUrl = `${requestUrl.origin}${requestUrl.pathname}`;

@@ -7,6 +7,8 @@ export const envSchema = v.object({
   ),
   GAMES_API_URL: v.optional(v.string()),
   POSTGRES_URL: v.string(),
+  CLERK_PUBLISHABLE_KEY: v.string(),
+  CLERK_SECRET_KEY: v.string(),
 });
 const result = v.safeParse(envSchema, process.env);
 if (!result.success) {

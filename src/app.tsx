@@ -13,7 +13,6 @@ import { ErrorPage } from "./components/error";
 import { Heading } from "./components/heading";
 import { withPage } from "./components/page-wrapper";
 import { UserData, UserProvider } from "./components/user-context";
-import { CLERK_PUBLISHABLE_KEY } from "./constants";
 import { Create } from "./pages/create/frontend";
 import { Edit } from "./pages/edit/frontend";
 import { Home } from "./pages/home/frontend";
@@ -46,7 +45,7 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
   // On client: ClerkProvider will hydrate and provide full functionality
   // Use client components for navigation - server components only for initial SSR
   const content = (
-    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY}>
+    <ClerkProvider publishableKey={process.env.CLERK_PUBLISHABLE_KEY || ""}>
       <UserProvider userData={userData ?? null}>
         <ErrorBoundary
           fallbackRender={({ error }) => <ErrorPage error={error as Error} />}

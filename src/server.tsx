@@ -11,7 +11,6 @@ import { renderToReadableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 
 import { App } from "./app";
-import { CLERK_PUBLISHABLE_KEY } from "./constants";
 import { environmentVariables, isDev } from "./env";
 import { appRouter } from "./router";
 import { trpcRouter } from "./trpc";
@@ -25,6 +24,11 @@ const { outputs } = await Bun.build({
   outdir: "./public",
   minify: true,
   naming: "[dir]/[name]-[hash].[ext]",
+  define: {
+    "process.env.CLERK_PUBLISHABLE_KEY": JSON.stringify(
+      environmentVariables.CLERK_PUBLISHABLE_KEY,
+    ),
+  },
 });
 const absolutePathToBundleFile = outputs[0]?.path;
 if (!absolutePathToBundleFile)
@@ -39,8 +43,8 @@ const relativePathToGlobalsCss = bundleHash
   : "/public/globals.css";
 
 const clerkClient = createClerkClient({
-  secretKey: process.env.CLERK_SECRET_KEY,
-  publishableKey: CLERK_PUBLISHABLE_KEY,
+  publishableKey: environmentVariables.CLERK_PUBLISHABLE_KEY,
+  secretKey: environmentVariables.CLERK_SECRET_KEY,
 });
 
 const app = new Elysia()
