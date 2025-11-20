@@ -9,4 +9,5 @@ RUN bun tailwind
 ENV PORT=8080
 ENV ENVIRONMENT=production
 
-CMD [ "bun", "start" ]
+# Ensure the container logs to stdout rather than stderr
+CMD [ "sh", "-c", "exec bun start 2>&1" ]
