@@ -18,7 +18,7 @@ export async function fetchCurrentGames(): Promise<GamesResponse> {
     );
     throw new TRPCError({
       message: "ESPN has changed their API recently, an update is needed.",
-      code: "INTERNAL_SERVER_ERROR",
+      code: "PARSE_ERROR",
     });
   }
   const parsedGames = parseResult.output;

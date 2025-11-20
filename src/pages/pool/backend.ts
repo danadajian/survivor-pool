@@ -42,8 +42,8 @@ export async function fetchPoolInfo({
   });
   if (!poolsResult)
     throw new TRPCError({
-      message: "Pool could not be found.",
-      code: "INTERNAL_SERVER_ERROR",
+      message: "Pool not found.",
+      code: "NOT_FOUND",
     });
   const {
     weekStarted,

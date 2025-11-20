@@ -86,13 +86,6 @@ const server = Bun.serve({
     const stream = await renderToReadableStream(
       <StaticRouter location={url.pathname}>
         <App userData={userData} dehydratedState={dehydratedState} />
-        {dehydratedState ? (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.__DEHYDRATED_STATE__ = ${JSON.stringify(dehydratedState)};`,
-            }}
-          />
-        ) : null}
         {isDev ? (
           <script src="https://cdn.tailwindcss.com" />
         ) : (
