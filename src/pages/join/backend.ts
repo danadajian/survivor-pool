@@ -8,7 +8,7 @@ import { members, pools } from "../../schema";
 
 export const joinPoolInput = v.object({
   ...userFields,
-  poolId: v.string(),
+  poolId: v.pipe(v.string(), v.uuid()),
 });
 
 export async function joinPool({
@@ -51,7 +51,7 @@ export async function joinPool({
 }
 
 export const poolInput = v.object({
-  poolId: v.string(),
+  poolId: v.pipe(v.string(), v.uuid()),
 });
 
 export async function getPool({ poolId }: v.InferInput<typeof poolInput>) {

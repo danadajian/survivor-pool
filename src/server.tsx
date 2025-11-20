@@ -62,43 +62,63 @@ const server = Bun.serve({
       return redirectToSignIn(authResult, url);
     }
 
-    const user = await clerkClient.users.getUser(authResult.toAuth().userId);
-    const userData = {
-      username: user.primaryEmailAddress?.emailAddress ?? "",
-      firstName: user.firstName ?? undefined,
-      lastName: user.lastName ?? undefined,
-    };
+    try {
+      const user = await clerkClient.users.getUser(authResult.toAuth().userId);
+      const userData = {
+        username: user.primaryEmailAddress?.emailAddress ?? "",
+        firstName: user.firstName ?? undefined,
+        lastName: user.lastName ?? undefined,
+      };
 
-    const queryClient = new QueryClient({
-      defaultOptions: {
-        queries: {
-          staleTime: 1000 * 60, // 1 minute
+      const queryClient = new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 1000 * 60, // 1 minute
+          },
         },
-      },
-    });
+      });
 
-    if (authResult.isAuthenticated) {
-      await prefetchQueriesForRoute(request, userData, queryClient);
+      if (authResult.isAuthenticated) {
+        await prefetchQueriesForRoute(request, userData, queryClient);
+      }
+
+      const dehydratedState = dehydrate(queryClient);
+
+      const stream = await renderToReadableStream(
+        <StaticRouter location={url.pathname}>
+          <App userData={userData} dehydratedState={dehydratedState} />
+          {isDev ? (
+            <script src="https://cdn.tailwindcss.com" />
+          ) : (
+            <link rel="stylesheet" href={relativePathToGlobalsCss} />
+          )}
+        </StaticRouter>,
+        {
+          bootstrapScripts: [relativePathToBundleFile],
+        },
+      );
+      return new Response(stream.pipeThrough(new TransformStream()), {
+        headers: { "Content-Type": "text/html" },
+      });
+    } catch (error) {
+      logger.error({ error }, "An error occurred while rendering the app");
+      const stream = await renderToReadableStream(
+        <StaticRouter location={url.pathname}>
+          <App />
+          {isDev ? (
+            <script src="https://cdn.tailwindcss.com" />
+          ) : (
+            <link rel="stylesheet" href={relativePathToGlobalsCss} />
+          )}
+        </StaticRouter>,
+        {
+          bootstrapScripts: [relativePathToBundleFile],
+        },
+      );
+      return new Response(stream.pipeThrough(new TransformStream()), {
+        headers: { "Content-Type": "text/html" },
+      });
     }
-
-    const dehydratedState = dehydrate(queryClient);
-
-    const stream = await renderToReadableStream(
-      <StaticRouter location={url.pathname}>
-        <App userData={userData} dehydratedState={dehydratedState} />
-        {isDev ? (
-          <script src="https://cdn.tailwindcss.com" />
-        ) : (
-          <link rel="stylesheet" href={relativePathToGlobalsCss} />
-        )}
-      </StaticRouter>,
-      {
-        bootstrapScripts: [relativePathToBundleFile],
-      },
-    );
-    return new Response(stream.pipeThrough(new TransformStream()), {
-      headers: { "Content-Type": "text/html" },
-    });
   },
 });
 

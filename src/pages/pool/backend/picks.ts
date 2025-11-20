@@ -8,11 +8,11 @@ import { fetchCurrentGames } from "../../../utils/fetch-current-games";
 import { userEliminationStatus } from "./user-elimination-status";
 
 export const fetchPoolMembersInput = v.object({
-  poolId: v.string(),
+  poolId: v.pipe(v.string(), v.uuid()),
 });
 
 export const fetchPicksForWeekInput = v.object({
-  poolId: v.string(),
+  poolId: v.pipe(v.string(), v.uuid()),
   week: v.number(),
   season: v.number(),
 });

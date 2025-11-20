@@ -5,7 +5,7 @@ import { db } from "../../db";
 import { pools } from "../../schema";
 
 export const editPoolInput = v.object({
-  poolId: v.string(),
+  poolId: v.pipe(v.string(), v.uuid()),
   poolName: v.string(),
   lives: v.number(),
 });

@@ -7,7 +7,7 @@ import { members, pools } from "../../../schema";
 import { fetchCurrentGames } from "../../../utils/fetch-current-games";
 
 export const reactivatePoolInput = v.object({
-  poolId: v.string(),
+  poolId: v.pipe(v.string(), v.uuid()),
 });
 
 export async function reactivatePool({

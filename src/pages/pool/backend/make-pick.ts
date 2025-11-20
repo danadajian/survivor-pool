@@ -9,7 +9,7 @@ export const makePickInput = v.object({
   teamPicked: v.string(),
   week: v.number(),
   season: v.number(),
-  poolId: v.string(),
+  poolId: v.pipe(v.string(), v.uuid()),
   pickIsSecret: v.optional(v.boolean()),
 });
 

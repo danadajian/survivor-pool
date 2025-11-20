@@ -47,9 +47,7 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
   const content = (
     <ClerkProvider publishableKey={process.env.CLERK_PUBLISHABLE_KEY || ""}>
       <UserProvider userData={userData}>
-        <ErrorBoundary
-          fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
-        >
+        <ErrorBoundary FallbackComponent={ErrorPage}>
           <ClientProvider dehydratedState={dehydratedState}>
             <SignedIn>{routes}</SignedIn>
             <SignedOut>

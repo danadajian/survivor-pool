@@ -14,7 +14,7 @@ import { userEliminationStatus } from "./backend/user-elimination-status";
 
 export const fetchPoolInfoInput = v.object({
   username: v.string(),
-  poolId: v.string(),
+  poolId: v.pipe(v.string(), v.uuid()),
 });
 
 export async function fetchPoolInfo({

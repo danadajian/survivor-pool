@@ -29,7 +29,7 @@ export async function prefetchQueriesForRoute(
 
   if (!poolId) return;
 
-  if (endpoint === "join") {
+  if (endpoint === "join" || endpoint === "edit") {
     await queryClient.prefetchQuery({
       queryKey: [["getPool"], { input: { poolId }, type: "query" }],
       queryFn: () => caller.getPool({ poolId }),
