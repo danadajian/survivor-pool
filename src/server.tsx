@@ -3,7 +3,6 @@ import { staticPlugin } from "@elysiajs/static";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import Elysia from "elysia";
 import { HotModuleReload, hotModuleReload } from "elysia-hot-module-reload";
-import { rateLimit } from "elysia-rate-limit";
 import { isbot } from "isbot";
 import path from "path";
 import React from "react";
@@ -114,7 +113,6 @@ const app = new Elysia()
       headers: { "Content-Type": "text/html" },
     });
   })
-  .use(rateLimit({ max: 100 }))
   .use(trpcRouter(appRouter))
   .use(staticPlugin())
   .listen(environmentVariables.PORT ?? 8080);
