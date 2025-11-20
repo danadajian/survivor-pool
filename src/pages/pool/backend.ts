@@ -9,8 +9,9 @@ import { buildUserDisplayName } from "../../utils/build-user-display-name";
 import { checkIfPickIsLocked } from "../../utils/check-if-pick-is-locked";
 import { fetchCurrentGames } from "../../utils/fetch-current-games";
 import { getPickStatus } from "../../utils/get-pick-status";
+import { checkIfAllAvailableTeamsAreLocked } from "./backend/check-if-all-available-teams-are-locked";
 import { getEventButtons } from "./backend/get-event-buttons";
-import { getForbiddenTeamsForUser } from "./backend/get-forbidden-teams-for-user";
+import { getPreviouslyPickedTeamsForUser } from "./backend/get-previously-picked-teams-for-user";
 import { userEliminationStatus } from "./backend/user-elimination-status";
 
 export const fetchPoolInfoInput = v.object({
@@ -78,25 +79,30 @@ export async function fetchPoolInfo({
     events,
     userPick,
   });
+  const previouslyPickedTeams = getPreviouslyPickedTeamsForUser({
+    username,
+    picksForPoolAndSeason,
+    events,
+  });
+  const userAllAvailableTeamsLocked = checkIfAllAvailableTeamsAreLocked({
+    events,
+    previouslyPickedTeams,
+  });
   const pickStatus = getPickStatus({
     eliminated,
     userPick,
     pickIsLocked,
+    userAllAvailableTeamsLocked,
   });
   const pickHeader = buildPickHeader({
     userPick,
     pickStatus,
     firstName: poolMember.firstName,
   });
-  const forbiddenTeams = getForbiddenTeamsForUser({
-    username,
-    picksForPoolAndSeason,
-    events,
-  });
   const eventButtons = getEventButtons({
     events,
     userPick,
-    forbiddenTeams,
+    previouslyPickedTeams,
     eliminated,
   });
   const poolCreatorMember = poolMembers.find(

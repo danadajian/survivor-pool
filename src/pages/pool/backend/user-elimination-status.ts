@@ -1,7 +1,7 @@
 import { Events } from "src/utils/fetch-current-games";
 
 import { picks } from "../../../schema";
-import { getForbiddenTeamsForUser } from "./get-forbidden-teams-for-user";
+import { getPreviouslyPickedTeamsForUser } from "./get-previously-picked-teams-for-user";
 
 export function userEliminationStatus({
   username,
@@ -44,13 +44,13 @@ export function userEliminationStatus({
     ),
   );
 
-  const forbiddenTeamsForUser = getForbiddenTeamsForUser({
+  const previouslyPickedTeams = getPreviouslyPickedTeamsForUser({
     username,
     picksForPoolAndSeason,
     events,
   });
   const userHasNoTeamsToPick = teamsAvailableToPick.every((team) =>
-    forbiddenTeamsForUser.includes(team),
+    previouslyPickedTeams.includes(team),
   );
 
   return {

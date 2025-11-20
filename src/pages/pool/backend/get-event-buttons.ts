@@ -19,12 +19,12 @@ export type TeamButtonProps = {
 export function getEventButtons({
   events,
   userPick,
-  forbiddenTeams,
+  previouslyPickedTeams,
   eliminated,
 }: {
   events: Events;
   userPick?: typeof picks.$inferSelect;
-  forbiddenTeams: string[];
+  previouslyPickedTeams: string[];
   eliminated: boolean;
 }): EventButton[] {
   return events.map((event) => {
@@ -35,7 +35,7 @@ export function getEventButtons({
         events,
         competition,
         userPick,
-        forbiddenTeams,
+        previouslyPickedTeams,
         eliminated,
       }),
       homeTeamButton: buildTeamButtonProps({
@@ -43,7 +43,7 @@ export function getEventButtons({
         events,
         competition,
         userPick,
-        forbiddenTeams,
+        previouslyPickedTeams,
         eliminated,
       }),
       competition,
@@ -56,14 +56,14 @@ function buildTeamButtonProps({
   events,
   competition,
   userPick,
-  forbiddenTeams,
+  previouslyPickedTeams,
   eliminated,
 }: {
   teamType: "home" | "away";
   events: Events;
   competition?: Competition;
   userPick?: typeof picks.$inferSelect;
-  forbiddenTeams: string[];
+  previouslyPickedTeams: string[];
   eliminated: boolean;
 }): TeamButtonProps {
   const competitors = competition?.competitors ?? [];
@@ -73,19 +73,18 @@ function buildTeamButtonProps({
   const gameStartedOrFinished =
     competition?.status.type.name !== "STATUS_SCHEDULED";
   const teamCurrentlyPicked = team?.name === userPick?.teamPicked;
-  const teamPreviouslyPicked = forbiddenTeams.includes(team?.name ?? "");
+  const teamPreviouslyPicked = previouslyPickedTeams.includes(team?.name ?? "");
   const pickIsLocked = checkIfPickIsLocked({
     events,
     userPick,
   });
-  const buttonDisabledForOtherReason =
-    gameStartedOrFinished || pickIsLocked || eliminated;
-  const buttonDisabled = teamPreviouslyPicked || buttonDisabledForOtherReason;
+  const pickIsForbidden = gameStartedOrFinished || pickIsLocked || eliminated;
+  const buttonDisabled = teamPreviouslyPicked || pickIsForbidden;
   const buttonStyle = teamCurrentlyPicked
     ? ButtonStyle.CURRENTLY_PICKED
     : teamPreviouslyPicked
       ? ButtonStyle.PREVIOUSLY_PICKED
-      : buttonDisabledForOtherReason
+      : pickIsForbidden
         ? ButtonStyle.PICK_FORBIDDEN
         : ButtonStyle.DEFAULT;
   return {

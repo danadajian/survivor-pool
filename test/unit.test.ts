@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { getForbiddenTeamsForUser } from "src/pages/pool/backend/get-forbidden-teams-for-user";
+import { checkIfAllAvailableTeamsAreLocked } from "src/pages/pool/backend/check-if-all-available-teams-are-locked";
+import { getPreviouslyPickedTeamsForUser } from "src/pages/pool/backend/get-previously-picked-teams-for-user";
 
 import { getEventButtons } from "../src/pages/pool/backend/get-event-buttons";
 import { userEliminationStatus } from "../src/pages/pool/backend/user-elimination-status";
@@ -63,6 +64,17 @@ describe("pick header", () => {
     });
     expect(result).toEqual("Sorry, you have been eliminated from this pool.");
   });
+
+  test("you missed the deadline to make a pick", () => {
+    const result = buildPickHeader({
+      userPick: {
+        teamPicked: "49ers",
+        result: "PENDING",
+      } as typeof picks.$inferSelect,
+      pickStatus: "MISSED_DEADLINE",
+    });
+    expect(result).toEqual("You missed the deadline to make a pick this week.");
+  });
 });
 
 describe("team buttons", () => {
@@ -71,7 +83,7 @@ describe("team buttons", () => {
     const buttons = getEventButtons({
       events,
       eliminated: false,
-      forbiddenTeams: [],
+      previouslyPickedTeams: [],
     });
     expect(
       buttons.find((button) => button.awayTeamButton.team?.name === "Bills")
@@ -96,7 +108,7 @@ describe("team buttons", () => {
         result: "PENDING",
       } as typeof picks.$inferSelect,
       eliminated: false,
-      forbiddenTeams: [],
+      previouslyPickedTeams: [],
     });
     expect(
       buttons.find((button) => button.awayTeamButton.team?.name === "49ers")
@@ -120,7 +132,7 @@ describe("team buttons", () => {
         result: "PENDING",
         teamPicked: "Bills",
       } as typeof picks.$inferSelect,
-      forbiddenTeams: ["Jets"],
+      previouslyPickedTeams: ["Jets"],
       eliminated: false,
     });
     expect(
@@ -489,6 +501,48 @@ describe("user elimination", () => {
     expect(user2LivesRemaining).toEqual(1);
   });
 
+  test("running out of unlocked teams to pick detects lock out but does not eliminate user yet", () => {
+    const picksForPoolAndSeason = [
+      {
+        username: "user1",
+        week: 1,
+        teamPicked: "Bills",
+        result: "WON",
+      },
+    ] as (typeof picks.$inferSelect)[];
+    // Create events where all games have started (STATUS_IN_PROGRESS)
+    const events = (mockEspnResponse.events as Events).slice(0, 1).map((e) => ({
+      ...e,
+      competitions: e.competitions.map((c) => ({
+        ...c,
+        status: { type: { name: "STATUS_IN_PROGRESS" } },
+      })),
+    })) as Events;
+
+    const { eliminated, livesRemaining } = userEliminationStatus({
+      username: "user1",
+      currentWeek: 2,
+      picksForPoolAndSeason,
+      weekStarted: 1,
+      lives: 1,
+      events,
+    });
+
+    const previouslyPickedTeams = getPreviouslyPickedTeamsForUser({
+      username: "user1",
+      picksForPoolAndSeason,
+      events,
+    });
+    const userAllAvailableTeamsLocked = checkIfAllAvailableTeamsAreLocked({
+      events,
+      previouslyPickedTeams,
+    });
+
+    expect(userAllAvailableTeamsLocked).toBeTrue();
+    expect(eliminated).toBeFalse(); // Not eliminated immediately, but can't pick
+    expect(livesRemaining).toEqual(1);
+  });
+
   test("everyone running out of teams to pick does not eliminate anyone", () => {
     const picksForPoolAndSeason = [
       {
@@ -624,12 +678,12 @@ describe("forbidden teams", () => {
         result: "WON",
       },
     ] as (typeof picks.$inferSelect)[];
-    const forbiddenTeams = getForbiddenTeamsForUser({
+    const previouslyPickedTeams = getPreviouslyPickedTeamsForUser({
       username: "user1",
       picksForPoolAndSeason,
       events: mockEspnResponse.events as Events,
     });
-    expect(forbiddenTeams).toEqual(["Bills"]);
+    expect(previouslyPickedTeams).toEqual(["Bills"]);
   });
 
   test("excludes pending picks from forbidden teams", () => {
@@ -653,12 +707,12 @@ describe("forbidden teams", () => {
         result: "PENDING",
       },
     ] as (typeof picks.$inferSelect)[];
-    const forbiddenTeams = getForbiddenTeamsForUser({
+    const previouslyPickedTeams = getPreviouslyPickedTeamsForUser({
       username: "user1",
       picksForPoolAndSeason,
       events: mockEspnResponse.events as Events,
     });
-    expect(forbiddenTeams).toEqual(["Bills"]);
+    expect(previouslyPickedTeams).toEqual(["Bills"]);
   });
 
   test("returns empty list when all users have picked all available teams", () => {
@@ -689,12 +743,12 @@ describe("forbidden teams", () => {
       },
     ] as (typeof picks.$inferSelect)[];
     const events = (mockEspnResponse.events as Events).slice(0, 1);
-    const forbiddenTeams = getForbiddenTeamsForUser({
+    const previouslyPickedTeams = getPreviouslyPickedTeamsForUser({
       username: "user1",
       picksForPoolAndSeason,
       events,
     });
-    expect(forbiddenTeams).toEqual([]);
+    expect(previouslyPickedTeams).toEqual([]);
   });
 
   test("returns all teams when not all users have picked all available teams", () => {
@@ -725,12 +779,12 @@ describe("forbidden teams", () => {
       },
     ] as (typeof picks.$inferSelect)[];
     const events = (mockEspnResponse.events as Events).slice(0, 1);
-    const forbiddenTeams = getForbiddenTeamsForUser({
+    const previouslyPickedTeams = getPreviouslyPickedTeamsForUser({
       username: "user1",
       picksForPoolAndSeason,
       events,
     });
-    expect(forbiddenTeams).toEqual(["Bills", "Jets"]);
+    expect(previouslyPickedTeams).toEqual(["Bills", "Jets"]);
   });
 
   test("returns the teams picked after all users picked all available teams", () => {
@@ -773,17 +827,17 @@ describe("forbidden teams", () => {
       },
     ] as (typeof picks.$inferSelect)[];
     const events = (mockEspnResponse.events as Events).slice(0, 1);
-    const forbiddenTeams = getForbiddenTeamsForUser({
+    const previouslyPickedTeams = getPreviouslyPickedTeamsForUser({
       username: "user1",
       picksForPoolAndSeason,
       events,
     });
-    expect(forbiddenTeams).toEqual(["Bills"]);
-    const forbiddenTeamsForUser2 = getForbiddenTeamsForUser({
+    expect(previouslyPickedTeams).toEqual(["Bills"]);
+    const previouslyPickedTeamsForUser2 = getPreviouslyPickedTeamsForUser({
       username: "user2",
       picksForPoolAndSeason,
       events,
     });
-    expect(forbiddenTeamsForUser2).toEqual(["Jets"]);
+    expect(previouslyPickedTeamsForUser2).toEqual(["Jets"]);
   });
 });

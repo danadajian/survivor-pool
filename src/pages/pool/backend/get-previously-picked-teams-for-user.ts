@@ -1,7 +1,7 @@
 import { picks } from "../../../schema";
 import { Events } from "../../../utils/fetch-current-games";
 
-export function getForbiddenTeamsForUser({
+export function getPreviouslyPickedTeamsForUser({
   username,
   picksForPoolAndSeason,
   events,
