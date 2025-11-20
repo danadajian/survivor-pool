@@ -8,7 +8,7 @@ export const logger = pino({
   base: {}, // Remove pid, hostname, and other default fields
   formatters: {
     level: (label) => {
-      return { level: label.toUpperCase() };
+      return { level: label };
     },
   },
   ...(isDev && {
