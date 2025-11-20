@@ -85,4 +85,4 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
   );
 };
 
-const NotFound = withPage(() => <Heading>Not Found</Heading>);
+const NotFound = withPage(() => <Heading>Page Not Found</Heading>);

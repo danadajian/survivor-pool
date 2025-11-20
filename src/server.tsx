@@ -30,6 +30,29 @@ const trpcHandler = createBunHttpHandler({
   endpoint: "/trpc",
 });
 
+const renderApp = async (
+  url: URL,
+  props: React.ComponentProps<typeof App> = {},
+) => {
+  const stream = await renderToReadableStream(
+    <StaticRouter location={url.pathname}>
+      <App {...props} />
+      {isDev ? (
+        <script src="https://cdn.tailwindcss.com" />
+      ) : (
+        <link rel="stylesheet" href={relativePathToGlobalsCss} />
+      )}
+    </StaticRouter>,
+    {
+      bootstrapScripts: [relativePathToBundleFile],
+    },
+  );
+
+  return new Response(stream.pipeThrough(new TransformStream()), {
+    headers: { "Content-Type": "text/html" },
+  });
+};
+
 const server = Bun.serve({
   port: environmentVariables.PORT ?? 8080,
   routes: {
@@ -84,40 +107,10 @@ const server = Bun.serve({
 
       const dehydratedState = dehydrate(queryClient);
 
-      const stream = await renderToReadableStream(
-        <StaticRouter location={url.pathname}>
-          <App userData={userData} dehydratedState={dehydratedState} />
-          {isDev ? (
-            <script src="https://cdn.tailwindcss.com" />
-          ) : (
-            <link rel="stylesheet" href={relativePathToGlobalsCss} />
-          )}
-        </StaticRouter>,
-        {
-          bootstrapScripts: [relativePathToBundleFile],
-        },
-      );
-      return new Response(stream.pipeThrough(new TransformStream()), {
-        headers: { "Content-Type": "text/html" },
-      });
+      return await renderApp(url, { userData, dehydratedState });
     } catch (error) {
       logger.error({ error }, "An error occurred while rendering the app");
-      const stream = await renderToReadableStream(
-        <StaticRouter location={url.pathname}>
-          <App />
-          {isDev ? (
-            <script src="https://cdn.tailwindcss.com" />
-          ) : (
-            <link rel="stylesheet" href={relativePathToGlobalsCss} />
-          )}
-        </StaticRouter>,
-        {
-          bootstrapScripts: [relativePathToBundleFile],
-        },
-      );
-      return new Response(stream.pipeThrough(new TransformStream()), {
-        headers: { "Content-Type": "text/html" },
-      });
+      return await renderApp(url);
     }
   },
 });

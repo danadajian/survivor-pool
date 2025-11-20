@@ -19,7 +19,7 @@ export const ClientProvider = ({
         queries: {
           staleTime: 1000 * 60, // 1 minute
           throwOnError: true,
-          retry: 2,
+          retry: 1,
         },
         mutations: {
           throwOnError: true,
