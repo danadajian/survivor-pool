@@ -83,10 +83,9 @@ describe("pool page", () => {
 
   it("renders all picks for the week", () => {
     cy.intercept("/trpc/pool*", { body: basicGamesAndPicksResponse });
-    cy.intercept("/trpc/poolMemberLivesRemaining*", {
-      body: poolMemberLivesRemainingResponse,
+    cy.intercept("/trpc/picksForWeek,poolMemberLivesRemaining*", {
+      body: [picksForWeekResponse, poolMemberLivesRemainingResponse],
     });
-    cy.intercept("/trpc/picksForWeek*", { body: picksForWeekResponse });
 
     cy.mount(
       <MockProviders initialEntries={["/pick/123?view=all-picks"]}>
