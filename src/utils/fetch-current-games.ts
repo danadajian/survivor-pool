@@ -74,8 +74,8 @@ const eventsSchema = v.array(
             homeAway: v.string(),
             team: v.object({
               name: v.string(),
-              abbreviation: v.string(),
               logo: v.string(),
+              displayName: v.string(),
             }),
             winner: v.optional(v.boolean()),
           }),

@@ -89,7 +89,7 @@ export const TeamButton = ({ teamButton, username, poolId }: TeamProps) => {
         className={buttonClass}
       >
         <img
-          alt={team.abbreviation}
+          alt={team.name}
           src={team.logo}
           className={`h-12 w-12 sm:h-16 sm:w-16 ${imageClass}`}
         />
