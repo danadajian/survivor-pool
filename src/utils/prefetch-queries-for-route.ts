@@ -1,5 +1,4 @@
 import { QueryClient } from "@tanstack/react-query";
-import { Context } from "elysia";
 import { UserData } from "src/components/user-context";
 import { createContext } from "src/context";
 import { appRouter } from "src/router";
@@ -7,13 +6,13 @@ import { appRouter } from "src/router";
 import { parseRoute } from "./parse-route";
 
 export async function prefetchQueriesForRoute(
-  context: Context,
+  request: Request,
   { username }: UserData,
   queryClient: QueryClient,
 ) {
-  const pathname = new URL(context.request.url).pathname;
-  const { endpoint, poolId } = parseRoute(pathname);
-  const trpcContext = await createContext({ req: context.request });
+  const url = new URL(request.url);
+  const { endpoint, poolId } = parseRoute(url.pathname);
+  const trpcContext = await createContext({ req: request });
   const caller = appRouter.createCaller(trpcContext);
 
   if (endpoint === "winners") {
@@ -43,8 +42,6 @@ export async function prefetchQueriesForRoute(
     queryFn: () => Promise.resolve(poolMemberData),
   });
 
-  // Parse URL params for week/season if present
-  const url = new URL(context.request.url);
   const weekParam = url.searchParams.get("week");
   const seasonParam = url.searchParams.get("season");
   const week = weekParam ? Number(weekParam) : poolMemberData.week;

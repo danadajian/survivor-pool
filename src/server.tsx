@@ -1,18 +1,16 @@
 import { createClerkClient } from "@clerk/backend";
-import { staticPlugin } from "@elysiajs/static";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
-import Elysia from "elysia";
-import { HotModuleReload, hotModuleReload } from "elysia-hot-module-reload";
 import { isbot } from "isbot";
 import path from "path";
 import React from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
+import { createBunHttpHandler } from "trpc-bun-adapter";
 
 import { App } from "./app";
+import { createContext } from "./context";
 import { environmentVariables, isDev } from "./env";
 import { appRouter } from "./router";
-import { trpcRouter } from "./trpc";
 import { handleBotRequest } from "./utils/handle-bot-request";
 import { logger } from "./utils/logger";
 import { prefetchQueriesForRoute } from "./utils/prefetch-queries-for-route";
@@ -46,25 +44,45 @@ const clerkClient = createClerkClient({
   secretKey: environmentVariables.CLERK_SECRET_KEY,
 });
 
-const app = new Elysia()
-  .get("/health", () => "all good")
-  .get(relativePathToGlobalsCss, () => Bun.file("./public/globals.css"))
-  .get("*", async (context) => {
-    const userAgent = context.request.headers.get("user-agent");
-    const requestUrl = new URL(context.request.url);
+const trpcHandler = createBunHttpHandler({
+  router: appRouter,
+  createContext,
+  endpoint: "/trpc",
+});
+
+const server = Bun.serve({
+  port: environmentVariables.PORT ?? 8080,
+  routes: {
+    "/health": new Response("all good"),
+    [relativePathToGlobalsCss]: new Response(Bun.file("./public/globals.css")),
+    "/public/*": async (request) => {
+      const url = new URL(request.url);
+      const filePath = `.${url.pathname}`;
+      const file = Bun.file(filePath);
+      if (await file.exists()) {
+        return new Response(file);
+      }
+      return new Response("Not Found", { status: 404 });
+    },
+    "/trpc/*": async (request, server) => {
+      const res = await trpcHandler(request, server);
+      return res ?? new Response("Not Found", { status: 404 });
+    },
+  },
+  async fetch(request) {
+    const url = new URL(request.url);
+    const userAgent = request.headers.get("user-agent");
 
     if (isbot(userAgent)) {
-      return handleBotRequest(requestUrl, context.request.headers);
+      return handleBotRequest(url, request.headers);
     }
 
-    const authResult = await clerkClient.authenticateRequest(context.request);
-
+    const authResult = await clerkClient.authenticateRequest(request);
     if (!authResult.isAuthenticated) {
-      return redirectToSignIn(authResult, requestUrl);
+      return redirectToSignIn(authResult, url);
     }
 
-    const auth = authResult.toAuth();
-    const user = await clerkClient.users.getUser(auth.userId);
+    const user = await clerkClient.users.getUser(authResult.toAuth().userId);
     const userData = {
       username: user.primaryEmailAddress?.emailAddress ?? "",
       firstName: user.firstName ?? undefined,
@@ -80,13 +98,13 @@ const app = new Elysia()
     });
 
     if (authResult.isAuthenticated && userData) {
-      await prefetchQueriesForRoute(context, userData, queryClient);
+      await prefetchQueriesForRoute(request, userData, queryClient);
     }
 
     const dehydratedState = dehydrate(queryClient);
 
     const stream = await renderToReadableStream(
-      <StaticRouter location={context.path}>
+      <StaticRouter location={url.pathname}>
         <App userData={userData} dehydratedState={dehydratedState} />
         {dehydratedState ? (
           <script
@@ -95,14 +113,10 @@ const app = new Elysia()
             }}
           />
         ) : null}
-        {isDev ? null : (
+        {isDev ? (
+          <script src="https://cdn.tailwindcss.com" />
+        ) : (
           <link rel="stylesheet" href={relativePathToGlobalsCss} />
-        )}
-        {isDev && (
-          <>
-            <script src="https://cdn.tailwindcss.com" />
-            <HotModuleReload />
-          </>
         )}
       </StaticRouter>,
       {
@@ -112,15 +126,7 @@ const app = new Elysia()
     return new Response(stream.pipeThrough(new TransformStream()), {
       headers: { "Content-Type": "text/html" },
     });
-  })
-  .use(trpcRouter(appRouter))
-  .use(staticPlugin())
-  .listen(environmentVariables.PORT ?? 8080);
+  },
+});
 
-if (isDev) {
-  app.use(hotModuleReload());
-}
-
-logger.info(
-  `App is running at http://${app.server?.hostname}:${app.server?.port}`,
-);
+logger.info(`App is running at http://${server.hostname}:${server.port}`);
