@@ -1,9 +1,11 @@
 import { ClerkProvider } from "@clerk/clerk-react";
 import type { InitialState } from "@clerk/types";
 import React, { type ComponentProps, type PropsWithChildren } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { MemoryRouter } from "react-router-dom";
 
 import { ClientProvider } from "../../src/components/client-provider";
+import { ErrorPage } from "../../src/components/error";
 import { UserProvider } from "../../src/components/user-context";
 
 const DEV_PUBLISHABLE_KEY =
@@ -20,14 +22,18 @@ export const MockProviders = ({
 }: PropsWithChildren & {
   initialEntries?: ComponentProps<typeof MemoryRouter>["initialEntries"];
 }) => (
-  <ClientProvider>
-    <ClerkProvider
-      initialState={mockClerkState}
-      publishableKey={DEV_PUBLISHABLE_KEY}
-    >
-      <UserProvider userData={userData}>
-        <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
-      </UserProvider>
-    </ClerkProvider>
-  </ClientProvider>
+  <ErrorBoundary FallbackComponent={ErrorPage}>
+    <ClientProvider>
+      <ClerkProvider
+        initialState={mockClerkState}
+        publishableKey={DEV_PUBLISHABLE_KEY}
+      >
+        <UserProvider userData={userData}>
+          <MemoryRouter initialEntries={initialEntries}>
+            {children}
+          </MemoryRouter>
+        </UserProvider>
+      </ClerkProvider>
+    </ClientProvider>
+  </ErrorBoundary>
 );
