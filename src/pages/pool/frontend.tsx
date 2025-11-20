@@ -137,11 +137,11 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
             userPickTeam={userPickTeam}
           >
             {pickHeader}
+            <div className="text-sm text-slate-600">
+              You have {livesRemaining}{" "}
+              {livesRemaining === 1 ? "life" : "lives"} remaining.
+            </div>
           </PickStatusCard>
-          <p className="text-sm font-medium text-slate-700">
-            You have {livesRemaining} {livesRemaining === 1 ? "life" : "lives"}{" "}
-            remaining.
-          </p>
         </div>
         <ul className="grid gap-4">
           {eventButtons.map((eventButton, index) => (
@@ -273,7 +273,9 @@ const PickStatusCard = ({
           </div>
         ) : null}
       </div>
-      <p className={`text-base font-medium ${message}`}>{children}</p>
+      <div className={`flex flex-col gap-4 text-base font-medium ${message}`}>
+        {children}
+      </div>
     </div>
   );
 };
