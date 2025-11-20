@@ -309,11 +309,14 @@ const PicksView = ({
     urlParams: { week: weekUrlParam, season: seasonUrlParam },
     setUrlParams,
   } = useUrlParams();
-  const [poolData] = trpc.poolMemberLivesRemaining.useSuspenseQuery({
-    poolId,
-  });
+  const { data: poolData, isFetching } = trpc.poolMemberLivesRemaining.useQuery(
+    {
+      poolId,
+    },
+  );
 
-  const { membersWithEliminationStatus, lives } = poolData;
+  const membersWithEliminationStatus = poolData?.membersWithEliminationStatus;
+  const lives = poolData?.lives;
   const week = Number(weekUrlParam ?? currentWeek);
   const season = Number(seasonUrlParam ?? currentSeason);
 
@@ -341,11 +344,17 @@ const PicksView = ({
       </Surface>
       <Surface className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold text-slate-800">Pool members</h2>
-        <MemberTable
-          membersWithEliminationStatus={membersWithEliminationStatus}
-          username={username}
-          lives={lives}
-        />
+        {isFetching || !membersWithEliminationStatus || lives === undefined ? (
+          <div className="flex min-h-[200px] items-center justify-center rounded-xl border border-slate-200/80 bg-white">
+            <Loader inline />
+          </div>
+        ) : (
+          <MemberTable
+            membersWithEliminationStatus={membersWithEliminationStatus}
+            username={username}
+            lives={lives}
+          />
+        )}
       </Surface>
     </>
   );
