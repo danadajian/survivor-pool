@@ -11028,7 +11028,6 @@ export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pool"]> = {
       pickHeader: "Make your pick, Test!",
       livesRemaining: 1,
       pickStatus: "PENDING",
-      eliminated: false,
     },
   },
 };
@@ -11046,7 +11045,6 @@ export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
       poolMembers: [],
       livesRemaining: 1,
       pickStatus: "PENDING",
-      eliminated: false,
       pickHeader: "Make your pick, Test!",
     },
   },
@@ -11064,7 +11062,6 @@ export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
       pickHeader: "You're riding with the Bills this week!",
       livesRemaining: 1,
       pickStatus: "PICKED",
-      eliminated: false,
       userPick: {
         teamPicked: "Bills",
         week: 1,
@@ -11092,7 +11089,6 @@ export const responseWithSecretPick: TRPCResponse<RouterOutput["pool"]> = {
       poolMembers: [],
       livesRemaining: 1,
       pickStatus: "PICKED",
-      eliminated: false,
       pickHeader: "You're riding with the Bills this week!",
       userPick: {
         teamPicked: "Bills",

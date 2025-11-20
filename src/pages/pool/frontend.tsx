@@ -49,6 +49,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
     pickHeader,
     livesRemaining,
     userPick,
+    userPickTeam,
     pickStatus,
   } = data;
 
@@ -130,7 +131,11 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
           <h2 className="text-xl font-semibold text-slate-800">
             Week {currentWeek}
           </h2>
-          <PickStatusCard status={pickStatus} userPick={userPick}>
+          <PickStatusCard
+            status={pickStatus}
+            userPick={userPick}
+            userPickTeam={userPickTeam}
+          >
             {pickHeader}
           </PickStatusCard>
           <p className="text-sm font-medium text-slate-700">
@@ -188,12 +193,14 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
 type PickStatusCardProps = {
   status: PickStatus;
   userPick: RouterOutput["pool"]["userPick"];
+  userPickTeam?: RouterOutput["pool"]["userPickTeam"];
   children: React.ReactNode;
 };
 
 const PickStatusCard = ({
   status,
   userPick,
+  userPickTeam,
   children,
 }: PickStatusCardProps) => {
   const styles = {
@@ -232,23 +239,41 @@ const PickStatusCard = ({
   const { container, badge, message } = styles[status];
 
   const secretBadge = userPick?.pickIsSecret ? (
-    <span className="inline-flex items-center rounded-full bg-slate-200 px-2 py-0.5 text-xs font-semibold text-slate-600">
+    <span className="inline-flex items-center rounded-full bg-purple-200 px-2.5 py-0.5 text-sm font-medium text-purple-700">
       SECRET
     </span>
   ) : null;
 
   return (
-    <div className={`flex flex-col gap-1 rounded-lg p-4 ${container}`}>
-      <div className="flex items-center gap-2">
-        <span
-          className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${badge}`}
-        >
-          {status}
-        </span>
-        <span className="font-bold">{userPick?.teamPicked}</span>
-        {secretBadge}
+    <div className={`flex flex-col gap-4 rounded-xl p-6 ${container}`}>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span
+              className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-medium ${badge}`}
+            >
+              {status}
+            </span>
+            {secretBadge}
+          </div>
+        </div>
+
+        {userPick?.teamPicked ? (
+          <div className="flex items-center gap-4">
+            {userPickTeam?.logo && (
+              <img
+                src={userPickTeam.logo}
+                alt={userPickTeam.name}
+                className="h-16 w-16 object-contain"
+              />
+            )}
+            <span className="text-3xl font-bold tracking-tight">
+              {userPick.teamPicked}
+            </span>
+          </div>
+        ) : null}
       </div>
-      <p className={`text-sm font-medium ${message}`}>{children}</p>
+      <p className={`text-base font-medium ${message}`}>{children}</p>
     </div>
   );
 };
@@ -429,7 +454,7 @@ const PickTable = ({ poolId, username, week, season }: PickTableProps) => {
                 </td>
                 <td className="px-3 py-2.5 text-center text-slate-700 sm:px-4 sm:py-3">
                   {pick.pickIsSecret ? (
-                    <span className="inline-flex items-center rounded-full bg-slate-200 px-2 py-0.5 text-xs font-semibold text-slate-600">
+                    <span className="inline-flex items-center rounded-full bg-purple-200 px-2.5 py-0.5 text-sm font-medium text-purple-700">
                       SECRET
                     </span>
                   ) : (

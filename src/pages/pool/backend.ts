@@ -108,11 +108,16 @@ export async function fetchPoolInfo({
     lastName: poolCreatorMember?.lastName,
   });
 
+  const userPickTeam = events
+    .flatMap((event) => event.competitions)
+    .flatMap((competition) => competition.competitors)
+    .find((competitor) => competitor.team.name === userPick?.teamPicked)?.team;
+
   return {
     pickStatus,
     pickHeader,
     userPick,
-    eliminated,
+    userPickTeam,
     livesRemaining,
     eventButtons,
     currentSeason,
