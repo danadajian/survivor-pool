@@ -4,9 +4,9 @@ WORKDIR /app
 COPY . .
 
 RUN bun install --production
+RUN bun tailwind
 
 ENV PORT=8080
+ENV ENVIRONMENT=production
 
-RUN chmod +x entrypoint.sh
-ENTRYPOINT ["./entrypoint.sh"]
-CMD [ "bun", "prod" ]
+CMD [ "bun", "start" ]
