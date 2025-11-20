@@ -1,4 +1,7 @@
+import { checkIfAllAvailableTeamsAreLocked } from "../pages/pool/backend/check-if-all-available-teams-are-locked";
 import { picks } from "../schema";
+import { checkIfPickIsLocked } from "./check-if-pick-is-locked";
+import { Events } from "./fetch-current-games";
 
 export type PickStatus =
   | "ELIMINATED"
@@ -12,20 +15,25 @@ export type PickStatus =
 export function getPickStatus({
   eliminated,
   userPick,
-  pickIsLocked,
-  userAllAvailableTeamsLocked,
+  events,
+  previouslyPickedTeams,
 }: {
   eliminated: boolean;
   userPick?: typeof picks.$inferSelect;
-  pickIsLocked: boolean;
-  userAllAvailableTeamsLocked: boolean;
+  events: Events;
+  previouslyPickedTeams: string[];
 }): PickStatus {
-  if (eliminated) {
-    return "ELIMINATED";
+  if (
+    checkIfAllAvailableTeamsAreLocked({
+      events,
+      previouslyPickedTeams,
+    })
+  ) {
+    return "MISSED_DEADLINE";
   }
 
-  if (userAllAvailableTeamsLocked) {
-    return "MISSED_DEADLINE";
+  if (eliminated) {
+    return "ELIMINATED";
   }
 
   switch (userPick?.result) {
@@ -34,7 +42,12 @@ export function getPickStatus({
     case "LOST":
       return "LOST";
     default:
-      if (pickIsLocked) {
+      if (
+        checkIfPickIsLocked({
+          events,
+          userPick,
+        })
+      ) {
         return "LOCKED";
       } else if (userPick?.teamPicked) {
         return "PICKED";

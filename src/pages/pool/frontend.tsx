@@ -234,17 +234,15 @@ const PickStatusCard = ({
       badge: "bg-blue-200 text-blue-800",
       message: "text-blue-700",
     },
-    LOCKED_OUT: {
-      container: "bg-rose-50 text-rose-900",
-      badge: "bg-rose-200 text-rose-800",
-      message: "text-rose-700",
-    },
     MISSED_DEADLINE: {
       container: "bg-rose-50 text-rose-900",
       badge: "bg-rose-200 text-rose-800",
       message: "text-rose-700",
     },
-  };
+  } satisfies Record<
+    PickStatus,
+    { container: string; badge: string; message: string }
+  >;
 
   const { container, badge, message } = styles[status];
 
