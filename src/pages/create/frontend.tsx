@@ -16,6 +16,7 @@ const CreateComponent = ({ user }: PageProps) => {
   const utils = trpc.useUtils();
   const [poolName, setPoolName] = useState("");
   const [lives, setLives] = useState(MIN_LIVES);
+  const [sport, setSport] = useState<"nfl" | "nba" | "nhl">("nfl");
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { mutate, data, isSuccess } = trpc.createPool.useMutation({
@@ -47,7 +48,7 @@ const CreateComponent = ({ user }: PageProps) => {
       return;
     }
     setError("");
-    mutate({ ...user, poolName: poolName.trim(), lives });
+    mutate({ ...user, poolName: poolName.trim(), lives, sport });
   };
 
   if (isSuccess && data?.poolId) {
@@ -99,6 +100,29 @@ const CreateComponent = ({ user }: PageProps) => {
               className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-base text-slate-800 shadow-inner focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 sm:px-4 sm:py-3"
               placeholder="e.g. Sunday Survivors"
             />
+          </div>
+          <div className="flex flex-col gap-3">
+            <span className="text-sm font-medium text-slate-600">Sport</span>
+            <div className="flex gap-4">
+              {(["nfl", "nba", "nhl"] as const).map((s) => (
+                <label
+                  key={s}
+                  className="flex cursor-pointer items-center gap-2"
+                >
+                  <input
+                    type="radio"
+                    name="sport"
+                    value={s}
+                    checked={sport === s}
+                    onChange={(e) =>
+                      setSport(e.target.value as "nfl" | "nba" | "nhl")
+                    }
+                    className="h-4 w-4 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span className="text-slate-800 uppercase">{s}</span>
+                </label>
+              ))}
+            </div>
           </div>
           <div className="flex flex-col gap-3">
             <span className="text-sm font-medium text-slate-600">

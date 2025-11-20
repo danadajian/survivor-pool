@@ -6,7 +6,7 @@ import { db } from "../../db";
 import { members, picks, pools } from "../../schema";
 import { buildPickHeader } from "../../utils/build-pick-header";
 import { buildUserDisplayName } from "../../utils/build-user-display-name";
-import { fetchCurrentGames } from "../../utils/fetch-current-games";
+import { fetchCurrentGames, type Sport } from "../../utils/fetch-current-games";
 import { getPickStatus } from "../../utils/get-pick-status";
 import { getEventButtons } from "./backend/get-event-buttons";
 import { getPreviouslyPickedTeamsForUser } from "./backend/get-previously-picked-teams-for-user";
@@ -29,14 +29,7 @@ export async function fetchPoolInfo({
       code: "NOT_FOUND",
     });
   }
-  const games = await fetchCurrentGames();
-  const {
-    events,
-    season: { year: currentSeason },
-    week: { number: currentWeek },
-  } = games;
-
-  const picksForPoolAndSeason = await fetchPicks(poolId, currentSeason);
+  
   const poolsResult = await db.query.pools.findFirst({
     where: eq(pools.id, poolId),
   });
@@ -46,11 +39,31 @@ export async function fetchPoolInfo({
       code: "NOT_FOUND",
     });
   const {
-    weekStarted,
+    poolStarted,
     lives,
     name: poolName,
     creator: poolCreatorUsername,
+    sport,
   } = poolsResult;
+
+  const games = await fetchCurrentGames(sport as Sport);
+  const {
+    events,
+    season: { year: currentSeason },
+    week,
+    day,
+  } = games;
+
+  const currentWeek =
+    week?.number ?? (day ? Number(day.date.replace(/-/g, "")) : 1);
+
+  const weekStarted =
+    sport === "nfl"
+      ? Number(poolStarted.replace("Week ", ""))
+      : Number(poolStarted.replace(/-/g, ""));
+
+  const picksForPoolAndSeason = await fetchPicks(poolId, currentSeason);
+
   const poolWinnerUsername = poolsResult.poolWinner;
   const poolWinnerMember = poolWinnerUsername
     ? poolMembers.find((member) => member.username === poolWinnerUsername)
@@ -123,6 +136,7 @@ export async function fetchPoolInfo({
     poolCreatorDisplayName,
     poolMembers,
     poolWinnerDisplayName,
+    sport: sport as Sport,
   };
 }
 

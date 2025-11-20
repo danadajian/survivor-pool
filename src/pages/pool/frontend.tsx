@@ -13,6 +13,7 @@ import { Button } from "../../components/ui/button";
 import { Surface } from "../../components/ui/surface";
 import { WeekDropdown } from "../../components/week-dropdown";
 import { type RouterOutput, trpc } from "../../trpc";
+import { formatWeekDisplay } from "../../utils/format-week-display";
 import { type PickStatus } from "../../utils/get-pick-status";
 import { useUrlParams } from "../../utils/use-url-params";
 import { EventButton } from "./backend/get-event-buttons";
@@ -51,6 +52,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
     userPick,
     userPickTeam,
     pickStatus,
+    sport,
   } = data;
 
   const onReactivate = () => mutate({ poolId });
@@ -129,7 +131,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
       <Surface className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold text-slate-800">
-            Week {currentWeek}
+            {formatWeekDisplay(currentWeek, sport)}
           </h2>
           <PickStatusCard
             status={pickStatus}
@@ -167,6 +169,9 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
                 {poolWinnerDisplayName
                   ? `${poolWinnerDisplayName} has won this pool!`
                   : `${poolName} ${currentSeason}`}
+                <span className="ml-3 align-middle text-sm font-medium uppercase text-slate-500">
+                  {sport}
+                </span>
               </Heading>
               <p className="text-sm text-slate-500">
                 Commissioner:{" "}
@@ -353,7 +358,10 @@ const PicksView = ({
   const week = Number(weekUrlParam ?? currentWeek);
   const season = Number(seasonUrlParam ?? currentSeason);
 
-  const weekOptions = Array.from({ length: currentWeek }, (_, i) => i + 1);
+  const isWeekly = currentWeek < 100;
+  const weekOptions = isWeekly
+    ? Array.from({ length: currentWeek }, (_, i) => i + 1)
+    : [currentWeek];
 
   return (
     <>
@@ -366,6 +374,9 @@ const PicksView = ({
             options={weekOptions}
             selected={week}
             onSelect={(option) => setUrlParams({ week: String(option) })}
+            renderOption={(option) =>
+              formatWeekDisplay(option, poolData?.sport)
+            }
           />
         </div>
         <PickTable
@@ -406,6 +417,9 @@ const PickTable = ({ poolId, username, week, season }: PickTableProps) => {
     week,
     season,
   });
+  const { data: poolData } = trpc.poolMemberLivesRemaining.useQuery({
+    poolId,
+  });
 
   if (isLoading) {
     return (
@@ -418,7 +432,7 @@ const PickTable = ({ poolId, username, week, season }: PickTableProps) => {
   if (!picks || picks.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-slate-300/80 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
-        No picks recorded for Week {week} yet.
+        No picks recorded for {formatWeekDisplay(week, poolData?.sport)} yet.
       </div>
     );
   }

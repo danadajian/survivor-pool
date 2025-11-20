@@ -1,19 +1,27 @@
 import { TRPCError } from "@trpc/server";
 import * as v from "valibot";
 
-import { environmentVariables } from "../env";
 import { logger } from "./logger";
 
-export async function fetchCurrentGames(): Promise<GamesResponse> {
-  if (!environmentVariables.GAMES_API_URL) {
-    throw new Error("GAMES_API_URL is required");
+export const SPORT_URLS = {
+  nfl: "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+  nba: "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
+  nhl: "https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard",
+} as const;
+
+export type Sport = keyof typeof SPORT_URLS;
+
+export async function fetchCurrentGames(sport: Sport = "nfl"): Promise<GamesResponse> {
+  const url = SPORT_URLS[sport];
+  if (!url) {
+    throw new Error(`Invalid sport: ${sport}`);
   }
-  const response = await fetch(environmentVariables.GAMES_API_URL);
+  const response = await fetch(url);
   const games = await response.json();
   const parseResult = v.safeParse(gamesSchema, games);
   if (!parseResult.success) {
     logger.error(
-      { issues: parseResult.issues },
+      { issues: parseResult.issues.map((issue) => issue.message) },
       "Failed to validate games response from API.",
     );
     throw new TRPCError({
@@ -28,6 +36,7 @@ export async function fetchCurrentGames(): Promise<GamesResponse> {
   return {
     events: filteredEvents,
     week: parsedGames.week,
+    day: parsedGames.day,
     season: parsedGames.season,
   };
 }
@@ -35,8 +44,11 @@ export async function fetchCurrentGames(): Promise<GamesResponse> {
 export type Events = v.InferInput<typeof eventsSchema>;
 export type GamesResponse = {
   events: Events;
-  week: {
+  week?: {
     number: number;
+  };
+  day?: {
+    date: string;
   };
   season: {
     year: number;
@@ -86,9 +98,16 @@ const eventsSchema = v.array(
 );
 
 const gamesSchema = v.object({
-  week: v.object({
-    number: v.number(),
-  }),
+  week: v.optional(
+    v.object({
+      number: v.number(),
+    }),
+  ),
+  day: v.optional(
+    v.object({
+      date: v.string(),
+    }),
+  ),
   season: v.object({
     year: v.number(),
   }),

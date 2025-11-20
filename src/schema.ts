@@ -29,7 +29,10 @@ export const pools = pgTable("pools", {
   lives: integer("lives").notNull().default(1),
   weekStarted: integer("week_started").notNull().default(1),
   weekEnded: integer("week_ended"),
+  poolStarted: varchar("pool_started", { length: 256 }).notNull(),
+  poolEnded: varchar("pool_ended", { length: 256 }),
   season: integer("season").notNull(),
+  sport: varchar("sport", { length: 256 }).notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   poolWinner: varchar("pool_winner", { length: 256 }),
 });

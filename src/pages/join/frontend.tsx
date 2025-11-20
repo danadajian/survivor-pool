@@ -46,7 +46,11 @@ const JoinComponent = ({ user, poolId }: PageProps) => {
         </p>
         <p className="text-lg font-semibold text-slate-800">
           You have been invited to join{" "}
-          <span className="text-slate-900">{pool.name}</span>.
+          <span className="text-slate-900">{pool.name}</span>
+          <span className="ml-2 rounded border border-slate-200 px-1.5 py-0.5 align-middle text-xs text-slate-500 uppercase">
+            {pool.sport}
+          </span>
+          .
         </p>
         <p className="text-sm text-slate-500">
           Joining connects you to the latest picks, standings, and weekly

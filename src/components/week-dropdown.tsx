@@ -6,10 +6,12 @@ export const WeekDropdown = ({
   selected,
   options,
   onSelect,
+  renderOption,
 }: {
   selected: number;
   options: number[];
   onSelect: (option: number) => void;
+  renderOption?: (option: number) => React.ReactNode;
 }) => {
   const { showOptions, position, buttonRef, dropdownRef, toggle, close } =
     useDropdown();
@@ -86,7 +88,7 @@ export const WeekDropdown = ({
             role="menuitem"
             tabIndex={-1}
           >
-            {`Week ${option}`}
+            {renderOption ? renderOption(option) : `Week ${option}`}
           </button>
         ))}
       </PortalDropdownMenu>

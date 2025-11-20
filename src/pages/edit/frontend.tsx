@@ -17,6 +17,9 @@ const EditComponent = ({ poolId }: PageProps) => {
   const [data] = trpc.getPool.useSuspenseQuery({ poolId });
   const [poolName, setPoolName] = useState(data.name);
   const [lives, setLives] = useState(data.lives);
+  const [sport, setSport] = useState<"nfl" | "nba" | "nhl">(
+    (data.sport as "nfl" | "nba" | "nhl") || "nfl",
+  );
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { mutate, isSuccess } = trpc.editPool.useMutation({
@@ -47,7 +50,7 @@ const EditComponent = ({ poolId }: PageProps) => {
       return;
     }
     setError("");
-    mutate({ poolId, poolName: poolName.trim(), lives });
+    mutate({ poolId, poolName: poolName.trim(), lives, sport });
   };
 
   if (isSuccess) {
@@ -93,6 +96,29 @@ const EditComponent = ({ poolId }: PageProps) => {
               onChange={(event) => setPoolName(event.target.value)}
               className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-base text-slate-800 shadow-inner focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 sm:px-4 sm:py-3"
             />
+          </div>
+          <div className="flex flex-col gap-3">
+            <span className="text-sm font-medium text-slate-600">Sport</span>
+            <div className="flex gap-4">
+              {(["nfl", "nba", "nhl"] as const).map((s) => (
+                <label
+                  key={s}
+                  className="flex cursor-pointer items-center gap-2"
+                >
+                  <input
+                    type="radio"
+                    name="sport"
+                    value={s}
+                    checked={sport === s}
+                    onChange={(e) =>
+                      setSport(e.target.value as "nfl" | "nba" | "nhl")
+                    }
+                    className="h-4 w-4 border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span className="text-slate-800 uppercase">{s}</span>
+                </label>
+              ))}
+            </div>
           </div>
           <div className="flex flex-col gap-3">
             <span className="text-sm font-medium text-slate-600">

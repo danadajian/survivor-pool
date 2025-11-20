@@ -4,7 +4,7 @@ import * as v from "valibot";
 
 import { db } from "../../../db";
 import { members, picks, pools } from "../../../schema";
-import { fetchCurrentGames } from "../../../utils/fetch-current-games";
+import { fetchCurrentGames, type Sport } from "../../../utils/fetch-current-games";
 import { userEliminationStatus } from "./user-elimination-status";
 
 export const fetchPoolMembersInput = v.object({
@@ -22,7 +22,16 @@ export async function fetchPicksForWeek({
   week,
   season,
 }: v.InferInput<typeof fetchPicksForWeekInput>) {
-  const gamesResponse = await fetchCurrentGames();
+  const poolsResult = await db.query.pools.findFirst({
+    where: eq(pools.id, poolId),
+  });
+  if (!poolsResult) {
+    throw new TRPCError({
+      message: "Pool not found.",
+      code: "NOT_FOUND",
+    });
+  }
+  const gamesResponse = await fetchCurrentGames(poolsResult.sport as Sport);
   const { events } = gamesResponse;
 
   const picksResult = await db
@@ -77,19 +86,6 @@ export async function fetchPicksForWeek({
 export async function fetchPoolMembers({
   poolId,
 }: v.InferInput<typeof fetchPoolMembersInput>) {
-  const gamesResponse = await fetchCurrentGames();
-
-  const {
-    week: { number: currentWeek },
-    season: { year: currentSeason },
-  } = gamesResponse;
-
-  const poolMembers = await db.query.members.findMany({
-    where: eq(members.poolId, poolId),
-  });
-  const picksForPoolAndSeason = await db.query.picks.findMany({
-    where: and(eq(picks.poolId, poolId), eq(picks.season, currentSeason)),
-  });
   const poolsResult = await db.query.pools.findFirst({
     where: eq(pools.id, poolId),
   });
@@ -98,6 +94,25 @@ export async function fetchPoolMembers({
       message: "Pool not found.",
       code: "NOT_FOUND",
     });
+
+  const gamesResponse = await fetchCurrentGames(poolsResult.sport as Sport);
+
+  const {
+    week,
+    day,
+    season: { year: currentSeason },
+  } = gamesResponse;
+
+  const currentWeek =
+    week?.number ?? (day ? Number(day.date.replace(/-/g, "")) : 1);
+
+  const poolMembers = await db.query.members.findMany({
+    where: eq(members.poolId, poolId),
+  });
+  const picksForPoolAndSeason = await db.query.picks.findMany({
+    where: and(eq(picks.poolId, poolId), eq(picks.season, currentSeason)),
+  });
+
   const { weekStarted, lives } = poolsResult;
   const membersWithEliminationStatus = poolMembers
     .map((member) => ({
@@ -118,5 +133,6 @@ export async function fetchPoolMembers({
     lives,
     week: currentWeek,
     season: currentSeason,
+    sport: poolsResult.sport,
   };
 }

@@ -1,10 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
+import spacetime from "spacetime";
 import * as v from "valibot";
 
 import { db } from "../../../db";
 import { members, pools } from "../../../schema";
-import { fetchCurrentGames } from "../../../utils/fetch-current-games";
+import { fetchCurrentGames, type Sport } from "../../../utils/fetch-current-games";
 
 export const reactivatePoolInput = v.object({
   poolId: v.pipe(v.string(), v.uuid()),
@@ -13,13 +14,30 @@ export const reactivatePoolInput = v.object({
 export async function reactivatePool({
   poolId,
 }: v.InferInput<typeof reactivatePoolInput>) {
+  const existingPool = await db.query.pools.findFirst({
+    where: eq(pools.id, poolId),
+  });
+  if (!existingPool) {
+    throw new TRPCError({
+      message: "Pool not found.",
+      code: "NOT_FOUND",
+    });
+  }
+
   const {
-    week: { number: currentWeek },
+    week,
+    day,
     season: { year: currentSeason },
-  } = await fetchCurrentGames();
+  } = await fetchCurrentGames(existingPool.sport as Sport);
+
+  const poolCurrentValue =
+    existingPool.sport === "nfl"
+      ? `Week ${week?.number ?? 1}`
+      : (day?.date ?? spacetime.now().format("{iso-short}"));
+
   const [poolResult] = await db
     .update(pools)
-    .set({ weekEnded: currentWeek })
+    .set({ poolEnded: poolCurrentValue })
     .where(eq(pools.id, poolId))
     .returning();
   if (!poolResult)
@@ -28,13 +46,13 @@ export async function reactivatePool({
       code: "INTERNAL_SERVER_ERROR",
     });
 
-  const { id, createdAt, weekEnded, poolWinner, ...poolFieldsToRetain } =
+  const { id, createdAt, poolEnded, poolWinner, ...poolFieldsToRetain } =
     poolResult;
   const [newPool] = await db
     .insert(pools)
     .values({
       ...poolFieldsToRetain,
-      weekStarted: currentWeek,
+      poolStarted: poolCurrentValue,
       season: currentSeason,
     })
     .returning();

@@ -8,6 +8,7 @@ import {
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { TrophyIcon } from "@heroicons/react/24/solid";
 import React, { Fragment } from "react";
+import spacetime from "spacetime";
 
 import { Heading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
@@ -214,10 +215,37 @@ const WinnersList = ({
 
 const WinnerCard = ({ winner }: { winner: WinnerRecord }) => {
   const winnerDisplay = winner.winner;
+
+  // For daily sports (non-NFL), these are dates, which we can format if desired,
+  // or display as is if they are already formatted.
+  // Since the backend now stores "Week X" or "YYYY-MM-DD", we can display as is,
+  // or use a helper to format the date string nicely.
+  // However, the user asked for "Thursday, November 20th" display style previously.
+  // Let's check if formatWeekDisplay handles "YYYY-MM-DD".
+  // formatWeekDisplay currently handles 20251120 (number).
+  // We should update formatWeekDisplay or handle it here.
+  // Since we're storing ISO strings now, let's try to reuse formatWeekDisplay if updated,
+  // or just assume the strings are good enough or simple formatting.
+  // The user said "store these as dates so we can easily display the date...".
+  // Given the previous context, formatting "2025-11-20" to "Nov 20" or similar might be nice,
+  // but "Week X" should stay "Week X".
+  // Let's just display them directly for now as requested: "Week 1" and "2025-11-20".
+  // Wait, if I can format 2025-11-20 nicely, I should.
+
+  const start =
+    winner.poolStarted.includes("-") && !winner.poolStarted.includes("Week")
+      ? spacetime(winner.poolStarted).format("{day-name}, {month} {date-ordinal}")
+      : winner.poolStarted;
+
+  const end =
+    winner.poolEnded &&
+    winner.poolEnded.includes("-") &&
+    !winner.poolEnded.includes("Week")
+      ? spacetime(winner.poolEnded).format("{day-name}, {month} {date-ordinal}")
+      : winner.poolEnded;
+
   const weekRange =
-    winner.weekEnded && winner.weekEnded !== winner.weekStarted
-      ? `Weeks ${winner.weekStarted} – ${winner.weekEnded}`
-      : `Week ${winner.weekStarted}`;
+    end && end !== start ? `${start} - ${end}` : start;
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm shadow-slate-900/10 transition hover:-translate-y-0.5 hover:shadow-lg sm:rounded-3xl sm:p-6">
@@ -229,6 +257,9 @@ const WinnerCard = ({ winner }: { winner: WinnerRecord }) => {
           <div className="flex flex-col gap-0.5 sm:gap-1">
             <p className="text-[0.65rem] font-semibold tracking-[0.35em] text-amber-700 uppercase sm:text-xs sm:tracking-[0.34em]">
               {winner.poolName}
+              <span className="ml-2 inline-block rounded border border-amber-700/20 px-1.5 py-0.5 text-[0.6rem] tracking-normal text-amber-800 sm:text-[0.65rem]">
+                {winner.sport}
+              </span>
             </p>
             <p className="text-base font-semibold text-slate-900 sm:text-lg">
               {winnerDisplay}

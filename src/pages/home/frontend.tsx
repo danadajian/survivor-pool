@@ -76,15 +76,20 @@ const PoolSelect = ({
         </p>
       </div>
       <div className="flex flex-col gap-3">
-        {data.map(({ poolId, poolName, creator }) => (
+        {data.map(({ poolId, poolName, creator, sport }) => (
           <div
             key={poolId}
             className="flex flex-col items-stretch justify-between gap-3 rounded-2xl border border-slate-200/70 bg-white/80 p-3 shadow-sm shadow-slate-900/5 transition hover:-translate-y-0.5 hover:shadow-md sm:flex-row sm:items-center sm:p-4"
           >
             <div className="text-left">
-              <p className="text-base font-semibold text-slate-800">
-                {poolName}
-              </p>
+              <div className="flex items-center gap-2">
+                <p className="text-base font-semibold text-slate-800">
+                  {poolName}
+                </p>
+                <span className="rounded-md border border-slate-200 px-1.5 py-0.5 text-xs font-medium text-slate-500 uppercase">
+                  {sport}
+                </span>
+              </div>
               {username === creator ? (
                 <p className="text-sm text-slate-500">You manage this pool</p>
               ) : null}
