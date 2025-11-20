@@ -45,7 +45,7 @@ export async function fetchPoolWinners({
     poolName: pool.poolName,
     season: pool.season,
     weekStarted: pool.weekStarted,
-    weekEnded: pool.weekEnded ?? null,
+    weekEnded: pool.weekEnded,
     winner: buildUserDisplayName({
       username: pool.poolWinner!,
       firstName: pool.winnerFirstName,

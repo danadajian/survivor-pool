@@ -14,9 +14,11 @@ const UserContext = createContext<UserData | null>(null);
 export const UserProvider = ({
   children,
   userData,
-}: PropsWithChildren<{ userData: UserData | null }>) => {
+}: PropsWithChildren<{ userData?: UserData }>) => {
   return (
-    <UserContext.Provider value={userData}>{children}</UserContext.Provider>
+    <UserContext.Provider value={userData ?? null}>
+      {children}
+    </UserContext.Provider>
   );
 };
 

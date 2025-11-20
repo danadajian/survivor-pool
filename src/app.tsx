@@ -46,7 +46,7 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
   // Use client components for navigation - server components only for initial SSR
   const content = (
     <ClerkProvider publishableKey={process.env.CLERK_PUBLISHABLE_KEY || ""}>
-      <UserProvider userData={userData ?? null}>
+      <UserProvider userData={userData}>
         <ErrorBoundary
           fallbackRender={({ error }) => <ErrorPage error={error as Error} />}
         >

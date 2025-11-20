@@ -1,7 +1,6 @@
 import { createClerkClient } from "@clerk/backend";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { isbot } from "isbot";
-import path from "path";
 import React from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
@@ -11,33 +10,14 @@ import { App } from "./app";
 import { createContext } from "./context";
 import { environmentVariables, isDev } from "./env";
 import { appRouter } from "./router";
+import { buildClientAndGetPaths } from "./utils/build-client-and-get-paths";
 import { handleBotRequest } from "./utils/handle-bot-request";
 import { logger } from "./utils/logger";
 import { prefetchQueriesForRoute } from "./utils/prefetch-queries-for-route";
 import { redirectToSignIn } from "./utils/redirect-to-sign-in";
 
-const { outputs } = await Bun.build({
-  entrypoints: ["./src/client.tsx"],
-  outdir: "./public",
-  minify: true,
-  naming: "[dir]/[name]-[hash].[ext]",
-  define: {
-    "process.env.CLERK_PUBLISHABLE_KEY": JSON.stringify(
-      environmentVariables.CLERK_PUBLISHABLE_KEY,
-    ),
-  },
-});
-const absolutePathToBundleFile = outputs[0]?.path;
-if (!absolutePathToBundleFile)
-  throw new Error("Path to bundle file is missing.");
-const relativePathToBundleFile = `/${path.relative(process.cwd(), absolutePathToBundleFile).replace(/\\/g, "/")}`;
-const bundleHashMatch = relativePathToBundleFile.match(
-  /-(?<hash>[^./]+)\.[^.]+$/,
-);
-const bundleHash = bundleHashMatch?.groups?.hash ?? bundleHashMatch?.[1];
-const relativePathToGlobalsCss = bundleHash
-  ? `/public/globals-${bundleHash}.css`
-  : "/public/globals.css";
+const { relativePathToBundleFile, relativePathToGlobalsCss } =
+  await buildClientAndGetPaths();
 
 const clerkClient = createClerkClient({
   publishableKey: environmentVariables.CLERK_PUBLISHABLE_KEY,
@@ -97,7 +77,7 @@ const server = Bun.serve({
       },
     });
 
-    if (authResult.isAuthenticated && userData) {
+    if (authResult.isAuthenticated) {
       await prefetchQueriesForRoute(request, userData, queryClient);
     }
 
