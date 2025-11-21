@@ -563,6 +563,7 @@ describe("feature tests", () => {
       poolId,
       poolName: "Test Pool",
       lives: 2,
+      sport: "nfl",
     });
     expect(updatedPoolResult?.lives).toEqual(2);
   });

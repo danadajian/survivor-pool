@@ -8,15 +8,23 @@ import { type PageProps, withPage } from "../../components/page-wrapper";
 import { Button } from "../../components/ui/button";
 import { Surface } from "../../components/ui/surface";
 import { trpc } from "../../trpc";
+import { type Sport } from "../../utils/fetch-current-games";
 
 const MIN_LIVES = 1;
 const MAX_LIVES = 9;
+
+const SPORTS: { id: Sport; label: string }[] = [
+  { id: "nfl", label: "NFL" },
+  { id: "nba", label: "NBA" },
+  { id: "nhl", label: "NHL" },
+];
 
 const EditComponent = ({ poolId }: PageProps) => {
   const utils = trpc.useUtils();
   const [data] = trpc.getPool.useSuspenseQuery({ poolId });
   const [poolName, setPoolName] = useState(data.name);
   const [lives, setLives] = useState(data.lives);
+  const [sport, setSport] = useState<Sport>((data.sport as Sport) ?? "nfl");
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { mutate, isSuccess } = trpc.editPool.useMutation({
@@ -47,7 +55,7 @@ const EditComponent = ({ poolId }: PageProps) => {
       return;
     }
     setError("");
-    mutate({ poolId, poolName: poolName.trim(), lives });
+    mutate({ poolId, poolName: poolName.trim(), lives, sport });
   };
 
   if (isSuccess) {
@@ -93,6 +101,22 @@ const EditComponent = ({ poolId }: PageProps) => {
               onChange={(event) => setPoolName(event.target.value)}
               className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-base text-slate-800 shadow-inner focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 sm:px-4 sm:py-3"
             />
+          </div>
+          <div className="flex flex-col gap-3">
+            <span className="text-sm font-medium text-slate-600">Sport</span>
+            <div className="flex gap-3">
+              {SPORTS.map((s) => (
+                <Button
+                  key={s.id}
+                  type="button"
+                  variant={sport === s.id ? "primary" : "secondary"}
+                  onClick={() => setSport(s.id)}
+                  className="flex-1"
+                >
+                  {s.label}
+                </Button>
+              ))}
+            </div>
           </div>
           <div className="flex flex-col gap-3">
             <span className="text-sm font-medium text-slate-600">

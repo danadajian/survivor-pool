@@ -51,6 +51,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
     userPick,
     userPickTeam,
     pickStatus,
+    sport,
   } = data;
 
   const onReactivate = () => mutate({ poolId });
@@ -168,12 +169,17 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
                   ? `${poolWinnerDisplayName} has won this pool!`
                   : `${poolName} ${currentSeason}`}
               </Heading>
-              <p className="text-sm text-slate-500">
-                Commissioner:{" "}
-                <span className="font-medium text-slate-700">
-                  {poolCreatorDisplayName}
+              <div className="flex items-center gap-3">
+                <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-bold tracking-wider text-slate-600 uppercase shadow-sm">
+                  {sport}
                 </span>
-              </p>
+                <p className="text-sm text-slate-500">
+                  Commissioner:{" "}
+                  <span className="font-medium text-slate-700">
+                    {poolCreatorDisplayName}
+                  </span>
+                </p>
+              </div>
             </div>
             <div className="shrink-0">
               <ChangePoolDropdown username={username} currentPoolId={poolId} />

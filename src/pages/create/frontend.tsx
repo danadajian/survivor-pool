@@ -8,14 +8,22 @@ import { type PageProps, withPage } from "../../components/page-wrapper";
 import { Button } from "../../components/ui/button";
 import { Surface } from "../../components/ui/surface";
 import { trpc } from "../../trpc";
+import { type Sport } from "../../utils/fetch-current-games";
 
 const MIN_LIVES = 1;
 const MAX_LIVES = 9;
+
+const SPORTS: { id: Sport; label: string }[] = [
+  { id: "nfl", label: "NFL" },
+  { id: "nba", label: "NBA" },
+  { id: "nhl", label: "NHL" },
+];
 
 const CreateComponent = ({ user }: PageProps) => {
   const utils = trpc.useUtils();
   const [poolName, setPoolName] = useState("");
   const [lives, setLives] = useState(MIN_LIVES);
+  const [sport, setSport] = useState<Sport>("nfl");
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { mutate, data, isSuccess } = trpc.createPool.useMutation({
@@ -47,7 +55,7 @@ const CreateComponent = ({ user }: PageProps) => {
       return;
     }
     setError("");
-    mutate({ ...user, poolName: poolName.trim(), lives });
+    mutate({ ...user, poolName: poolName.trim(), lives, sport });
   };
 
   if (isSuccess && data?.poolId) {
@@ -99,6 +107,22 @@ const CreateComponent = ({ user }: PageProps) => {
               className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-base text-slate-800 shadow-inner focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 sm:px-4 sm:py-3"
               placeholder="e.g. Sunday Survivors"
             />
+          </div>
+          <div className="flex flex-col gap-3">
+            <span className="text-sm font-medium text-slate-600">Sport</span>
+            <div className="flex gap-3">
+              {SPORTS.map((s) => (
+                <Button
+                  key={s.id}
+                  type="button"
+                  variant={sport === s.id ? "primary" : "secondary"}
+                  onClick={() => setSport(s.id)}
+                  className="flex-1"
+                >
+                  {s.label}
+                </Button>
+              ))}
+            </div>
           </div>
           <div className="flex flex-col gap-3">
             <span className="text-sm font-medium text-slate-600">

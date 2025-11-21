@@ -6,7 +6,7 @@ import { db } from "../../db";
 import { members, picks, pools } from "../../schema";
 import { buildPickHeader } from "../../utils/build-pick-header";
 import { buildUserDisplayName } from "../../utils/build-user-display-name";
-import { fetchCurrentGames } from "../../utils/fetch-current-games";
+import { fetchCurrentGames, type Sport } from "../../utils/fetch-current-games";
 import { getPickStatus } from "../../utils/get-pick-status";
 import { getEventButtons } from "./backend/get-event-buttons";
 import { getPreviouslyPickedTeamsForUser } from "./backend/get-previously-picked-teams-for-user";
@@ -29,10 +29,6 @@ export async function fetchPoolInfo({
       code: "NOT_FOUND",
     });
   }
-  const games = await fetchCurrentGames();
-  const { events, currentSeason, currentGameDate } = games;
-
-  const picksForPoolAndSeason = await fetchPicks(poolId, currentSeason);
   const poolsResult = await db.query.pools.findFirst({
     where: eq(pools.id, poolId),
   });
@@ -41,7 +37,17 @@ export async function fetchPoolInfo({
       message: "Pool not found.",
       code: "NOT_FOUND",
     });
-  const { lives, name: poolName, creator: poolCreatorUsername } = poolsResult;
+  const {
+    lives,
+    name: poolName,
+    creator: poolCreatorUsername,
+    sport,
+  } = poolsResult;
+  const games = await fetchCurrentGames(sport as Sport);
+  const { events, currentSeason, currentGameDate } = games;
+
+  const picksForPoolAndSeason = await fetchPicks(poolId, currentSeason);
+
   const poolWinnerUsername = poolsResult.poolWinner;
   const poolWinnerMember = poolWinnerUsername
     ? poolMembers.find((member) => member.username === poolWinnerUsername)
@@ -112,6 +118,7 @@ export async function fetchPoolInfo({
     poolCreatorDisplayName,
     poolMembers,
     poolWinnerDisplayName,
+    sport,
   };
 }
 

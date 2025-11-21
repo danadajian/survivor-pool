@@ -11018,6 +11018,7 @@ const basicEventButtons = [
 export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
+      sport: "nfl",
       eventButtons: basicEventButtons,
       currentGameDate: `Week ${mockEspnResponse.week.number}`,
       currentSeason: mockEspnResponse.season.year,
@@ -11036,6 +11037,7 @@ export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
 > = {
   result: {
     data: {
+      sport: "nfl",
       eventButtons: [],
       currentGameDate: `Week ${mockEspnPreseasonResponse.week.number}`,
       currentSeason: mockEspnPreseasonResponse.season.year,
@@ -11052,6 +11054,7 @@ export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
 export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
+      sport: "nfl",
       eventButtons: basicEventButtons,
       currentGameDate: `Week ${mockEspnResponse.week.number}`,
       currentSeason: mockEspnResponse.season.year,
@@ -11080,6 +11083,7 @@ export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
 export const responseWithSecretPick: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
+      sport: "nfl",
       eventButtons: basicEventButtons,
       currentGameDate: `Week ${mockEspnResponse.week.number}`,
       currentSeason: mockEspnResponse.season.year,
