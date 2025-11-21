@@ -53,8 +53,8 @@ describe("feature tests", () => {
 
   it("should create a new pool", async () => {
     mockGamesResponse({
-      week: { number: 1 },
-      season: { year: season },
+      currentGameDate: "Week 1",
+      currentSeason: season,
       events: [],
     });
     await createPool({ poolName: "Test Pool", username: user1 });
@@ -166,8 +166,8 @@ describe("feature tests", () => {
       },
     ] as Events;
     mockGamesResponse({
-      week: { number: 1 },
-      season: { year: season },
+      currentGameDate: "Week 1",
+      currentSeason: season,
       events: mockEvents,
     });
     const picks = await fetchPicksForWeek({
@@ -318,8 +318,8 @@ describe("feature tests", () => {
       },
     ] as Events;
     mockGamesResponse({
-      week: { number: 1 },
-      season: { year: season },
+      currentGameDate: "Week 1",
+      currentSeason: season,
       events: mockEvents,
     });
     const picks = await fetchPicksForWeek({
@@ -523,8 +523,8 @@ describe("feature tests", () => {
   it("should reactivate the pool by creating a new pool and adding all members", async () => {
     const currentWeek = 4;
     mockGamesResponse({
-      week: { number: currentWeek },
-      season: { year: season },
+      currentGameDate: `Week ${currentWeek}`,
+      currentSeason: season,
       events: [],
     });
     const oldPoolId = await getPoolId();

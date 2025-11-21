@@ -26,6 +26,7 @@ export const pools = pgTable("pools", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 256 }).notNull(),
   creator: varchar("creator", { length: 256 }).notNull(),
+  sport: varchar("sport", { length: 256 }).notNull().default("nfl"),
   lives: integer("lives").notNull().default(1),
   poolStart: varchar("pool_start", { length: 256 }).notNull().default(""),
   poolEnd: varchar("pool_end", { length: 256 }),

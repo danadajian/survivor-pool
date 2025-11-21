@@ -79,10 +79,7 @@ export async function fetchPoolMembers({
 }: v.InferInput<typeof fetchPoolMembersInput>) {
   const gamesResponse = await fetchCurrentGames();
 
-  const {
-    week: { number: currentWeek },
-    season: { year: currentSeason },
-  } = gamesResponse;
+  const { currentGameDate, currentSeason } = gamesResponse;
 
   const poolMembers = await db.query.members.findMany({
     where: eq(members.poolId, poolId),
@@ -114,7 +111,7 @@ export async function fetchPoolMembers({
   return {
     membersWithEliminationStatus,
     lives,
-    pickDate: `Week ${currentWeek}`,
+    pickDate: currentGameDate,
     season: currentSeason,
   };
 }

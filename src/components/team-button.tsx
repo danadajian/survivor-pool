@@ -46,12 +46,12 @@ export const TeamButton = ({ teamButton, username, poolId }: TeamProps) => {
     return <div>No team found.</div>;
   }
 
-  const { currentPickDate, currentSeason } = data;
+  const { currentGameDate, currentSeason } = data;
   const handleUpdate = () =>
     mutate({
       username,
       teamPicked: team.name,
-      pickDate: currentPickDate,
+      pickDate: currentGameDate,
       season: currentSeason,
       poolId,
       pickIsSecret,

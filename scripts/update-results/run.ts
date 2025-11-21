@@ -1,6 +1,6 @@
 import { updateResults } from "./update-results";
 import { fetchCurrentGames } from "../../src/utils/fetch-current-games";
 
-const { events, week, season } = await fetchCurrentGames();
+const { events, currentGameDate, currentSeason } = await fetchCurrentGames();
 
-await updateResults(events, `Week ${week.number}`, season.year);
+await updateResults(events, currentGameDate, currentSeason);

@@ -5,13 +5,14 @@ import * as v from "valibot";
 import { userFields } from "../../components/page-wrapper";
 import { db } from "../../db";
 import { pools } from "../../schema";
-import { fetchCurrentGames } from "../../utils/fetch-current-games";
+import { fetchCurrentGames, type Sport } from "../../utils/fetch-current-games";
 import { joinPool } from "../join/backend";
 
 export const createPoolInput = v.object({
   ...userFields,
   poolName: v.pipe(v.string(), v.nonEmpty("Please enter a pool name.")),
   lives: v.optional(v.number()),
+  sport: v.optional(v.picklist(["nfl", "nba", "nhl"])),
 });
 
 export async function createPool({
@@ -20,6 +21,7 @@ export async function createPool({
   username,
   firstName,
   lastName,
+  sport = "nfl",
 }: v.InferInput<typeof createPoolInput>) {
   const existingPool = await db.query.pools.findFirst({
     where: eq(pools.name, poolName),
@@ -32,18 +34,21 @@ export async function createPool({
     });
   }
 
-  const {
-    week: { number: currentWeek },
-    season: { year: currentSeason },
-  } = await fetchCurrentGames();
+  const { currentGameDate, currentSeason } = await fetchCurrentGames(
+    sport as Sport,
+  );
+
+  const poolStart = currentGameDate;
+
   const [insertResult] = await db
     .insert(pools)
     .values({
       name: poolName,
       lives,
       creator: username,
-      poolStart: `Week ${currentWeek}`,
+      poolStart,
       season: currentSeason,
+      sport,
     })
     .returning({ id: pools.id });
   const poolId = insertResult?.id;

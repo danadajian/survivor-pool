@@ -11019,7 +11019,7 @@ export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
       eventButtons: basicEventButtons,
-      currentPickDate: `Week ${mockEspnResponse.week.number}`,
+      currentGameDate: `Week ${mockEspnResponse.week.number}`,
       currentSeason: mockEspnResponse.season.year,
       poolName: "Test Pool",
       poolCreatorUsername: "test@user.com",
@@ -11037,7 +11037,7 @@ export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
   result: {
     data: {
       eventButtons: [],
-      currentPickDate: `Week ${mockEspnPreseasonResponse.week.number}`,
+      currentGameDate: `Week ${mockEspnPreseasonResponse.week.number}`,
       currentSeason: mockEspnPreseasonResponse.season.year,
       poolName: "Test Pool",
       poolCreatorUsername: "test@user.com",
@@ -11053,7 +11053,7 @@ export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
       eventButtons: basicEventButtons,
-      currentPickDate: `Week ${mockEspnResponse.week.number}`,
+      currentGameDate: `Week ${mockEspnResponse.week.number}`,
       currentSeason: mockEspnResponse.season.year,
       poolName: "Test Pool",
       poolCreatorUsername: "test@user.com",
@@ -11081,7 +11081,7 @@ export const responseWithSecretPick: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
       eventButtons: basicEventButtons,
-      currentPickDate: `Week ${mockEspnResponse.week.number}`,
+      currentGameDate: `Week ${mockEspnResponse.week.number}`,
       currentSeason: mockEspnResponse.season.year,
       poolName: "Test Pool",
       poolCreatorUsername: "test@user.com",

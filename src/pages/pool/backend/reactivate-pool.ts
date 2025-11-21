@@ -4,7 +4,10 @@ import * as v from "valibot";
 
 import { db } from "../../../db";
 import { members, pools } from "../../../schema";
-import { fetchCurrentGames } from "../../../utils/fetch-current-games";
+import {
+  fetchCurrentGames,
+  type Sport,
+} from "../../../utils/fetch-current-games";
 
 export const reactivatePoolInput = v.object({
   poolId: v.pipe(v.string(), v.uuid()),
@@ -13,13 +16,25 @@ export const reactivatePoolInput = v.object({
 export async function reactivatePool({
   poolId,
 }: v.InferInput<typeof reactivatePoolInput>) {
-  const {
-    week: { number: currentWeek },
-    season: { year: currentSeason },
-  } = await fetchCurrentGames();
+  const existingPool = await db.query.pools.findFirst({
+    where: eq(pools.id, poolId),
+  });
+  if (!existingPool) {
+    throw new TRPCError({
+      message: "Pool not found.",
+      code: "NOT_FOUND",
+    });
+  }
+
+  const { currentGameDate, currentSeason } = await fetchCurrentGames(
+    existingPool.sport as Sport,
+  );
+
+  const poolCurrentValue = currentGameDate;
+
   const [poolResult] = await db
     .update(pools)
-    .set({ poolEnd: `Week ${currentWeek}` })
+    .set({ poolEnd: poolCurrentValue })
     .where(eq(pools.id, poolId))
     .returning();
   if (!poolResult)
@@ -34,7 +49,7 @@ export async function reactivatePool({
     .insert(pools)
     .values({
       ...poolFieldsToRetain,
-      poolStart: `Week ${currentWeek}`,
+      poolStart: poolCurrentValue,
       season: currentSeason,
     })
     .returning();

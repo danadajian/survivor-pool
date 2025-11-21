@@ -40,7 +40,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
   const {
     eventButtons,
     currentSeason,
-    currentPickDate,
+    currentGameDate,
     poolName,
     poolWinnerDisplayName,
     poolMembers,
@@ -63,7 +63,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
         <PicksView
           poolId={poolId}
           username={username}
-          currentPickDate={currentPickDate}
+          currentGameDate={currentGameDate}
           currentSeason={currentSeason}
         />
       );
@@ -129,7 +129,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
       <Surface className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold text-slate-800">
-            {currentPickDate}
+            {currentGameDate}
           </h2>
           <PickStatusCard
             status={pickStatus}
@@ -330,14 +330,14 @@ export const Pool = withPage(PoolComponent);
 type PicksViewProps = {
   poolId: string;
   username: string;
-  currentPickDate: string;
+  currentGameDate: string;
   currentSeason: number;
 };
 
 const PicksView = ({
   poolId,
   username,
-  currentPickDate,
+  currentGameDate,
   currentSeason,
 }: PicksViewProps) => {
   const {
@@ -350,10 +350,10 @@ const PicksView = ({
 
   const membersWithEliminationStatus = poolData?.membersWithEliminationStatus;
   const lives = poolData?.lives;
-  const pickDate = weekUrlParam ?? currentPickDate;
+  const pickDate = weekUrlParam ?? currentGameDate;
   const season = Number(seasonUrlParam ?? currentSeason);
 
-  const currentWeekNumber = Number(currentPickDate.split(" ")[1] ?? 1);
+  const currentWeekNumber = Number(currentGameDate.split(" ")[1] ?? 1);
   const weekOptions = Array.from(
     { length: currentWeekNumber },
     (_, i) => `Week ${i + 1}`,

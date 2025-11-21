@@ -212,12 +212,13 @@ const WinnersList = ({
   );
 };
 
-const WinnerCard = ({ winner }: { winner: WinnerRecord }) => {
-  const winnerDisplay = winner.winner;
+const WinnerCard = ({
+  winner: { poolStart, poolEnd, poolName, sport, winner: winnerDisplay },
+}: {
+  winner: WinnerRecord;
+}) => {
   const weekRange =
-    winner.poolEnd && winner.poolEnd !== winner.poolStart
-      ? `${winner.poolStart} – ${winner.poolEnd}`
-      : winner.poolStart;
+    poolEnd && poolEnd !== poolStart ? `${poolStart} – ${poolEnd}` : poolStart;
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm shadow-slate-900/10 transition hover:-translate-y-0.5 hover:shadow-lg sm:rounded-3xl sm:p-6">
@@ -228,7 +229,10 @@ const WinnerCard = ({ winner }: { winner: WinnerRecord }) => {
           </span>
           <div className="flex flex-col gap-0.5 sm:gap-1">
             <p className="text-[0.65rem] font-semibold tracking-[0.35em] text-amber-700 uppercase sm:text-xs sm:tracking-[0.34em]">
-              {winner.poolName}
+              {poolName}
+              <span className="ml-2 inline-block rounded border border-amber-700/20 px-1.5 py-0.5 text-[0.6rem] tracking-normal text-amber-800 sm:text-[0.65rem]">
+                {sport}
+              </span>
             </p>
             <p className="text-base font-semibold text-slate-900 sm:text-lg">
               {winnerDisplay}

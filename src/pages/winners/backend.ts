@@ -20,6 +20,7 @@ export async function fetchPoolWinners({
       poolId: pools.id,
       poolName: pools.name,
       season: pools.season,
+      sport: pools.sport,
       poolStart: pools.poolStart,
       poolEnd: pools.poolEnd,
       poolWinner: pools.poolWinner,
@@ -43,6 +44,7 @@ export async function fetchPoolWinners({
   const winners = poolRows.map((pool) => ({
     poolId: pool.poolId,
     poolName: pool.poolName,
+    sport: pool.sport,
     season: pool.season,
     poolStart: pool.poolStart,
     poolEnd: pool.poolEnd,
