@@ -15,16 +15,6 @@ export async function reactivatePool({
   poolId,
   sport,
 }: v.InferInput<typeof reactivatePoolInput>) {
-  const existingPool = await db.query.pools.findFirst({
-    where: eq(pools.id, poolId),
-  });
-  if (!existingPool) {
-    throw new TRPCError({
-      message: "Pool not found.",
-      code: "NOT_FOUND",
-    });
-  }
-
   const { currentGameDate, currentSeason } = await fetchCurrentGames(sport);
 
   const [poolResult] = await db

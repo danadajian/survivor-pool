@@ -38,15 +38,13 @@ export async function createPool({
     sport as Sport,
   );
 
-  const poolStart = currentGameDate;
-
   const [insertResult] = await db
     .insert(pools)
     .values({
       name: poolName,
       lives,
       creator: username,
-      poolStart,
+      poolStart: currentGameDate,
       season: currentSeason,
       sport,
     })
