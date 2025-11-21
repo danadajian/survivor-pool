@@ -98,15 +98,13 @@ export async function fetchPoolMembers({
       message: "Pool not found.",
       code: "NOT_FOUND",
     });
-  const { weekStarted, lives } = poolsResult;
+  const { lives } = poolsResult;
   const membersWithEliminationStatus = poolMembers
     .map((member) => ({
       ...member,
       ...userEliminationStatus({
         username: member.username,
-        currentWeek,
         picksForPoolAndSeason,
-        weekStarted,
         lives,
         events: gamesResponse.events,
       }),

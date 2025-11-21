@@ -66,10 +66,8 @@ export async function updateResults(
     });
 
     const poolWinner = await findPoolWinner({
-      currentWeek: week,
       picksForPoolAndSeason,
       poolMembers,
-      weekStarted: pool.weekStarted,
       lives: pool.lives,
       events,
     });

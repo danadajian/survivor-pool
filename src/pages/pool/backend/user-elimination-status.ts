@@ -5,16 +5,12 @@ import { getPreviouslyPickedTeamsForUser } from "./get-previously-picked-teams-f
 
 export function userEliminationStatus({
   username,
-  currentWeek,
   picksForPoolAndSeason,
-  weekStarted,
   lives,
   events,
 }: {
   username: string;
-  currentWeek: number;
   picksForPoolAndSeason: (typeof picks.$inferSelect)[];
-  weekStarted: number;
   lives: number;
   events: Events;
 }) {
@@ -32,8 +28,6 @@ export function userEliminationStatus({
   const numberOfWeeksFailedToPick = getNumberOfWeeksFailedToPick(
     picksForPoolAndSeason,
     username,
-    currentWeek,
-    weekStarted,
   );
   const livesLost =
     lostPicksWhereSomeoneElseWonThatWeek.length + numberOfWeeksFailedToPick;
@@ -62,22 +56,23 @@ export function userEliminationStatus({
 function getNumberOfWeeksFailedToPick(
   picksForPoolAndSeason: (typeof picks.$inferSelect)[],
   username: string,
-  currentWeek: number,
-  weekStarted: number,
 ) {
-  const userPicks = picksForPoolAndSeason.filter(
-    (pick) => pick.username === username,
-  );
-  const weeksUserPicked = userPicks.map((pick) => pick.week);
+  const weeksUserPicked = picksForPoolAndSeason
+    .filter((pick) => pick.username === username)
+    .map((pick) => pick.week);
   const weeksEveryoneElsePicked = picksForPoolAndSeason
     .filter((pick) => pick.username !== username)
     .map((pick) => pick.week);
-  const allWeeksFromWeekStartedToCurrentWeek = Array.from(
-    { length: currentWeek - weekStarted },
-    (_, i) => i + weekStarted,
-  );
+
+  const allWeeksWithCompletedPicks = picksForPoolAndSeason
+    .filter((pick) => pick.result !== "PENDING")
+    .map((pick) => pick.week);
+  const uniqueWeeksWithCompletedPicks = [
+    ...new Set(allWeeksWithCompletedPicks),
+  ];
+
   const weeksUserFailedToPickWhenSomeoneElsePicked =
-    allWeeksFromWeekStartedToCurrentWeek.filter(
+    uniqueWeeksWithCompletedPicks.filter(
       (week) =>
         !weeksUserPicked.includes(week) &&
         weeksEveryoneElsePicked.includes(week),

@@ -164,9 +164,7 @@ describe("user elimination", () => {
     ] as (typeof picks.$inferSelect)[];
     const { eliminated, livesRemaining } = userEliminationStatus({
       username: "user1",
-      currentWeek: 1,
       picksForPoolAndSeason,
-      weekStarted: 1,
       lives: 1,
       events: mockEspnResponse.events as Events,
     });
@@ -209,9 +207,7 @@ describe("user elimination", () => {
     ] as (typeof picks.$inferSelect)[];
     const { eliminated, livesRemaining } = userEliminationStatus({
       username: "user1",
-      currentWeek: 3,
       picksForPoolAndSeason,
-      weekStarted: 1,
       lives: 1,
       events: mockEspnResponse.events as Events,
     });
@@ -248,18 +244,14 @@ describe("user elimination", () => {
     ] as (typeof picks.$inferSelect)[];
     const { eliminated } = userEliminationStatus({
       username: "user1",
-      currentWeek: 3,
       picksForPoolAndSeason,
-      weekStarted: 1,
       lives: 1,
       events: mockEspnResponse.events as Events,
     });
     expect(eliminated).toBeFalse();
     const { eliminated: eliminatedNextWeek } = userEliminationStatus({
       username: "user1",
-      currentWeek: 3,
       picksForPoolAndSeason,
-      weekStarted: 1,
       lives: 1,
       events: mockEspnResponse.events as Events,
     });
@@ -295,18 +287,14 @@ describe("user elimination", () => {
     ] as (typeof picks.$inferSelect)[];
     const { eliminated } = userEliminationStatus({
       username: "user2",
-      currentWeek: 2,
       picksForPoolAndSeason,
-      weekStarted: 1,
       lives: 1,
       events: mockEspnResponse.events as Events,
     });
     expect(eliminated).toBeTrue();
     const { eliminated: eliminatedNextWeek } = userEliminationStatus({
       username: "user2",
-      currentWeek: 3,
       picksForPoolAndSeason,
-      weekStarted: 1,
       lives: 1,
       events: mockEspnResponse.events as Events,
     });
@@ -342,18 +330,14 @@ describe("user elimination", () => {
     ] as (typeof picks.$inferSelect)[];
     const { eliminated: user1Eliminated } = userEliminationStatus({
       username: "user1",
-      currentWeek: 3,
       picksForPoolAndSeason,
-      weekStarted: 1,
       lives: 1,
       events: mockEspnResponse.events as Events,
     });
     expect(user1Eliminated).toBeFalse();
     const { eliminated: user2Eliminated } = userEliminationStatus({
       username: "user2",
-      currentWeek: 3,
       picksForPoolAndSeason,
-      weekStarted: 1,
       lives: 1,
       events: mockEspnResponse.events as Events,
     });
@@ -395,9 +379,7 @@ describe("user elimination", () => {
     ] as (typeof picks.$inferSelect)[];
     const { eliminated: user1Eliminated } = userEliminationStatus({
       username: "user1",
-      currentWeek: 3,
       picksForPoolAndSeason,
-      weekStarted: 1,
       lives: 2,
       events: mockEspnResponse.events as Events,
     });
@@ -439,9 +421,7 @@ describe("user elimination", () => {
     ] as (typeof picks.$inferSelect)[];
     const { eliminated: user1Eliminated } = userEliminationStatus({
       username: "user1",
-      currentWeek: 3,
       picksForPoolAndSeason,
-      weekStarted: 1,
       lives: 2,
       events: mockEspnResponse.events as Events,
     });
@@ -479,9 +459,7 @@ describe("user elimination", () => {
     const { eliminated: user1Eliminated, livesRemaining: user1LivesRemaining } =
       userEliminationStatus({
         username: "user1",
-        currentWeek: 3,
         picksForPoolAndSeason,
-        weekStarted: 1,
         lives: 1,
         events,
       });
@@ -491,9 +469,7 @@ describe("user elimination", () => {
     const { eliminated: user2Eliminated, livesRemaining: user2LivesRemaining } =
       userEliminationStatus({
         username: "user2",
-        currentWeek: 3,
         picksForPoolAndSeason,
-        weekStarted: 1,
         lives: 1,
         events,
       });
@@ -521,9 +497,7 @@ describe("user elimination", () => {
 
     const { eliminated, livesRemaining } = userEliminationStatus({
       username: "user1",
-      currentWeek: 2,
       picksForPoolAndSeason,
-      weekStarted: 1,
       lives: 1,
       events,
     });
@@ -574,9 +548,7 @@ describe("user elimination", () => {
     const { eliminated: user1Eliminated, livesRemaining: user1LivesRemaining } =
       userEliminationStatus({
         username: "user1",
-        currentWeek: 3,
         picksForPoolAndSeason,
-        weekStarted: 1,
         lives: 1,
         events,
       });
@@ -586,9 +558,7 @@ describe("user elimination", () => {
     const { eliminated: user2Eliminated, livesRemaining: user2LivesRemaining } =
       userEliminationStatus({
         username: "user2",
-        currentWeek: 3,
         picksForPoolAndSeason,
-        weekStarted: 1,
         lives: 1,
         events,
       });
@@ -639,9 +609,7 @@ describe("user elimination", () => {
     const { eliminated: user1Eliminated, livesRemaining: user1LivesRemaining } =
       userEliminationStatus({
         username: "user1",
-        currentWeek: 4,
         picksForPoolAndSeason,
-        weekStarted: 1,
         lives: 1,
         events,
       });
@@ -651,9 +619,7 @@ describe("user elimination", () => {
     const { eliminated: user2Eliminated, livesRemaining: user2LivesRemaining } =
       userEliminationStatus({
         username: "user2",
-        currentWeek: 4,
         picksForPoolAndSeason,
-        weekStarted: 1,
         lives: 1,
         events,
       });

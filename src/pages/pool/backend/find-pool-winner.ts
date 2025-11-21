@@ -4,17 +4,13 @@ import { members, picks } from "../../../schema";
 import { userEliminationStatus } from "./user-elimination-status";
 
 export async function findPoolWinner({
-  currentWeek,
   picksForPoolAndSeason,
   poolMembers,
-  weekStarted,
   lives,
   events,
 }: {
-  currentWeek: number;
   picksForPoolAndSeason: (typeof picks.$inferSelect)[];
   poolMembers: (typeof members.$inferSelect)[];
-  weekStarted: number;
   lives: number;
   events: Events;
 }) {
@@ -22,8 +18,6 @@ export async function findPoolWinner({
     ({ username }) =>
       !userEliminationStatus({
         username,
-        currentWeek,
-        weekStarted,
         picksForPoolAndSeason,
         lives,
         events,

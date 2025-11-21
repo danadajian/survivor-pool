@@ -45,12 +45,7 @@ export async function fetchPoolInfo({
       message: "Pool not found.",
       code: "NOT_FOUND",
     });
-  const {
-    weekStarted,
-    lives,
-    name: poolName,
-    creator: poolCreatorUsername,
-  } = poolsResult;
+  const { lives, name: poolName, creator: poolCreatorUsername } = poolsResult;
   const poolWinnerUsername = poolsResult.poolWinner;
   const poolWinnerMember = poolWinnerUsername
     ? poolMembers.find((member) => member.username === poolWinnerUsername)
@@ -64,9 +59,7 @@ export async function fetchPoolInfo({
     : undefined;
   const { eliminated, livesRemaining } = userEliminationStatus({
     username,
-    currentWeek,
     picksForPoolAndSeason,
-    weekStarted,
     lives,
     events,
   });
