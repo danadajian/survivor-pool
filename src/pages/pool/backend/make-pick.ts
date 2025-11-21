@@ -36,15 +36,13 @@ export async function makePick({
       .set({ teamPicked, pickIsSecret })
       .where(eq(picks.id, existingPendingPick.id));
   }
-  return db
-    .insert(picks)
-    .values({
-      username,
-      teamPicked,
-      week,
-      season,
-      poolId,
-      pickIsSecret,
-      pickDate: "",
-    });
+  return db.insert(picks).values({
+    username,
+    teamPicked,
+    week,
+    season,
+    poolId,
+    pickIsSecret,
+    pickDate: "",
+  });
 }
