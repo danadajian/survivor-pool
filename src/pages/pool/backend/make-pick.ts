@@ -38,5 +38,13 @@ export async function makePick({
   }
   return db
     .insert(picks)
-    .values({ username, teamPicked, week, season, poolId, pickIsSecret });
+    .values({
+      username,
+      teamPicked,
+      week,
+      season,
+      poolId,
+      pickIsSecret,
+      pickDate: "",
+    });
 }
