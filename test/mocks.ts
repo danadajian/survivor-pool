@@ -11019,7 +11019,7 @@ export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
       eventButtons: basicEventButtons,
-      currentWeek: mockEspnResponse.week.number,
+      currentPickDate: `Week ${mockEspnResponse.week.number}`,
       currentSeason: mockEspnResponse.season.year,
       poolName: "Test Pool",
       poolCreatorUsername: "test@user.com",
@@ -11037,7 +11037,7 @@ export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
   result: {
     data: {
       eventButtons: [],
-      currentWeek: mockEspnPreseasonResponse.week.number,
+      currentPickDate: `Week ${mockEspnPreseasonResponse.week.number}`,
       currentSeason: mockEspnPreseasonResponse.season.year,
       poolName: "Test Pool",
       poolCreatorUsername: "test@user.com",
@@ -11053,7 +11053,7 @@ export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
       eventButtons: basicEventButtons,
-      currentWeek: mockEspnResponse.week.number,
+      currentPickDate: `Week ${mockEspnResponse.week.number}`,
       currentSeason: mockEspnResponse.season.year,
       poolName: "Test Pool",
       poolCreatorUsername: "test@user.com",
@@ -11065,7 +11065,7 @@ export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
       userPick: {
         teamPicked: "Bills",
         week: 1,
-        pickDate: "",
+        pickDate: "Week 1",
         season: 2023,
         poolId: "123",
         username: "test@user.com",
@@ -11082,7 +11082,7 @@ export const responseWithSecretPick: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
       eventButtons: basicEventButtons,
-      currentWeek: mockEspnResponse.week.number,
+      currentPickDate: `Week ${mockEspnResponse.week.number}`,
       currentSeason: mockEspnResponse.season.year,
       poolName: "Test Pool",
       poolCreatorUsername: "test@user.com",
@@ -11094,7 +11094,7 @@ export const responseWithSecretPick: TRPCResponse<RouterOutput["pool"]> = {
       userPick: {
         teamPicked: "Bills",
         week: 1,
-        pickDate: "",
+        pickDate: "Week 1",
         season: 2023,
         poolId: "123",
         username: "test@user.com",
@@ -11112,7 +11112,7 @@ export const poolMemberLivesRemainingResponse: TRPCResponse<
 > = {
   result: {
     data: {
-      week: 1,
+      pickDate: "Week 1",
       season: 2023,
       lives: 1,
       membersWithEliminationStatus: [
@@ -11149,7 +11149,7 @@ export const picksForWeekResponse: TRPCResponse<RouterOutput["picksForWeek"]> =
           lastName: "User1",
           teamPicked: "Chiefs",
           pickIsSecret: false,
-          week: 1,
+          pickDate: "Week 1",
           season: 2023,
           poolId: "12345",
           result: "PENDING",
@@ -11161,7 +11161,7 @@ export const picksForWeekResponse: TRPCResponse<RouterOutput["picksForWeek"]> =
           lastName: "User2",
           teamPicked: "Bills",
           pickIsSecret: false,
-          week: 1,
+          pickDate: "Week 1",
           season: 2023,
           poolId: "12345",
           result: "PENDING",

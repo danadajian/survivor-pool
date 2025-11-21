@@ -51,14 +51,14 @@ export async function prefetchQueriesForRoute(
 
   const weekParam = url.searchParams.get("week");
   const seasonParam = url.searchParams.get("season");
-  const week = weekParam ? Number(weekParam) : poolMemberData.week;
+  const pickDate = weekParam ?? poolMemberData.pickDate;
   const season = seasonParam ? Number(seasonParam) : poolMemberData.season;
 
   await queryClient.prefetchQuery({
     queryKey: [
       ["picksForWeek"],
-      { input: { poolId, week, season }, type: "query" },
+      { input: { poolId, pickDate, season }, type: "query" },
     ],
-    queryFn: () => caller.picksForWeek({ poolId, week, season }),
+    queryFn: () => caller.picksForWeek({ poolId, pickDate, season }),
   });
 }

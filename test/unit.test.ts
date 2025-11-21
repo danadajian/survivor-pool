@@ -151,13 +151,13 @@ describe("user elimination", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
@@ -176,31 +176,31 @@ describe("user elimination", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
       {
         username: "user2",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Eagles",
         result: "WON",
       },
       {
         username: "user1",
-        week: 3,
+        pickDate: "Week 3",
         teamPicked: "Giants",
         result: "PENDING",
       },
       {
         username: "user2",
-        week: 3,
+        pickDate: "Week 3",
         teamPicked: "Bengals",
         result: "PENDING",
       },
@@ -219,25 +219,25 @@ describe("user elimination", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
       {
         username: "user1",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Giants",
         result: "WON",
       },
       {
         username: "user2",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Eagles",
         result: "WON",
       },
@@ -262,25 +262,25 @@ describe("user elimination", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
       {
         username: "user1",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Giants",
         result: "WON",
       },
       {
         username: "user2",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Eagles",
         result: "LOST",
       },
@@ -305,25 +305,25 @@ describe("user elimination", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
       {
         username: "user1",
-        week: 3,
+        pickDate: "Week 3",
         teamPicked: "Giants",
         result: "PENDING",
       },
       {
         username: "user2",
-        week: 3,
+        pickDate: "Week 3",
         teamPicked: "Eagles",
         result: "PENDING",
       },
@@ -348,31 +348,31 @@ describe("user elimination", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
       {
         username: "user2",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Eagles",
         result: "WON",
       },
       {
         username: "user1",
-        week: 3,
+        pickDate: "Week 3",
         teamPicked: "Giants",
         result: "PENDING",
       },
       {
         username: "user2",
-        week: 3,
+        pickDate: "Week 3",
         teamPicked: "Bengals",
         result: "PENDING",
       },
@@ -390,31 +390,31 @@ describe("user elimination", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "49ers",
         result: "WON",
       },
       {
         username: "user2",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Eagles",
         result: "WON",
       },
       {
         username: "user1",
-        week: 3,
+        pickDate: "Week 3",
         teamPicked: "Giants",
         result: "LOST",
       },
       {
         username: "user2",
-        week: 3,
+        pickDate: "Week 3",
         teamPicked: "Bengals",
         result: "WON",
       },
@@ -432,25 +432,25 @@ describe("user elimination", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user1",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Jets",
         result: "WON",
       },
       {
         username: "user2",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Giants",
         result: "WON",
       },
@@ -481,7 +481,7 @@ describe("user elimination", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
@@ -521,25 +521,25 @@ describe("user elimination", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user1",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Jets",
         result: "WON",
       },
       {
         username: "user2",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Jets",
         result: "WON",
       },
@@ -570,37 +570,37 @@ describe("user elimination", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user1",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Jets",
         result: "WON",
       },
       {
         username: "user2",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Jets",
         result: "WON",
       },
       {
         username: "user1",
-        week: 3,
+        pickDate: "Week 3",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user2",
-        week: 3,
+        pickDate: "Week 3",
         teamPicked: "Jets",
         result: "LOST",
       },
@@ -633,13 +633,13 @@ describe("forbidden teams", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Jets",
         result: "WON",
       },
@@ -656,19 +656,19 @@ describe("forbidden teams", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Giants",
         result: "WON",
       },
       {
         username: "user1",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Jets",
         result: "PENDING",
       },
@@ -685,25 +685,25 @@ describe("forbidden teams", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user1",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Jets",
         result: "WON",
       },
       {
         username: "user2",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Jets",
         result: "WON",
       },
@@ -721,25 +721,25 @@ describe("forbidden teams", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Giants",
         result: "WON",
       },
       {
         username: "user1",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Jets",
         result: "WON",
       },
       {
         username: "user2",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Jets",
         result: "WON",
       },
@@ -757,37 +757,37 @@ describe("forbidden teams", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user2",
-        week: 1,
+        pickDate: "Week 1",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user1",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Jets",
         result: "WON",
       },
       {
         username: "user2",
-        week: 2,
+        pickDate: "Week 2",
         teamPicked: "Jets",
         result: "WON",
       },
       {
         username: "user1",
-        week: 3,
+        pickDate: "Week 3",
         teamPicked: "Bills",
         result: "WON",
       },
       {
         username: "user2",
-        week: 3,
+        pickDate: "Week 3",
         teamPicked: "Jets",
         result: "WON",
       },

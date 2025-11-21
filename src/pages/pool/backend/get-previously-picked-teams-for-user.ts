@@ -28,10 +28,16 @@ export function getPreviouslyPickedTeamsForUser({
     .map((pick) => pick.teamPicked);
 
   const maxWeekWithResults = Math.max(
-    ...completedPicksForPoolAndSeason.map((pick) => pick.week),
+    ...completedPicksForPoolAndSeason.map((pick) => {
+      const match = pick.pickDate.match(/(\d+)/);
+      return match ? parseInt(match[0], 10) : 0;
+    }),
   );
   const picksFromRemainingUsers = completedPicksForPoolAndSeason.filter(
-    (pick) => pick.week === maxWeekWithResults,
+    (pick) => {
+      const match = pick.pickDate.match(/(\d+)/);
+      return (match ? parseInt(match[0], 10) : 0) === maxWeekWithResults;
+    },
   );
   const remainingUsers = [
     ...new Set(picksFromRemainingUsers.map((pick) => pick.username)),

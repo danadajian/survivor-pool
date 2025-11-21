@@ -105,14 +105,14 @@ describe("feature tests", () => {
     await makePick({
       username: user1,
       teamPicked: "Giants",
-      week: 1,
+      pickDate: "Week 1",
       season,
       poolId,
     });
     await makePick({
       username: user2,
       teamPicked: "49ers",
-      week: 1,
+      pickDate: "Week 1",
       season,
       poolId,
       pickIsSecret: true,
@@ -120,26 +120,26 @@ describe("feature tests", () => {
     const user1Pick = await db.query.picks.findFirst({
       where: and(
         eq(picks.username, user1),
-        eq(picks.week, 1),
+        eq(picks.pickDate, "Week 1"),
         eq(picks.poolId, poolId),
         eq(picks.season, season),
       ),
     });
     expect(user1Pick?.username).toEqual(user1);
-    expect(user1Pick?.week).toEqual(1);
+    expect(user1Pick?.pickDate).toEqual("Week 1");
     expect(user1Pick?.season).toEqual(season);
     expect(user1Pick?.poolId).toEqual(poolId);
     expect(user1Pick?.teamPicked).toEqual("Giants");
     const user2Pick = await db.query.picks.findFirst({
       where: and(
         eq(picks.username, user2),
-        eq(picks.week, 1),
+        eq(picks.pickDate, "Week 1"),
         eq(picks.poolId, poolId),
         eq(picks.season, season),
       ),
     });
     expect(user2Pick?.username).toEqual(user2);
-    expect(user2Pick?.week).toEqual(1);
+    expect(user2Pick?.pickDate).toEqual("Week 1");
     expect(user2Pick?.season).toEqual(season);
     expect(user2Pick?.poolId).toEqual(poolId);
     expect(user2Pick?.teamPicked).toEqual("49ers");
@@ -172,7 +172,7 @@ describe("feature tests", () => {
     });
     const picks = await fetchPicksForWeek({
       poolId,
-      week: 1,
+      pickDate: "Week 1",
       season,
     });
     const secretPick = picks.find((pick) => pick.pickIsSecret);
@@ -199,9 +199,9 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    await updateResults(eventsWithPendingResult, 1, season);
+    await updateResults(eventsWithPendingResult, "Week 1", season);
     const userPicks = await db.query.picks.findMany({
-      where: and(eq(picks.week, 1), eq(picks.season, season)),
+      where: and(eq(picks.pickDate, "Week 1"), eq(picks.season, season)),
     });
     expect(userPicks.every((pick) => pick.result === "PENDING")).toBeTrue();
     const picksForPoolAndSeason = await fetchPicks(poolId, season);
@@ -259,11 +259,11 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    await updateResults(eventsWithWinningResult, 1, season);
+    await updateResults(eventsWithWinningResult, "Week 1", season);
     const userPick1 = await db.query.picks.findFirst({
       where: and(
         eq(picks.username, user1),
-        eq(picks.week, 1),
+        eq(picks.pickDate, "Week 1"),
         eq(picks.season, season),
       ),
     });
@@ -282,7 +282,7 @@ describe("feature tests", () => {
     const userPick2 = await db.query.picks.findFirst({
       where: and(
         eq(picks.username, user2),
-        eq(picks.week, 1),
+        eq(picks.pickDate, "Week 1"),
         eq(picks.season, season),
       ),
     });
@@ -324,7 +324,7 @@ describe("feature tests", () => {
     });
     const picks = await fetchPicksForWeek({
       poolId,
-      week: 1,
+      pickDate: "Week 1",
       season,
     });
     const secretPick = picks.find((pick) => pick.pickIsSecret);
@@ -336,7 +336,7 @@ describe("feature tests", () => {
   it("should eliminate users who fail to make a pick the week before", async () => {
     const poolId = await getPoolId();
     const events = mockEspnResponse.events as Events;
-    await updateResults(events, 2, season);
+    await updateResults(events, "Week 2", season);
 
     const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
@@ -369,14 +369,14 @@ describe("feature tests", () => {
     await makePick({
       username: user1,
       teamPicked: losingTeam,
-      week: 2,
+      pickDate: "Week 2",
       season,
       poolId,
     });
     await makePick({
       username: user2,
       teamPicked: losingTeam,
-      week: 2,
+      pickDate: "Week 2",
       season,
       poolId,
     });
@@ -400,7 +400,7 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    await updateResults(events, 2, season);
+    await updateResults(events, "Week 2", season);
     const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
       userEliminationStatus({
@@ -429,14 +429,14 @@ describe("feature tests", () => {
     await makePick({
       username: user1,
       teamPicked: winningTeam,
-      week: 3,
+      pickDate: "Week 3",
       season,
       poolId,
     });
     await makePick({
       username: user2,
       teamPicked: tyingTeam1,
-      week: 3,
+      pickDate: "Week 3",
       season,
       poolId,
     });
@@ -475,7 +475,7 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    await updateResults(eventsWithTie, 3, season);
+    await updateResults(eventsWithTie, "Week 3", season);
 
     const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
@@ -512,7 +512,7 @@ describe("feature tests", () => {
     const poolId = await getPoolId();
 
     const events = mockEspnResponse.events as Events;
-    await updateResults(events, 3, season);
+    await updateResults(events, "Week 3", season);
 
     const pool = await db.query.pools.findFirst({
       where: eq(pools.id, poolId),
@@ -569,18 +569,18 @@ describe("feature tests", () => {
 
   it("should not eliminate user with 2 lives after 1 loss", async () => {
     const poolId = await getPoolId();
-    const currentWeek = 4;
+    const currentWeek = "Week 4";
     await makePick({
       username: user1,
       teamPicked: "49ers",
-      week: currentWeek,
+      pickDate: currentWeek,
       season,
       poolId,
     });
     await makePick({
       username: user2,
       teamPicked: "Giants",
-      week: currentWeek,
+      pickDate: currentWeek,
       season,
       poolId,
     });
@@ -624,18 +624,18 @@ describe("feature tests", () => {
 
   it("should not declare pool winner until all picks are completed", async () => {
     const poolId = await getPoolId();
-    const currentWeek = 5;
+    const currentWeek = "Week 5";
     await makePick({
       username: user1,
       teamPicked: "Patriots",
-      week: currentWeek,
+      pickDate: currentWeek,
       season,
       poolId,
     });
     await makePick({
       username: user2,
       teamPicked: "Dolphins",
-      week: currentWeek,
+      pickDate: currentWeek,
       season,
       poolId,
     });
@@ -678,7 +678,7 @@ describe("feature tests", () => {
 
   it("should eliminate user with 2 lives after 2 losses and declare pool winner", async () => {
     const poolId = await getPoolId();
-    const currentWeek = 5;
+    const currentWeek = "Week 5";
     const events = [
       {
         competitions: [

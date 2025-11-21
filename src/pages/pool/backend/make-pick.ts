@@ -7,7 +7,7 @@ import { picks } from "../../../schema";
 export const makePickInput = v.object({
   username: v.string(),
   teamPicked: v.string(),
-  week: v.number(),
+  pickDate: v.string(),
   season: v.number(),
   poolId: v.pipe(v.string(), v.uuid()),
   pickIsSecret: v.optional(v.boolean()),
@@ -16,7 +16,7 @@ export const makePickInput = v.object({
 export async function makePick({
   username,
   teamPicked,
-  week,
+  pickDate,
   season,
   poolId,
   pickIsSecret,
@@ -25,7 +25,7 @@ export async function makePick({
     where: and(
       eq(picks.username, username),
       eq(picks.poolId, poolId),
-      eq(picks.week, week),
+      eq(picks.pickDate, pickDate),
       eq(picks.season, season),
       eq(picks.result, "PENDING"),
     ),
@@ -39,10 +39,9 @@ export async function makePick({
   return db.insert(picks).values({
     username,
     teamPicked,
-    week,
+    pickDate,
     season,
     poolId,
     pickIsSecret,
-    pickDate: "",
   });
 }

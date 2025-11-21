@@ -13,13 +13,13 @@ export const fetchPoolMembersInput = v.object({
 
 export const fetchPicksForWeekInput = v.object({
   poolId: v.pipe(v.string(), v.uuid()),
-  week: v.number(),
+  pickDate: v.string(),
   season: v.number(),
 });
 
 export async function fetchPicksForWeek({
   poolId,
-  week,
+  pickDate,
   season,
 }: v.InferInput<typeof fetchPicksForWeekInput>) {
   const gamesResponse = await fetchCurrentGames();
@@ -31,7 +31,7 @@ export async function fetchPicksForWeek({
       firstName: members.firstName,
       lastName: members.lastName,
       teamPicked: picks.teamPicked,
-      week: picks.week,
+      pickDate: picks.pickDate,
       season: picks.season,
       poolId: picks.poolId,
       pickIsSecret: picks.pickIsSecret,
@@ -48,7 +48,7 @@ export async function fetchPicksForWeek({
     )
     .where(
       and(
-        eq(picks.week, week),
+        eq(picks.pickDate, pickDate),
         eq(picks.season, season),
         eq(picks.poolId, poolId),
       ),
@@ -114,7 +114,7 @@ export async function fetchPoolMembers({
   return {
     membersWithEliminationStatus,
     lives,
-    week: currentWeek,
+    pickDate: `Week ${currentWeek}`,
     season: currentSeason,
   };
 }

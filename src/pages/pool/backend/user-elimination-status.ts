@@ -21,7 +21,8 @@ export function userEliminationStatus({
     (userPick) =>
       picksForPoolAndSeason
         .filter(
-          (pick) => pick.week === userPick.week && pick.username !== username,
+          (pick) =>
+            pick.pickDate === userPick.pickDate && pick.username !== username,
         )
         .some((pick) => pick.result === "WON"),
   );
@@ -59,14 +60,14 @@ function getNumberOfWeeksFailedToPick(
 ) {
   const weeksUserPicked = picksForPoolAndSeason
     .filter((pick) => pick.username === username)
-    .map((pick) => pick.week);
+    .map((pick) => pick.pickDate);
   const weeksEveryoneElsePicked = picksForPoolAndSeason
     .filter((pick) => pick.username !== username)
-    .map((pick) => pick.week);
+    .map((pick) => pick.pickDate);
 
   const allWeeksWithCompletedPicks = picksForPoolAndSeason
     .filter((pick) => pick.result !== "PENDING")
-    .map((pick) => pick.week);
+    .map((pick) => pick.pickDate);
   const uniqueWeeksWithCompletedPicks = [
     ...new Set(allWeeksWithCompletedPicks),
   ];

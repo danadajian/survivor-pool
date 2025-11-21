@@ -40,7 +40,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
   const {
     eventButtons,
     currentSeason,
-    currentWeek,
+    currentPickDate,
     poolName,
     poolWinnerDisplayName,
     poolMembers,
@@ -63,7 +63,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
         <PicksView
           poolId={poolId}
           username={username}
-          currentWeek={currentWeek}
+          currentPickDate={currentPickDate}
           currentSeason={currentSeason}
         />
       );
@@ -129,7 +129,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
       <Surface className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold text-slate-800">
-            Week {currentWeek}
+            {currentPickDate}
           </h2>
           <PickStatusCard
             status={pickStatus}
@@ -330,14 +330,14 @@ export const Pool = withPage(PoolComponent);
 type PicksViewProps = {
   poolId: string;
   username: string;
-  currentWeek: number;
+  currentPickDate: string;
   currentSeason: number;
 };
 
 const PicksView = ({
   poolId,
   username,
-  currentWeek,
+  currentPickDate,
   currentSeason,
 }: PicksViewProps) => {
   const {
@@ -350,10 +350,14 @@ const PicksView = ({
 
   const membersWithEliminationStatus = poolData?.membersWithEliminationStatus;
   const lives = poolData?.lives;
-  const week = Number(weekUrlParam ?? currentWeek);
+  const pickDate = weekUrlParam ?? currentPickDate;
   const season = Number(seasonUrlParam ?? currentSeason);
 
-  const weekOptions = Array.from({ length: currentWeek }, (_, i) => i + 1);
+  const currentWeekNumber = Number(currentPickDate.split(" ")[1] ?? 1);
+  const weekOptions = Array.from(
+    { length: currentWeekNumber },
+    (_, i) => `Week ${i + 1}`,
+  );
 
   return (
     <>
@@ -364,14 +368,14 @@ const PicksView = ({
           </h2>
           <WeekDropdown
             options={weekOptions}
-            selected={week}
-            onSelect={(option) => setUrlParams({ week: String(option) })}
+            selected={pickDate}
+            onSelect={(option) => setUrlParams({ week: option })}
           />
         </div>
         <PickTable
           poolId={poolId}
           username={username}
-          week={week}
+          pickDate={pickDate}
           season={season}
         />
       </Surface>
@@ -396,14 +400,14 @@ const PicksView = ({
 type PickTableProps = {
   poolId: string;
   username: string;
-  week: number;
+  pickDate: string;
   season: number;
 };
 
-const PickTable = ({ poolId, username, week, season }: PickTableProps) => {
+const PickTable = ({ poolId, username, pickDate, season }: PickTableProps) => {
   const { data: picks, isLoading } = trpc.picksForWeek.useQuery({
     poolId,
-    week,
+    pickDate,
     season,
   });
 
@@ -418,7 +422,7 @@ const PickTable = ({ poolId, username, week, season }: PickTableProps) => {
   if (!picks || picks.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-slate-300/80 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
-        No picks recorded for Week {week} yet.
+        No picks recorded for {pickDate} yet.
       </div>
     );
   }

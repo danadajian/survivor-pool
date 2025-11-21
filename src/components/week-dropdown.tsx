@@ -7,9 +7,9 @@ export const WeekDropdown = ({
   options,
   onSelect,
 }: {
-  selected: number;
-  options: number[];
-  onSelect: (option: number) => void;
+  selected: string;
+  options: string[];
+  onSelect: (option: string) => void;
 }) => {
   const { showOptions, position, buttonRef, dropdownRef, toggle, close } =
     useDropdown();
@@ -28,7 +28,7 @@ export const WeekDropdown = ({
     }
   }, [selected, showOptions, dropdownRef]);
 
-  const onClick = (option: number) => {
+  const onClick = (option: string) => {
     onSelect(option);
     close();
   };
@@ -86,7 +86,7 @@ export const WeekDropdown = ({
             role="menuitem"
             tabIndex={-1}
           >
-            {`Week ${option}`}
+            {option}
           </button>
         ))}
       </PortalDropdownMenu>

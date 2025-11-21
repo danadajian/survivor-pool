@@ -7,12 +7,12 @@ import { findPoolWinner } from "../../src/pages/pool/backend/find-pool-winner";
 
 export async function updateResults(
   events: Events,
-  week: number,
+  pickDate: string,
   season: number,
 ) {
   const pendingUserPicksThisWeek = await db.query.picks.findMany({
     where: and(
-      eq(picks.week, week),
+      eq(picks.pickDate, pickDate),
       eq(picks.season, season),
       eq(picks.result, "PENDING"),
     ),
@@ -38,7 +38,7 @@ export async function updateResults(
         and(
           eq(picks.username, username),
           eq(picks.poolId, poolId),
-          eq(picks.week, week),
+          eq(picks.pickDate, pickDate),
           eq(picks.season, season),
           eq(picks.result, "PENDING"),
         ),

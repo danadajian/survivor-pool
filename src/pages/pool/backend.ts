@@ -35,6 +35,7 @@ export async function fetchPoolInfo({
     season: { year: currentSeason },
     week: { number: currentWeek },
   } = games;
+  const currentPickDate = `Week ${currentWeek}`;
 
   const picksForPoolAndSeason = await fetchPicks(poolId, currentSeason);
   const poolsResult = await db.query.pools.findFirst({
@@ -64,7 +65,7 @@ export async function fetchPoolInfo({
     events,
   });
   const userPick = picksForPoolAndSeason.find(
-    (pick) => pick.username === username && pick.week === currentWeek,
+    (pick) => pick.username === username && pick.pickDate === currentPickDate,
   );
   const previouslyPickedTeams = getPreviouslyPickedTeamsForUser({
     username,
@@ -110,7 +111,7 @@ export async function fetchPoolInfo({
     livesRemaining,
     eventButtons,
     currentSeason,
-    currentWeek,
+    currentPickDate,
     poolName,
     poolCreatorUsername,
     poolCreatorDisplayName,
