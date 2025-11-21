@@ -99,6 +99,18 @@ export async function fetchPoolInfo({
     lastName: poolCreatorMember?.lastName,
   });
 
+  const availablePickDates = Array.from(
+    new Set([
+      ...picksForPoolAndSeason.map((pick) => pick.pickDate),
+      currentGameDate,
+    ]),
+  ).sort((a, b) => {
+    if (a.startsWith("Week ") && b.startsWith("Week ")) {
+      return Number(a.split(" ")[1] ?? 0) - Number(b.split(" ")[1] ?? 0);
+    }
+    return a.localeCompare(b);
+  });
+
   const userPickTeam = events
     .flatMap((event) => event.competitions)
     .flatMap((competition) => competition.competitors)
@@ -119,6 +131,7 @@ export async function fetchPoolInfo({
     poolMembers,
     poolWinnerDisplayName,
     sport,
+    availablePickDates,
   };
 }
 

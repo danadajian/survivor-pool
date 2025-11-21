@@ -1,8 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
+import { Sport } from "src/utils/fetch-current-games";
 
 import { ChangePoolDropdown } from "../../components/change-pool-dropdown";
+import { GameDateDropdown } from "../../components/game-date-dropdown";
 import { Heading } from "../../components/heading";
 import { Loader } from "../../components/loader";
 import { type PageProps, withPage } from "../../components/page-wrapper";
@@ -11,7 +13,6 @@ import { SecretPickProvider } from "../../components/secret-pick-provider";
 import { TeamButton } from "../../components/team-button";
 import { Button } from "../../components/ui/button";
 import { Surface } from "../../components/ui/surface";
-import { WeekDropdown } from "../../components/week-dropdown";
 import { type RouterOutput, trpc } from "../../trpc";
 import { type PickStatus } from "../../utils/get-pick-status";
 import { useUrlParams } from "../../utils/use-url-params";
@@ -41,6 +42,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
     eventButtons,
     currentSeason,
     currentGameDate,
+    availablePickDates,
     poolName,
     poolWinnerDisplayName,
     poolMembers,
@@ -54,7 +56,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
     sport,
   } = data;
 
-  const onReactivate = () => mutate({ poolId });
+  const onReactivate = () => mutate({ poolId, sport: sport as Sport });
   const isPoolCreator = username === poolCreatorUsername;
   const userPickIsSecret = userPick?.pickIsSecret;
 
@@ -66,6 +68,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
           username={username}
           currentGameDate={currentGameDate}
           currentSeason={currentSeason}
+          availablePickDates={availablePickDates}
         />
       );
     }
@@ -338,6 +341,7 @@ type PicksViewProps = {
   username: string;
   currentGameDate: string;
   currentSeason: number;
+  availablePickDates: string[];
 };
 
 const PicksView = ({
@@ -345,9 +349,10 @@ const PicksView = ({
   username,
   currentGameDate,
   currentSeason,
+  availablePickDates,
 }: PicksViewProps) => {
   const {
-    urlParams: { week: weekUrlParam, season: seasonUrlParam },
+    urlParams: { gameDate: gameDateUrlParam, season: seasonUrlParam },
     setUrlParams,
   } = useUrlParams();
   const { data: poolData, isLoading } = trpc.poolMemberLivesRemaining.useQuery({
@@ -356,14 +361,8 @@ const PicksView = ({
 
   const membersWithEliminationStatus = poolData?.membersWithEliminationStatus;
   const lives = poolData?.lives;
-  const pickDate = weekUrlParam ?? currentGameDate;
+  const pickDate = gameDateUrlParam ?? currentGameDate;
   const season = Number(seasonUrlParam ?? currentSeason);
-
-  const currentWeekNumber = Number(currentGameDate.split(" ")[1] ?? 1);
-  const weekOptions = Array.from(
-    { length: currentWeekNumber },
-    (_, i) => `Week ${i + 1}`,
-  );
 
   return (
     <>
@@ -372,8 +371,8 @@ const PicksView = ({
           <h2 className="text-lg font-semibold text-slate-800">
             Weekly results
           </h2>
-          <WeekDropdown
-            options={weekOptions}
+          <GameDateDropdown
+            options={availablePickDates}
             selected={pickDate}
             onSelect={(option) => setUrlParams({ week: option })}
           />

@@ -4,17 +4,16 @@ import * as v from "valibot";
 
 import { db } from "../../../db";
 import { members, pools } from "../../../schema";
-import {
-  fetchCurrentGames,
-  type Sport,
-} from "../../../utils/fetch-current-games";
+import { fetchCurrentGames } from "../../../utils/fetch-current-games";
 
 export const reactivatePoolInput = v.object({
   poolId: v.pipe(v.string(), v.uuid()),
+  sport: v.picklist(["nfl", "nba", "nhl"]),
 });
 
 export async function reactivatePool({
   poolId,
+  sport,
 }: v.InferInput<typeof reactivatePoolInput>) {
   const existingPool = await db.query.pools.findFirst({
     where: eq(pools.id, poolId),
@@ -26,15 +25,11 @@ export async function reactivatePool({
     });
   }
 
-  const { currentGameDate, currentSeason } = await fetchCurrentGames(
-    existingPool.sport as Sport,
-  );
-
-  const poolCurrentValue = currentGameDate;
+  const { currentGameDate, currentSeason } = await fetchCurrentGames(sport);
 
   const [poolResult] = await db
     .update(pools)
-    .set({ poolEnd: poolCurrentValue })
+    .set({ poolEnd: currentGameDate })
     .where(eq(pools.id, poolId))
     .returning();
   if (!poolResult)
@@ -49,7 +44,7 @@ export async function reactivatePool({
     .insert(pools)
     .values({
       ...poolFieldsToRetain,
-      poolStart: poolCurrentValue,
+      poolStart: currentGameDate,
       season: currentSeason,
     })
     .returning();
