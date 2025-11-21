@@ -62,7 +62,7 @@ describe("feature tests", () => {
     expect(result).toHaveLength(1);
     expect(result[0]?.name).toEqual("Test Pool");
     expect(result[0]?.creator).toEqual(user1);
-    expect(result[0]?.weekStarted).toEqual(1);
+    expect(result[0]?.poolStart).toEqual("Week 1");
   });
 
   it("should have added the creator as a member", async () => {
@@ -521,9 +521,9 @@ describe("feature tests", () => {
   });
 
   it("should reactivate the pool by creating a new pool and adding all members", async () => {
-    const weekStarted = 4;
+    const currentWeek = 4;
     mockGamesResponse({
-      week: { number: weekStarted },
+      week: { number: currentWeek },
       season: { year: season },
       events: [],
     });
@@ -531,10 +531,10 @@ describe("feature tests", () => {
     const newPool = await reactivatePool({ poolId: oldPoolId });
     if (!newPool) throw new Error();
     const oldPool = await getPool({ poolId: oldPoolId });
-    expect(oldPool?.weekStarted).toEqual(1);
-    expect(oldPool?.weekEnded).toEqual(weekStarted);
-    expect(newPool?.weekStarted).toEqual(weekStarted);
-    expect(newPool?.weekEnded).toEqual(null);
+    expect(oldPool?.poolStart).toEqual("Week 1");
+    expect(oldPool?.poolEnd).toEqual(`Week ${currentWeek}`);
+    expect(newPool?.poolStart).toEqual(`Week ${currentWeek}`);
+    expect(newPool?.poolEnd).toEqual(null);
     const oldPoolMembers = await db.query.members.findMany({
       where: eq(members.poolId, oldPoolId),
     });
@@ -553,8 +553,8 @@ describe("feature tests", () => {
       (winner) => winner.poolName === "Test Pool",
     );
     expect(testPoolWinner?.winner).toEqual(user1);
-    expect(testPoolWinner?.weekStarted).toEqual(1);
-    expect(testPoolWinner?.weekEnded).toEqual(4);
+    expect(testPoolWinner?.poolStart).toEqual("Week 1");
+    expect(testPoolWinner?.poolEnd).toEqual("Week 4");
   });
 
   it("should edit the pool to add multiple lives", async () => {

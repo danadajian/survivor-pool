@@ -19,7 +19,7 @@ export async function fetchPoolsForUser({
       creator: pools.creator,
     })
     .from(members)
-    .where(and(eq(members.username, username), isNull(pools.weekEnded)))
+    .where(and(eq(members.username, username), isNull(pools.poolEnd)))
     .innerJoin(pools, eq(members.poolId, pools.id));
 }
 

@@ -19,7 +19,7 @@ export async function reactivatePool({
   } = await fetchCurrentGames();
   const [poolResult] = await db
     .update(pools)
-    .set({ weekEnded: currentWeek })
+    .set({ poolEnd: `Week ${currentWeek}` })
     .where(eq(pools.id, poolId))
     .returning();
   if (!poolResult)
@@ -28,13 +28,13 @@ export async function reactivatePool({
       code: "INTERNAL_SERVER_ERROR",
     });
 
-  const { id, createdAt, weekEnded, poolWinner, ...poolFieldsToRetain } =
+  const { id, createdAt, poolEnd, poolWinner, ...poolFieldsToRetain } =
     poolResult;
   const [newPool] = await db
     .insert(pools)
     .values({
       ...poolFieldsToRetain,
-      weekStarted: currentWeek,
+      poolStart: `Week ${currentWeek}`,
       season: currentSeason,
     })
     .returning();

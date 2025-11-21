@@ -215,9 +215,9 @@ const WinnersList = ({
 const WinnerCard = ({ winner }: { winner: WinnerRecord }) => {
   const winnerDisplay = winner.winner;
   const weekRange =
-    winner.weekEnded && winner.weekEnded !== winner.weekStarted
-      ? `Weeks ${winner.weekStarted} – ${winner.weekEnded}`
-      : `Week ${winner.weekStarted}`;
+    winner.poolEnd && winner.poolEnd !== winner.poolStart
+      ? `${winner.poolStart} – ${winner.poolEnd}`
+      : winner.poolStart;
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm shadow-slate-900/10 transition hover:-translate-y-0.5 hover:shadow-lg sm:rounded-3xl sm:p-6">

@@ -42,9 +42,7 @@ export async function createPool({
       name: poolName,
       lives,
       creator: username,
-      weekStarted: currentWeek,
-      poolStart: "",
-      poolEnd: "",
+      poolStart: `Week ${currentWeek}`,
       season: currentSeason,
     })
     .returning({ id: pools.id });
