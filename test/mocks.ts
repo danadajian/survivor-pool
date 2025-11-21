@@ -11064,7 +11064,6 @@ export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
       pickStatus: "PICKED",
       userPick: {
         teamPicked: "Bills",
-        week: 1,
         pickDate: "Week 1",
         season: 2023,
         poolId: "123",
@@ -11093,7 +11092,6 @@ export const responseWithSecretPick: TRPCResponse<RouterOutput["pool"]> = {
       pickHeader: "You're riding with the Bills this week!",
       userPick: {
         teamPicked: "Bills",
-        week: 1,
         pickDate: "Week 1",
         season: 2023,
         poolId: "123",
