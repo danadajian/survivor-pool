@@ -30,14 +30,18 @@ export const NavBar = () => {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur">
       <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4 sm:gap-6 sm:px-6">
-        <div className="flex items-center gap-2 sm:gap-3">
+        <NavLink
+          to="/"
+          onClick={handleNavLinkClick}
+          className="flex items-center gap-2 rounded-lg transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-300 sm:gap-3"
+        >
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white shadow-sm">
             SP
           </div>
           <span className="hidden text-base font-semibold text-slate-900 sm:inline">
             Survivor Pool
           </span>
-        </div>
+        </NavLink>
         <div className="hidden flex-1 items-center justify-center gap-1.5 sm:flex sm:gap-2">
           {navItems.map(({ to, label }) => (
             <NavLink
