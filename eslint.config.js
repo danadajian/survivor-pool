@@ -38,7 +38,7 @@ export default [
         { assertionStyle: "never" },
       ],
     },
-    ignores: ["test/**/*", "cypress/**/*"],
+    ignores: ["test/**/*"],
   },
   {
     ignores: ["**/*.js", "public", "scripts"],

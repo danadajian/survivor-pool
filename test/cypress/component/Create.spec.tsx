@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Create } from "../../src/pages/create/frontend";
+import { Create } from "../../../src/pages/create/frontend";
 import { MockProviders } from "../support/mock-providers";
 
 describe("create page", () => {

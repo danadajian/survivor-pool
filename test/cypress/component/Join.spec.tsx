@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Join } from "../../src/pages/join/frontend";
+import { Join } from "../../../src/pages/join/frontend";
 import { MockProviders } from "../support/mock-providers";
 
 describe("join page", () => {

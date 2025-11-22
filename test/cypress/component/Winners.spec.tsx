@@ -1,8 +1,8 @@
 import type { TRPCResponse } from "@trpc/server/rpc";
 import React from "react";
 
-import { Winners } from "../../src/pages/winners/frontend";
-import type { RouterOutput } from "../../src/trpc";
+import { Winners } from "../../../src/pages/winners/frontend";
+import type { RouterOutput } from "../../../src/trpc";
 import { MockProviders } from "../support/mock-providers";
 
 const winnersResponse: TRPCResponse<RouterOutput["winners"]> = {

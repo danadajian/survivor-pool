@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Pool } from "../../src/pages/pool/frontend";
+import { Pool } from "../../../src/pages/pool/frontend";
 import {
   basicGamesAndPicksPreseasonResponse,
   basicGamesAndPicksResponse,
@@ -8,7 +8,7 @@ import {
   poolMemberLivesRemainingResponse,
   responseWithPick,
   responseWithSecretPick,
-} from "../../test/mocks";
+} from "../../mocks";
 import { MockProviders } from "../support/mock-providers";
 
 describe("pool page", () => {

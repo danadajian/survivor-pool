@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Home } from "../../src/pages/home/frontend";
-import { poolsForUserResponse } from "../../test/mocks";
+import { Home } from "../../../src/pages/home/frontend";
+import { poolsForUserResponse } from "../../mocks";
 import { MockProviders } from "../support/mock-providers";
 
 describe("home page", () => {

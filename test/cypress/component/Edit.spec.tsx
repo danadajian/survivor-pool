@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Edit } from "../../src/pages/edit/frontend";
+import { Edit } from "../../../src/pages/edit/frontend";
 import { MockProviders } from "../support/mock-providers";
 
 describe("edit page", () => {
