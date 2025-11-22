@@ -217,7 +217,7 @@ const WinnerCard = ({
 }: {
   winner: WinnerRecord;
 }) => {
-  const weekRange =
+  const poolDateRange =
     poolEnd && poolEnd !== poolStart ? `${poolStart} – ${poolEnd}` : poolStart;
 
   return (
@@ -241,7 +241,7 @@ const WinnerCard = ({
         </div>
         <div className="flex flex-col gap-2 text-xs text-slate-500 sm:flex-row sm:items-baseline sm:text-sm">
           <span className="inline-flex w-max items-center rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600 sm:px-3.5">
-            {weekRange}
+            {poolDateRange}
           </span>
           <span className="hidden sm:inline">
             Champion locked in and the pool is complete.

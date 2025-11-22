@@ -11065,7 +11065,7 @@ export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
       poolCreatorUsername: "test@user.com",
       poolCreatorDisplayName: "test@user.com",
       poolMembers: [],
-      pickHeader: "You're riding with the Bills this week!",
+      pickHeader: "You're riding with the Bills!",
       livesRemaining: 1,
       pickStatus: "PICKED",
       userPick: {
@@ -11097,7 +11097,7 @@ export const responseWithSecretPick: TRPCResponse<RouterOutput["pool"]> = {
       poolMembers: [],
       livesRemaining: 1,
       pickStatus: "PICKED",
-      pickHeader: "You're riding with the Bills this week!",
+      pickHeader: "You're riding with the Bills!",
       userPick: {
         teamPicked: "Bills",
         pickDate: "Week 1",

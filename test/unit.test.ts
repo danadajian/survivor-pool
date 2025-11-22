@@ -18,7 +18,7 @@ describe("pick header", () => {
       } as typeof picks.$inferSelect,
       pickStatus: "PICKED",
     });
-    expect(result).toEqual("You're riding with the Bills this week!");
+    expect(result).toEqual("You're riding with the Bills!");
   });
 
   test("pick is locked", () => {
@@ -71,9 +71,9 @@ describe("pick header", () => {
         teamPicked: "49ers",
         result: "PENDING",
       } as typeof picks.$inferSelect,
-      pickStatus: "MISSED_DEADLINE",
+      pickStatus: "MISSED DEADLINE",
     });
-    expect(result).toEqual("You missed the deadline to make a pick this week.");
+    expect(result).toEqual("You missed the deadline to make a pick.");
   });
 });
 

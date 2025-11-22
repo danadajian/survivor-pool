@@ -47,9 +47,7 @@ describe("pool page", () => {
     }).should("be.visible");
     cy.intercept("/trpc/pool*", { body: responseWithPick });
     cy.findByRole("button", { name: "Lock it in" }).click();
-    cy.findByText("You're riding with the Bills this week!").should(
-      "be.visible",
-    );
+    cy.findByText("You're riding with the Bills!").should("be.visible");
   });
 
   it("sets secret toggle state for secret pick", () => {

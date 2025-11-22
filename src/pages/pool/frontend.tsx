@@ -75,7 +75,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
         <Surface className="flex flex-col gap-6">
           <p className="text-base text-slate-600">
             Hang tight! The season hasn&apos;t started yet. Once games are on
-            the calendar, you&apos;ll see your weekly matchups here.
+            the calendar, you&apos;ll see your matchups here.
           </p>
           <div className="flex flex-col gap-3">
             <h3 className="text-sm font-semibold tracking-[0.2em] text-slate-500 uppercase">
@@ -240,7 +240,7 @@ const PickStatusCard = ({
       badge: "bg-blue-200 text-blue-800",
       message: "text-blue-700",
     },
-    MISSED_DEADLINE: {
+    ["MISSED DEADLINE"]: {
       container: "bg-rose-50 text-rose-900",
       badge: "bg-rose-200 text-rose-800",
       message: "text-rose-700",
@@ -371,7 +371,7 @@ const PicksView = ({
           <GameDateDropdown
             options={availablePickDates}
             selected={pickDate}
-            onSelect={(option) => setUrlParams({ week: option })}
+            onSelect={(option) => setUrlParams({ gameDate: option })}
           />
         </div>
         <PickTable

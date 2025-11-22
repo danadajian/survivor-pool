@@ -53,10 +53,6 @@ const JoinComponent = ({ user, poolId }: PageProps) => {
             {pool.sport}
           </span>
         </div>
-        <p className="text-sm text-slate-500">
-          Joining connects you to the latest picks, standings, and weekly
-          updates.
-        </p>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Button onClick={joinPool} type="button" className="w-full sm:w-auto">
             Join Pool

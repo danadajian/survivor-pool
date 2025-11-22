@@ -10,7 +10,7 @@ export type PickStatus =
   | "LOCKED"
   | "PICKED"
   | "PENDING"
-  | "MISSED_DEADLINE";
+  | "MISSED DEADLINE";
 
 export function getPickStatus({
   eliminated,
@@ -29,7 +29,7 @@ export function getPickStatus({
       previouslyPickedTeams,
     })
   ) {
-    return "MISSED_DEADLINE";
+    return "MISSED DEADLINE";
   }
 
   if (eliminated) {

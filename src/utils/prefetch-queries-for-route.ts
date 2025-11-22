@@ -49,9 +49,9 @@ export async function prefetchQueriesForRoute(
     queryFn: () => Promise.resolve(poolMemberData),
   });
 
-  const weekParam = url.searchParams.get("week");
+  const gameDateParam = url.searchParams.get("gameDate");
   const seasonParam = url.searchParams.get("season");
-  const pickDate = weekParam ?? poolMemberData.pickDate;
+  const pickDate = gameDateParam ?? poolMemberData.pickDate;
   const season = seasonParam ? Number(seasonParam) : poolMemberData.season;
 
   await queryClient.prefetchQuery({
