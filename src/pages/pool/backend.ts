@@ -105,7 +105,7 @@ export async function fetchPoolInfo({
       currentGameDate,
     ]),
   ).sort((a, b) => {
-    if (a.startsWith("Week ") && b.startsWith("Week ")) {
+    if (a.startsWith("Week") && b.startsWith("Week")) {
       return Number(a.split(" ")[1] ?? 0) - Number(b.split(" ")[1] ?? 0);
     }
     return a.localeCompare(b);
