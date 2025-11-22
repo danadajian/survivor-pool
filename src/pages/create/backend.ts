@@ -5,7 +5,7 @@ import * as v from "valibot";
 import { userFields } from "../../components/page-wrapper";
 import { db } from "../../db";
 import { pools } from "../../schema";
-import { fetchCurrentGames, type Sport } from "../../utils/fetch-current-games";
+import { fetchCurrentGames } from "../../utils/fetch-current-games";
 import { joinPool } from "../join/backend";
 
 export const createPoolInput = v.object({
@@ -34,9 +34,7 @@ export async function createPool({
     });
   }
 
-  const { currentGameDate, currentSeason } = await fetchCurrentGames(
-    sport as Sport,
-  );
+  const { currentGameDate, currentSeason } = await fetchCurrentGames(sport);
 
   const [insertResult] = await db
     .insert(pools)

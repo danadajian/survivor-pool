@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
-import { Sport } from "src/utils/fetch-current-games";
 
 import { ChangePoolDropdown } from "../../components/change-pool-dropdown";
 import { GameDateDropdown } from "../../components/game-date-dropdown";
@@ -23,8 +22,6 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
     urlParams: { view = "pick" },
     setUrlParams,
   } = useUrlParams();
-  const activeTab = view as "pick" | "all-picks";
-
   const [data] = trpc.pool.useSuspenseQuery({ username, poolId });
   const navigate = useNavigate();
   const utils = trpc.useUtils();
@@ -56,12 +53,12 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
     sport,
   } = data;
 
-  const onReactivate = () => mutate({ poolId, sport: sport as Sport });
+  const onReactivate = () => mutate({ poolId, sport });
   const isPoolCreator = username === poolCreatorUsername;
   const userPickIsSecret = userPick?.pickIsSecret;
 
   const renderContent = () => {
-    if (activeTab === "all-picks") {
+    if (view === "all-picks") {
       return (
         <PicksView
           poolId={poolId}
@@ -189,7 +186,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
             </div>
           </div>
           <PoolTabs
-            activeTab={activeTab}
+            activeTab={view}
             onTabChange={(tab) => setUrlParams({ view: tab })}
           />
         </div>

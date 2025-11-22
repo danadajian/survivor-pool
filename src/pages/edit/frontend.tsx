@@ -24,7 +24,7 @@ const EditComponent = ({ poolId }: PageProps) => {
   const [data] = trpc.getPool.useSuspenseQuery({ poolId });
   const [poolName, setPoolName] = useState(data.name);
   const [lives, setLives] = useState(data.lives);
-  const [sport, setSport] = useState<Sport>((data.sport as Sport) ?? "nfl");
+  const [sport, setSport] = useState<Sport>(data.sport);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { mutate, isSuccess } = trpc.editPool.useMutation({

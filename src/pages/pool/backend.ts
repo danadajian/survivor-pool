@@ -6,7 +6,7 @@ import { db } from "../../db";
 import { members, picks, pools } from "../../schema";
 import { buildPickHeader } from "../../utils/build-pick-header";
 import { buildUserDisplayName } from "../../utils/build-user-display-name";
-import { fetchCurrentGames, type Sport } from "../../utils/fetch-current-games";
+import { fetchCurrentGames } from "../../utils/fetch-current-games";
 import { getPickStatus } from "../../utils/get-pick-status";
 import { getEventButtons } from "./backend/get-event-buttons";
 import { getPreviouslyPickedTeamsForUser } from "./backend/get-previously-picked-teams-for-user";
@@ -43,7 +43,7 @@ export async function fetchPoolInfo({
     creator: poolCreatorUsername,
     sport,
   } = poolsResult;
-  const games = await fetchCurrentGames(sport as Sport);
+  const games = await fetchCurrentGames(sport);
   const { events, currentSeason, currentGameDate } = games;
 
   const picksForPoolAndSeason = await fetchPicks(poolId, currentSeason);

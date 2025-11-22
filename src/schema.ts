@@ -8,8 +8,6 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-export const resultEnum = pgEnum("result", ["WON", "LOST", "PENDING"]);
-
 export const picks = pgTable("picks", {
   id: uuid("id").primaryKey().defaultRandom(),
   username: varchar("username", { length: 256 }).notNull(),
@@ -19,14 +17,16 @@ export const picks = pgTable("picks", {
   poolId: uuid("pool_id").notNull(),
   timestamp: timestamp("timestamp").notNull().defaultNow(),
   pickIsSecret: boolean().default(false),
-  result: resultEnum("result").notNull().default("PENDING"),
+  result: pgEnum("result", ["WON", "LOST", "PENDING"])()
+    .notNull()
+    .default("PENDING"),
 });
 
 export const pools = pgTable("pools", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 256 }).notNull(),
   creator: varchar("creator", { length: 256 }).notNull(),
-  sport: varchar("sport", { length: 256 }).notNull().default("nfl"),
+  sport: pgEnum("sport", ["nfl", "nba", "nhl"])().notNull().default("nfl"),
   lives: integer("lives").notNull().default(1),
   poolStart: varchar("pool_start", { length: 256 }).notNull().default(""),
   poolEnd: varchar("pool_end", { length: 256 }),
