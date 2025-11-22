@@ -167,11 +167,14 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
               <Heading>
                 {poolWinnerDisplayName
                   ? `${poolWinnerDisplayName} has won this pool!`
-                  : `${poolName} ${currentSeason}`}
+                  : poolName}
               </Heading>
               <div className="flex items-center gap-3">
                 <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-bold tracking-wider text-slate-600 uppercase shadow-sm">
                   {sport}
+                </span>
+                <span className="rounded-md bg-blue-100 px-2 py-0.5 text-xs font-bold tracking-wider text-blue-600 uppercase shadow-sm">
+                  {currentSeason} Season
                 </span>
                 <p className="text-sm text-slate-500">
                   Commissioner:{" "}
