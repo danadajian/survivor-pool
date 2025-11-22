@@ -31,6 +31,16 @@ export default [
     },
   },
   {
+    files: ["**/*.ts", "**/*.tsx"],
+    rules: {
+      "@typescript-eslint/consistent-type-assertions": [
+        "error",
+        { assertionStyle: "never" },
+      ],
+    },
+    ignores: ["test/**/*", "cypress/**/*"],
+  },
+  {
     ignores: ["**/*.js", "public", "scripts"],
   },
 ];

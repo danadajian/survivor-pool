@@ -53,8 +53,8 @@ describe("feature tests", () => {
 
   it("should create a new pool", async () => {
     mockGamesResponse({
-      week: { number: 1 },
-      season: { year: season },
+      currentGameDate: "Week 1",
+      currentSeason: season,
       events: [],
     });
     await createPool({ poolName: "Test Pool", username: user1 });
@@ -166,8 +166,8 @@ describe("feature tests", () => {
       },
     ] as Events;
     mockGamesResponse({
-      week: { number: 1 },
-      season: { year: season },
+      currentGameDate: "Week 1",
+      currentSeason: season,
       events: mockEvents,
     });
     const picks = await fetchPicksForWeek({
@@ -318,8 +318,8 @@ describe("feature tests", () => {
       },
     ] as Events;
     mockGamesResponse({
-      week: { number: 1 },
-      season: { year: season },
+      currentGameDate: "Week 1",
+      currentSeason: season,
       events: mockEvents,
     });
     const picks = await fetchPicksForWeek({
@@ -333,7 +333,7 @@ describe("feature tests", () => {
     expect(secretPick?.teamPicked).toEqual("49ers");
   });
 
-  it("should eliminate users who fail to make a pick the week before", async () => {
+  it("should eliminate users who fail to make a pick the round before", async () => {
     const poolId = await getPoolId();
     const events = mockEspnResponse.events as Events;
     await updateResults(events, "Week 2", season);
@@ -523,12 +523,12 @@ describe("feature tests", () => {
   it("should reactivate the pool by creating a new pool and adding all members", async () => {
     const currentWeek = 4;
     mockGamesResponse({
-      week: { number: currentWeek },
-      season: { year: season },
+      currentGameDate: `Week ${currentWeek}`,
+      currentSeason: season,
       events: [],
     });
     const oldPoolId = await getPoolId();
-    const newPool = await reactivatePool({ poolId: oldPoolId });
+    const newPool = await reactivatePool({ poolId: oldPoolId, sport: "NFL" });
     if (!newPool) throw new Error();
     const oldPool = await getPool({ poolId: oldPoolId });
     expect(oldPool?.poolStart).toEqual("Week 1");
@@ -563,6 +563,7 @@ describe("feature tests", () => {
       poolId,
       poolName: "Test Pool",
       lives: 2,
+      sport: "NFL",
     });
     expect(updatedPoolResult?.lives).toEqual(2);
   });

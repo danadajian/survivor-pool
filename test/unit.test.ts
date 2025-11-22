@@ -18,7 +18,7 @@ describe("pick header", () => {
       } as typeof picks.$inferSelect,
       pickStatus: "PICKED",
     });
-    expect(result).toEqual("You're riding with the Bills this week!");
+    expect(result).toEqual("You're riding with the Bills!");
   });
 
   test("pick is locked", () => {
@@ -32,7 +32,7 @@ describe("pick header", () => {
     expect(result).toEqual("Your 49ers pick is locked. Good luck!");
   });
 
-  test("you survived a week by winning", () => {
+  test("you survived a round by winning", () => {
     const result = buildPickHeader({
       userPick: {
         teamPicked: "49ers",
@@ -43,7 +43,7 @@ describe("pick header", () => {
     expect(result).toEqual("The 49ers won, and you're still alive!");
   });
 
-  test("you survived a week by everyone losing with you", () => {
+  test("you survived a round by everyone losing with you", () => {
     const result = buildPickHeader({
       userPick: {
         teamPicked: "49ers",
@@ -71,9 +71,11 @@ describe("pick header", () => {
         teamPicked: "49ers",
         result: "PENDING",
       } as typeof picks.$inferSelect,
-      pickStatus: "MISSED_DEADLINE",
+      pickStatus: "MISSED DEADLINE",
     });
-    expect(result).toEqual("You missed the deadline to make a pick this week.");
+    expect(result).toEqual(
+      "It's too late to make a pick as all games have started or finished.",
+    );
   });
 });
 
@@ -147,7 +149,7 @@ describe("team buttons", () => {
 });
 
 describe("user elimination", () => {
-  test("failure to pick in week 1 does not eliminate user", () => {
+  test("picking a winning team in first round does not eliminate user", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
@@ -172,7 +174,7 @@ describe("user elimination", () => {
     expect(livesRemaining).toEqual(1);
   });
 
-  test("failure to pick in a previous week eliminates user", () => {
+  test("failure to pick in a previous round eliminates user", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
@@ -301,7 +303,7 @@ describe("user elimination", () => {
     expect(eliminatedNextWeek).toBeTrue();
   });
 
-  test("failing to pick in a previous week when no one else picked does not eliminate user", () => {
+  test("failing to pick in a previous round when no one else picked does not eliminate user", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
@@ -344,7 +346,7 @@ describe("user elimination", () => {
     expect(user2Eliminated).toBeFalse();
   });
 
-  test("failing to pick in a previous week in a pool with 2 lives does not eliminate user", () => {
+  test("failing to pick in a previous round in a pool with 2 lives does not eliminate user", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
@@ -386,7 +388,7 @@ describe("user elimination", () => {
     expect(user1Eliminated).toBeFalse();
   });
 
-  test("failing to pick in a previous week in a pool with 2 lives and then losing eliminates user", () => {
+  test("failing to pick in a previous round in a pool with 2 lives and then losing eliminates user", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",
@@ -629,7 +631,7 @@ describe("user elimination", () => {
 });
 
 describe("forbidden teams", () => {
-  test("returns the teams that the user has picked in previous weeks", () => {
+  test("returns the teams that the user has picked in previous rounds", () => {
     const picksForPoolAndSeason = [
       {
         username: "user1",

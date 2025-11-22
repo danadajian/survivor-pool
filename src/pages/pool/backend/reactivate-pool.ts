@@ -3,23 +3,23 @@ import { eq } from "drizzle-orm";
 import * as v from "valibot";
 
 import { db } from "../../../db";
-import { members, pools } from "../../../schema";
+import { members, pools, SPORTS } from "../../../schema";
 import { fetchCurrentGames } from "../../../utils/fetch-current-games";
 
 export const reactivatePoolInput = v.object({
   poolId: v.pipe(v.string(), v.uuid()),
+  sport: v.picklist(SPORTS),
 });
 
 export async function reactivatePool({
   poolId,
+  sport,
 }: v.InferInput<typeof reactivatePoolInput>) {
-  const {
-    week: { number: currentWeek },
-    season: { year: currentSeason },
-  } = await fetchCurrentGames();
+  const { currentGameDate, currentSeason } = await fetchCurrentGames(sport);
+
   const [poolResult] = await db
     .update(pools)
-    .set({ poolEnd: `Week ${currentWeek}` })
+    .set({ poolEnd: currentGameDate })
     .where(eq(pools.id, poolId))
     .returning();
   if (!poolResult)
@@ -34,7 +34,7 @@ export async function reactivatePool({
     .insert(pools)
     .values({
       ...poolFieldsToRetain,
-      poolStart: `Week ${currentWeek}`,
+      poolStart: currentGameDate,
       season: currentSeason,
     })
     .returning();

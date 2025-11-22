@@ -11,7 +11,7 @@ export const mockEspnResponse = {
       uid: "s:20~l:28",
       name: "National Football League",
       abbreviation: "NFL",
-      slug: "nfl",
+      slug: "NFL",
       season: {
         year: 2023,
         startDate: "2023-08-01T07:00Z",
@@ -2454,7 +2454,7 @@ export const mockEspnResponse = {
                     "https://a.espncdn.com/media/motion/2023/0910/dm_230910_Harrison_Bryant_TD/dm_230910_Harrison_Bryant_TD.jpg",
                   duration: 30,
                   tracking: {
-                    sportName: "nfl",
+                    sportName: "NFL",
                     leagueName: "No League",
                     coverageType: "Final Game Highlight",
                     trackingName:
@@ -3138,7 +3138,7 @@ export const mockEspnResponse = {
                     "https://a.espncdn.com/media/motion/2023/0910/dm_230910_nfl_jags_jones_td/dm_230910_nfl_jags_jones_td.jpg",
                   duration: 39,
                   tracking: {
-                    sportName: "nfl",
+                    sportName: "NFL",
                     leagueName: "No League",
                     coverageType: "Final Game Highlight",
                     trackingName:
@@ -4407,7 +4407,7 @@ export const mockEspnResponse = {
                     "https://a.espncdn.com/media/motion/2023/0910/dm_230910_Derek_Carr_throws_TD/dm_230910_Derek_Carr_throws_TD.jpg",
                   duration: 25,
                   tracking: {
-                    sportName: "nfl",
+                    sportName: "NFL",
                     leagueName: "No League",
                     coverageType: "Final Game Highlight",
                     trackingName:
@@ -5088,7 +5088,7 @@ export const mockEspnResponse = {
                     "https://a.espncdn.com/media/motion/2023/0910/dm_230910_Niners_McCaffrey_long_TD/dm_230910_Niners_McCaffrey_long_TD.jpg",
                   duration: 42,
                   tracking: {
-                    sportName: "nfl",
+                    sportName: "NFL",
                     leagueName: "No League",
                     coverageType: "Final Game Highlight",
                     trackingName:
@@ -5771,7 +5771,7 @@ export const mockEspnResponse = {
                     "https://a.espncdn.com/media/motion/2023/0910/dm_230910_was_howell_td/dm_230910_was_howell_td.jpg",
                   duration: 18,
                   tracking: {
-                    sportName: "nfl",
+                    sportName: "NFL",
                     leagueName: "No League",
                     coverageType: "Final Game Highlight",
                     trackingName:
@@ -6455,7 +6455,7 @@ export const mockEspnResponse = {
                     "https://a.espncdn.com/media/motion/2023/0910/dm_230910_rev1_Justice_Hill_2nd_TD/dm_230910_rev1_Justice_Hill_2nd_TD.jpg",
                   duration: 25,
                   tracking: {
-                    sportName: "nfl",
+                    sportName: "NFL",
                     leagueName: "No League",
                     coverageType: "Final Game Highlight",
                     trackingName:
@@ -7138,7 +7138,7 @@ export const mockEspnResponse = {
                     "https://a.espncdn.com/media/motion/2023/0910/dm_230910_Quay_Walker_pick_6/dm_230910_Quay_Walker_pick_6.jpg",
                   duration: 39,
                   tracking: {
-                    sportName: "nfl",
+                    sportName: "NFL",
                     leagueName: "No League",
                     coverageType: "Final Game Highlight",
                     trackingName:
@@ -7822,7 +7822,7 @@ export const mockEspnResponse = {
                     "https://a.espncdn.com/media/motion/2023/0910/dm_230910_Jimmy_Gto_Meyers/dm_230910_Jimmy_Gto_Meyers.jpg",
                   duration: 24,
                   tracking: {
-                    sportName: "nfl",
+                    sportName: "NFL",
                     leagueName: "No League",
                     coverageType: "Final Game Highlight",
                     trackingName:
@@ -8506,7 +8506,7 @@ export const mockEspnResponse = {
                     "https://a.espncdn.com/media/motion/2023/0910/dm_230910_DM_NFL_MAC_JONES_PICK_SIX/dm_230910_DM_NFL_MAC_JONES_PICK_SIX.jpg",
                   duration: 32,
                   tracking: {
-                    sportName: "nfl",
+                    sportName: "NFL",
                     leagueName: "No League",
                     coverageType: "Final Game Highlight",
                     trackingName:
@@ -9189,7 +9189,7 @@ export const mockEspnResponse = {
                     "https://a.espncdn.com/media/motion/2023/0910/dm_230910_Chargers_Dolphins_full_HL/dm_230910_Chargers_Dolphins_full_HL.jpg",
                   duration: 101,
                   tracking: {
-                    sportName: "nfl",
+                    sportName: "NFL",
                     leagueName: "No League",
                     coverageType: "Final Game Highlight",
                     trackingName:
@@ -9873,7 +9873,7 @@ export const mockEspnResponse = {
                     "https://a.espncdn.com/media/motion/2023/0910/dm_230910_donald_scares_geno/dm_230910_donald_scares_geno.jpg",
                   duration: 16,
                   tracking: {
-                    sportName: "nfl",
+                    sportName: "NFL",
                     leagueName: "No League",
                     coverageType: "Final Game Highlight",
                     trackingName:
@@ -10557,7 +10557,7 @@ export const mockEspnResponse = {
                     "https://a.espncdn.com/media/motion/2023/0910/dm_230910_NFL_Highlight_Cowboys_defensive_sot/dm_230910_NFL_Highlight_Cowboys_defensive_sot.jpg",
                   duration: 104,
                   tracking: {
-                    sportName: "nfl",
+                    sportName: "NFL",
                     leagueName: "No League",
                     coverageType: "Final Game Highlight",
                     trackingName:
@@ -10703,7 +10703,7 @@ export const mockEspnPreseasonResponse = {
       uid: "s:20~l:28",
       name: "National Football League",
       abbreviation: "NFL",
-      slug: "nfl",
+      slug: "NFL",
       season: {
         year: 2023,
         startDate: "2023-08-01T07:00Z",
@@ -11018,8 +11018,10 @@ const basicEventButtons = [
 export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
+      sport: "NFL",
+      availablePickDates: ["Week 1"],
       eventButtons: basicEventButtons,
-      currentPickDate: `Week ${mockEspnResponse.week.number}`,
+      currentGameDate: `Week ${mockEspnResponse.week.number}`,
       currentSeason: mockEspnResponse.season.year,
       poolName: "Test Pool",
       poolCreatorUsername: "test@user.com",
@@ -11036,8 +11038,10 @@ export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
 > = {
   result: {
     data: {
+      sport: "NFL",
+      availablePickDates: ["Week 1"],
       eventButtons: [],
-      currentPickDate: `Week ${mockEspnPreseasonResponse.week.number}`,
+      currentGameDate: `Week ${mockEspnPreseasonResponse.week.number}`,
       currentSeason: mockEspnPreseasonResponse.season.year,
       poolName: "Test Pool",
       poolCreatorUsername: "test@user.com",
@@ -11052,14 +11056,16 @@ export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
 export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
+      sport: "NFL",
+      availablePickDates: ["Week 1"],
       eventButtons: basicEventButtons,
-      currentPickDate: `Week ${mockEspnResponse.week.number}`,
+      currentGameDate: `Week ${mockEspnResponse.week.number}`,
       currentSeason: mockEspnResponse.season.year,
       poolName: "Test Pool",
       poolCreatorUsername: "test@user.com",
       poolCreatorDisplayName: "test@user.com",
       poolMembers: [],
-      pickHeader: "You're riding with the Bills this week!",
+      pickHeader: "You're riding with the Bills!",
       livesRemaining: 1,
       pickStatus: "PICKED",
       userPick: {
@@ -11080,8 +11086,10 @@ export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
 export const responseWithSecretPick: TRPCResponse<RouterOutput["pool"]> = {
   result: {
     data: {
+      sport: "NFL",
+      availablePickDates: ["Week 1"],
       eventButtons: basicEventButtons,
-      currentPickDate: `Week ${mockEspnResponse.week.number}`,
+      currentGameDate: `Week ${mockEspnResponse.week.number}`,
       currentSeason: mockEspnResponse.season.year,
       poolName: "Test Pool",
       poolCreatorUsername: "test@user.com",
@@ -11089,7 +11097,7 @@ export const responseWithSecretPick: TRPCResponse<RouterOutput["pool"]> = {
       poolMembers: [],
       livesRemaining: 1,
       pickStatus: "PICKED",
-      pickHeader: "You're riding with the Bills this week!",
+      pickHeader: "You're riding with the Bills!",
       userPick: {
         teamPicked: "Bills",
         pickDate: "Week 1",

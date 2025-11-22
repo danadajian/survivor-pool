@@ -1,7 +1,7 @@
 import React from "react";
 
 type PoolTabsProps = {
-  activeTab: "pick" | "all-picks";
+  activeTab: string;
   onTabChange: (tab: "pick" | "all-picks") => void;
 };
 

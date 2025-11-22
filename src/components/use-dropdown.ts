@@ -57,11 +57,13 @@ export const useDropdown = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target;
       if (
         buttonRef.current &&
         dropdownRef.current &&
-        !buttonRef.current.contains(event.target as Node) &&
-        !dropdownRef.current.contains(event.target as Node)
+        target instanceof Node &&
+        !buttonRef.current.contains(target) &&
+        !dropdownRef.current.contains(target)
       ) {
         setShowOptions(false);
       }

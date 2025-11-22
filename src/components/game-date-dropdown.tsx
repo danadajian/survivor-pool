@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import { PortalDropdownMenu, useDropdown } from "./portal-dropdown";
 
-export const WeekDropdown = ({
+export const GameDateDropdown = ({
   selected,
   options,
   onSelect,
@@ -45,7 +45,7 @@ export const WeekDropdown = ({
           aria-expanded={showOptions}
           aria-haspopup="true"
         >
-          Change Week
+          Change Date
           <svg
             className="h-5 w-5 text-slate-500 transition group-hover:text-slate-700"
             viewBox="0 0 20 20"

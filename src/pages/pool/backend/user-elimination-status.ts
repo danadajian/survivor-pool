@@ -58,25 +58,25 @@ function getNumberOfWeeksFailedToPick(
   picksForPoolAndSeason: (typeof picks.$inferSelect)[],
   username: string,
 ) {
-  const weeksUserPicked = picksForPoolAndSeason
+  const roundsUserPicked = picksForPoolAndSeason
     .filter((pick) => pick.username === username)
     .map((pick) => pick.pickDate);
-  const weeksEveryoneElsePicked = picksForPoolAndSeason
+  const roundsEveryoneElsePicked = picksForPoolAndSeason
     .filter((pick) => pick.username !== username)
     .map((pick) => pick.pickDate);
 
-  const allWeeksWithCompletedPicks = picksForPoolAndSeason
+  const allroundsWithCompletedPicks = picksForPoolAndSeason
     .filter((pick) => pick.result !== "PENDING")
     .map((pick) => pick.pickDate);
-  const uniqueWeeksWithCompletedPicks = [
-    ...new Set(allWeeksWithCompletedPicks),
+  const uniqueroundsWithCompletedPicks = [
+    ...new Set(allroundsWithCompletedPicks),
   ];
 
-  const weeksUserFailedToPickWhenSomeoneElsePicked =
-    uniqueWeeksWithCompletedPicks.filter(
-      (week) =>
-        !weeksUserPicked.includes(week) &&
-        weeksEveryoneElsePicked.includes(week),
+  const roundsUserFailedToPickWhenSomeoneElsePicked =
+    uniqueroundsWithCompletedPicks.filter(
+      (round) =>
+        !roundsUserPicked.includes(round) &&
+        roundsEveryoneElsePicked.includes(round),
     );
-  return weeksUserFailedToPickWhenSomeoneElsePicked.length;
+  return roundsUserFailedToPickWhenSomeoneElsePicked.length;
 }

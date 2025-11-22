@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import spacetime from "spacetime";
 
 import { ChangePoolDropdown } from "../../components/change-pool-dropdown";
+import { GameDateDropdown } from "../../components/game-date-dropdown";
 import { Heading } from "../../components/heading";
 import { Loader } from "../../components/loader";
 import { type PageProps, withPage } from "../../components/page-wrapper";
@@ -11,7 +12,6 @@ import { SecretPickProvider } from "../../components/secret-pick-provider";
 import { TeamButton } from "../../components/team-button";
 import { Button } from "../../components/ui/button";
 import { Surface } from "../../components/ui/surface";
-import { WeekDropdown } from "../../components/week-dropdown";
 import { type RouterOutput, trpc } from "../../trpc";
 import { type PickStatus } from "../../utils/get-pick-status";
 import { useUrlParams } from "../../utils/use-url-params";
@@ -22,8 +22,6 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
     urlParams: { view = "pick" },
     setUrlParams,
   } = useUrlParams();
-  const activeTab = view as "pick" | "all-picks";
-
   const [data] = trpc.pool.useSuspenseQuery({ username, poolId });
   const navigate = useNavigate();
   const utils = trpc.useUtils();
@@ -40,7 +38,8 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
   const {
     eventButtons,
     currentSeason,
-    currentPickDate,
+    currentGameDate,
+    availablePickDates,
     poolName,
     poolWinnerDisplayName,
     poolMembers,
@@ -51,20 +50,22 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
     userPick,
     userPickTeam,
     pickStatus,
+    sport,
   } = data;
 
-  const onReactivate = () => mutate({ poolId });
+  const onReactivate = () => mutate({ poolId, sport });
   const isPoolCreator = username === poolCreatorUsername;
   const userPickIsSecret = userPick?.pickIsSecret;
 
   const renderContent = () => {
-    if (activeTab === "all-picks") {
+    if (view === "all-picks") {
       return (
         <PicksView
           poolId={poolId}
           username={username}
-          currentPickDate={currentPickDate}
+          currentGameDate={currentGameDate}
           currentSeason={currentSeason}
+          availablePickDates={availablePickDates}
         />
       );
     }
@@ -74,7 +75,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
         <Surface className="flex flex-col gap-6">
           <p className="text-base text-slate-600">
             Hang tight! The season hasn&apos;t started yet. Once games are on
-            the calendar, you&apos;ll see your weekly matchups here.
+            the calendar, you&apos;ll see your matchups here.
           </p>
           <div className="flex flex-col gap-3">
             <h3 className="text-sm font-semibold tracking-[0.2em] text-slate-500 uppercase">
@@ -129,7 +130,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
       <Surface className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold text-slate-800">
-            {currentPickDate}
+            {currentGameDate}
           </h2>
           <PickStatusCard
             status={pickStatus}
@@ -168,19 +169,24 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
                   ? `${poolWinnerDisplayName} has won this pool!`
                   : `${poolName} ${currentSeason}`}
               </Heading>
-              <p className="text-sm text-slate-500">
-                Commissioner:{" "}
-                <span className="font-medium text-slate-700">
-                  {poolCreatorDisplayName}
+              <div className="flex items-center gap-3">
+                <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-bold tracking-wider text-slate-600 uppercase shadow-sm">
+                  {sport}
                 </span>
-              </p>
+                <p className="text-sm text-slate-500">
+                  Commissioner:{" "}
+                  <span className="font-medium text-slate-700">
+                    {poolCreatorDisplayName}
+                  </span>
+                </p>
+              </div>
             </div>
             <div className="shrink-0">
               <ChangePoolDropdown username={username} currentPoolId={poolId} />
             </div>
           </div>
           <PoolTabs
-            activeTab={activeTab}
+            activeTab={view}
             onTabChange={(tab) => setUrlParams({ view: tab })}
           />
         </div>
@@ -234,7 +240,7 @@ const PickStatusCard = ({
       badge: "bg-blue-200 text-blue-800",
       message: "text-blue-700",
     },
-    MISSED_DEADLINE: {
+    ["MISSED DEADLINE"]: {
       container: "bg-rose-50 text-rose-900",
       badge: "bg-rose-200 text-rose-800",
       message: "text-rose-700",
@@ -330,18 +336,20 @@ export const Pool = withPage(PoolComponent);
 type PicksViewProps = {
   poolId: string;
   username: string;
-  currentPickDate: string;
+  currentGameDate: string;
   currentSeason: number;
+  availablePickDates: string[];
 };
 
 const PicksView = ({
   poolId,
   username,
-  currentPickDate,
+  currentGameDate,
   currentSeason,
+  availablePickDates,
 }: PicksViewProps) => {
   const {
-    urlParams: { week: weekUrlParam, season: seasonUrlParam },
+    urlParams: { gameDate: gameDateUrlParam, season: seasonUrlParam },
     setUrlParams,
   } = useUrlParams();
   const { data: poolData, isLoading } = trpc.poolMemberLivesRemaining.useQuery({
@@ -350,14 +358,8 @@ const PicksView = ({
 
   const membersWithEliminationStatus = poolData?.membersWithEliminationStatus;
   const lives = poolData?.lives;
-  const pickDate = weekUrlParam ?? currentPickDate;
+  const pickDate = gameDateUrlParam ?? currentGameDate;
   const season = Number(seasonUrlParam ?? currentSeason);
-
-  const currentWeekNumber = Number(currentPickDate.split(" ")[1] ?? 1);
-  const weekOptions = Array.from(
-    { length: currentWeekNumber },
-    (_, i) => `Week ${i + 1}`,
-  );
 
   return (
     <>
@@ -366,10 +368,10 @@ const PicksView = ({
           <h2 className="text-lg font-semibold text-slate-800">
             Weekly results
           </h2>
-          <WeekDropdown
-            options={weekOptions}
+          <GameDateDropdown
+            options={availablePickDates}
             selected={pickDate}
-            onSelect={(option) => setUrlParams({ week: option })}
+            onSelect={(option) => setUrlParams({ gameDate: option })}
           />
         </div>
         <PickTable

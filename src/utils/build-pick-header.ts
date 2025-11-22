@@ -20,9 +20,9 @@ export function buildPickHeader({
     case "LOCKED":
       return `Your ${userPick?.teamPicked} pick is locked. Good luck!`;
     case "PICKED":
-      return `You're riding with the ${userPick?.teamPicked} this week!`;
-    case "MISSED_DEADLINE":
-      return "You missed the deadline to make a pick this week.";
+      return `You're riding with the ${userPick?.teamPicked}!`;
+    case "MISSED DEADLINE":
+      return "It's too late to make a pick as all games have started or finished.";
     case "PENDING":
       return `Make your pick, ${firstName ?? userPick?.username}!`;
   }

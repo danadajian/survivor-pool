@@ -29,15 +29,6 @@ export async function fetchPoolInfo({
       code: "NOT_FOUND",
     });
   }
-  const games = await fetchCurrentGames();
-  const {
-    events,
-    season: { year: currentSeason },
-    week: { number: currentWeek },
-  } = games;
-  const currentPickDate = `Week ${currentWeek}`;
-
-  const picksForPoolAndSeason = await fetchPicks(poolId, currentSeason);
   const poolsResult = await db.query.pools.findFirst({
     where: eq(pools.id, poolId),
   });
@@ -46,7 +37,17 @@ export async function fetchPoolInfo({
       message: "Pool not found.",
       code: "NOT_FOUND",
     });
-  const { lives, name: poolName, creator: poolCreatorUsername } = poolsResult;
+  const {
+    lives,
+    name: poolName,
+    creator: poolCreatorUsername,
+    sport,
+  } = poolsResult;
+  const games = await fetchCurrentGames(sport);
+  const { events, currentSeason, currentGameDate } = games;
+
+  const picksForPoolAndSeason = await fetchPicks(poolId, currentSeason);
+
   const poolWinnerUsername = poolsResult.poolWinner;
   const poolWinnerMember = poolWinnerUsername
     ? poolMembers.find((member) => member.username === poolWinnerUsername)
@@ -65,7 +66,7 @@ export async function fetchPoolInfo({
     events,
   });
   const userPick = picksForPoolAndSeason.find(
-    (pick) => pick.username === username && pick.pickDate === currentPickDate,
+    (pick) => pick.username === username && pick.pickDate === currentGameDate,
   );
   const previouslyPickedTeams = getPreviouslyPickedTeamsForUser({
     username,
@@ -98,6 +99,18 @@ export async function fetchPoolInfo({
     lastName: poolCreatorMember?.lastName,
   });
 
+  const availablePickDates = Array.from(
+    new Set([
+      ...picksForPoolAndSeason.map((pick) => pick.pickDate),
+      currentGameDate,
+    ]),
+  ).sort((a, b) => {
+    if (a.startsWith("Week") && b.startsWith("Week")) {
+      return Number(a.split(" ")[1] ?? 0) - Number(b.split(" ")[1] ?? 0);
+    }
+    return a.localeCompare(b);
+  });
+
   const userPickTeam = events
     .flatMap((event) => event.competitions)
     .flatMap((competition) => competition.competitors)
@@ -111,12 +124,14 @@ export async function fetchPoolInfo({
     livesRemaining,
     eventButtons,
     currentSeason,
-    currentPickDate,
+    currentGameDate,
     poolName,
     poolCreatorUsername,
     poolCreatorDisplayName,
     poolMembers,
     poolWinnerDisplayName,
+    sport,
+    availablePickDates,
   };
 }
 
