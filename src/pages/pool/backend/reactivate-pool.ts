@@ -3,12 +3,12 @@ import { eq } from "drizzle-orm";
 import * as v from "valibot";
 
 import { db } from "../../../db";
-import { members, pools } from "../../../schema";
+import { members, pools, SPORTS } from "../../../schema";
 import { fetchCurrentGames } from "../../../utils/fetch-current-games";
 
 export const reactivatePoolInput = v.object({
   poolId: v.pipe(v.string(), v.uuid()),
-  sport: v.picklist(["nfl", "nba", "nhl"]),
+  sport: v.picklist(SPORTS),
 });
 
 export async function reactivatePool({

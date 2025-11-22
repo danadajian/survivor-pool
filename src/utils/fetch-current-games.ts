@@ -1,18 +1,17 @@
 import { TRPCError } from "@trpc/server";
 import * as v from "valibot";
 
+import { Sport } from "../schema";
 import { logger } from "./logger";
 
 export const SPORT_URLS = {
-  nfl: "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
-  nba: "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
-  nhl: "https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard",
+  NFL: "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+  NBA: "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard",
+  NHL: "https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard",
 } as const;
 
-export type Sport = keyof typeof SPORT_URLS;
-
 export async function fetchCurrentGames(
-  sport: Sport = "nfl",
+  sport: Sport = "NFL",
 ): Promise<GamesResponse> {
   const url = SPORT_URLS[sport];
   if (!url) {

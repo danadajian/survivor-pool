@@ -13,7 +13,7 @@ const winnersResponse: TRPCResponse<RouterOutput["winners"]> = {
         {
           poolId: "pool-1",
           poolName: "Legends League",
-          sport: "nfl",
+          sport: "NFL",
           season: 2024,
           poolStart: "Week 1",
           poolEnd: "Week 10",
@@ -22,7 +22,7 @@ const winnersResponse: TRPCResponse<RouterOutput["winners"]> = {
         {
           poolId: "pool-2",
           poolName: "Champions Circle",
-          sport: "nfl",
+          sport: "NFL",
           season: 2024,
           poolStart: "Week 1",
           poolEnd: "Week 12",

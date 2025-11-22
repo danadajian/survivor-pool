@@ -22,11 +22,14 @@ export const picks = pgTable("picks", {
     .default("PENDING"),
 });
 
+export const SPORTS = ["NFL", "NBA", "NHL"] as const;
+export type Sport = (typeof SPORTS)[number];
+
 export const pools = pgTable("pools", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 256 }).notNull(),
   creator: varchar("creator", { length: 256 }).notNull(),
-  sport: pgEnum("sport", ["nfl", "nba", "nhl"])().notNull().default("nfl"),
+  sport: pgEnum("sport", SPORTS)().notNull().default("NFL"),
   lives: integer("lives").notNull().default(1),
   poolStart: varchar("pool_start", { length: 256 }).notNull().default(""),
   poolEnd: varchar("pool_end", { length: 256 }),

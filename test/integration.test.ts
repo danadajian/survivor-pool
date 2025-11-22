@@ -528,7 +528,7 @@ describe("feature tests", () => {
       events: [],
     });
     const oldPoolId = await getPoolId();
-    const newPool = await reactivatePool({ poolId: oldPoolId, sport: "nfl" });
+    const newPool = await reactivatePool({ poolId: oldPoolId, sport: "NFL" });
     if (!newPool) throw new Error();
     const oldPool = await getPool({ poolId: oldPoolId });
     expect(oldPool?.poolStart).toEqual("Week 1");
@@ -563,7 +563,7 @@ describe("feature tests", () => {
       poolId,
       poolName: "Test Pool",
       lives: 2,
-      sport: "nfl",
+      sport: "NFL",
     });
     expect(updatedPoolResult?.lives).toEqual(2);
   });

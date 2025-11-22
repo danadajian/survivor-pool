@@ -7,23 +7,17 @@ import { Heading, Subheading } from "../../components/heading";
 import { type PageProps, withPage } from "../../components/page-wrapper";
 import { Button } from "../../components/ui/button";
 import { Surface } from "../../components/ui/surface";
+import { type Sport, SPORTS } from "../../schema";
 import { trpc } from "../../trpc";
-import { type Sport } from "../../utils/fetch-current-games";
 
 const MIN_LIVES = 1;
 const MAX_LIVES = 9;
-
-const SPORTS: { id: Sport; label: string }[] = [
-  { id: "nfl", label: "NFL" },
-  { id: "nba", label: "NBA" },
-  { id: "nhl", label: "NHL" },
-];
 
 const CreateComponent = ({ user }: PageProps) => {
   const utils = trpc.useUtils();
   const [poolName, setPoolName] = useState("");
   const [lives, setLives] = useState(MIN_LIVES);
-  const [sport, setSport] = useState<Sport>("nfl");
+  const [sport, setSport] = useState<Sport>("NFL");
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { mutate, data, isSuccess } = trpc.createPool.useMutation({
@@ -111,15 +105,15 @@ const CreateComponent = ({ user }: PageProps) => {
           <div className="flex flex-col gap-3">
             <span className="text-sm font-medium text-slate-600">Sport</span>
             <div className="flex gap-3">
-              {SPORTS.map((s) => (
+              {SPORTS.map((sportOption) => (
                 <Button
-                  key={s.id}
+                  key={sportOption}
                   type="button"
-                  variant={sport === s.id ? "primary" : "secondary"}
-                  onClick={() => setSport(s.id)}
+                  variant={sport === sportOption ? "primary" : "secondary"}
+                  onClick={() => setSport(sportOption)}
                   className="flex-1"
                 >
-                  {s.label}
+                  {sportOption}
                 </Button>
               ))}
             </div>
