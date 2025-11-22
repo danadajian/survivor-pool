@@ -126,11 +126,15 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
       );
     }
 
+    const formattedGameDate = currentGameDate.startsWith("Week ")
+      ? currentGameDate
+      : spacetime(currentGameDate).format("{day}, {month} {date}");
+
     return (
       <Surface className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold text-slate-800">
-            {currentGameDate}
+            {formattedGameDate}
           </h2>
           <PickStatusCard
             status={pickStatus}
