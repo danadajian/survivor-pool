@@ -22,7 +22,7 @@ describe("pool page", () => {
         <Pool />
       </MockProviders>,
     );
-    cy.findByRole("heading", { name: "Test Pool 2023" }).should("be.visible");
+    cy.findByRole("heading", { name: "Test Pool" }).should("be.visible");
     cy.findByRole("heading", { name: "Week 1" }).should("be.visible");
     cy.findByText("Make your pick, Test!").should("be.visible");
     cy.findByText("BUF -2.0").should("be.visible");
@@ -73,7 +73,7 @@ describe("pool page", () => {
         <Pool />
       </MockProviders>,
     );
-    cy.findByRole("heading", { name: "Test Pool 2023" }).should("be.visible");
+    cy.findByRole("heading", { name: "Test Pool" }).should("be.visible");
     cy.findByText(/Hang tight! The season hasn't started yet/).should(
       "be.visible",
     );
