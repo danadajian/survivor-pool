@@ -333,7 +333,7 @@ describe("feature tests", () => {
     expect(secretPick?.teamPicked).toEqual("49ers");
   });
 
-  it("should eliminate users who fail to make a pick the week before", async () => {
+  it("should eliminate users who fail to make a pick the round before", async () => {
     const poolId = await getPoolId();
     const events = mockEspnResponse.events as Events;
     await updateResults(events, "Week 2", season);

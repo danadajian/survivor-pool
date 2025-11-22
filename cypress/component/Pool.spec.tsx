@@ -74,12 +74,12 @@ describe("pool page", () => {
       </MockProviders>,
     );
     cy.findByRole("heading", { name: "Test Pool 2023" }).should("be.visible");
-    cy.findByText(
-      "Hang tight! The season hasn't started yet. Once games are on the calendar, you'll see your weekly matchups here.",
-    ).should("be.visible");
+    cy.findByText(/Hang tight! The season hasn't started yet/).should(
+      "be.visible",
+    );
   });
 
-  it("renders all picks for the week", () => {
+  it("renders all picks for the round", () => {
     cy.intercept("/trpc/pool*", { body: basicGamesAndPicksResponse });
     cy.intercept("/trpc/picksForWeek,poolMemberLivesRemaining*", {
       body: [picksForWeekResponse, poolMemberLivesRemainingResponse],

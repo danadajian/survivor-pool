@@ -9,7 +9,7 @@ const sections = [
     id: "how-it-works",
     title: "How it works",
     body: [
-      "Each week, pick one NFL team to win their game. If they win, you survive to play another week. If they lose or tie, you're out.",
+      "Each round, pick one team to win their game. If they win, you survive to play another round. If they lose or tie, you're out.",
       "The goal is simple: be the last person standing.",
     ],
   },
@@ -17,8 +17,8 @@ const sections = [
     id: "picking-teams",
     title: "Picking your teams",
     body: [
-      "You can only use each NFL team once per season. Choose wisely and plan several weeks ahead.",
-      "Submit your pick before that team's game kicks off. You can wait until later in the week—just don't miss the start time.",
+      "You can only use each team once per season. Choose wisely and plan several rounds ahead.",
+      "Submit your pick before that team's game starts. You can wait until closer to game time—just don't miss the start time.",
     ],
   },
   {
@@ -26,7 +26,7 @@ const sections = [
     title: "Elimination",
     body: [
       "Missed picks or losing selections cost you a life. Run out of lives and you're eliminated.",
-      "If every remaining player misses in the same week, everyone survives to fight another round.",
+      "If every remaining player misses in the same round, everyone survives to fight another round.",
     ],
   },
   {
@@ -35,7 +35,7 @@ const sections = [
     body: [
       "Last player standing takes the pot. If multiple players survive the regular season, the pool continues into the playoffs.",
       "Run out of teams to pick in the postseason? You're eliminated. If everyone runs out, picks reset.",
-      "Reached the Super Bowl with multiple survivors? Submit a final score prediction as a tiebreaker—the closest total score differential wins.",
+      "Reached the championship game with multiple survivors? Submit a final score prediction as a tiebreaker—the closest total score differential wins.",
     ],
   },
 ];
