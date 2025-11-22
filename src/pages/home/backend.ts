@@ -2,7 +2,7 @@ import { and, eq, isNull } from "drizzle-orm";
 import * as v from "valibot";
 
 import { db } from "../../db";
-import { members, pools } from "../../schema";
+import { members, picks, pools } from "../../schema";
 import { poolInput } from "../join/backend";
 
 export const fetchPoolsForUserInput = v.object({
@@ -25,5 +25,7 @@ export async function fetchPoolsForUser({
 }
 
 export async function deletePool({ poolId }: v.InferInput<typeof poolInput>) {
+  await db.delete(picks).where(eq(picks.poolId, poolId));
+  await db.delete(members).where(eq(members.poolId, poolId));
   return db.delete(pools).where(eq(pools.id, poolId));
 }

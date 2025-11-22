@@ -721,10 +721,21 @@ describe("feature tests", () => {
   it("should delete a pool", async () => {
     const poolId = await getPoolId();
     await deletePool({ poolId });
+
     const poolsResult = await db.query.pools.findMany({
       where: eq(pools.id, poolId),
     });
     expect(poolsResult.length).toEqual(0);
+
+    const picksAfter = await db.query.picks.findMany({
+      where: eq(picks.poolId, poolId),
+    });
+    expect(picksAfter.length).toEqual(0);
+
+    const membersAfter = await db.query.members.findMany({
+      where: eq(members.poolId, poolId),
+    });
+    expect(membersAfter.length).toEqual(0);
   });
 });
 
