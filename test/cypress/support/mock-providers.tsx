@@ -16,19 +16,24 @@ const userData = {
   lastName: "User",
 };
 const mockClerkState = { user: userData } as InitialState;
+const mockUnauthenticatedClerkState = {} as InitialState;
 export const MockProviders = ({
   children,
   initialEntries = ["/"],
+  authenticated = true,
 }: PropsWithChildren & {
   initialEntries?: ComponentProps<typeof MemoryRouter>["initialEntries"];
+  authenticated?: boolean;
 }) => (
   <ErrorBoundary FallbackComponent={ErrorPage}>
     <ClientProvider>
       <ClerkProvider
-        initialState={mockClerkState}
+        initialState={
+          authenticated ? mockClerkState : mockUnauthenticatedClerkState
+        }
         publishableKey={DEV_PUBLISHABLE_KEY}
       >
-        <UserProvider userData={userData}>
+        <UserProvider userData={authenticated ? userData : undefined}>
           <MemoryRouter initialEntries={initialEntries}>
             {children}
           </MemoryRouter>

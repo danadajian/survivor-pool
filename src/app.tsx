@@ -16,9 +16,11 @@ import { UserData, UserProvider } from "./components/user-context";
 import { Create } from "./pages/create/frontend";
 import { Edit } from "./pages/edit/frontend";
 import { Home } from "./pages/home/frontend";
+import { Landing } from "./pages/home/landing";
 import { Join } from "./pages/join/frontend";
 import { Pool } from "./pages/pool/frontend";
 import { Rules } from "./pages/rules/frontend";
+import { PublicRules } from "./pages/rules/public-rules";
 import { Winners } from "./pages/winners/frontend";
 
 type AppProps = {
@@ -27,17 +29,24 @@ type AppProps = {
 };
 
 export const App = ({ userData, dehydratedState }: AppProps) => {
-  const routes = (
+  const authenticatedRoutes = (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/rules" element={<Rules />} />
       <Route path="/winners" element={<Winners />} />
       <Route path="/pool/:poolId" element={<Pool />} />
-
       <Route path="/create" element={<Create />} />
       <Route path="/edit/:poolId" element={<Edit />} />
       <Route path="/join/:poolId" element={<Join />} />
       <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+
+  const publicRoutes = (
+    <Routes>
+      <Route path="/" element={<Landing />} />
+      <Route path="/rules" element={<PublicRules />} />
+      <Route path="*" element={<RedirectToSignIn />} />
     </Routes>
   );
 
@@ -49,10 +58,8 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
       <UserProvider userData={userData}>
         <ErrorBoundary FallbackComponent={ErrorPage}>
           <ClientProvider dehydratedState={dehydratedState}>
-            <SignedIn>{routes}</SignedIn>
-            <SignedOut>
-              <RedirectToSignIn />
-            </SignedOut>
+            <SignedIn>{authenticatedRoutes}</SignedIn>
+            <SignedOut>{publicRoutes}</SignedOut>
           </ClientProvider>
         </ErrorBoundary>
       </UserProvider>

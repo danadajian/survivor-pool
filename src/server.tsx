@@ -5,8 +5,10 @@ import React from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom";
 import { createBunHttpHandler } from "trpc-bun-adapter";
+import * as v from "valibot";
 
 import { App } from "./app";
+import { userSchema } from "./components/page-wrapper";
 import { createContext } from "./context";
 import { environmentVariables, isDev } from "./env";
 import { appRouter } from "./router";
@@ -76,22 +78,31 @@ const server = Bun.serve({
     const url = new URL(request.url);
     const userAgent = request.headers.get("user-agent");
 
-    if (isbot(userAgent)) {
-      return handleBotRequest(url, request.headers);
-    }
-
-    const authResult = await clerkClient.authenticateRequest(request);
-    if (!authResult.isAuthenticated) {
-      return redirectToSignIn(authResult, url);
-    }
-
     try {
+      if (isbot(userAgent)) {
+        return handleBotRequest(url, request.headers);
+      }
+
+      const authResult = await clerkClient.authenticateRequest(request);
+
+      const publicRoutes = ["/", "/rules"];
+      const isPublicRoute = publicRoutes.includes(url.pathname);
+
+      if (!authResult.isAuthenticated) {
+        return isPublicRoute
+          ? await renderApp(url)
+          : redirectToSignIn(authResult, url);
+      }
+
       const user = await clerkClient.users.getUser(authResult.toAuth().userId);
-      const userData = {
-        username: user.primaryEmailAddress?.emailAddress ?? "",
-        firstName: user.firstName ?? undefined,
-        lastName: user.lastName ?? undefined,
-      };
+      const { success, output: userData } = v.safeParse(userSchema, {
+        username: user?.primaryEmailAddress?.emailAddress,
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+      });
+      if (!success) {
+        return new Response("Invalid user data", { status: 400 });
+      }
 
       const queryClient = new QueryClient({
         defaultOptions: {
@@ -100,11 +111,7 @@ const server = Bun.serve({
           },
         },
       });
-
-      if (authResult.isAuthenticated) {
-        await prefetchQueriesForRoute(request, userData, queryClient);
-      }
-
+      await prefetchQueriesForRoute(request, userData, queryClient);
       const dehydratedState = dehydrate(queryClient);
 
       return await renderApp(url, { userData, dehydratedState });

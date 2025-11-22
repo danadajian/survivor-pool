@@ -11,8 +11,8 @@ import { useUserData } from "./user-context";
 
 export const userFields = {
   username: v.string(),
-  firstName: v.optional(v.string()),
-  lastName: v.optional(v.string()),
+  firstName: v.optional(v.nullable(v.string())),
+  lastName: v.optional(v.nullable(v.string())),
 } as const;
 export const userSchema = v.object(userFields);
 
@@ -32,26 +32,24 @@ export const withPage = (Component: React.FC<PageProps>) => () => {
       [clientUser],
     );
 
-    let user: v.InferInput<typeof userSchema>;
+    let user;
     const serverUser = useUserData();
     if (serverUser) {
       user = serverUser;
+    } else if (!isLoaded || !userResource) {
+      return <Loader />;
     } else {
-      if (!isLoaded || !userResource) {
-        return <Loader />;
-      }
-
       const userInfo = {
-        username: userResource.primaryEmailAddress?.emailAddress ?? "",
+        username: userResource.primaryEmailAddress?.emailAddress,
         firstName: userResource.firstName,
         lastName: userResource.lastName,
       };
 
-      const result = v.safeParse(userSchema, userInfo);
-      if (!result.success) {
+      const { success, output: parsedUser } = v.safeParse(userSchema, userInfo);
+      if (!success) {
         return <ErrorPage error={new Error("Invalid user data")} />;
       }
-      user = result.output;
+      user = parsedUser;
     }
 
     return (
