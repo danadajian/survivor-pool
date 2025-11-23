@@ -9,7 +9,9 @@
     {
       "matchDepTypes": ["packageManager"],
       "matchPackageNames": ["bun"],
-      "groupName": "application dependencies"
+      "groupName": "application dependencies",
+      "ignoreUnknownEngines": true,
+      "versioning": "semver"
     }
   ]
 }
