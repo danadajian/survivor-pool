@@ -14,9 +14,6 @@ export async function fetchCurrentGames(
   sport: Sport = "NFL",
 ): Promise<GamesResponse> {
   const url = SPORT_URLS[sport];
-  if (!url) {
-    throw new Error(`Invalid sport: ${sport}`);
-  }
   const response = await fetch(url);
   const games = await response.json();
   const parseResult = v.safeParse(gamesSchema, games);
@@ -68,8 +65,13 @@ const eventsSchema = v.array(
       v.object({
         date: v.string(),
         status: v.object({
+          clock: v.optional(v.number()),
+          displayClock: v.optional(v.string()),
+          period: v.optional(v.number()),
           type: v.object({
             name: v.string(),
+            detail: v.optional(v.string()),
+            shortDetail: v.optional(v.string()),
           }),
         }),
         odds: v.optional(
@@ -94,6 +96,7 @@ const eventsSchema = v.array(
               displayName: v.string(),
             }),
             winner: v.optional(v.boolean()),
+            score: v.optional(v.string()),
           }),
         ),
       }),
