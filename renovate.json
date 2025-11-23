@@ -1,17 +1,26 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended", "schedule:earlyMondays"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["package.json"],
+      "matchStrings": [
+        "\"packageManager\":\\s*\"(?<depName>bun)@(?<currentValue>.*?)\""
+      ],
+      "datasourceTemplate": "npm",
+      "versioningTemplate": "semver"
+    }
+  ],
   "packageRules": [
     {
       "matchUpdateTypes": ["patch", "minor"],
       "groupName": "application dependencies"
     },
     {
-      "matchDepTypes": ["packageManager"],
+      "matchManagers": ["regex"],
       "matchPackageNames": ["bun"],
-      "groupName": "application dependencies",
-      "ignoreUnknownEngines": true,
-      "versioning": "semver"
+      "groupName": "application dependencies"
     }
   ]
 }
