@@ -7,6 +7,7 @@ import { userEliminationStatus } from "../src/pages/pool/backend/user-eliminatio
 import { picks } from "../src/schema";
 import { buildPickHeader } from "../src/utils/build-pick-header";
 import { Events } from "../src/utils/fetch-current-games";
+import { getPickStatus } from "../src/utils/get-pick-status";
 import { mockEspnResponse } from "./mocks";
 
 describe("pick header", () => {
@@ -807,5 +808,39 @@ describe("forbidden teams", () => {
       events,
     });
     expect(previouslyPickedTeamsForUser2).toEqual(["Jets"]);
+  });
+});
+
+describe("getPickStatus", () => {
+  test("returns LOCKED when user has pending pick and all available teams are locked", () => {
+    const events = (mockEspnResponse.events as Events).map((event) => ({
+      ...event,
+      competitions: event.competitions.map((competition) => ({
+        ...competition,
+        status: {
+          type: {
+            name: "STATUS_IN_PROGRESS",
+          },
+        },
+      })),
+    })) as Events;
+
+    const status = getPickStatus({
+      eliminated: false,
+      userPick: {
+        id: "1",
+        username: "user1",
+        pickDate: "Week 1",
+        season: 2025,
+        poolId: "1",
+        timestamp: new Date(),
+        pickIsSecret: false,
+        teamPicked: "Bills",
+        result: "PENDING",
+      },
+      events,
+      previouslyPickedTeams: [],
+    });
+    expect(status).toBe("LOCKED");
   });
 });

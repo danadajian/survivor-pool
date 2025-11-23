@@ -23,18 +23,7 @@ export function getPickStatus({
   events: Events;
   previouslyPickedTeams: string[];
 }): PickStatus {
-  if (
-    checkIfAllAvailableTeamsAreLocked({
-      events,
-      previouslyPickedTeams,
-    })
-  ) {
-    return "MISSED DEADLINE";
-  }
-
-  if (eliminated) {
-    return "ELIMINATED";
-  }
+  if (eliminated) return "ELIMINATED";
 
   switch (userPick?.result) {
     case "WON":
@@ -47,12 +36,16 @@ export function getPickStatus({
           events,
           userPick,
         })
-      ) {
+      )
         return "LOCKED";
-      } else if (userPick?.teamPicked) {
-        return "PICKED";
-      } else {
-        return "PENDING";
-      }
+      else if (userPick?.teamPicked) return "PICKED";
+      else if (
+        checkIfAllAvailableTeamsAreLocked({
+          events,
+          previouslyPickedTeams,
+        })
+      )
+        return "MISSED DEADLINE";
+      else return "PENDING";
   }
 }
