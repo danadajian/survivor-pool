@@ -18,7 +18,7 @@
       "groupName": "application dependencies"
     },
     {
-      "matchManagers": ["regex"],
+      "matchManagers": ["custom.regex"],
       "matchPackageNames": ["bun"],
       "groupName": "application dependencies"
     }
