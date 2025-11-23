@@ -6,7 +6,7 @@
       "customType": "regex",
       "managerFilePatterns": ["package.json"],
       "matchStrings": [
-        "\"packageManager\":\\s*\"(?<depName>bun)@(?<currentValue>.*?)\""
+        "\"packageManager\":\\s*\"(?<depName>bun)@(?<currentValue>[\\d.]+)\""
       ],
       "datasourceTemplate": "npm",
       "versioningTemplate": "semver"
