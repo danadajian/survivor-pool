@@ -5,6 +5,12 @@
     {
       "matchUpdateTypes": ["patch", "minor"],
       "groupName": "application dependencies"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["bun"],
+      "matchDepTypes": ["packageManager"],
+      "groupName": "application dependencies"
     }
   ]
 }
