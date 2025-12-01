@@ -22,6 +22,10 @@ import {
   reactivatePoolInput,
 } from "./pages/pool/backend/reactivate-pool";
 import {
+  updateMemberPhone,
+  updateMemberPhoneInput,
+} from "./pages/pool/backend/update-member-phone";
+import {
   fetchPoolWinners,
   fetchPoolWinnersInput,
 } from "./pages/winners/backend";
@@ -63,6 +67,9 @@ export const appRouter = t.router({
   reactivatePool: authenticatedProcedure
     .input(v.parser(reactivatePoolInput))
     .mutation(({ input }) => reactivatePool(input)),
+  updateMemberPhone: authenticatedProcedure
+    .input(v.parser(updateMemberPhoneInput))
+    .mutation(({ input }) => updateMemberPhone(input)),
   winners: authenticatedProcedure
     .input(v.parser(fetchPoolWinnersInput))
     .query(({ input }) => fetchPoolWinners(input)),

@@ -37,6 +37,7 @@
     "spacetime": "7.11.0",
     "tailwindcss": "4.1.17",
     "trpc-bun-adapter": "1.3.0",
+    "twilio": "5.10.6",
     "valibot": "1.2.0"
   },
   "devDependencies": {
