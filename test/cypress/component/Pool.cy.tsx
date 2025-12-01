@@ -2,10 +2,9 @@ import React from "react";
 
 import { Pool } from "../../../src/pages/pool/frontend";
 import {
+  allPicksPoolResponse,
   basicGamesAndPicksPreseasonResponse,
   basicGamesAndPicksResponse,
-  picksForWeekResponse,
-  poolMemberLivesRemainingResponse,
   responseWithPick,
   responseWithSecretPick,
 } from "../../mocks";
@@ -80,10 +79,7 @@ describe("pool page", () => {
   });
 
   it("renders all picks for the round", () => {
-    cy.intercept("/trpc/pool*", { body: basicGamesAndPicksResponse });
-    cy.intercept("/trpc/picksForWeek,poolMemberLivesRemaining*", {
-      body: [picksForWeekResponse, poolMemberLivesRemainingResponse],
-    });
+    cy.intercept("/trpc/pool*", { body: allPicksPoolResponse });
 
     cy.mount(
       <MockProviders initialEntries={["/pick/123?view=all-picks"]}>

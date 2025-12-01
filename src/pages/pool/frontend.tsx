@@ -27,12 +27,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
   const utils = trpc.useUtils();
 
   const { mutate } = trpc.reactivatePool.useMutation({
-    onSettled: () =>
-      Promise.all([
-        utils.pool.invalidate(),
-        utils.poolMemberLivesRemaining.invalidate(),
-        utils.picksForWeek.invalidate(),
-      ]),
+    onSettled: () => utils.pool.invalidate(),
   });
 
   const {
@@ -386,14 +381,17 @@ const PicksView = ({
     urlParams: { gameDate: gameDateUrlParam, season: seasonUrlParam },
     setUrlParams,
   } = useUrlParams();
-  const { data: poolData, isLoading } = trpc.poolMemberLivesRemaining.useQuery({
+  const pickDate = gameDateUrlParam ?? currentGameDate;
+  const season = Number(seasonUrlParam ?? currentSeason);
+  const { data: poolData, isLoading } = trpc.pool.useQuery({
+    username,
     poolId,
+    pickDate,
+    season,
   });
 
   const membersWithEliminationStatus = poolData?.membersWithEliminationStatus;
   const lives = poolData?.lives;
-  const pickDate = gameDateUrlParam ?? currentGameDate;
-  const season = Number(seasonUrlParam ?? currentSeason);
 
   return (
     <>
@@ -441,11 +439,13 @@ type PickTableProps = {
 };
 
 const PickTable = ({ poolId, username, pickDate, season }: PickTableProps) => {
-  const { data: picks, isLoading } = trpc.picksForWeek.useQuery({
+  const { data: poolData, isLoading } = trpc.pool.useQuery({
+    username,
     poolId,
     pickDate,
     season,
   });
+  const picks = poolData?.picksForWeek;
 
   if (isLoading) {
     return (
@@ -528,7 +528,7 @@ const PickTable = ({ poolId, username, pickDate, season }: PickTableProps) => {
 };
 
 type MemberTableProps = {
-  membersWithEliminationStatus: RouterOutput["poolMemberLivesRemaining"]["membersWithEliminationStatus"];
+  membersWithEliminationStatus: RouterOutput["pool"]["membersWithEliminationStatus"];
   username: string;
   lives: number;
 };

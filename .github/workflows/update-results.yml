@@ -16,5 +16,4 @@ jobs:
       - run: bun install
       - run: bun run ./scripts/update-results/run.ts
         env:
-          GAMES_API_URL: ${{ secrets.GAMES_API_URL }}
           POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
