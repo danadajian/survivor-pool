@@ -1,12 +1,15 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import * as v from "valibot";
 
 import { db } from "../../db";
 import { members, picks, pools } from "../../schema";
 import { buildPickHeader } from "../../utils/build-pick-header";
 import { buildUserDisplayName } from "../../utils/build-user-display-name";
-import { fetchCurrentGames } from "../../utils/fetch-current-games";
+import {
+  type Events,
+  fetchCurrentGames,
+} from "../../utils/fetch-current-games";
 import { getPickStatus } from "../../utils/get-pick-status";
 import { getEventButtons } from "./backend/get-event-buttons";
 import { getPreviouslyPickedTeamsForUser } from "./backend/get-previously-picked-teams-for-user";
@@ -15,11 +18,13 @@ import { userEliminationStatus } from "./backend/user-elimination-status";
 export const fetchPoolInfoInput = v.object({
   username: v.string(),
   poolId: v.pipe(v.string(), v.uuid()),
+  pickDate: v.optional(v.string()),
 });
 
 export async function fetchPoolInfo({
   username,
   poolId,
+  pickDate: requestedPickDate,
 }: v.InferInput<typeof fetchPoolInfoInput>) {
   const poolMembers = await fetchPoolMembers(poolId);
   const poolMember = poolMembers.find((member) => member.username === username);
@@ -116,6 +121,27 @@ export async function fetchPoolInfo({
     .flatMap((competition) => competition.competitors)
     .find((competitor) => competitor.team.name === userPick?.teamPicked)?.team;
 
+  const membersWithEliminationStatus = poolMembers
+    .map((member) => ({
+      ...member,
+      ...userEliminationStatus({
+        username: member.username,
+        picksForPoolAndSeason,
+        lives,
+        events,
+      }),
+    }))
+    .toSorted((a, b) => b.livesRemaining - a.livesRemaining);
+
+  const pickDate = requestedPickDate ?? currentGameDate;
+
+  const picksForWeek = await fetchPicksForWeek({
+    poolId,
+    pickDate,
+    season: currentSeason,
+    events,
+  });
+
   return {
     pickStatus,
     pickHeader,
@@ -132,6 +158,9 @@ export async function fetchPoolInfo({
     poolWinnerDisplayName,
     sport,
     availablePickDates,
+    membersWithEliminationStatus,
+    lives,
+    picksForWeek,
   };
 }
 
@@ -143,4 +172,64 @@ export async function fetchPicks(poolId: string, season: number) {
   return db.query.picks.findMany({
     where: and(eq(picks.poolId, poolId), eq(picks.season, season)),
   });
+}
+
+export async function fetchPicksForWeek({
+  poolId,
+  pickDate,
+  season,
+  events,
+}: {
+  poolId: string;
+  pickDate: string;
+  season: number;
+  events: Events;
+}) {
+  const picksForWeekResult = await db
+    .select({
+      username: members.username,
+      firstName: members.firstName,
+      lastName: members.lastName,
+      teamPicked: picks.teamPicked,
+      pickDate: picks.pickDate,
+      season: picks.season,
+      poolId: picks.poolId,
+      pickIsSecret: picks.pickIsSecret,
+      result: picks.result,
+      timestamp: picks.timestamp,
+    })
+    .from(picks)
+    .innerJoin(
+      members,
+      and(
+        eq(picks.username, members.username),
+        eq(picks.poolId, members.poolId),
+      ),
+    )
+    .where(
+      and(
+        eq(picks.pickDate, pickDate),
+        eq(picks.season, season),
+        eq(picks.poolId, poolId),
+      ),
+    )
+    .orderBy(desc(picks.result), asc(picks.teamPicked), asc(picks.timestamp));
+
+  const picksForWeek = picksForWeekResult.map((pick) => {
+    const competitionWithTeamPicked = events.find((event) =>
+      event.competitions[0]?.competitors.some(
+        (competitor) => competitor.team.name === pick.teamPicked,
+      ),
+    )?.competitions[0];
+    const pickShouldBeSecret =
+      pick.pickIsSecret &&
+      competitionWithTeamPicked?.status.type.name === "STATUS_SCHEDULED";
+    const teamPicked = pickShouldBeSecret ? "SECRET" : pick.teamPicked;
+    return {
+      ...pick,
+      teamPicked,
+    };
+  });
+
+  return picksForWeek;
 }

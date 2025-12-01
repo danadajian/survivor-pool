@@ -40,25 +40,4 @@ export async function prefetchQueriesForRoute(
     queryKey: [["pool"], { input: { username, poolId }, type: "query" }],
     queryFn: () => caller.pool({ username, poolId }),
   });
-  const poolMemberData = await caller.poolMemberLivesRemaining({ poolId });
-  await queryClient.prefetchQuery({
-    queryKey: [
-      ["poolMemberLivesRemaining"],
-      { input: { poolId }, type: "query" },
-    ],
-    queryFn: () => Promise.resolve(poolMemberData),
-  });
-
-  const gameDateParam = url.searchParams.get("gameDate");
-  const seasonParam = url.searchParams.get("season");
-  const pickDate = gameDateParam ?? poolMemberData.pickDate;
-  const season = seasonParam ? Number(seasonParam) : poolMemberData.season;
-
-  await queryClient.prefetchQuery({
-    queryKey: [
-      ["picksForWeek"],
-      { input: { poolId, pickDate, season }, type: "query" },
-    ],
-    queryFn: () => caller.picksForWeek({ poolId, pickDate, season }),
-  });
 }

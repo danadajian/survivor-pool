@@ -27,12 +27,7 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
   const utils = trpc.useUtils();
 
   const { mutate } = trpc.reactivatePool.useMutation({
-    onSettled: () =>
-      Promise.all([
-        utils.pool.invalidate(),
-        utils.poolMemberLivesRemaining.invalidate(),
-        utils.picksForWeek.invalidate(),
-      ]),
+    onSettled: () => utils.pool.invalidate(),
   });
 
   const {
@@ -64,7 +59,6 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
           poolId={poolId}
           username={username}
           currentGameDate={currentGameDate}
-          currentSeason={currentSeason}
           availablePickDates={availablePickDates}
         />
       );
@@ -371,7 +365,6 @@ type PicksViewProps = {
   poolId: string;
   username: string;
   currentGameDate: string;
-  currentSeason: number;
   availablePickDates: string[];
 };
 
@@ -379,21 +372,20 @@ const PicksView = ({
   poolId,
   username,
   currentGameDate,
-  currentSeason,
   availablePickDates,
 }: PicksViewProps) => {
   const {
-    urlParams: { gameDate: gameDateUrlParam, season: seasonUrlParam },
+    urlParams: { gameDate: pickDate },
     setUrlParams,
   } = useUrlParams();
-  const { data: poolData, isLoading } = trpc.poolMemberLivesRemaining.useQuery({
+  const { data: poolData, isLoading } = trpc.pool.useQuery({
+    username,
     poolId,
+    pickDate,
   });
 
   const membersWithEliminationStatus = poolData?.membersWithEliminationStatus;
   const lives = poolData?.lives;
-  const pickDate = gameDateUrlParam ?? currentGameDate;
-  const season = Number(seasonUrlParam ?? currentSeason);
 
   return (
     <>
@@ -404,16 +396,11 @@ const PicksView = ({
           </h2>
           <GameDateDropdown
             options={availablePickDates}
-            selected={pickDate}
+            selected={pickDate ?? currentGameDate}
             onSelect={(option) => setUrlParams({ gameDate: option })}
           />
         </div>
-        <PickTable
-          poolId={poolId}
-          username={username}
-          pickDate={pickDate}
-          season={season}
-        />
+        <PickTable poolId={poolId} username={username} pickDate={pickDate} />
       </Surface>
       <Surface className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold text-slate-800">Pool members</h2>
@@ -436,16 +423,16 @@ const PicksView = ({
 type PickTableProps = {
   poolId: string;
   username: string;
-  pickDate: string;
-  season: number;
+  pickDate?: string;
 };
 
-const PickTable = ({ poolId, username, pickDate, season }: PickTableProps) => {
-  const { data: picks, isLoading } = trpc.picksForWeek.useQuery({
+const PickTable = ({ poolId, username, pickDate }: PickTableProps) => {
+  const { data: poolData, isLoading } = trpc.pool.useQuery({
+    username,
     poolId,
     pickDate,
-    season,
   });
+  const picks = poolData?.picksForWeek;
 
   if (isLoading) {
     return (
@@ -528,7 +515,7 @@ const PickTable = ({ poolId, username, pickDate, season }: PickTableProps) => {
 };
 
 type MemberTableProps = {
-  membersWithEliminationStatus: RouterOutput["poolMemberLivesRemaining"]["membersWithEliminationStatus"];
+  membersWithEliminationStatus: RouterOutput["pool"]["membersWithEliminationStatus"];
   username: string;
   lives: number;
 };

@@ -11030,6 +11030,9 @@ export const basicGamesAndPicksResponse: TRPCResponse<RouterOutput["pool"]> = {
       pickHeader: "Make your pick, Test!",
       livesRemaining: 1,
       pickStatus: "PENDING",
+      lives: 1,
+      membersWithEliminationStatus: [],
+      picksForWeek: [],
     },
   },
 };
@@ -11050,6 +11053,9 @@ export const basicGamesAndPicksPreseasonResponse: TRPCResponse<
       livesRemaining: 1,
       pickStatus: "PENDING",
       pickHeader: "Make your pick, Test!",
+      lives: 1,
+      membersWithEliminationStatus: [],
+      picksForWeek: [],
     },
   },
 };
@@ -11079,6 +11085,9 @@ export const responseWithPick: TRPCResponse<RouterOutput["pool"]> = {
         timestamp: new Date().toISOString(),
         result: "PENDING",
       },
+      lives: 1,
+      membersWithEliminationStatus: [],
+      picksForWeek: [],
     },
   },
 };
@@ -11109,17 +11118,18 @@ export const responseWithSecretPick: TRPCResponse<RouterOutput["pool"]> = {
         timestamp: new Date().toISOString(),
         result: "PENDING",
       },
+      lives: 1,
+      membersWithEliminationStatus: [],
+      picksForWeek: [],
     },
   },
 };
 
 export const poolMemberLivesRemainingResponse: TRPCResponse<
-  RouterOutput["poolMemberLivesRemaining"]
+  RouterOutput["pool"]
 > = {
   result: {
     data: {
-      pickDate: "Week 1",
-      season: 2023,
       lives: 1,
       membersWithEliminationStatus: [
         {
@@ -11141,14 +11151,28 @@ export const poolMemberLivesRemainingResponse: TRPCResponse<
           lastName: "User2",
         },
       ],
+      // Add required fields from pool query
+      sport: "NFL",
+      availablePickDates: ["Week 1"],
+      eventButtons: [],
+      currentGameDate: "Week 1",
+      currentSeason: 2023,
+      poolName: "Test Pool",
+      poolCreatorUsername: "test@user.com",
+      poolCreatorDisplayName: "test@user.com",
+      poolMembers: [],
+      pickHeader: "",
+      livesRemaining: 1,
+      pickStatus: "PENDING",
+      picksForWeek: [],
     },
   },
 };
 
-export const picksForWeekResponse: TRPCResponse<RouterOutput["picksForWeek"]> =
-  {
-    result: {
-      data: [
+export const picksForWeekResponse: TRPCResponse<RouterOutput["pool"]> = {
+  result: {
+    data: {
+      picksForWeek: [
         {
           username: "test@user.com",
           firstName: "Test",
@@ -11174,8 +11198,37 @@ export const picksForWeekResponse: TRPCResponse<RouterOutput["picksForWeek"]> =
           timestamp: "123",
         },
       ],
+      // Add required fields from pool query
+      sport: "NFL",
+      availablePickDates: ["Week 1"],
+      eventButtons: [],
+      currentGameDate: "Week 1",
+      currentSeason: 2023,
+      poolName: "Test Pool",
+      poolCreatorUsername: "test@user.com",
+      poolCreatorDisplayName: "test@user.com",
+      poolMembers: [],
+      pickHeader: "",
+      livesRemaining: 1,
+      pickStatus: "PENDING",
+      lives: 1,
+      membersWithEliminationStatus: [],
     },
-  };
+  },
+};
+
+export const allPicksPoolResponse: TRPCResponse<RouterOutput["pool"]> = {
+  result: {
+    data: {
+      // base pool data (no picks or member statuses)
+      ...basicGamesAndPicksResponse.result.data,
+      // add member lives/status data
+      ...poolMemberLivesRemainingResponse.result.data,
+      // add picks for the week
+      ...picksForWeekResponse.result.data,
+    },
+  },
+};
 
 export const poolsForUserResponse: TRPCResponse = {
   result: {

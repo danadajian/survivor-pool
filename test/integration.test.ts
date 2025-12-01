@@ -15,10 +15,13 @@ import { createPool } from "../src/pages/create/backend";
 import { editPool } from "../src/pages/edit/backend";
 import { deletePool } from "../src/pages/home/backend";
 import { getPool, joinPool } from "../src/pages/join/backend";
-import { fetchPicks, fetchPoolMembers } from "../src/pages/pool/backend";
+import {
+  fetchPicks,
+  fetchPicksForWeek,
+  fetchPoolMembers,
+} from "../src/pages/pool/backend";
 import { findPoolWinner } from "../src/pages/pool/backend/find-pool-winner";
 import { makePick } from "../src/pages/pool/backend/make-pick";
-import { fetchPicksForWeek } from "../src/pages/pool/backend/picks";
 import { reactivatePool } from "../src/pages/pool/backend/reactivate-pool";
 import { userEliminationStatus } from "../src/pages/pool/backend/user-elimination-status";
 import { fetchPoolWinners } from "../src/pages/winners/backend";
@@ -174,8 +177,11 @@ describe("feature tests", () => {
       poolId,
       pickDate: "Week 1",
       season,
+      events: mockEvents,
     });
-    const secretPick = picks.find((pick) => pick.pickIsSecret);
+    const secretPick = picks.find(
+      (pick: (typeof picks)[number]) => pick.pickIsSecret,
+    );
     expect(secretPick?.username).toEqual(user2);
     expect(secretPick?.result).toEqual("PENDING");
     expect(secretPick?.teamPicked).toEqual("SECRET");
@@ -326,8 +332,11 @@ describe("feature tests", () => {
       poolId,
       pickDate: "Week 1",
       season,
+      events: mockEvents,
     });
-    const secretPick = picks.find((pick) => pick.pickIsSecret);
+    const secretPick = picks.find(
+      (pick: (typeof picks)[number]) => pick.pickIsSecret,
+    );
     expect(secretPick?.username).toEqual(user2);
     expect(secretPick?.result).toEqual("WON");
     expect(secretPick?.teamPicked).toEqual("49ers");
