@@ -59,7 +59,6 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
           poolId={poolId}
           username={username}
           currentGameDate={currentGameDate}
-          currentSeason={currentSeason}
           availablePickDates={availablePickDates}
         />
       );
@@ -366,7 +365,6 @@ type PicksViewProps = {
   poolId: string;
   username: string;
   currentGameDate: string;
-  currentSeason: number;
   availablePickDates: string[];
 };
 
@@ -374,20 +372,16 @@ const PicksView = ({
   poolId,
   username,
   currentGameDate,
-  currentSeason,
   availablePickDates,
 }: PicksViewProps) => {
   const {
-    urlParams: { gameDate: gameDateUrlParam, season: seasonUrlParam },
+    urlParams: { gameDate: pickDate },
     setUrlParams,
   } = useUrlParams();
-  const pickDate = gameDateUrlParam ?? currentGameDate;
-  const season = Number(seasonUrlParam ?? currentSeason);
   const { data: poolData, isLoading } = trpc.pool.useQuery({
     username,
     poolId,
     pickDate,
-    season,
   });
 
   const membersWithEliminationStatus = poolData?.membersWithEliminationStatus;
@@ -402,16 +396,11 @@ const PicksView = ({
           </h2>
           <GameDateDropdown
             options={availablePickDates}
-            selected={pickDate}
+            selected={pickDate ?? currentGameDate}
             onSelect={(option) => setUrlParams({ gameDate: option })}
           />
         </div>
-        <PickTable
-          poolId={poolId}
-          username={username}
-          pickDate={pickDate}
-          season={season}
-        />
+        <PickTable poolId={poolId} username={username} pickDate={pickDate} />
       </Surface>
       <Surface className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold text-slate-800">Pool members</h2>
@@ -434,16 +423,14 @@ const PicksView = ({
 type PickTableProps = {
   poolId: string;
   username: string;
-  pickDate: string;
-  season: number;
+  pickDate?: string;
 };
 
-const PickTable = ({ poolId, username, pickDate, season }: PickTableProps) => {
+const PickTable = ({ poolId, username, pickDate }: PickTableProps) => {
   const { data: poolData, isLoading } = trpc.pool.useQuery({
     username,
     poolId,
     pickDate,
-    season,
   });
   const picks = poolData?.picksForWeek;
 

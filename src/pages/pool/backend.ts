@@ -19,14 +19,12 @@ export const fetchPoolInfoInput = v.object({
   username: v.string(),
   poolId: v.pipe(v.string(), v.uuid()),
   pickDate: v.optional(v.string()),
-  season: v.optional(v.number()),
 });
 
 export async function fetchPoolInfo({
   username,
   poolId,
   pickDate: requestedPickDate,
-  season: requestedSeason,
 }: v.InferInput<typeof fetchPoolInfoInput>) {
   const poolMembers = await fetchPoolMembers(poolId);
   const poolMember = poolMembers.find((member) => member.username === username);
@@ -136,12 +134,11 @@ export async function fetchPoolInfo({
     .toSorted((a, b) => b.livesRemaining - a.livesRemaining);
 
   const pickDate = requestedPickDate ?? currentGameDate;
-  const season = requestedSeason ?? currentSeason;
 
   const picksForWeek = await fetchPicksForWeek({
     poolId,
     pickDate,
-    season,
+    season: currentSeason,
     events,
   });
 
