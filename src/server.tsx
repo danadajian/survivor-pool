@@ -85,7 +85,7 @@ const server = Bun.serve({
 
       const authResult = await clerkClient.authenticateRequest(request);
 
-      const publicRoutes = ["/", "/rules"];
+      const publicRoutes = ["/", "/rules", "/privacy"];
       const isPublicRoute = publicRoutes.includes(url.pathname);
 
       if (!authResult.isAuthenticated) {

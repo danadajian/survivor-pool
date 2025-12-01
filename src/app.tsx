@@ -19,6 +19,8 @@ import { Home } from "./pages/home/frontend";
 import { Landing } from "./pages/home/landing";
 import { Join } from "./pages/join/frontend";
 import { Pool } from "./pages/pool/frontend";
+import { Privacy } from "./pages/privacy/frontend";
+import { PublicPrivacy } from "./pages/privacy/public-privacy";
 import { Rules } from "./pages/rules/frontend";
 import { PublicRules } from "./pages/rules/public-rules";
 import { Winners } from "./pages/winners/frontend";
@@ -33,6 +35,7 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/rules" element={<Rules />} />
+      <Route path="/privacy" element={<Privacy />} />
       <Route path="/winners" element={<Winners />} />
       <Route path="/pool/:poolId" element={<Pool />} />
       <Route path="/create" element={<Create />} />
@@ -46,6 +49,7 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/rules" element={<PublicRules />} />
+      <Route path="/privacy" element={<PublicPrivacy />} />
       <Route path="*" element={<RedirectToSignIn />} />
     </Routes>
   );

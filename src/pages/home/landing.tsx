@@ -1,6 +1,6 @@
 import { SignInButton } from "@clerk/clerk-react";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Heading } from "../../components/heading";
 import { Button } from "../../components/ui/button";
@@ -87,6 +87,16 @@ export const Landing = () => {
           </div>
         </div>
       </div>
+      <footer className="border-t border-slate-200 bg-white py-6">
+        <div className="mx-auto flex max-w-5xl items-center justify-center gap-6 px-4 sm:px-6">
+          <Link
+            to="/privacy"
+            className="text-sm text-slate-600 transition-colors hover:text-slate-900"
+          >
+            Privacy Policy
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 };
