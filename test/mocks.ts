@@ -11140,6 +11140,7 @@ export const poolMemberLivesRemainingResponse: TRPCResponse<
           poolId: "",
           firstName: "Test",
           lastName: "User1",
+          phoneNumber: null,
         },
         {
           username: "test2@user.com",
@@ -11149,6 +11150,7 @@ export const poolMemberLivesRemainingResponse: TRPCResponse<
           poolId: "",
           firstName: "Test",
           lastName: "User2",
+          phoneNumber: null,
         },
       ],
       // Add required fields from pool query
