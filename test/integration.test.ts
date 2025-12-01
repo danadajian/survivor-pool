@@ -199,7 +199,7 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    await updateResults(eventsWithPendingResult, "Week 1", season);
+    await updateResults(eventsWithPendingResult, "NFL", "Week 1", season);
     const userPicks = await db.query.picks.findMany({
       where: and(eq(picks.pickDate, "Week 1"), eq(picks.season, season)),
     });
@@ -259,7 +259,7 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    await updateResults(eventsWithWinningResult, "Week 1", season);
+    await updateResults(eventsWithWinningResult, "NFL", "Week 1", season);
     const userPick1 = await db.query.picks.findFirst({
       where: and(
         eq(picks.username, user1),
@@ -336,7 +336,7 @@ describe("feature tests", () => {
   it("should eliminate users who fail to make a pick the round before", async () => {
     const poolId = await getPoolId();
     const events = mockEspnResponse.events as Events;
-    await updateResults(events, "Week 2", season);
+    await updateResults(events, "NFL", "Week 2", season);
 
     const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
@@ -400,7 +400,7 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    await updateResults(events, "Week 2", season);
+    await updateResults(events, "NFL", "Week 2", season);
     const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
       userEliminationStatus({
@@ -475,7 +475,7 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    await updateResults(eventsWithTie, "Week 3", season);
+    await updateResults(eventsWithTie, "NFL", "Week 3", season);
 
     const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
@@ -512,7 +512,7 @@ describe("feature tests", () => {
     const poolId = await getPoolId();
 
     const events = mockEspnResponse.events as Events;
-    await updateResults(events, "Week 3", season);
+    await updateResults(events, "NFL", "Week 3", season);
 
     const pool = await db.query.pools.findFirst({
       where: eq(pools.id, poolId),
@@ -603,7 +603,7 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    await updateResults(events, currentWeek, season);
+    await updateResults(events, "NFL", currentWeek, season);
     const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
       userEliminationStatus({
@@ -657,7 +657,7 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    await updateResults(events, currentWeek, season);
+    await updateResults(events, "NFL", currentWeek, season);
     const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
       userEliminationStatus({
@@ -698,7 +698,7 @@ describe("feature tests", () => {
         ],
       },
     ] as Events;
-    await updateResults(events, currentWeek, season);
+    await updateResults(events, "NFL", currentWeek, season);
     const picksForPoolAndSeason = await fetchPicks(poolId, season);
     expect(
       userEliminationStatus({

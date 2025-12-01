@@ -2,11 +2,12 @@ import { and, eq } from "drizzle-orm";
 
 import { db } from "../../src/db";
 import { type Events } from "../../src/utils/fetch-current-games";
-import { picks, pools } from "../../src/schema";
+import { members, picks, pools, Sport } from "../../src/schema";
 import { findPoolWinner } from "../../src/pages/pool/backend/find-pool-winner";
 
 export async function updateResults(
   events: Events,
+  sport: Sport,
   pickDate: string,
   season: number,
 ) {
@@ -17,9 +18,15 @@ export async function updateResults(
       eq(picks.result, "PENDING"),
     ),
   });
-  const allPoolMembers = await db.query.members.findMany();
+  const allPoolMembers = await db
+    .select()
+    .from(members)
+    .innerJoin(pools, eq(members.poolId, pools.id))
+    .where(eq(pools.sport, sport));
 
-  for (const { username, poolId } of allPoolMembers) {
+  for (const {
+    members: { username, poolId },
+  } of allPoolMembers) {
     const userPick = pendingUserPicksThisWeek.find(
       (pick) => pick.poolId === poolId && pick.username === username,
     );
@@ -28,6 +35,10 @@ export async function updateResults(
     }
 
     const result = getResult(userPick.teamPicked, events);
+    if (result === "PENDING") {
+      continue;
+    }
+
     console.log(
       `Updating ${username}'s pick ${userPick.teamPicked} to ${result}...`,
     );
@@ -45,7 +56,9 @@ export async function updateResults(
       );
   }
 
-  const poolIds = [...new Set(allPoolMembers.map((member) => member.poolId))];
+  const poolIds = [
+    ...new Set(allPoolMembers.map(({ members }) => members.poolId)),
+  ];
   for (const poolId of poolIds) {
     const pool = await db.query.pools.findFirst({
       where: and(eq(pools.id, poolId), eq(pools.season, season)),
@@ -54,9 +67,9 @@ export async function updateResults(
       continue;
     }
 
-    const poolMembers = allPoolMembers.filter(
-      (member) => member.poolId === poolId,
-    );
+    const poolMembers = allPoolMembers
+      .filter(({ members }) => members.poolId === poolId)
+      .map(({ members }) => members);
     if (!poolMembers.length) {
       continue;
     }
