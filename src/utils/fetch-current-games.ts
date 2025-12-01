@@ -76,12 +76,16 @@ const eventsSchema = v.array(
           v.array(
             v.object({
               details: v.string(),
-              awayTeamOdds: v.object({
-                favorite: v.boolean(),
-              }),
-              homeTeamOdds: v.object({
-                favorite: v.boolean(),
-              }),
+              awayTeamOdds: v.optional(
+                v.object({
+                  favorite: v.boolean(),
+                }),
+              ),
+              homeTeamOdds: v.optional(
+                v.object({
+                  favorite: v.boolean(),
+                }),
+              ),
             }),
           ),
         ),
