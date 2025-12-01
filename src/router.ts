@@ -20,8 +20,8 @@ import { makePick, makePickInput } from "./pages/pool/backend/make-pick";
 import {
   fetchPicksForWeek,
   fetchPicksForWeekInput,
-  fetchPoolMembers as fetchPoolMemberLivesRemaining,
-  fetchPoolMembersInput,
+  fetchPoolMemberLivesRemaining,
+  fetchPoolMemberLivesRemainingInput,
 } from "./pages/pool/backend/picks";
 import {
   reactivatePool,
@@ -52,7 +52,7 @@ export const appRouter = t.router({
     .input(v.parser(fetchPoolsForUserInput))
     .query(({ input }) => fetchPoolsForUser(input)),
   poolMemberLivesRemaining: authenticatedProcedure
-    .input(v.parser(fetchPoolMembersInput))
+    .input(v.parser(fetchPoolMemberLivesRemainingInput))
     .query(({ input }) => fetchPoolMemberLivesRemaining(input)),
   picksForWeek: authenticatedProcedure
     .input(v.parser(fetchPicksForWeekInput))

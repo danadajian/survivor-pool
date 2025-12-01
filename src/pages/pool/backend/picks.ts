@@ -7,7 +7,7 @@ import { members, picks, pools } from "../../../schema";
 import { fetchCurrentGames } from "../../../utils/fetch-current-games";
 import { userEliminationStatus } from "./user-elimination-status";
 
-export const fetchPoolMembersInput = v.object({
+export const fetchPoolMemberLivesRemainingInput = v.object({
   poolId: v.pipe(v.string(), v.uuid()),
 });
 
@@ -22,7 +22,16 @@ export async function fetchPicksForWeek({
   pickDate,
   season,
 }: v.InferInput<typeof fetchPicksForWeekInput>) {
-  const gamesResponse = await fetchCurrentGames();
+  const poolsResult = await db.query.pools.findFirst({
+    where: eq(pools.id, poolId),
+  });
+  if (!poolsResult)
+    throw new TRPCError({
+      message: "Pool not found.",
+      code: "NOT_FOUND",
+    });
+
+  const gamesResponse = await fetchCurrentGames(poolsResult.sport);
   const { events } = gamesResponse;
 
   const picksResult = await db
@@ -74,10 +83,20 @@ export async function fetchPicksForWeek({
   return picksWithSecrets;
 }
 
-export async function fetchPoolMembers({
+export async function fetchPoolMemberLivesRemaining({
   poolId,
-}: v.InferInput<typeof fetchPoolMembersInput>) {
-  const gamesResponse = await fetchCurrentGames();
+}: v.InferInput<typeof fetchPoolMemberLivesRemainingInput>) {
+  const poolsResult = await db.query.pools.findFirst({
+    where: eq(pools.id, poolId),
+  });
+  if (!poolsResult)
+    throw new TRPCError({
+      message: "Pool not found.",
+      code: "NOT_FOUND",
+    });
+
+  const { lives, sport } = poolsResult;
+  const gamesResponse = await fetchCurrentGames(sport);
 
   const { currentGameDate, currentSeason } = gamesResponse;
 
@@ -87,15 +106,6 @@ export async function fetchPoolMembers({
   const picksForPoolAndSeason = await db.query.picks.findMany({
     where: and(eq(picks.poolId, poolId), eq(picks.season, currentSeason)),
   });
-  const poolsResult = await db.query.pools.findFirst({
-    where: eq(pools.id, poolId),
-  });
-  if (!poolsResult)
-    throw new TRPCError({
-      message: "Pool not found.",
-      code: "NOT_FOUND",
-    });
-  const { lives } = poolsResult;
   const membersWithEliminationStatus = poolMembers
     .map((member) => ({
       ...member,

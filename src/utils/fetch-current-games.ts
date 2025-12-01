@@ -10,9 +10,7 @@ export const SPORT_URLS = {
   NHL: "https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard",
 } as const;
 
-export async function fetchCurrentGames(
-  sport: Sport = "NFL",
-): Promise<GamesResponse> {
+export async function fetchCurrentGames(sport: Sport): Promise<GamesResponse> {
   const url = SPORT_URLS[sport];
   const response = await fetch(url);
   const games = await response.json();
