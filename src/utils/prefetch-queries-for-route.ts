@@ -15,6 +15,13 @@ export async function prefetchQueriesForRoute(
   const trpcContext = await createContext({ req: request });
   const caller = appRouter.createCaller(trpcContext);
 
+  if (endpoint !== "pool") {
+    await queryClient.prefetchQuery({
+      queryKey: [["poolsForUser"], { input: { username }, type: "query" }],
+      queryFn: () => caller.poolsForUser({ username }),
+    });
+  }
+
   if (endpoint === "winners") {
     await queryClient.prefetchQuery({
       queryKey: [["winners"], { input: { username }, type: "query" }],
@@ -22,22 +29,21 @@ export async function prefetchQueriesForRoute(
     });
   }
 
-  await queryClient.prefetchQuery({
-    queryKey: [["poolsForUser"], { input: { username }, type: "query" }],
-    queryFn: () => caller.poolsForUser({ username }),
-  });
-
   if (!poolId) return;
 
-  if (endpoint === "join" || endpoint === "edit") {
-    await queryClient.prefetchQuery({
-      queryKey: [["getPool"], { input: { poolId }, type: "query" }],
-      queryFn: () => caller.getPool({ poolId }),
-    });
+  switch (endpoint) {
+    case "join":
+    case "edit":
+      await queryClient.prefetchQuery({
+        queryKey: [["getPool"], { input: { poolId }, type: "query" }],
+        queryFn: () => caller.getPool({ poolId }),
+      });
+      break;
+    case "pool":
+      await queryClient.prefetchQuery({
+        queryKey: [["pool"], { input: { username, poolId }, type: "query" }],
+        queryFn: () => caller.pool({ username, poolId }),
+      });
+      break;
   }
-
-  await queryClient.prefetchQuery({
-    queryKey: [["pool"], { input: { username, poolId }, type: "query" }],
-    queryFn: () => caller.pool({ username, poolId }),
-  });
 }
