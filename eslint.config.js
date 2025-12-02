@@ -1,5 +1,6 @@
 import eslintPluginSimpleImportSort from "eslint-plugin-simple-import-sort";
 import noOnlyTests from "eslint-plugin-no-only-tests";
+import reactPlugin from "eslint-plugin-react";
 import typescriptEslint from "typescript-eslint";
 
 export default [
@@ -16,6 +17,7 @@ export default [
       "@typescript-eslint": typescriptEslint.plugin,
       "simple-import-sort": eslintPluginSimpleImportSort,
       "no-only-tests": noOnlyTests,
+      react: reactPlugin,
     },
     rules: {
       "no-console": "error",
@@ -39,6 +41,20 @@ export default [
       ],
     },
     ignores: ["test/**/*"],
+  },
+  {
+    files: ["**/*.tsx"],
+    plugins: {
+      react: reactPlugin,
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+    rules: {
+      "react/react-in-jsx-scope": "error",
+    },
   },
   {
     ignores: ["**/*.js", "public", "scripts"],
