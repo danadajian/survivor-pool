@@ -2,7 +2,6 @@ import { parseRoute } from "./parse-route";
 
 export function handleBotRequest(requestUrl: URL, headers: Headers): Response {
   // Handle reverse proxy scenarios (e.g., Railway, Cloudflare)
-  // Check for forwarded protocol header
   const forwardedProto = headers.get("x-forwarded-proto");
   const forwardedHost = headers.get("x-forwarded-host");
 
@@ -11,14 +10,18 @@ export function handleBotRequest(requestUrl: URL, headers: Headers): Response {
     // Use forwarded headers if available (common in production behind proxy)
     baseUrl = `${forwardedProto}://${forwardedHost}`;
   } else {
-    // Fall back to request URL origin
     baseUrl = requestUrl.origin;
   }
 
   const ogUrl = requestUrl.toString();
   const { endpoint } = parseRoute(requestUrl.pathname);
-  const ogTitle =
-    endpoint === "join" ? "Join My Survivor Pool" : "Survivor Pool";
+  const ogTitleMap: Record<string, string> = {
+    join: "Join My Survivor Pool",
+    rules: "Survivor Pool Rules",
+    privacy: "Privacy Policy",
+  };
+
+  const ogTitle = ogTitleMap[endpoint] ?? "Survivor Pool";
   const ogImage = `${baseUrl}/public/og.png`;
 
   const shareHtml = `<!doctype html>
