@@ -26,7 +26,30 @@ export async function fetchPoolInfo({
   poolId,
   pickDate: requestedPickDate,
 }: v.InferInput<typeof fetchPoolInfoInput>) {
-  const poolMembers = await fetchPoolMembers(poolId);
+  const poolsWithMembers = await db
+    .select()
+    .from(pools)
+    .leftJoin(members, eq(pools.id, members.poolId))
+    .where(eq(pools.id, poolId));
+
+  if (!poolsWithMembers.length) {
+    throw new TRPCError({
+      message: "Pool not found.",
+      code: "NOT_FOUND",
+    });
+  }
+
+  const pool = poolsWithMembers[0]?.pools;
+  if (!pool) {
+    throw new TRPCError({
+      message: "Pool not found.",
+      code: "NOT_FOUND",
+    });
+  }
+
+  const poolMembers = poolsWithMembers
+    .map((row) => row.members)
+    .filter((member) => member !== null);
   const poolMember = poolMembers.find((member) => member.username === username);
   if (!poolMember) {
     throw new TRPCError({
@@ -34,32 +57,25 @@ export async function fetchPoolInfo({
       code: "NOT_FOUND",
     });
   }
-  const poolsResult = await db.query.pools.findFirst({
-    where: eq(pools.id, poolId),
-  });
-  if (!poolsResult)
-    throw new TRPCError({
-      message: "Pool not found.",
-      code: "NOT_FOUND",
-    });
+
   const {
     lives,
     name: poolName,
     creator: poolCreatorUsername,
     sport,
-  } = poolsResult;
+    poolWinner,
+  } = pool;
+
   const games = await fetchCurrentGames(sport);
   const { events, currentSeason, currentGameDate } = games;
-
   const picksForPoolAndSeason = await fetchPicks(poolId, currentSeason);
 
-  const poolWinnerUsername = poolsResult.poolWinner;
-  const poolWinnerMember = poolWinnerUsername
-    ? poolMembers.find((member) => member.username === poolWinnerUsername)
+  const poolWinnerMember = poolWinner
+    ? poolMembers.find((member) => member.username === poolWinner)
     : undefined;
-  const poolWinnerDisplayName = poolWinnerUsername
+  const poolWinnerDisplayName = poolWinner
     ? buildUserDisplayName({
-        username: poolWinnerUsername,
+        username: poolWinner,
         firstName: poolWinnerMember?.firstName,
         lastName: poolWinnerMember?.lastName,
       })
