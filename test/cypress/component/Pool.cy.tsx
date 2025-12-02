@@ -17,7 +17,7 @@ describe("pool page", () => {
 
   it("renders without picks", () => {
     cy.mount(
-      <MockProviders initialEntries={["/pick/123"]}>
+      <MockProviders initialEntries={["/pool/123"]}>
         <Pool />
       </MockProviders>,
     );
@@ -31,7 +31,7 @@ describe("pool page", () => {
     cy.intercept("/trpc/makePick*", { body: { result: { data: {} } } });
 
     cy.mount(
-      <MockProviders initialEntries={["/pick/123"]}>
+      <MockProviders initialEntries={["/pool/123"]}>
         <Pool />
       </MockProviders>,
     );
@@ -52,7 +52,7 @@ describe("pool page", () => {
   it("sets secret toggle state for secret pick", () => {
     cy.intercept("/trpc/pool*", { body: responseWithSecretPick });
     cy.mount(
-      <MockProviders initialEntries={["/pick/123"]}>
+      <MockProviders initialEntries={["/pool/123"]}>
         <Pool />
       </MockProviders>,
     );
@@ -68,7 +68,7 @@ describe("pool page", () => {
     cy.intercept("/trpc/pool*", { body: basicGamesAndPicksPreseasonResponse });
 
     cy.mount(
-      <MockProviders initialEntries={["/pick/123"]}>
+      <MockProviders initialEntries={["/pool/123"]}>
         <Pool />
       </MockProviders>,
     );
@@ -82,7 +82,7 @@ describe("pool page", () => {
     cy.intercept("/trpc/pool*", { body: allPicksPoolResponse });
 
     cy.mount(
-      <MockProviders initialEntries={["/pick/123?view=all-picks"]}>
+      <MockProviders initialEntries={["/pool/123?view=all-picks"]}>
         <Pool />
       </MockProviders>,
     );

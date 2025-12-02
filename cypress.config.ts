@@ -7,7 +7,7 @@ export default defineConfig({
       bundler: "vite",
       viteConfig: {},
     },
-    specPattern: "test/cypress/**/*.tsx",
+    specPattern: "test/cypress/**/*.cy.tsx",
     supportFile: "test/cypress/support/component.ts",
     indexHtmlFile: "test/cypress/support/component-index.html",
   },

@@ -9,6 +9,7 @@ export const rulesSections = [
     title: "How it works",
     body: [
       "Each round, pick one team to win their game. If they win, you survive to play another round. If they lose or tie, you're out.",
+      "A round represents a week of games for NFL, and a day where any games are played for all other sports.",
       "The goal is simple: be the last person standing.",
     ],
   },
@@ -16,7 +17,7 @@ export const rulesSections = [
     id: "picking-teams",
     title: "Picking your teams",
     body: [
-      "You can only use each team once per season. Choose wisely and plan several rounds ahead.",
+      "You can only pick each team once. Choose wisely and plan several rounds ahead.",
       "Submit your pick before that team's game starts. You can wait until closer to game time—just don't miss the start time.",
     ],
   },
