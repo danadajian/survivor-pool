@@ -177,7 +177,6 @@ describe("feature tests", () => {
       poolId,
       pickDate: "Week 1",
       season,
-      events: mockEvents,
     });
     const secretPick = picks.find(
       (pick: (typeof picks)[number]) => pick.pickIsSecret,
@@ -332,7 +331,6 @@ describe("feature tests", () => {
       poolId,
       pickDate: "Week 1",
       season,
-      events: mockEvents,
     });
     const secretPick = picks.find(
       (pick: (typeof picks)[number]) => pick.pickIsSecret,

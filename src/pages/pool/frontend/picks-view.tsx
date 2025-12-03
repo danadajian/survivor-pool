@@ -135,13 +135,15 @@ const PickTable = ({ poolId, username, pickDate }: PickTableProps) => {
                   {userFullName ?? pick.username}
                 </td>
                 <td className="px-3 py-2.5 text-center text-slate-700 sm:px-4 sm:py-3">
-                  {pick.pickIsSecret ? (
-                    <span className="inline-flex items-center rounded-full bg-purple-200 px-2.5 py-0.5 text-sm font-medium text-purple-700">
-                      SECRET
-                    </span>
-                  ) : (
-                    <span className="font-semibold">{pick.teamPicked}</span>
-                  )}
+                  <span
+                    className={
+                      pick.pickIsSecret
+                        ? "inline-flex items-center rounded-full bg-purple-200 px-2.5 py-0.5 text-sm font-medium text-purple-700"
+                        : "font-semibold"
+                    }
+                  >
+                    {pick.teamPicked}
+                  </span>
                 </td>
                 <td className="px-3 py-2.5 text-center sm:px-4 sm:py-3">
                   <span

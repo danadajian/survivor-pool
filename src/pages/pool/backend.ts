@@ -6,10 +6,7 @@ import { db } from "../../db";
 import { members, picks, pools } from "../../schema";
 import { buildPickHeader } from "../../utils/build-pick-header";
 import { buildUserDisplayName } from "../../utils/build-user-display-name";
-import {
-  type Events,
-  fetchCurrentGames,
-} from "../../utils/fetch-current-games";
+import { fetchCurrentGames } from "../../utils/fetch-current-games";
 import { getPickStatus } from "../../utils/get-pick-status";
 import { getEventButtons } from "./backend/get-event-buttons";
 import { getPreviouslyPickedTeamsForUser } from "./backend/get-previously-picked-teams-for-user";
@@ -155,7 +152,6 @@ export async function fetchPoolInfo({
     poolId,
     pickDate,
     season: currentSeason,
-    events,
   });
 
   return {
@@ -194,12 +190,10 @@ export async function fetchPicksForWeek({
   poolId,
   pickDate,
   season,
-  events,
 }: {
   poolId: string;
   pickDate: string;
   season: number;
-  events: Events;
 }) {
   const picksForWeekResult = await db
     .select({
@@ -232,14 +226,7 @@ export async function fetchPicksForWeek({
     .orderBy(desc(picks.result), asc(picks.teamPicked), asc(picks.timestamp));
 
   const picksForWeek = picksForWeekResult.map((pick) => {
-    const competitionWithTeamPicked = events.find((event) =>
-      event.competitions[0]?.competitors.some(
-        (competitor) => competitor.team.name === pick.teamPicked,
-      ),
-    )?.competitions[0];
-    const pickShouldBeSecret =
-      pick.pickIsSecret &&
-      competitionWithTeamPicked?.status.type.name === "STATUS_SCHEDULED";
+    const pickShouldBeSecret = pick.pickIsSecret && pick.result === "PENDING";
     const teamPicked = pickShouldBeSecret ? "SECRET" : pick.teamPicked;
     return {
       ...pick,
