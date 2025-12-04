@@ -29,13 +29,6 @@ export async function fetchPoolInfo({
     .leftJoin(members, eq(pools.id, members.poolId))
     .where(eq(pools.id, poolId));
 
-  if (!poolsWithMembers.length) {
-    throw new TRPCError({
-      message: "Pool not found.",
-      code: "NOT_FOUND",
-    });
-  }
-
   const pool = poolsWithMembers[0]?.pools;
   if (!pool) {
     throw new TRPCError({
