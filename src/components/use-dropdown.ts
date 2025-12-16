@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 export const useDropdown = () => {
   const [showOptions, setShowOptions] = useState(false);
-  const [position, setPosition] = useState({ top: 0, right: 0 });
+  const [position, setPosition] = useState({ top: 0, right: 0, left: 0 });
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -15,6 +15,7 @@ export const useDropdown = () => {
       const margin = 8;
       const rect = buttonRef.current.getBoundingClientRect();
       const dropdownHeight = dropdownRef.current?.offsetHeight ?? 0;
+      const dropdownWidth = dropdownRef.current?.offsetWidth ?? 0;
       const viewportTop = window.scrollY;
       const viewportHeight = window.innerHeight;
       const viewportBottom = viewportTop + viewportHeight;
@@ -37,9 +38,14 @@ export const useDropdown = () => {
         }
       }
 
+      // Calculate left position to right-align dropdown with button
+      // left = button's right edge - dropdown width
+      const left = rect.right - dropdownWidth;
+
       setPosition({
         top,
-        right: window.innerWidth - rect.right + window.scrollX,
+        right: window.innerWidth - rect.right,
+        left,
       });
     };
 

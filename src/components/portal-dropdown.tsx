@@ -5,7 +5,7 @@ import { useDropdown } from "./use-dropdown";
 
 type PortalDropdownMenuProps = {
   showOptions: boolean;
-  position: { top: number; right: number };
+  position: { top: number; right: number; left: number };
   dropdownRef: React.RefObject<HTMLDivElement | null>;
   buttonId: string;
   width?: string;
@@ -28,10 +28,10 @@ export const PortalDropdownMenu = ({
   const dropdownMenu = showOptions && (
     <div
       ref={dropdownRef}
-      className={`fixed z-50 ${width} origin-top-right overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white/95 ${padding} text-sm font-semibold text-slate-600 shadow-xl shadow-slate-900/10 focus:outline-none ${maxHeight} ${className}`}
+      className={`absolute z-50 ${width} origin-top-right overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white/95 ${padding} text-sm font-semibold text-slate-600 shadow-xl shadow-slate-900/10 focus:outline-none ${maxHeight} ${className}`}
       style={{
         top: `${position.top}px`,
-        right: `${position.right}px`,
+        left: `${position.left}px`,
       }}
       role="menu"
       aria-orientation="vertical"
