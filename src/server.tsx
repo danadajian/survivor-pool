@@ -10,7 +10,7 @@ import * as v from "valibot";
 import { App } from "./app";
 import { userSchema } from "./components/page-wrapper";
 import { createContext } from "./context";
-import { environmentVariables, isDev } from "./env";
+import { environmentVariables, isDev, isMockAuth } from "./env";
 import { appRouter } from "./router";
 import { buildClientAndGetPaths } from "./utils/build-client-and-get-paths";
 import { handleBotRequest } from "./utils/handle-bot-request";
@@ -83,25 +83,48 @@ const server = Bun.serve({
         return handleBotRequest(url, request.headers);
       }
 
-      const authResult = await clerkClient.authenticateRequest(request);
+      let userData;
 
-      const publicRoutes = ["/", "/rules", "/privacy"];
-      const isPublicRoute = publicRoutes.includes(url.pathname);
+      if (isMockAuth) {
+        // Mock authenticated state with hardcoded test values
+        const mockUserData = {
+          username: "test@example.com",
+          firstName: "Test",
+          lastName: "User",
+        };
+        const { success, output: parsedUserData } = v.safeParse(
+          userSchema,
+          mockUserData,
+        );
+        if (!success) {
+          return new Response("Invalid mock user data", { status: 400 });
+        }
+        userData = parsedUserData;
+      } else {
+        // Normal Clerk authentication
+        const authResult = await clerkClient.authenticateRequest(request);
 
-      if (!authResult.isAuthenticated) {
-        return isPublicRoute
-          ? await renderApp(url)
-          : redirectToSignIn(authResult, url);
-      }
+        const publicRoutes = ["/", "/rules", "/privacy"];
+        const isPublicRoute = publicRoutes.includes(url.pathname);
 
-      const user = await clerkClient.users.getUser(authResult.toAuth().userId);
-      const { success, output: userData } = v.safeParse(userSchema, {
-        username: user?.primaryEmailAddress?.emailAddress,
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-      });
-      if (!success) {
-        return new Response("Invalid user data", { status: 400 });
+        if (!authResult.isAuthenticated) {
+          return isPublicRoute
+            ? await renderApp(url)
+            : redirectToSignIn(authResult, url);
+        }
+
+        const user = await clerkClient.users.getUser(
+          authResult.toAuth().userId,
+        );
+        const { success, output: parsedUserData } = v.safeParse(userSchema, {
+          username: user?.primaryEmailAddress?.emailAddress,
+          firstName: user?.firstName,
+          lastName: user?.lastName,
+        });
+        if (!success) {
+          return new Response("Invalid user data", { status: 400 });
+        }
+        userData = parsedUserData;
       }
 
       const queryClient = new QueryClient({
@@ -114,7 +137,7 @@ const server = Bun.serve({
       await prefetchQueriesForRoute(request, userData, queryClient);
       const dehydratedState = dehydrate(queryClient);
 
-      return await renderApp(url, { userData, dehydratedState });
+      return await renderApp(url, { userData, dehydratedState, isMockAuth });
     } catch (error) {
       logger.error({ error }, "An error occurred while rendering the app");
       return await renderApp(url);

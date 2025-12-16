@@ -25,12 +25,31 @@ import { Rules } from "./pages/rules/frontend";
 import { PublicRules } from "./pages/rules/public-rules";
 import { Winners } from "./pages/winners/frontend";
 
+declare global {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface Window {
+    __IS_MOCK_AUTH__?: boolean;
+    __USER_DATA__?: UserData;
+  }
+}
+
 type AppProps = {
   userData?: UserData;
   dehydratedState?: unknown;
+  isMockAuth?: boolean;
 };
 
-export const App = ({ userData, dehydratedState }: AppProps) => {
+export const App = ({
+  userData: userDataProp,
+  dehydratedState,
+  isMockAuth: isMockAuthProp,
+}: AppProps) => {
+  const isMockAuth =
+    isMockAuthProp ??
+    (typeof window !== "undefined" ? window.__IS_MOCK_AUTH__ : false);
+  const userData =
+    userDataProp ??
+    (typeof window !== "undefined" ? window.__USER_DATA__ : undefined);
   const authenticatedRoutes = (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -57,18 +76,30 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
   // On server: Pass userData via UserProvider for SSR
   // On client: ClerkProvider will hydrate and provide full functionality
   // Use client components for navigation - server components only for initial SSR
-  const content = (
-    <ClerkProvider publishableKey={process.env.CLERK_PUBLISHABLE_KEY || ""}>
-      <UserProvider userData={userData}>
-        <ErrorBoundary FallbackComponent={ErrorPage}>
-          <ClientProvider dehydratedState={dehydratedState}>
-            <SignedIn>{authenticatedRoutes}</SignedIn>
-            <SignedOut>{publicRoutes}</SignedOut>
-          </ClientProvider>
-        </ErrorBoundary>
-      </UserProvider>
-    </ClerkProvider>
-  );
+  const content =
+    isMockAuth && userData ? (
+      // In mock auth mode, bypass Clerk authentication checks
+      <ClerkProvider publishableKey={process.env.CLERK_PUBLISHABLE_KEY || ""}>
+        <UserProvider userData={userData}>
+          <ErrorBoundary FallbackComponent={ErrorPage}>
+            <ClientProvider dehydratedState={dehydratedState}>
+              {authenticatedRoutes}
+            </ClientProvider>
+          </ErrorBoundary>
+        </UserProvider>
+      </ClerkProvider>
+    ) : (
+      <ClerkProvider publishableKey={process.env.CLERK_PUBLISHABLE_KEY || ""}>
+        <UserProvider userData={userData}>
+          <ErrorBoundary FallbackComponent={ErrorPage}>
+            <ClientProvider dehydratedState={dehydratedState}>
+              <SignedIn>{authenticatedRoutes}</SignedIn>
+              <SignedOut>{publicRoutes}</SignedOut>
+            </ClientProvider>
+          </ErrorBoundary>
+        </UserProvider>
+      </ClerkProvider>
+    );
 
   return (
     <html lang="en">
@@ -85,6 +116,20 @@ export const App = ({ userData, dehydratedState }: AppProps) => {
           <script
             dangerouslySetInnerHTML={{
               __html: `window.__DEHYDRATED_STATE__ = ${JSON.stringify(dehydratedState)};`,
+            }}
+          />
+        ) : null}
+        {isMockAuth ? (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.__IS_MOCK_AUTH__ = true;`,
+            }}
+          />
+        ) : null}
+        {userData ? (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.__USER_DATA__ = ${JSON.stringify(userData)};`,
             }}
           />
         ) : null}

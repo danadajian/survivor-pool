@@ -8,6 +8,7 @@ export const envSchema = v.object({
   POSTGRES_URL: v.string(),
   CLERK_PUBLISHABLE_KEY: v.optional(v.string()),
   CLERK_SECRET_KEY: v.optional(v.string()),
+  MOCK_AUTH: v.optional(v.string()),
 });
 const result = v.safeParse(envSchema, process.env);
 if (!result.success) {
@@ -15,3 +16,4 @@ if (!result.success) {
 }
 export const environmentVariables = result.output;
 export const isDev = environmentVariables.ENVIRONMENT === "development";
+export const isMockAuth = environmentVariables.MOCK_AUTH === "true";

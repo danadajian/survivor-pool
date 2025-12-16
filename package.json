@@ -5,6 +5,7 @@
   "scripts": {
     "db": "docker compose up -d && bun drizzle",
     "dev": "rm -f public/client-*.js && ENVIRONMENT=development bun --hot ./src/server.tsx",
+    "dev:authed": "rm -f public/client-*.js && ENVIRONMENT=development MOCK_AUTH=true bun --hot ./src/server.tsx",
     "drizzle": "drizzle-kit push",
     "docker": "docker build . --tag survivor-pool",
     "format": "prettier --write .",
