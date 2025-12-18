@@ -25,6 +25,9 @@ const PoolComponent = ({ user: { username }, poolId }: PageProps) => {
   const utils = trpc.useUtils();
 
   const { mutate } = trpc.reactivatePool.useMutation({
+    onSuccess: (newPool) => {
+      navigate(`/pool/${newPool.id}`);
+    },
     onSettled: () => utils.pool.invalidate(),
   });
 
