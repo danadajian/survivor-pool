@@ -63,7 +63,7 @@ jobs:
           bun-version-file: package.json
       - run: bun install
       - name: Run component tests
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7.4.3
         with:
           component: true
           install: false
