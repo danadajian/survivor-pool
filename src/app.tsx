@@ -1,9 +1,9 @@
 import {
   ClerkProvider,
   RedirectToSignIn,
-  SignInButton,
-  SignOutButton,
-} from "@clerk/react";
+  SignedIn,
+  SignedOut,
+} from "@clerk/clerk-react";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Route, Routes } from "react-router-dom";
@@ -92,8 +92,8 @@ export const App = ({
         <UserProvider userData={userData}>
           <ErrorBoundary FallbackComponent={ErrorPage as any}>
             <ClientProvider dehydratedState={dehydratedState}>
-              <SignInButton>{authenticatedRoutes}</SignInButton>
-              <SignOutButton>{publicRoutes}</SignOutButton>
+              <SignedIn>{authenticatedRoutes}</SignedIn>
+              <SignedOut>{publicRoutes}</SignedOut>
             </ClientProvider>
           </ErrorBoundary>
         </UserProvider>

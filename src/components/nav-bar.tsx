@@ -1,4 +1,4 @@
-import { UserButton } from "@clerk/react";
+import { UserButton } from "@clerk/clerk-react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import { useErrorBoundary } from "react-error-boundary";

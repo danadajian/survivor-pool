@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/react";
+import { useUser } from "@clerk/clerk-react";
 import React, { Suspense, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import * as v from "valibot";

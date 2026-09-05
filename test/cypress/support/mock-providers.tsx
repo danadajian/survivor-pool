@@ -1,4 +1,4 @@
-import { ClerkProvider } from "@clerk/react";
+import { ClerkProvider } from "@clerk/clerk-react";
 import React, { type ComponentProps, type PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { MemoryRouter } from "react-router-dom";

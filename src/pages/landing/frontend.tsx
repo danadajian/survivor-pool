@@ -1,4 +1,4 @@
-import { SignInButton } from "@clerk/react";
+import { SignInButton } from "@clerk/clerk-react";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
