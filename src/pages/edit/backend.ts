@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 import * as v from "valibot";
 
-import { db } from "../../db";
-import { pools, SPORTS } from "../../schema";
+import { db } from "@/db";
+import { pools, SPORTS } from "@/schema";
 
 export const editPoolInput = v.object({
   poolId: v.pipe(v.string(), v.uuid()),

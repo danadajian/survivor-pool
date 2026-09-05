@@ -1,7 +1,7 @@
-import { picks } from "../../../schema";
-import { ButtonStyle } from "../../../utils/button-style";
-import { checkIfPickIsLocked } from "../../../utils/check-if-pick-is-locked";
-import { Events } from "../../../utils/fetch-current-games";
+import { picks } from "@/schema";
+import { ButtonStyle } from "@/utils/button-style";
+import { checkIfPickIsLocked } from "@/utils/check-if-pick-is-locked";
+import { Events } from "@/utils/fetch-current-games";
 
 export type Competition = Events[number]["competitions"][number];
 type Team = Competition["competitors"][number]["team"];

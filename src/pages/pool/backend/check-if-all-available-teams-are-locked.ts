@@ -1,4 +1,4 @@
-import { Events } from "../../../utils/fetch-current-games";
+import { Events } from "@/utils/fetch-current-games";
 
 export function checkIfAllAvailableTeamsAreLocked({
   events,

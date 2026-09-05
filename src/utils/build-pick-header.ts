@@ -1,4 +1,4 @@
-import { picks } from "../schema";
+import { picks } from "@/schema";
 import { PickStatus } from "./get-pick-status";
 
 export function buildPickHeader({

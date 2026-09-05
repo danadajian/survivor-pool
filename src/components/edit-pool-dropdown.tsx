@@ -14,7 +14,7 @@ import {
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { trpc } from "../trpc";
+import { trpc } from "@/trpc";
 import { CopyInviteLinkButton } from "./copy-invite-link-button";
 import { DialogWrapper } from "./dialog-wrapper";
 import { Button } from "./ui/button";

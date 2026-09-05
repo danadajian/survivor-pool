@@ -2,9 +2,9 @@ import { and, eq, isNotNull } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import * as v from "valibot";
 
-import { db } from "../../db";
-import { members, pools } from "../../schema";
-import { buildUserDisplayName } from "../../utils/build-user-display-name";
+import { db } from "@/db";
+import { members, pools } from "@/schema";
+import { buildUserDisplayName } from "@/utils/build-user-display-name";
 
 export const fetchPoolWinnersInput = v.object({
   username: v.string(),

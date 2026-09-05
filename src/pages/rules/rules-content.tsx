@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Heading } from "../../components/heading";
-import { Surface } from "../../components/ui/surface";
+import { Heading } from "@/components/heading";
+import { Surface } from "@/components/ui/surface";
 
 export const rulesSections = [
   {

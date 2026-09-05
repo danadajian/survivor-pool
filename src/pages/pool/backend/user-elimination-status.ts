@@ -1,4 +1,4 @@
-import { Events } from "src/utils/fetch-current-games";
+import { Events } from "@/utils/fetch-current-games";
 
 import { picks } from "../../../schema";
 import { getPreviouslyPickedTeamsForUser } from "./get-previously-picked-teams-for-user";

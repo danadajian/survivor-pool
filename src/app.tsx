@@ -26,7 +26,6 @@ import { PublicRules } from "./pages/rules/public-rules";
 import { Winners } from "./pages/winners/frontend";
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface Window {
     __IS_MOCK_AUTH__?: boolean;
     __USER_DATA__?: UserData;
@@ -81,7 +80,7 @@ export const App = ({
       // In mock auth mode, bypass Clerk authentication checks
       <ClerkProvider publishableKey={process.env.CLERK_PUBLISHABLE_KEY || ""}>
         <UserProvider userData={userData}>
-          <ErrorBoundary FallbackComponent={ErrorPage}>
+          <ErrorBoundary FallbackComponent={ErrorPage as any}>
             <ClientProvider dehydratedState={dehydratedState}>
               {authenticatedRoutes}
             </ClientProvider>
@@ -91,7 +90,7 @@ export const App = ({
     ) : (
       <ClerkProvider publishableKey={process.env.CLERK_PUBLISHABLE_KEY || ""}>
         <UserProvider userData={userData}>
-          <ErrorBoundary FallbackComponent={ErrorPage}>
+          <ErrorBoundary FallbackComponent={ErrorPage as any}>
             <ClientProvider dehydratedState={dehydratedState}>
               <SignedIn>{authenticatedRoutes}</SignedIn>
               <SignedOut>{publicRoutes}</SignedOut>

@@ -10,11 +10,11 @@ import {
 import { and, desc, eq } from "drizzle-orm";
 
 import { updateResults } from "../scripts/update-results/update-results";
-import { db } from "../src/db";
-import { createPool } from "../src/pages/create/backend";
-import { editPool } from "../src/pages/edit/backend";
-import { deletePool } from "../src/pages/home/backend";
-import { getPool, joinPool } from "../src/pages/join/backend";
+import { db } from "@/db";
+import { createPool } from "@/pages/create/backend";
+import { editPool } from "@/pages/edit/backend";
+import { deletePool } from "@/pages/home/backend";
+import { getPool, joinPool } from "@/pages/join/backend";
 import {
   fetchPicks,
   fetchPicksForWeek,

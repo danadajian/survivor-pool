@@ -2,7 +2,7 @@ import { ClerkClient } from "@clerk/backend";
 import { buildAccountsBaseUrl } from "@clerk/shared/buildAccountsBaseUrl";
 import { parsePublishableKey } from "@clerk/shared/keys";
 
-import { environmentVariables } from "../env";
+import { environmentVariables } from "@/env";
 
 export function redirectToSignIn(
   authResult: Awaited<ReturnType<ClerkClient["authenticateRequest"]>>,

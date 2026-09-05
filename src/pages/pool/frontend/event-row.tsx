@@ -1,7 +1,7 @@
 import React from "react";
 import spacetime from "spacetime";
 
-import { TeamButton } from "../../../components/team-button";
+import { TeamButton } from "@/components/team-button";
 import { type EventButton } from "../backend/get-event-buttons";
 
 type TeamRowProps = {

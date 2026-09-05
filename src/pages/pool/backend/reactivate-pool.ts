@@ -2,9 +2,9 @@ import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import * as v from "valibot";
 
-import { db } from "../../../db";
-import { members, pools, SPORTS } from "../../../schema";
-import { fetchCurrentGames } from "../../../utils/fetch-current-games";
+import { db } from "@/db";
+import { members, pools, SPORTS } from "@/schema";
+import { fetchCurrentGames } from "@/utils/fetch-current-games";
 
 export const reactivatePoolInput = v.object({
   poolId: v.pipe(v.string(), v.uuid()),

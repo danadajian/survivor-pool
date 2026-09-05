@@ -1,6 +1,6 @@
-import { Events } from "src/utils/fetch-current-games";
+import { Events } from "@/utils/fetch-current-games";
 
-import { members, picks } from "../../../schema";
+import { members, picks } from "@/schema";
 import { userEliminationStatus } from "./user-elimination-status";
 
 export async function findPoolWinner({

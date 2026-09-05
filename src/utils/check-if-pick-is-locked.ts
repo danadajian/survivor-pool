@@ -1,4 +1,4 @@
-import { picks } from "../schema";
+import { picks } from "@/schema";
 import { Events } from "./fetch-current-games";
 
 export function checkIfPickIsLocked({

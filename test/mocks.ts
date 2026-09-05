@@ -1,8 +1,8 @@
 import type { TRPCResponse } from "@trpc/server/rpc";
 
-import { EventButton } from "../src/pages/pool/backend/get-event-buttons";
-import { RouterOutput } from "../src/trpc";
-import { ButtonStyle } from "../src/utils/button-style";
+import { EventButton } from "@/pages/pool/backend/get-event-buttons";
+import { RouterOutput } from "@/trpc";
+import { ButtonStyle } from "@/utils/button-style";
 
 export const mockEspnResponse = {
   leagues: [

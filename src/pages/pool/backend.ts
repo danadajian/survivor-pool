@@ -2,12 +2,12 @@ import { TRPCError } from "@trpc/server";
 import { and, asc, desc, eq } from "drizzle-orm";
 import * as v from "valibot";
 
-import { db } from "../../db";
-import { members, picks, pools } from "../../schema";
-import { buildPickHeader } from "../../utils/build-pick-header";
-import { buildUserDisplayName } from "../../utils/build-user-display-name";
-import { fetchCurrentGames } from "../../utils/fetch-current-games";
-import { getPickStatus } from "../../utils/get-pick-status";
+import { db } from "@/db";
+import { members, picks, pools } from "@/schema";
+import { buildPickHeader } from "@/utils/build-pick-header";
+import { buildUserDisplayName } from "@/utils/build-user-display-name";
+import { fetchCurrentGames } from "@/utils/fetch-current-games";
+import { getPickStatus } from "@/utils/get-pick-status";
 import { getEventButtons } from "./backend/get-event-buttons";
 import { getPreviouslyPickedTeamsForUser } from "./backend/get-previously-picked-teams-for-user";
 import { userEliminationStatus } from "./backend/user-elimination-status";

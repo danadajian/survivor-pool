@@ -1,8 +1,8 @@
 import { and, eq, isNull } from "drizzle-orm";
 import * as v from "valibot";
 
-import { db } from "../../db";
-import { members, picks, pools } from "../../schema";
+import { db } from "@/db";
+import { members, picks, pools } from "@/schema";
 import { poolInput } from "../join/backend";
 
 export const fetchPoolsForUserInput = v.object({

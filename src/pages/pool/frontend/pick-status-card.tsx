@@ -1,7 +1,7 @@
 import React from "react";
 
-import { type RouterOutput } from "../../../trpc";
-import { type PickStatus } from "../../../utils/get-pick-status";
+import { type RouterOutput } from "@/trpc";
+import { type PickStatus } from "@/utils/get-pick-status";
 
 type PickStatusCardProps = {
   status: PickStatus;

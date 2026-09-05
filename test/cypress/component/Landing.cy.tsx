@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Landing } from "../../../src/pages/landing/frontend";
+import { Landing } from "@/pages/landing/frontend";
 import { MockProviders } from "../support/mock-providers";
 
 describe("landing page", () => {

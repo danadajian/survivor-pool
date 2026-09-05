@@ -1,11 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Heading } from "../../components/heading";
-import { type PageProps, withPage } from "../../components/page-wrapper";
-import { Button } from "../../components/ui/button";
-import { Surface } from "../../components/ui/surface";
-import { trpc } from "../../trpc";
+import { Heading } from "@/components/heading";
+import { type PageProps, withPage } from "@/components/page-wrapper";
+import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
+import { trpc } from "@/trpc";
 
 const JoinComponent = ({ user, poolId }: PageProps) => {
   const { mutate, isSuccess } = trpc.joinPool.useMutation();

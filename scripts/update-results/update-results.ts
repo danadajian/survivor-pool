@@ -1,9 +1,9 @@
 import { and, eq } from "drizzle-orm";
 
-import { db } from "../../src/db";
-import { type Events } from "../../src/utils/fetch-current-games";
-import { members, picks, pools, Sport } from "../../src/schema";
-import { findPoolWinner } from "../../src/pages/pool/backend/find-pool-winner";
+import { db } from "@/db";
+import { type Events } from "@/utils/fetch-current-games";
+import { members, picks, pools, Sport } from "@/schema";
+import { findPoolWinner } from "@/pages/pool/backend/find-pool-winner";
 
 export async function updateResults(
   events: Events,

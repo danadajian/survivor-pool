@@ -1,6 +1,6 @@
 import path from "path";
 
-import { environmentVariables } from "../env";
+import { environmentVariables } from "@/env";
 
 export async function buildClientAndGetPaths() {
   const { outputs } = await Bun.build({

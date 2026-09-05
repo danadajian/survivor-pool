@@ -2,10 +2,10 @@ import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import * as v from "valibot";
 
-import { userFields } from "../../components/page-wrapper";
-import { db } from "../../db";
-import { pools, SPORTS } from "../../schema";
-import { fetchCurrentGames } from "../../utils/fetch-current-games";
+import { userFields } from "@/components/page-wrapper";
+import { db } from "@/db";
+import { pools, SPORTS } from "@/schema";
+import { fetchCurrentGames } from "@/utils/fetch-current-games";
 import { joinPool } from "../join/backend";
 
 export const createPoolInput = v.object({

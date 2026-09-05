@@ -1,13 +1,13 @@
 import { describe, expect, test } from "bun:test";
-import { checkIfAllAvailableTeamsAreLocked } from "src/pages/pool/backend/check-if-all-available-teams-are-locked";
-import { getPreviouslyPickedTeamsForUser } from "src/pages/pool/backend/get-previously-picked-teams-for-user";
+import { checkIfAllAvailableTeamsAreLocked } from "@/pages/pool/backend/check-if-all-available-teams-are-locked";
+import { getPreviouslyPickedTeamsForUser } from "@/pages/pool/backend/get-previously-picked-teams-for-user";
 
-import { getEventButtons } from "../src/pages/pool/backend/get-event-buttons";
-import { userEliminationStatus } from "../src/pages/pool/backend/user-elimination-status";
-import { picks } from "../src/schema";
-import { buildPickHeader } from "../src/utils/build-pick-header";
-import { Events } from "../src/utils/fetch-current-games";
-import { getPickStatus } from "../src/utils/get-pick-status";
+import { getEventButtons } from "@/pages/pool/backend/get-event-buttons";
+import { userEliminationStatus } from "@/pages/pool/backend/user-elimination-status";
+import { picks } from "@/schema";
+import { buildPickHeader } from "@/utils/build-pick-header";
+import { Events } from "@/utils/fetch-current-games";
+import { getPickStatus } from "@/utils/get-pick-status";
 import { mockEspnResponse } from "./mocks";
 
 describe("pick header", () => {

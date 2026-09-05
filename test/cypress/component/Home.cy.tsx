@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Home } from "../../../src/pages/home/frontend";
+import { Home } from "@/pages/home/frontend";
 import { poolsForUserResponse } from "../../mocks";
 import { MockProviders } from "../support/mock-providers";
 

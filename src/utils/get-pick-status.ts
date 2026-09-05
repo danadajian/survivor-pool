@@ -1,5 +1,5 @@
-import { checkIfAllAvailableTeamsAreLocked } from "../pages/pool/backend/check-if-all-available-teams-are-locked";
-import { picks } from "../schema";
+import { checkIfAllAvailableTeamsAreLocked } from "@/pages/pool/backend/check-if-all-available-teams-are-locked";
+import { picks } from "@/schema";
 import { checkIfPickIsLocked } from "./check-if-pick-is-locked";
 import { Events } from "./fetch-current-games";
 

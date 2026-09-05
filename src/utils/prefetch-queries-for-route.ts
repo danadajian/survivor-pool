@@ -1,7 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
-import { UserData } from "src/components/user-context";
-import { createContext } from "src/context";
-import { appRouter } from "src/router";
+import { UserData } from "@/components/user-context";
+import { createContext } from "@/context";
+import { appRouter } from "@/router";
 
 import { parseRoute } from "./parse-route";
 

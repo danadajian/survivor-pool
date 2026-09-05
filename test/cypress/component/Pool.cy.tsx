@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Pool } from "../../../src/pages/pool/frontend";
+import { Pool } from "@/pages/pool/frontend";
 import {
   allPicksPoolResponse,
   basicGamesAndPicksPreseasonResponse,

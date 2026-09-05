@@ -3,7 +3,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { trpc } from "../trpc";
+import { trpc } from "@/trpc";
 import { PortalDropdownMenu, useDropdown } from "./portal-dropdown";
 
 type ChangePoolDropdownProps = {

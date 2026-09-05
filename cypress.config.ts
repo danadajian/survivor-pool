@@ -5,7 +5,11 @@ export default defineConfig({
     devServer: {
       framework: "react",
       bundler: "vite",
-      viteConfig: {},
+      viteConfig: {
+        resolve: {
+          tsconfigPaths: true,
+        },
+      },
     },
     specPattern: "test/cypress/**/*.cy.tsx",
     supportFile: "test/cypress/support/component.ts",

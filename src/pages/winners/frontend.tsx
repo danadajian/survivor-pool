@@ -9,10 +9,10 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { TrophyIcon } from "@heroicons/react/24/solid";
 import React, { Fragment } from "react";
 
-import { Heading } from "../../components/heading";
-import { type PageProps, withPage } from "../../components/page-wrapper";
-import { Surface } from "../../components/ui/surface";
-import { type RouterOutput, trpc } from "../../trpc";
+import { Heading } from "@/components/heading";
+import { type PageProps, withPage } from "@/components/page-wrapper";
+import { Surface } from "@/components/ui/surface";
+import { type RouterOutput, trpc } from "@/trpc";
 
 type WinnersData = RouterOutput["winners"];
 type WinnerRecord = WinnersData["winners"][number];

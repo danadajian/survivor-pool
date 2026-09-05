@@ -3,7 +3,7 @@ import React, { Suspense, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import * as v from "valibot";
 
-import { parseRoute } from "../utils/parse-route";
+import { parseRoute } from "@/utils/parse-route";
 import { ErrorPage } from "./error";
 import { Loader } from "./loader";
 import { NavBar } from "./nav-bar";

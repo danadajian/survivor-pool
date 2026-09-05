@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import * as v from "valibot";
 
-import { Sport } from "../schema";
+import { Sport } from "@/schema";
 import { logger } from "./logger";
 
 export const SPORT_URLS = {

@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
 import * as v from "valibot";
 
-import { db } from "../../../db";
-import { picks } from "../../../schema";
+import { db } from "@/db";
+import { picks } from "@/schema";
 
 export const makePickInput = v.object({
   username: v.string(),

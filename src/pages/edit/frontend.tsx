@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { CopyInviteLinkButton } from "../../components/copy-invite-link-button";
-import { ErrorMessage } from "../../components/error";
-import { Heading } from "../../components/heading";
-import { type PageProps, withPage } from "../../components/page-wrapper";
-import { Button } from "../../components/ui/button";
-import { Surface } from "../../components/ui/surface";
-import { type Sport, SPORTS } from "../../schema";
-import { trpc } from "../../trpc";
+import { CopyInviteLinkButton } from "@/components/copy-invite-link-button";
+import { ErrorMessage } from "@/components/error";
+import { Heading } from "@/components/heading";
+import { type PageProps, withPage } from "@/components/page-wrapper";
+import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
+import { type Sport, SPORTS } from "@/schema";
+import { trpc } from "@/trpc";
 
 const MIN_LIVES = 1;
 const MAX_LIVES = 9;

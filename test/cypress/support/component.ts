@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-namespace, @typescript-eslint/consistent-type-definitions */
 import "./commands";
 
 import { mount } from "cypress/react";

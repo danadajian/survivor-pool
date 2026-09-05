@@ -1,10 +1,10 @@
 import React from "react";
 
-import { GameDateDropdown } from "../../../components/game-date-dropdown";
-import { Loader } from "../../../components/loader";
-import { Surface } from "../../../components/ui/surface";
-import { type RouterOutput, trpc } from "../../../trpc";
-import { useUrlParams } from "../../../utils/use-url-params";
+import { GameDateDropdown } from "@/components/game-date-dropdown";
+import { Loader } from "@/components/loader";
+import { Surface } from "@/components/ui/surface";
+import { type RouterOutput, trpc } from "@/trpc";
+import { useUrlParams } from "@/utils/use-url-params";
 
 type PicksViewProps = {
   poolId: string;

@@ -1,5 +1,5 @@
-import { picks } from "../../../schema";
-import { Events } from "../../../utils/fetch-current-games";
+import { picks } from "@/schema";
+import { Events } from "@/utils/fetch-current-games";
 
 export function getPreviouslyPickedTeamsForUser({
   username,

@@ -1,12 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { EditPoolDropdown } from "../../components/edit-pool-dropdown";
-import { Heading } from "../../components/heading";
-import { type PageProps, withPage } from "../../components/page-wrapper";
-import { Button } from "../../components/ui/button";
-import { Surface } from "../../components/ui/surface";
-import { type RouterOutput, trpc } from "../../trpc";
+import { EditPoolDropdown } from "@/components/edit-pool-dropdown";
+import { Heading } from "@/components/heading";
+import { type PageProps, withPage } from "@/components/page-wrapper";
+import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/surface";
+import { type RouterOutput, trpc } from "@/trpc";
 
 const HomeComponent = ({ user: { username } }: PageProps) => {
   const [data] = trpc.poolsForUser.useSuspenseQuery({ username });
