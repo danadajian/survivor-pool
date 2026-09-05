@@ -13,6 +13,8 @@ import { Heading } from "@/components/heading";
 import { type PageProps, withPage } from "@/components/page-wrapper";
 import { Surface } from "@/components/ui/surface";
 import { type RouterOutput, trpc } from "@/trpc";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 type WinnersData = RouterOutput["winners"];
 type WinnerRecord = WinnersData["winners"][number];
@@ -213,31 +215,47 @@ const WinnersList = ({
 };
 
 const WinnerCard = ({
-  winner: { poolStart, poolEnd, poolName, sport, winner: winnerDisplay },
+  winner: {
+    poolStart,
+    poolEnd,
+    poolName,
+    poolId,
+    sport,
+    winner: winnerDisplay,
+  },
 }: {
   winner: WinnerRecord;
 }) => {
   const poolDateRange =
     poolEnd && poolEnd !== poolStart ? `${poolStart} – ${poolEnd}` : poolStart;
+  const navigate = useNavigate();
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm shadow-slate-900/10 transition hover:-translate-y-0.5 hover:shadow-lg sm:rounded-3xl sm:p-6">
       <div className="flex flex-col gap-3 text-left sm:gap-4">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-amber-600 shadow-inner shadow-amber-200 sm:h-12 sm:w-12">
-            <TrophyIcon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
-          </span>
-          <div className="flex flex-col gap-0.5 sm:gap-1">
-            <p className="text-[0.65rem] font-semibold tracking-[0.35em] text-amber-700 uppercase sm:text-xs sm:tracking-[0.34em]">
-              {poolName}
-              <span className="ml-2 inline-block rounded border border-amber-700/20 px-1.5 py-0.5 text-[0.6rem] tracking-normal text-amber-800 sm:text-[0.65rem]">
-                {sport}
-              </span>
-            </p>
-            <p className="text-base font-semibold text-slate-900 sm:text-lg">
-              {winnerDisplay}
-            </p>
+        <div className="flex w-full items-center justify-between gap-3 sm:gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-amber-600 shadow-inner shadow-amber-200 sm:h-12 sm:w-12">
+              <TrophyIcon
+                className="h-5 w-5 sm:h-6 sm:w-6"
+                aria-hidden="true"
+              />
+            </span>
+            <div className="flex flex-col gap-0.5 sm:gap-1">
+              <p className="text-[0.65rem] font-semibold tracking-[0.35em] text-amber-700 uppercase sm:text-xs sm:tracking-[0.34em]">
+                {poolName}
+                <span className="ml-2 inline-block rounded border border-amber-700/20 px-1.5 py-0.5 text-[0.6rem] tracking-normal text-amber-800 sm:text-[0.65rem]">
+                  {sport}
+                </span>
+              </p>
+              <p className="text-base font-semibold text-slate-900 sm:text-lg">
+                {winnerDisplay}
+              </p>
+            </div>
           </div>
+          <Button onClick={() => navigate(`/pool/${poolId}`)} type="button">
+            Go to Pool
+          </Button>
         </div>
         <div className="flex flex-col gap-2 text-xs text-slate-500 sm:flex-row sm:items-baseline sm:text-sm">
           <span className="inline-flex w-max items-center rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600 sm:px-3.5">

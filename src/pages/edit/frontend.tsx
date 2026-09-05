@@ -59,7 +59,7 @@ const EditComponent = ({ poolId }: PageProps) => {
           <Heading>{`${poolName} updated successfully!`}</Heading>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button onClick={() => navigate(`/pool/${data.id}`)} type="button">
-              Go to pool
+              Go to Pool
             </Button>
             <CopyInviteLinkButton poolId={data.id} />
           </div>
