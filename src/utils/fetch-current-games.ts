@@ -15,11 +15,15 @@ export async function fetchCurrentGames(sport: Sport): Promise<GamesResponse> {
   const response = await fetch(url, {
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
       "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
     },
   });
-  const games = await response.json();
+  const games = await response.json().catch((error) => {
+    throw new TRPCError({
+      message: `ESPN API failure. Message: ${error.message}`,
+      code: "PARSE_ERROR",
+    });
+  });
   const parseResult = v.safeParse(gamesSchema, games);
   if (!parseResult.success) {
     logger.error(
