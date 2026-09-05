@@ -1,6 +1,6 @@
 {
   "name": "survivor-pool",
-  "packageManager": "bun@1.4.1",
+  "packageManager": "bun@1.4.2",
   "type": "module",
   "scripts": {
     "db": "docker compose up -d && bun drizzle",
